@@ -67,12 +67,12 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>      Timeout (default: %d)\n", option.timeout);
     printf("\n");
     printf("Scpi options:\n");
-    printf("  -i, --ip <ip>                IP address\n");
+    printf("  -a, --address <ip>           IP address\n");
     printf("  -t, --timeout <seconds>      Timeout (default: %d)\n", option.timeout);
     printf("  -x, --dump-hex               Print response in hexidecimal\n");
     printf("  -f, --dump-file <filename>   Save response to file\n");
-    printf("  -a, --interactive            Enter interactive mode\n");
-    printf("  -r, --run-script <filename>  Run script\n");
+    printf("  -i, --interactive            Enter interactive mode\n");
+    printf("  -s, --script <filename>      Run script file\n");
     printf("\n");
 }
 
@@ -131,16 +131,16 @@ void parse_options(int argc, char *argv[])
         static struct option long_options[] =
         {
             {"timeout",	       required_argument, 0, 't'},
-            {"ip",             required_argument, 0, 'i'},
+            {"address",        required_argument, 0, 'a'},
             {"dump-hex",       no_argument,       0, 'x'},
             {"dump-file",      required_argument, 0, 'f'},
-            {"interactive",    no_argument,       0, 'a'},
-            {"run-script",     required_argument, 0, 'r'},
+            {"interactive",    no_argument,       0, 'i'},
+            {"script",         required_argument, 0, 's'},
             {0,                0,                 0,  0 }
         };
 
         /* Parse scpi options */
-        c = getopt_long(argc, argv, "i:t:xf:ar:", long_options, &option_index);
+        c = getopt_long(argc, argv, "t:a:xf:is:", long_options, &option_index);
 
         while (c != -1)
         {
@@ -150,7 +150,7 @@ void parse_options(int argc, char *argv[])
                     option.timeout = atoi(optarg);
                     break;
 
-                case 'i':
+                case 'a':
                     strncpy(option.ip, optarg, 500);
                     break;
 
@@ -163,11 +163,11 @@ void parse_options(int argc, char *argv[])
                     option.filename = optarg;
                     break;
 
-                case 'a':
+                case 'i':
                     option.interactive = true;
                     break;
 
-                case 'r':
+                case 's':
                     option.run_script = true;
                     option.filename = optarg;
                     break;
