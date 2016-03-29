@@ -1,0 +1,75 @@
+#
+# Bash completion script for lxi
+#
+
+_lxi()
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    #  The options we'll complete.
+    opts="discover \
+          scpi \
+          -a --address \
+          -t --timeout \
+          -x --dump-hex \
+          -f --dump-file \
+          -i --interactive \
+          -s --script \
+          -v --version \
+          -h --help"
+
+    #  Complete the arguments to the options.
+    case "${prev}" in
+        discover)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        scpi)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -a | --address)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -t | --timeout)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;; 
+        -f | --dump-file)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -x | --dump-hex)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -i | --interactive)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -s | --script)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -v | --version)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        -h | --help)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
+   return 0
+}
+
+# Bind completion to lxi command
+complete -o default -F _lxi lxi

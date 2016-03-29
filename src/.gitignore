@@ -1,4 +1,4 @@
 *.o
 *.a
-lxi
+/lxi
 rigol_1000z_screenshot
