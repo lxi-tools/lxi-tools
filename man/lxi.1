@@ -1,27 +1,87 @@
 .TH "lxi" "1" "28 March 2016"
 
 .SH "NAME"
-lxi \- The LXI control application.
+lxi \- a tool to control LXI devices.
 
 .SH "SYNOPSIS"
 .PP
 .B lxi
-[<options>]
+.RB [\| \-\-help \|]
+.RB [\| \-\-version \|]
+.I <COMMAND>
+.I [<OPTIONS>]
+[<SCPI COMMAND>]
 
 .SH "DESCRIPTION"
 .PP
-Control LXI devices.
+lxi is a commandline application for controlling LXI devices such as modern
+oscilloscopes, power supplies, spectrum analyzers, etc..
 
 .SH "OPTIONS"
+
+.TP
+.B \-h, \--help
+
+Display help.
 
 .TP
 .B \-v, \--version
 
 Display program version.
-.TP
-.B \-h, \--help
 
-Display help.
+.SH COMMANDS
+
+.TP
+.B discover
+.RS
+Search available network for LXI devices.
+.RE
+
+.TP
+.B scpi
+.RS
+Send SCPI command.
+.RE
+
+.SH "DISCOVER OPTIONS"
+
+.TP
+.B \-t, \--timeout <seconds>
+
+Timeout in seconds (default: 1)
+
+.SH "SCPI OPTIONS"
+
+.TP
+.B \-a, \--address <ip>
+
+IP address of LXI device.
+
+.TP
+.B \-t, \--timeout <seconds>
+
+Timeout in seconds (default: 1)
+
+.TP
+.B \-x, \--dump-hex
+
+Print response in hexidecimal.
+
+.TP
+.B \-f, \--dump-file <filename>
+
+Save response to file
+
+.TP
+.B \-i, \--interactive
+
+Enter interactive mode
+
+.TP
+.B \-s, \--script <filename>
+
+Run script (text file with SCPI commands).
+
 
 .SH "AUTHOR"
 .PP
