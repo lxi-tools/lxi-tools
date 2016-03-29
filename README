@@ -4,14 +4,14 @@
 
 1. Introduction
 
-    LXI Tools (lxi-tools) is a collection of various application tools for
-    controlling LXI devices such as modern oscilloscopes, power supplies,
-    spectrum analyzers etc..
+    LXI Tools (lxi-tools) is a collection of software tools for controlling LXI
+    instruments such as modern oscilloscopes, power
+    supplies, spectrum analyzers etc..
 
-    The most important tool application is the 'lxi' application which provides
-    commandline control of LXI devices.
+    The most notable tool is the 'lxi' application which provides commandline
+    control of LXI instruments.
 
-    Also available is small tool for grabbing screenshots from Rigol 1000Z
+    Also available is a small tool for grabbing screenshots from Rigol 1000Z
     series oscilloscopes.
 
     All tools rely on liblxi for LXI communication.
