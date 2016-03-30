@@ -49,11 +49,37 @@
       -r, --run-script <filename>  Run script
 
 
+    Example - discovering LXI devices on your network:
+
+     $ lxi discover
+     Searching for LXI devices - please wait...
+
+     Broadcasting on 127.0.0.1
+     Broadcasting on 10.42.0.255
+     Broadcasting on 192.168.1.255
+     Broadcasting on 172.17.42.1
+     Broadcasting on 10.0.3.1
+
+     Available devices:
+
+     [10.42.0.42]  RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
+
+
+    Example - sending a SCPI command to an instrument:
+    
+    $ lxi scpi --address 10.42.0.42 "*IDN?"
+    RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
+
+
     The commandline interface of the rigol_1000z_screenshot application is
     quite simple:
 
     Usage: rigol_1000z_screenshot <ip> <filename>
 
+    Example - retrieve screenshot:
+
+    $ rigol_1000z_screenshot 10.42.0.42 my_screen.bmp
+    Saved screenshot to my_screen.bmp
 
 4. Installation
 
