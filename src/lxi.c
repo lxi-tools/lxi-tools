@@ -37,7 +37,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "options.h"
-#include <lxi/lxi.h>
+#include <lxi.h>
 
 void file_dump(void *data, int length, char *filename)
 {

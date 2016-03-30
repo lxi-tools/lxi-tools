@@ -34,7 +34,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include <lxi/lxi.h>
+#include <lxi.h>
 
 void file_dump(void *data, int length, char *filename)
 {
@@ -74,6 +74,8 @@ int capture_screenshot(char *ip, char *filename, int timeout)
     file_dump(response_p, length, filename);
 
     printf("Saved screenshot to %s\n", filename);
+
+    lxi_disconnect(device);
 
     return 0;
 }
