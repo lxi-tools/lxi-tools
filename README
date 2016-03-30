@@ -25,6 +25,8 @@
 
 3. Usage
 
+3.1 lxi
+
     The commandline interface of the lxi application is reflected in the output
     from 'lxi --help':
 
@@ -70,11 +72,13 @@
     $ lxi scpi --address 10.42.0.42 "*IDN?"
     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
 
+3.2 rigol_1000z_screenshot
 
     The commandline interface of the rigol_1000z_screenshot application is
     quite simple:
 
     Usage: rigol_1000z_screenshot <ip> <filename>
+
 
     Example - retrieve screenshot:
 
