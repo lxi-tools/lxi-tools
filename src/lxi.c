@@ -138,10 +138,10 @@ int enter_interactive_mode(char *ip, int timeout)
     }
 
     printf("Connected to %s\n", ip);
-    printf("Entering interactive mode (write q to quit)\n\n");
+    printf("Entering interactive mode (ctrl-d to quit)\n\n");
 
     // Enter line/command processing loop
-    while (strcmp(input, "q") != 0)
+    while (true)
     {
         input = readline("lxi> ");
         if (input == NULL)
@@ -157,6 +157,9 @@ int enter_interactive_mode(char *ip, int timeout)
         // Only expect response in case we are firing a question command
         if (input[strlen(input)-1] == '?')
         {
+            // Truncate old response string
+            response[0] = 0;
+
             lxi_receive(device, response, &length, timeout);
 
             // Print response
