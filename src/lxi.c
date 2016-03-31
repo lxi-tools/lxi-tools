@@ -138,12 +138,12 @@ int enter_interactive_mode(char *ip, int timeout)
     }
 
     printf("Connected to %s\n", ip);
-    printf("Entering interactive mode - write q to quit\n");
+    printf("Entering interactive mode (write q to quit)\n\n");
 
     // Enter line/command processing loop
     while (strcmp(input, "q") != 0)
     {
-        input = readline("lxi > ");
+        input = readline("lxi> ");
         if (input == NULL)
             break;
 
@@ -196,7 +196,7 @@ int run_script(char *ip, int timeout, char *filename)
     }
 
     printf("Connected to %s\n", ip);
-    printf("Running script %s\n", filename);
+    printf("Running script %s\n\n", filename);
 
     while ((read = getline(&line, &len, fp)) != -1)
     {
