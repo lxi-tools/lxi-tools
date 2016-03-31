@@ -139,11 +139,11 @@ void parse_options(int argc, char *argv[])
             {0,                0,                 0,  0 }
         };
 
-        /* Parse scpi options */
-        c = getopt_long(argc, argv, "t:a:xf:is:", long_options, &option_index);
-
-        while (c != -1)
+        do
         {
+            /* Parse scpi options */
+            c = getopt_long(argc, argv, "t:a:xf:is:", long_options, &option_index);
+
             switch (c)
             {
                 case 't':
@@ -175,8 +175,7 @@ void parse_options(int argc, char *argv[])
                 case '?':
                     exit(EXIT_FAILURE);
             }
-            c = getopt_long(argc, argv, "t:", long_options, &option_index);
-        }
+        } while (c != -1);
     } else
     {
         // No command provided so we restore index
@@ -189,11 +188,11 @@ void parse_options(int argc, char *argv[])
             {0,                0,                 0,  0 }
         };
 
-        /* Parse options */
-        c = getopt_long(argc, argv, "vh", long_options, &option_index);
-
-        while (c != -1)
+        do
         {
+            /* Parse options */
+            c = getopt_long(argc, argv, "vh", long_options, &option_index);
+
             switch (c)
             {
                 case 'v':
@@ -207,8 +206,7 @@ void parse_options(int argc, char *argv[])
                 case '?':
                     exit(EXIT_FAILURE);
             }
-            c = getopt_long(argc, argv, "vh", long_options, &option_index);
-        }
+        } while (c != -1);
     }
 
     if ((option.command == SCPI) && (optind != argc))
