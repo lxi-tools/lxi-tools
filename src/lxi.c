@@ -91,7 +91,15 @@ int scpi(char *ip, char *command, int timeout, char *filename)
 
     strip_trailing_space(command);
 
+    // Connect
     device = lxi_connect(ip);
+    if (device != LXI_OK)
+    {
+        printf("Error: Unable to connect to LXI device\n");
+        exit(LXI_ERROR);
+    }
+
+    // Send SCPI command
     lxi_send(device, command, strlen(command), timeout);
 
     // Only expect response in case we are firing a question command
@@ -108,6 +116,9 @@ int scpi(char *ip, char *command, int timeout, char *filename)
             printf("%s", response);
     }
 
+    // Disconnect
+    lxi_disconnect(device);
+
     return 0;
 }
 
@@ -118,7 +129,14 @@ int enter_interactive_mode(char *ip, int timeout)
     int device;
     int length;
 
+    // Connect
     device = lxi_connect(ip);
+    if (device != LXI_OK)
+    {
+        printf("Error: Unable to connect to LXI device\n");
+        exit(LXI_ERROR);
+    }
+
     printf("Connected to %s\n", ip);
     printf("Entering interactive mode - write q to quit\n");
 
@@ -147,6 +165,10 @@ int enter_interactive_mode(char *ip, int timeout)
     }
 
     printf("\n");
+
+    // Disconnect
+    lxi_disconnect(device);
+
     return 0;
 }
 
@@ -167,6 +189,12 @@ int run_script(char *ip, int timeout, char *filename)
 
     // Connect
     device = lxi_connect(ip);
+    if (device != LXI_OK)
+    {
+        printf("Error: Unable to connect to LXI device\n");
+        exit(LXI_ERROR);
+    }
+
     printf("Connected to %s\n", ip);
     printf("Running script %s\n", filename);
 
@@ -191,6 +219,9 @@ int run_script(char *ip, int timeout, char *filename)
 
     free(line);
     fclose(fp);
+
+    // Disconnect
+    lxi_disconnect(device);
 
     return 0;
 }
