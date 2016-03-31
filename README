@@ -25,6 +25,7 @@
 
 3. Usage
 
+
 3.1 lxi
 
     The commandline interface of the lxi application is reflected in the output
@@ -72,6 +73,7 @@
     $ lxi scpi --address 10.42.0.42 "*IDN?"
     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
 
+
 3.2 rigol_1000z_screenshot
 
     The commandline interface of the rigol_1000z_screenshot application is
@@ -84,6 +86,7 @@
 
     $ rigol_1000z_screenshot 10.42.0.42 my_screen.bmp
     Saved screenshot to my_screen.bmp
+
 
 4. Installation
 
