@@ -188,7 +188,10 @@ int run_script(char *ip, int timeout, char *filename)
     // Open script file
     fp = fopen(filename, "r");
     if (fp == NULL)
+    {
+        printf("Error: Unable to open file %s\n", filename);
         exit(EXIT_FAILURE);
+    }
 
     // Connect
     device = lxi_connect(ip);
