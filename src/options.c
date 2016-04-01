@@ -147,7 +147,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 't':
-                    option.timeout = atoi(optarg);
+                    option.timeout = atoi(optarg) * 1000;
                     break;
 
                 case 'a':

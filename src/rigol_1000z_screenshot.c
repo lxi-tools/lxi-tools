@@ -36,6 +36,8 @@
 #include <ctype.h>
 #include <lxi.h>
 
+#define IMAGE_SIZE_MAX 0x200000 // 2 MB
+
 void file_dump(void *data, int length, char *filename)
 {
     FILE *fp;
@@ -47,7 +49,7 @@ void file_dump(void *data, int length, char *filename)
 
 int capture_screenshot(char *ip, char *filename, int timeout)
 {
-    char response[LXI_MESSAGE_LENGTH_MAX] = "";
+    char response[IMAGE_SIZE_MAX] = "";
     int device;
     int length;
     char *command = "display:data?";
@@ -57,7 +59,12 @@ int capture_screenshot(char *ip, char *filename, int timeout)
 
     device = lxi_connect(ip);
     lxi_send(device, command, strlen(command), timeout);
-    lxi_receive(device, response, &length, timeout);
+    length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
+    if (length < 0)
+    {
+        printf("Error: Failed to receive message\n");
+        exit(1);
+    }
 
     // Strip TMC block header
     c = response[1];
