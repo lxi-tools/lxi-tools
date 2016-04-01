@@ -5,8 +5,8 @@
 1. Introduction
 
     LXI Tools (lxi-tools) is a collection of software tools for controlling LXI
-    instruments such as modern oscilloscopes, power
-    supplies, spectrum analyzers etc..
+    instruments such as modern oscilloscopes, power supplies, spectrum
+    analyzers etc..
 
     The most notable tool is the 'lxi' application which provides commandline
     control of LXI instruments.
@@ -31,25 +31,25 @@
     The commandline interface of the lxi application is reflected in the output
     from 'lxi --help':
 
-    Usage: ./lxi [--version] [--help] <command> [<options>] [<scpi command>]
+     Usage: ./lxi [--version] [--help] <command> [<options>] [<scpi command>]
 
-      -v, --version                Display version
-      -h, --help                   Display help
+       -v, --version                Display version
+       -h, --help                   Display help
 
-    Commands:
-      discover                     Search for LXI devices
-      scpi                         Send SCPI command
+     Commands:
+       discover                     Search for LXI devices
+       scpi                         Send SCPI command
 
-    Discover options:
-      -t, --timeout <seconds>      Timeout (default: 1)
+     Discover options:
+       -t, --timeout <seconds>      Timeout (default: 1)
 
-    Scpi options:
-      -i, --ip <ip>                IP address
-      -t, --timeout <seconds>      Timeout (default: 1)
-      -x, --dump-hex               Print response in hexidecimal
-      -f, --dump-file <filename>   Save response to file
-      -a, --interactive            Enter interactive mode
-      -r, --run-script <filename>  Run script
+     Scpi options:
+       -i, --ip <ip>                IP address
+       -t, --timeout <seconds>      Timeout (default: 1)
+       -x, --dump-hex               Print response in hexidecimal
+       -f, --dump-file <filename>   Save response to file
+       -a, --interactive            Enter interactive mode
+       -r, --run-script <filename>  Run script
 
 
     Example - discovering LXI devices on your network:
@@ -114,4 +114,3 @@
 
     This code is released under BSD-3, commonly known as the 3-clause (or
     "modified") BSD license.
-
