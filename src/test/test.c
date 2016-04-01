@@ -4,14 +4,17 @@
 
 int main()
 {
-    char response[LXI_MESSAGE_LENGTH_MAX];
-    int device, length, timeout = 1;
+    char response[65536];
+    int device, length, timeout = 1000;
     char *command = "*IDN?";
 
     device = lxi_connect("10.42.0.42");
 
+    // Send SCPI command
     lxi_send(device, command, strlen(command), timeout);
-    lxi_receive(device, response, &length, timeout);
+
+    // Wait for response
+    lxi_receive(device, response, sizeof(response), timeout);
 
     printf("%s\n", response);
 
