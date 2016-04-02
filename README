@@ -89,13 +89,15 @@
 
 
 4. Installation
-
+    
     Install steps:
 
     $ ./configure
     $ make
     $ make install
 
+    NOTE: 
+     lxi-tools depends on liblxi so you need to go install liblxi first.
 
 5. Development
 
