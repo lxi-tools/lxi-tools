@@ -283,7 +283,7 @@ int discover(void)
         printf("Available devices:\n\n");
 
     // Print discovered device IP address and ID
-    while (lxi_get_device_info(devices, &device) == 0)
+    while (lxi_get_device_info(devices, &device) == LXI_OK)
     {
         printf("[%s]  %s\n", device.address, device.id);
     }

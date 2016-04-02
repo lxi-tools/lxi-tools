@@ -42,7 +42,7 @@
 struct option_t option =
 {
     SCPI,    // Default command
-    1,       // Default timeout
+    1,       // Default timeout in seconds
     "",      // Default IP address
     "*IDN?", // Default SCPI command
     false,   // Default no hex dump
@@ -92,6 +92,9 @@ void parse_options(int argc, char *argv[])
         exit(EXIT_SUCCESS);
     }
 
+    // Convert default timeout to milliseconds
+    option.timeout = option.timeout * 1000;
+
     // getopt_long stores the option index here
     int option_index = 0;
 
@@ -116,7 +119,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 't':
-                    option.timeout = atoi(optarg);
+                    option.timeout = atoi(optarg) * 1000;
                     break;
                 case '?':
                     exit(EXIT_FAILURE);
