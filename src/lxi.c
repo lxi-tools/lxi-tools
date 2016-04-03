@@ -109,8 +109,21 @@ int scpi(char *ip, char *command, int timeout, char *filename)
         exit(EXIT_FAILURE);
     }
 
+    int question(char *string)
+    {
+        int i;
+
+        for (i = 0; string[i] != '\0'; i++)
+        {
+            if (string[i] == '?')
+                return true;
+        }
+
+        return false;
+    }
+
     // Only expect response in case we are firing a question command
-    if (command[strlen(command)-1] == '?')
+    if (question(command))
     {
         length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
         if (length < 0)
