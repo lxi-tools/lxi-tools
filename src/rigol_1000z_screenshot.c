@@ -52,7 +52,7 @@ int capture_screenshot(char *ip, char *filename, int timeout)
     char response[IMAGE_SIZE_MAX] = "";
     int device;
     int length;
-    char *command = "display:data?";
+    char *command = "display:data? on,0,png";
     char *response_p;
     char c;
     int n;
@@ -73,11 +73,7 @@ int capture_screenshot(char *ip, char *filename, int timeout)
     response_p += n+2;
     length -= n+2;
 
-    // Strip termination character
-    response[length] = 0;
-    length--;
-
-    // Dump bitmap data to file
+    // Dump image data to file
     file_dump(response_p, length, filename);
 
     printf("Saved screenshot to %s\n", filename);
