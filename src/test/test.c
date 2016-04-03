@@ -8,6 +8,10 @@ int main()
     int device, length, timeout = 1000;
     char *command = "*IDN?";
 
+    // Initialize LXI library
+    lxi_init();
+
+    // Connect LXI device
     device = lxi_connect("10.42.0.42");
 
     // Send SCPI command
@@ -18,5 +22,6 @@ int main()
 
     printf("%s\n", response);
 
+    // Disconnect
     lxi_disconnect(device);
 }
