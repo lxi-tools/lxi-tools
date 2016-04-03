@@ -79,13 +79,13 @@
     The commandline interface of the rigol_1000z_screenshot application is
     quite simple:
 
-    Usage: rigol_1000z_screenshot <ip> <filename>
+    Usage: rigol_1000z_screenshot <address> <filename>
 
 
-    Example - retrieve screenshot:
+    Example - retrieve PNG screenshot:
 
-    $ rigol_1000z_screenshot 10.42.0.42 my_screen.bmp
-    Saved screenshot to my_screen.bmp
+    $ rigol_1000z_screenshot 10.42.0.42 my_screen.png
+    Saved screenshot to my_screen.png
 
 
 4. Installation
