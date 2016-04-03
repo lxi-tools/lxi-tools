@@ -47,7 +47,7 @@ void file_dump(void *data, int length, char *filename)
     fclose(fp);
 }
 
-int capture_screenshot(char *ip, char *filename, int timeout)
+int capture_screenshot(char *address, char *filename, int timeout)
 {
     char response[IMAGE_SIZE_MAX] = "";
     int device;
@@ -57,7 +57,7 @@ int capture_screenshot(char *ip, char *filename, int timeout)
     char c;
     int n;
 
-    device = lxi_connect(ip);
+    device = lxi_connect(address);
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
@@ -76,7 +76,7 @@ int capture_screenshot(char *ip, char *filename, int timeout)
     // Dump image data to file
     file_dump(response_p, length, filename);
 
-    printf("Saved screenshot to %s\n", filename);
+    printf("Saved PNG screenshot to %s\n", filename);
 
     lxi_disconnect(device);
 
@@ -89,14 +89,14 @@ int main(int argc, char* argv[])
 
     if (argc != 3)
     {
-        printf("Usage: rigol_1000z_screenshot <ip> <filename>\n");
+        printf("Usage: rigol_1000z_screenshot <address> <filename>\n");
         exit(EXIT_FAILURE);
     }
 
     // Initialize lxi library
     lxi_init();
 
-    status = capture_screenshot(argv[1], argv[2], 5);
+    status = capture_screenshot(argv[1], argv[2], 2);
 
     return status;
 }
