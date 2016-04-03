@@ -98,7 +98,7 @@ int scpi(char *ip, char *command, int timeout, char *filename)
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");
-        exit(EXIT_FAILURE);
+        goto error_connect;
     }
 
     // Send SCPI command
@@ -106,7 +106,7 @@ int scpi(char *ip, char *command, int timeout, char *filename)
     if (length < 0)
     {
         printf("Error: Failed to send message\n");
-        exit(EXIT_FAILURE);
+        goto error_send;
     }
 
     int question(char *string)
@@ -129,7 +129,7 @@ int scpi(char *ip, char *command, int timeout, char *filename)
         if (length < 0)
         {
             printf("Error: Failed to receive message\n");
-            exit(EXIT_FAILURE);
+            goto error_receive;
         }
 
         // Print response
@@ -145,6 +145,16 @@ int scpi(char *ip, char *command, int timeout, char *filename)
     lxi_disconnect(device);
 
     return 0;
+
+error_send:
+error_receive:
+
+    // Disconnect
+    lxi_disconnect(device);
+
+error_connect:
+
+    return 1;
 }
 
 int enter_interactive_mode(char *ip, int timeout)
@@ -159,7 +169,7 @@ int enter_interactive_mode(char *ip, int timeout)
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");
-        exit(EXIT_FAILURE);
+        goto error_connect;
     }
 
     printf("Connected to %s\n", ip);
@@ -181,7 +191,7 @@ int enter_interactive_mode(char *ip, int timeout)
         if (length < 0)
         {
             printf("Error: Failed to send message\n");
-            exit(EXIT_FAILURE);
+            goto error_send;
         }
 
         // Only expect response in case we are firing a question command
@@ -194,7 +204,7 @@ int enter_interactive_mode(char *ip, int timeout)
             if (length < 0)
             {
                 printf("Error: Failed to receive message\n");
-                exit(EXIT_FAILURE);
+                goto error_receive;
             }
 
             // Print response
@@ -208,6 +218,16 @@ int enter_interactive_mode(char *ip, int timeout)
     lxi_disconnect(device);
 
     return 0;
+
+error_send:
+error_receive:
+
+    // Disconnect
+    lxi_disconnect(device);
+
+error_connect:
+
+    return 1;
 }
 
 int run_script(char *ip, int timeout, char *filename)
@@ -225,7 +245,7 @@ int run_script(char *ip, int timeout, char *filename)
     if (fp == NULL)
     {
         printf("Error: Unable to open file %s\n", filename);
-        exit(EXIT_FAILURE);
+        goto error_fopen;
     }
 
     // Connect
@@ -233,7 +253,7 @@ int run_script(char *ip, int timeout, char *filename)
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");
-        exit(EXIT_FAILURE);
+        goto error_connect;
     }
 
     printf("Connected to %s\n", ip);
@@ -250,7 +270,7 @@ int run_script(char *ip, int timeout, char *filename)
         if (length < 0)
         {
             printf("Error: Failed to send message\n");
-            exit(EXIT_FAILURE);
+            goto error_send;
         }
 
         // Only expect response in case we are firing a question command
@@ -260,7 +280,7 @@ int run_script(char *ip, int timeout, char *filename)
             if (length < 0)
             {
                 printf("Error: Failed to receive message\n");
-                exit(EXIT_FAILURE);
+                goto error_receive;
             }
 
             // Print response
@@ -275,6 +295,18 @@ int run_script(char *ip, int timeout, char *filename)
     lxi_disconnect(device);
 
     return 0;
+
+error_send:
+error_receive:
+    free(line);
+
+    // Disconnect
+    lxi_disconnect(device);
+
+error_connect:
+    fclose(fp);
+error_fopen:
+    return 1;
 }
 
 int discover(void)
