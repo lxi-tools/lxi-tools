@@ -339,7 +339,7 @@ static int discover(void)
     printf("\n");
 
     if (device_count == 0)
-        printf("No LXI devices found\n\n");
+        printf("No devices found\n\n");
     else
         printf("Found %d device%c\n\n", device_count, device_count > 1 ? 's' : ' ');
 
