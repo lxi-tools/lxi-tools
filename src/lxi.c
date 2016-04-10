@@ -319,7 +319,7 @@ void broadcast(char *address, char *interface)
 
 void device(char *address, char *id)
 {
-    printf(" Found %s on address %s\n", id, address);
+    printf("    Found \"%s\" on address %s\n", id, address);
     device_count++;
 }
 

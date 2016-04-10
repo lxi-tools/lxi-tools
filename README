@@ -57,15 +57,14 @@
      $ lxi discover
      Searching for LXI devices - please wait...
 
-     Broadcasting on 127.0.0.1
-     Broadcasting on 10.42.0.255
-     Broadcasting on 192.168.1.255
-     Broadcasting on 172.17.42.1
-     Broadcasting on 10.0.3.1
+     Broadcasting on interface lo
+     Broadcasting on interface eth0
+         Found "RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03.SP2" on address 10.42.0.42
+     Broadcasting on interface wlan0
+     Broadcasting on interface docker0
+     Broadcasting on interface lxcbr0
 
-     Available devices:
-
-     [10.42.0.42]  RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
+     Found 1 device
 
 
     Example - sending a SCPI command to an instrument:
