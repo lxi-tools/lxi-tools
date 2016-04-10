@@ -41,7 +41,9 @@
 
 #define RESPONSE_LENGTH_MAX 0x500000
 
-void file_dump(void *data, int length, char *filename)
+static int device_count = 0;
+
+static void file_dump(void *data, int length, char *filename)
 {
     FILE *fp;
 
@@ -52,7 +54,7 @@ void file_dump(void *data, int length, char *filename)
     printf("Saved %d bytes to %s\n", length, filename);
 }
 
-void hex_dump(void *data, int length)
+static void hex_dump(void *data, int length)
 {
     int i;
     char *bufferp;
@@ -71,7 +73,7 @@ void hex_dump(void *data, int length)
     printf("\n");
 }
 
-void strip_trailing_space(char *line)
+static void strip_trailing_space(char *line)
 {
     int i = strlen(line) - 1;
 
@@ -85,7 +87,7 @@ void strip_trailing_space(char *line)
     }
 }
 
-int scpi(char *ip, char *command, int timeout, char *filename)
+static int scpi(char *ip, char *command, int timeout, char *filename)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
     int device;
@@ -157,7 +159,7 @@ error_connect:
     return 1;
 }
 
-int enter_interactive_mode(char *ip, int timeout)
+static int enter_interactive_mode(char *ip, int timeout)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
     char *input = "";
@@ -230,7 +232,7 @@ error_connect:
     return 1;
 }
 
-int run_script(char *ip, int timeout, char *filename)
+static int run_script(char *ip, int timeout, char *filename)
 {
     FILE *fp;
     char *line = NULL;
@@ -309,29 +311,37 @@ error_fopen:
     return 1;
 }
 
-int discover(void)
+
+void broadcast(char *address, char *interface)
 {
-    lxi_device_t device;
-    lxi_devices_t *devices;
+    printf("Broadcasting on interface %s\n", interface);
+}
+
+void device(char *address, char *id)
+{
+    printf(" Found %s on address %s\n", id, address);
+    device_count++;
+}
+
+static int discover(void)
+{
+    struct lxi_info_t info;
+
+    // Set up info callbacks
+    info.broadcast = &broadcast;
+    info.device = &device;
 
     printf("Searching for LXI devices - please wait...\n\n");
 
-    lxi_discover_devices(&devices, option.timeout, true);
+    // Search for LXI evices
+    lxi_discover(&info, option.timeout);
 
     printf("\n");
 
-    if (devices == NULL)
-    {
+    if (device_count == 0)
         printf("No LXI devices found\n\n");
-        return 0;
-    } else
-        printf("Available devices:\n\n");
-
-    // Print discovered device IP address and ID
-    while (lxi_get_device_info(devices, &device) == LXI_OK)
-    {
-        printf("[%s]  %s\n", device.address, device.id);
-    }
+    else
+        printf("Found %d device%c\n\n", device_count, device_count > 1 ? 's' : ' ');
 
     return 0;
 }
