@@ -44,12 +44,12 @@
        -t, --timeout <seconds>      Timeout (default: 1)
 
      Scpi options:
-       -i, --ip <ip>                IP address
+       -a, --address <ip>           IP address
        -t, --timeout <seconds>      Timeout (default: 1)
        -x, --dump-hex               Print response in hexidecimal
        -f, --dump-file <filename>   Save response to file
-       -a, --interactive            Enter interactive mode
-       -r, --run-script <filename>  Run script
+       -i, --interactive            Enter interactive mode
+       -s, --script <filename>      Run script file
 
 
     Example - discovering LXI devices on your network:
