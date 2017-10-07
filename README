@@ -40,7 +40,7 @@
      Scpi options:
        -a, --address <ip>           IP address
        -t, --timeout <seconds>      Timeout (default: 1)
-       -x, --dump-hex               Print response in hexidecimal
+       -x, --dump-hex               Print response in hexadecimal
        -f, --dump-file <filename>   Save response to file
        -i, --interactive            Enter interactive mode
        -s, --script <filename>      Run script file

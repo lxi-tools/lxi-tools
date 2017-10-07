@@ -69,7 +69,7 @@ void print_help(char *argv[])
     printf("Scpi options:\n");
     printf("  -a, --address <ip>           IP address\n");
     printf("  -t, --timeout <seconds>      Timeout (default: %d)\n", option.timeout);
-    printf("  -x, --dump-hex               Print response in hexidecimal\n");
+    printf("  -x, --dump-hex               Print response in hexadecimal\n");
     printf("  -f, --dump-file <filename>   Save response to file\n");
     printf("  -i, --interactive            Enter interactive mode\n");
     printf("  -s, --script <filename>      Run script file\n");
