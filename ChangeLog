@@ -1,5 +1,18 @@
 
-=== lxi-tools v1.0 ===
+=== lxi-tools v1.1 ===
 
+
+Changes since lxi-tools v1.0:
+
+ * Fix missing src/bash-completion/lxi
+
+   An automake rule was fixed to make sure that the file
+   src/bash-completion/lxi is included in the distributed tarball.
+
+ * Update README
+
+
+
+lxi-tools v1.0:
 
  * First release (stable)
