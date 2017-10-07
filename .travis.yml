@@ -1,0 +1,8 @@
+sudo: true
+language: c
+before_script: ./autogen.sh
+script: ./configure --prefix=/usr && make && sudo make install
+install:
+  - wget https://github.com/lxi/liblxi/releases/download/v1.0/liblxi-1.0.tar.xz
+  - tar -xvf liblxi-1.0.tar.xz
+  - pushd liblxi-1.0 && ./configure --prefix=/usr && make && sudo make install && popd
