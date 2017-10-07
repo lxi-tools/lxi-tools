@@ -9,5 +9,7 @@ lxi_LDADD = -llxi -lreadline
 
 rigol_1000z_screenshot_SOURCES=rigol_1000z_screenshot.c
 
-bashcompletiondir=$(sysconfdir)/bash_completion.d
-dist_bashcompletion_DATA=bash-completion/lxi
+if ENABLE_BASH_COMPLETION
+bashcompletiondir=@BASH_COMPLETION_DIR@
+bashcompletion_DATA=bash-completion/lxi
+endif
