@@ -8,8 +8,8 @@
     systems that enables control of LXI instruments such as modern
     oscilloscopes, power supplies, spectrum analyzers etc..
 
-    The most notable tool is the 'lxi' application which provides commandline
-    control of LXI instruments.
+    The main tool is the 'lxi' application which provides commandline control
+    of LXI instruments.
 
     Also available is a small tool for grabbing screenshots from Rigol 1000Z
     series oscilloscopes.
