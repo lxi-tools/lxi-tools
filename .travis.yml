@@ -5,4 +5,4 @@ script: ./configure --prefix=/usr && make && sudo make install
 install:
   - wget https://github.com/lxi/liblxi/archive/master.tar.gz
   - tar -xvf master.tar.gz
-  - pushd liblxi-master && ./configure --prefix=/usr && make && sudo make install && popd
+  - pushd liblxi-master && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install && popd
