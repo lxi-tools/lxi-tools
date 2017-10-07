@@ -17,12 +17,6 @@
     All tools rely on liblxi for LXI communication.
 
 
-2. Status
-
-    The code is currently considered experimental. API and internals are
-    subject to change. Use on your own risk.
-
-
 3. Usage
 
 
@@ -97,6 +91,7 @@
 
     NOTE: 
      lxi-tools depends on liblxi so you need to go install liblxi first.
+
 
 5. Development
 
