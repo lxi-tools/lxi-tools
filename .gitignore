@@ -19,6 +19,7 @@ src/include/config.h.in
 src/include/config.h.in~
 src/include/stamp-h1
 *.swp
+*.asc
 /ar-lib
 .dirstamp
 *.a
