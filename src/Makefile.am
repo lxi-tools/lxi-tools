@@ -11,5 +11,5 @@ rigol_1000z_screenshot_SOURCES=rigol_1000z_screenshot.c
 
 if ENABLE_BASH_COMPLETION
 bashcompletiondir=@BASH_COMPLETION_DIR@
-bashcompletion_DATA=bash-completion/lxi
+dist_bashcompletion_DATA=bash-completion/lxi
 endif
