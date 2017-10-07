@@ -17,10 +17,10 @@
     All tools rely on liblxi for LXI communication.
 
 
-3. Usage
+2. Usage
 
 
-3.1 lxi
+2.1 lxi
 
     The commandline interface of the lxi application is reflected in the output
     from 'lxi --help':
@@ -67,7 +67,7 @@
     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
 
 
-3.2 rigol_1000z_screenshot
+2.2 rigol_1000z_screenshot
 
     The commandline interface of the rigol_1000z_screenshot application is
     quite simple:
@@ -81,7 +81,7 @@
     Saved screenshot to my_screen.png
 
 
-4. Installation
+3. Installation
     
     Install steps:
 
@@ -93,7 +93,7 @@
      lxi-tools depends on liblxi so you need to go install liblxi first.
 
 
-5. Development
+4. Development
 
     This is open source. If you want to help out with the project please join
     in. Any contributions (bug reports, code, doc, ideas, etc.) are welcome.
@@ -101,12 +101,12 @@
     Please use the github issue tracker and pull request features.
 
 
-6. Website
+5. Website
 
     Visit http://lxi.github.io
 
 
-7. License
+6. License
 
     This code is released under BSD-3, commonly known as the 3-clause (or
     "modified") BSD license.
