@@ -58,6 +58,12 @@ int capture_screenshot(char *address, char *filename, int timeout)
     int n;
 
     device = lxi_connect(address);
+    if (device == LXI_ERROR)
+    {
+        printf("Error: Failed to connect\n");
+        exit(1);
+    }
+
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
