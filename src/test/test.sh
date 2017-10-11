@@ -1,4 +1,4 @@
-IP=10.42.0.42
+IP=$1
 SCPI="lxi scpi --address $IP"
 
 #$SCPI "display:data?"
