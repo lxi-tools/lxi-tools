@@ -333,7 +333,7 @@ static int discover(void)
 
     printf("Searching for LXI devices - please wait...\n\n");
 
-    // Search for LXI evices
+    // Search for LXI devices
     lxi_discover(&info, option.timeout);
 
     printf("\n");
