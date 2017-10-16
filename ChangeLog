@@ -1,5 +1,25 @@
 
-=== lxi-tools v1.1 ===
+=== lxi-tools v1.2 ===
+
+
+Changes since lxi-tools v1.1:
+
+ * Increase default timeout value for lxi tool
+
+   Increase the default timeout value for the lxi tool from 1 to 5 seconds
+
+ * Fix timeout for Rigol screenshot tool
+
+   Timeout is increased to avoid failure to capture screenshot
+
+ * Fix typo
+
+ * Cleanup test script
+
+ * Fix crash in rigol_1000z_screenshot tool
+
+   Add error handling to avoid crashing when connecting remote device fails.
+
 
 
 Changes since lxi-tools v1.0:
