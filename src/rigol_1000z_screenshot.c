@@ -42,7 +42,7 @@ void file_dump(void *data, int length, char *filename)
 {
     FILE *fp;
 
-    fp=fopen(filename, "w+");
+    fp = fopen(filename, "w+");
     fwrite(data, 1, length, fp);
     fclose(fp);
 }
@@ -102,7 +102,8 @@ int main(int argc, char* argv[])
     // Initialize lxi library
     lxi_init();
 
-    status = capture_screenshot(argv[1], argv[2], 2);
+    // Capture screenshot, 5 seconds timeout
+    status = capture_screenshot(argv[1], argv[2], 5000);
 
     return status;
 }
