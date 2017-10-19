@@ -42,7 +42,7 @@
 struct option_t option =
 {
     SCPI,    // Default command
-    5,       // Default timeout in seconds
+    3,       // Default timeout in seconds
     "",      // Default IP address
     "*IDN?", // Default SCPI command
     false,   // Default no hex dump
