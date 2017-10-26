@@ -1,5 +1,15 @@
 
-=== lxi-tools v1.2 ===
+=== lxi-tools v1.3 ===
+
+
+Changes since lxi-tools v1.2:
+
+ * Added AUTHORS file
+
+ * Use new lxi_connect() function
+
+ * Reconfigure default timeout to 3 seconds
+
 
 
 Changes since lxi-tools v1.1:
