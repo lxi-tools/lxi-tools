@@ -57,7 +57,7 @@ int capture_screenshot(char *address, char *filename, int timeout)
     char c;
     int n;
 
-    device = lxi_connect(address);
+    device = lxi_connect(address, NULL, timeout);
     if (device == LXI_ERROR)
     {
         printf("Error: Failed to connect\n");
