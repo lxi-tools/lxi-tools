@@ -93,17 +93,18 @@
      lxi-tools depends on liblxi so you need to go install liblxi first.
 
 
-4. Development
+4. Contributing
 
-    This is open source. If you want to help out with the project please join
-    in. Any contributions (bug reports, code, doc, ideas, etc.) are welcome.
+    lxi-tools is open source. If you want to help out with the project please
+    join in. Any contributions (bug reports, code, doc, ideas, etc.) are
+    welcome.
 
     Please use the github issue tracker and pull request features.
 
 
 5. Website
 
-    Visit http://lxi.github.io
+    Visit https://lxi.github.io
 
 
 6. License
