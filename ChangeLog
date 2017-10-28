@@ -1,5 +1,15 @@
 
-=== lxi-tools v1.4 ===
+=== lxi-tools v1.5 ===
+
+
+Changes since lxi-tools v1.4:
+
+ * Remove -Og flag       
+
+   Not supported by older gcc versions.             
+
+ * Fix various bugs in script and interactive mode  
+
 
 
 Changes since lxi-tools v1.3:
