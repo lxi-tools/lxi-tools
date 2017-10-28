@@ -78,7 +78,7 @@ static void strip_trailing_space(char *line)
 {
     int i = strlen(line) - 1;
 
-    while (i > 0)
+    while (i >= 0)
     {
         if ( isspace(line[i]) )
             line[i] = '\0';
@@ -189,29 +189,30 @@ static int enter_interactive_mode(char *ip, int timeout)
 
         strip_trailing_space(input);
 
+        // Skip empty lines
+        if (strlen(input) == 0)
+            continue;
+
         // Send entered input as SCPI command
         length = lxi_send(device, input, strlen(input), timeout);
         if (length < 0)
-        {
             printf("Error: Failed to send message\n");
-            goto error_send;
-        }
 
         // Only expect response in case we are firing a question command
         if (input[strlen(input)-1] == '?')
         {
-            // Truncate old response string
-            response[0] = 0;
-
             length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
             if (length < 0)
             {
                 printf("Error: Failed to receive message\n");
-                goto error_receive;
-            }
+            } else
+            {
+                // Make sure we terminate response string
+                response[length] = 0;
 
-            // Print response
-            printf("%s", response);
+                // Print response
+                printf("%s", response);
+            }
         }
     }
 
@@ -221,12 +222,6 @@ static int enter_interactive_mode(char *ip, int timeout)
     lxi_disconnect(device);
 
     return 0;
-
-error_send:
-error_receive:
-
-    // Disconnect
-    lxi_disconnect(device);
 
 error_connect:
 
@@ -268,13 +263,14 @@ static int run_script(char *ip, int timeout, char *filename)
 
         strip_trailing_space(line);
 
+        // Skip empty lines
+        if (strlen(line) == 1)
+            continue;
+
         // Send read line as SCPI command
         length = lxi_send(device, line, strlen(line), timeout);
         if (length < 0)
-        {
             printf("Error: Failed to send message\n");
-            goto error_send;
-        }
 
         // Only expect response in case we are firing a question command
         if (line[strlen(line)-1] == '?')
@@ -283,11 +279,14 @@ static int run_script(char *ip, int timeout, char *filename)
             if (length < 0)
             {
                 printf("Error: Failed to receive message\n");
-                goto error_receive;
-            }
+            } else
+            {
+                // Make sure we terminate response string
+                response[length] = 0;
 
-            // Print response
-            printf("%s", response);
+                // Print response
+                printf("%s", response);
+            }
         }
     }
 
@@ -298,13 +297,6 @@ static int run_script(char *ip, int timeout, char *filename)
     lxi_disconnect(device);
 
     return 0;
-
-error_send:
-error_receive:
-    free(line);
-
-    // Disconnect
-    lxi_disconnect(device);
 
 error_connect:
     fclose(fp);
