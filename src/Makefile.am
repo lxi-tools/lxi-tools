@@ -7,7 +7,7 @@ lxi_SOURCES = lxi.c \
               screenshot.c \
               screenshot_rigol-1000z.c
 
-lxi_CFLAGS = -Og
+lxi_CFLAGS =
 lxi_LDADD = -llxi -lreadline
 
 if ENABLE_BASH_COMPLETION
