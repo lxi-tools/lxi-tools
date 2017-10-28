@@ -37,6 +37,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "options.h"
+#include "screenshot.h"
 #include <lxi.h>
 
 #define RESPONSE_LENGTH_MAX 0x500000
@@ -368,6 +369,15 @@ int main(int argc, char* argv[])
                 status = run_script(option.ip, option.timeout, option.filename);
             else
                 status = scpi(option.ip, option.scpi_command, option.timeout, option.filename);
+            break;
+        case SCREENSHOT:
+            screenshot_register_plugins();
+            if (option.list)
+            {
+                screenshot_list_plugins();
+                return 0;
+            }
+            status = screenshot(option.ip, option.model, option.screenshot_filename, option.timeout);
             break;
     }
 

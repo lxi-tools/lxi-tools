@@ -1,65 +1,73 @@
 .TH "lxi" "1" "October 2017"
 
 .SH "NAME"
-lxi \- a tool to control LXI enabled instruments.
+lxi \- a tool for controlling LXI enabled instruments.
 
 .SH "SYNOPSIS"
 .PP
 .B lxi
 .RB [\| \-\-help \|]
 .RB [\| \-\-version \|]
-.I <COMMAND>
-.I [<OPTIONS>]
-[<SCPI COMMAND>]
+.I <command>
+.I [<args>]
 
 .SH "DESCRIPTION"
 .PP
-lxi is a commandline application for controlling LXI enabled instruments such
-as modern oscilloscopes, power supplies, spectrum analyzers, etc..
+lxi is a commandline tool for controlling LXI enabled instruments such as
+modern oscilloscopes, power supplies, spectrum analyzers, etc..
 
 .SH "OPTIONS"
 
 .TP
 .B \-h, \--help
-Display help.
+Display help
 
 .TP
 .B \-v, \--version
-Display program version.
+Display program version
 
 .SH COMMANDS
 
-.TP
+.PP
 .B discover
+.I [<options>]
 .RS
-Search available network for LXI devices.
+Search available networks for LXI devices
 .RE
 
-.TP
+.PP
 .B scpi
+.I [<options>] <SCPI-command>
 .RS
-Send SCPI command.
+Send SCPI command
+.RE
+
+.PP
+.B screenshot
+.I [<options>] <filename>
+.RS
+Capture screenshot to file
 .RE
 
 .SH "DISCOVER OPTIONS"
 
 .TP
 .B \-t, \--timeout <seconds>
-Timeout in seconds (default: 1)
+Timeout in seconds (default: 3)
 
 .SH "SCPI OPTIONS"
 
 .TP
 .B \-a, \--address <ip>
-IP address of LXI device.
+IP address of LXI device
 
 .TP
 .B \-t, \--timeout <seconds>
-Timeout in seconds (default: 1)
+Timeout in seconds (default: 3)
 
 .TP
 .B \-x, \--dump-hex
-Print response in hexadecimal.
+Print response in hexadecimal
 
 .TP
 .B \-f, \--dump-file <filename>
@@ -71,14 +79,45 @@ Enter interactive mode
 
 .TP
 .B \-s, \--script <filename>
-Run script (plain text file with one SCPI command per line).
+Run script (plain text file with one SCPI command per line)
 
+.SH "SCREENSHOT OPTIONS"
+
+.TP
+.B \-a, \--address <ip>
+IP address of LXI device
+
+.TP
+.B \-t, \--timeout <seconds>
+Timeout in seconds (default: 3)
+
+.TP
+.B \-m, \--model <name>
+Name of device model (model/family)
+
+.TP
+.B \-l, \--list
+List supported device models
+
+.SH "EXAMPLES"
+.TP
+Send SCPI command to LXI device:
+
+lxi scpi -a 192.168.0.42 "*IDN?"
+
+.TP
+Capture screenshot from LXI device with specific model/family:
+
+lxi screenshot -a 192.168.0.42 -m rigol-1000z my-screenshot.png
+
+.PP
+Some LXI devices are slow to process SCPI commands, in which case you
+might need to take care to increase the timeout value.
 
 .SH "WEBSITE"
 .PP
-Visit http://lxi.github.io
-
+Visit https://lxi.github.io
 
 .SH "AUTHOR"
 .PP
-Written by Martin Lund <martin.lund@keep-it-simple.com>.
+Written by Martin Lund <martin.lund@keep-it-simple.com>

@@ -50,29 +50,39 @@ struct option_t option =
     "",      // Default dump filename
     false,   // Default no interactive mode
     false,   // Default no run script
+    "",      // Default model
+    false,   // Default no list
+    "",      // Default screenshot filename
 };
 
 void print_help(char *argv[])
 {
-    printf("Usage: %s [--version] [--help] <command> [<options>] [<scpi command>]\n", argv[0]);
+    printf("Usage: %s [--version] [--help] <command> [<args>]\n", argv[0]);
     printf("\n");
-    printf("  -v, --version                Display version\n");
-    printf("  -h, --help                   Display help\n");
+    printf("  -v, --version                       Display version\n");
+    printf("  -h, --help                          Display help\n");
     printf("\n");
     printf("Commands:\n");
-    printf("  discover                     Search for LXI devices\n");
-    printf("  scpi                         Send SCPI command\n");
+    printf("  discover [<options>]                Search for LXI devices\n");
+    printf("  scpi [<options>] <scpi-command>     Send SCPI command\n");
+    printf("  screenshot [<options>] <filename>   Capture screenshot to file\n");
     printf("\n");
     printf("Discover options:\n");
-    printf("  -t, --timeout <seconds>      Timeout (default: %d)\n", option.timeout);
+    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
     printf("\n");
     printf("Scpi options:\n");
-    printf("  -a, --address <ip>           IP address\n");
-    printf("  -t, --timeout <seconds>      Timeout (default: %d)\n", option.timeout);
-    printf("  -x, --dump-hex               Print response in hexadecimal\n");
-    printf("  -f, --dump-file <filename>   Save response to file\n");
-    printf("  -i, --interactive            Enter interactive mode\n");
-    printf("  -s, --script <filename>      Run script file\n");
+    printf("  -a, --address <ip>                  Device IP address\n");
+    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
+    printf("  -x, --dump-hex                      Print response in hexadecimal\n");
+    printf("  -f, --dump-file <filename>          Save response to file\n");
+    printf("  -i, --interactive                   Enter interactive mode\n");
+    printf("  -s, --script <filename>             Run script file\n");
+    printf("\n");
+    printf("Screenshot options:\n");
+    printf("  -a, --address <ip>                  Device IP address\n");
+    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
+    printf("  -m, --model <name>                  Name of device model (model/family)\n");
+    printf("  -l, --list                          List supported device models\n");
     printf("\n");
 }
 
@@ -107,7 +117,7 @@ void parse_options(int argc, char *argv[])
 
         static struct option long_options[] =
         {
-            {"timeout",	       required_argument, 0, 't'},
+            {"timeout",        required_argument, 0, 't'},
             {0,                0,                 0,  0 }
         };
 
@@ -133,8 +143,8 @@ void parse_options(int argc, char *argv[])
 
         static struct option long_options[] =
         {
-            {"timeout",	       required_argument, 0, 't'},
             {"address",        required_argument, 0, 'a'},
+            {"timeout",        required_argument, 0, 't'},
             {"dump-hex",       no_argument,       0, 'x'},
             {"dump-file",      required_argument, 0, 'f'},
             {"interactive",    no_argument,       0, 'i'},
@@ -149,12 +159,12 @@ void parse_options(int argc, char *argv[])
 
             switch (c)
             {
-                case 't':
-                    option.timeout = atoi(optarg) * 1000;
-                    break;
-
                 case 'a':
                     strncpy(option.ip, optarg, 500);
+                    break;
+
+                case 't':
+                    option.timeout = atoi(optarg) * 1000;
                     break;
 
                 case 'x':
@@ -179,6 +189,46 @@ void parse_options(int argc, char *argv[])
                     exit(EXIT_FAILURE);
             }
         } while (c != -1);
+    } else if (strcmp(argv[1], "screenshot") == 0)
+    {
+        option.command = SCREENSHOT;
+
+        static struct option long_options[] =
+        {
+            {"address",        required_argument, 0, 'a'},
+            {"timeout",        required_argument, 0, 't'},
+            {"model",          required_argument, 0, 'm'},
+            {"list",           no_argument,       0, 'l'},
+            {0,                0,                 0,  0 }
+        };
+
+        do
+        {
+            /* Parse screenshot options */
+            c = getopt_long(argc, argv, "a:t:m:l", long_options, &option_index);
+
+            switch (c)
+            {
+                case 'a':
+                    strncpy(option.ip, optarg, 500);
+                    break;
+
+                case 't':
+                    option.timeout = atoi(optarg) * 1000;
+                    break;
+
+                case 'm':
+                    option.model = optarg;
+                    break;
+
+                case 'l':
+                    option.list = true;
+                    break;
+
+                case '?':
+                    exit(EXIT_FAILURE);
+            }
+        } while (c != -1);
     } else
     {
         // No command provided so we restore index
@@ -186,7 +236,7 @@ void parse_options(int argc, char *argv[])
 
         static struct option long_options[] =
         {
-            {"version",	       no_argument,       0, 'v'},
+            {"version",        no_argument,       0, 'v'},
             {"help",           no_argument,       0, 'h'},
             {0,                0,                 0,  0 }
         };
@@ -218,6 +268,16 @@ void parse_options(int argc, char *argv[])
         if (strlen(option.ip) == 0)
         {
             printf("Error: No IP address specified\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    if ((option.command == SCREENSHOT) && (optind != argc))
+    {
+        strncpy(option.screenshot_filename, argv[optind++], 500);
+        if (strlen(option.screenshot_filename) == 0)
+        {
+            printf("Error: No filename specified\n");
             exit(EXIT_FAILURE);
         }
     }

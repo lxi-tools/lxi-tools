@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, Martin Lund
+ * Copyright (c) 2017, Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,28 +35,21 @@
 #include <string.h>
 #include <ctype.h>
 #include <lxi.h>
+#include "screenshot.h"
 
 #define IMAGE_SIZE_MAX 0x200000 // 2 MB
 
-void file_dump(void *data, int length, char *filename)
+int rigol_1000z_screenshot(char *address, char *filename, int timeout)
 {
-    FILE *fp;
-
-    fp = fopen(filename, "w+");
-    fwrite(data, 1, length, fp);
-    fclose(fp);
-}
-
-int capture_screenshot(char *address, char *filename, int timeout)
-{
+    char *command = "display:data? on,0,png";
     char response[IMAGE_SIZE_MAX] = "";
+    char *image;
     int device;
     int length;
-    char *command = "display:data? on,0,png";
-    char *response_p;
     char c;
     int n;
 
+    // Connect to LXI instrument
     device = lxi_connect(address, NULL, timeout);
     if (device == LXI_ERROR)
     {
@@ -64,6 +57,7 @@ int capture_screenshot(char *address, char *filename, int timeout)
         exit(1);
     }
 
+    // Send SCPI command to grab PNG image
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
@@ -75,35 +69,24 @@ int capture_screenshot(char *address, char *filename, int timeout)
     // Strip TMC block header
     c = response[1];
     n = atoi(&c);
-    response_p = &response[0];
-    response_p += n+2;
+    image = &response[0];
+    image += n+2;
     length -= n+2;
 
-    // Dump image data to file
-    file_dump(response_p, length, filename);
+    // Dump remaining PNG image data to file
+    screenshot_file_dump(image, length, filename, "PNG");
 
-    printf("Saved PNG screenshot to %s\n", filename);
-
+    // Disconnect
     lxi_disconnect(device);
 
     return 0;
 }
 
-int main(int argc, char* argv[])
+
+// Screenshot plugin configuration
+struct screenshot_plugin rigol_1000z =
 {
-    int status = EXIT_SUCCESS;
-
-    if (argc != 3)
-    {
-        printf("Usage: rigol_1000z_screenshot <address> <filename>\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Initialize lxi library
-    lxi_init();
-
-    // Capture screenshot, 5 seconds timeout
-    status = capture_screenshot(argv[1], argv[2], 5000);
-
-    return status;
-}
+	.name = "rigol-1000z",
+	.description = "Rigol 1000z series oscilloscopes",
+	.screenshot = rigol_1000z_screenshot
+};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Martin Lund
+ * Copyright (c) 2017, Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
+void screenshot_register_plugins(void);
+void screenshot_list_plugins(void);
+int screenshot(char *address, char *model, char *filename, int timeout);
 
-#include <stdbool.h>
-#include <sys/param.h>
+// Screenshot helper function used by plugins to dump image file
+void screenshot_file_dump(void *data, int length, char *filename, char *format);
 
-/* Options */
-struct option_t
+struct screenshot_plugin
 {
-    int command;
-    int timeout;
-    char ip[500];
-    char scpi_command[500];
-    bool dump_hex;
-    bool dump_file;
-    char *filename;
-    bool interactive;
-    bool run_script;
-    char *model;
-    bool list;
-    char screenshot_filename[500];
+   const char *name;
+   const char *description;
+   int (*screenshot)(char *address, char *filename, int timeout);
 };
-
-enum command_t
-{
-    DISCOVER,
-    SCPI,
-    SCREENSHOT
-};
-
-extern struct option_t option;
-
-void parse_options(int argc, char *argv[]);
-
-#endif

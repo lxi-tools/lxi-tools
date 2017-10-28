@@ -4,71 +4,69 @@
 
 _lxi()
 {
-    local cur prev opts base
+    local cur prev firstword opts discover_opts scpi_opts screenshot_opts
+
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
+	firstword=$(get_firstword)
 
-    #  The options we'll complete.
-    opts="discover \
-          scpi \
-          -a --address \
-          -t --timeout \
-          -x --dump-hex \
-          -f --dump-file \
-          -i --interactive \
-          -s --script \
+    # The options we'll complete.
+    opts="-h --help \
           -v --version \
-          -h --help"
+          discover \
+          scpi \
+          screenshot"
+    discover_opts="-t --timeout"
+    scpi_opts="-a --address \
+               -t --timeout \
+               -x --dump-hex \
+               -f --dump-file \
+               -i --interactive \
+               -s --script"
+    screenshot_opts="-a --address \
+                     -t --timeout \
+                     -m --model \
+                     -l --list"
 
-    #  Complete the arguments to the options.
-    case "${prev}" in
-        discover)
+    # Complete the options
+    case "${COMP_CWORD}" in
+        1)
             COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        scpi)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -a | --address)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -t | --timeout)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;; 
-        -f | --dump-file)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -x | --dump-hex)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -i | --interactive)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -s | --script)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -v | --version)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
-            ;;
-        -h | --help)
-            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-            return 0
             ;;
         *)
-        ;;
+            case ${firstword} in
+                discover)
+                    COMPREPLY=( $(compgen -W "${discover_opts}" -- ${cur}) )
+                    ;;
+                scpi)
+                    COMPREPLY=( $(compgen -W "${scpi_opts}" -- ${cur}) )
+                    ;;
+                screenshot)
+                    COMPREPLY=( $(compgen -W "${screenshot_opts}" -- ${cur}) )
+                    ;;
+                *)
+                    COMPREPLY=()
+                    ;;
+	        esac
+            ;;
     esac
 
-   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-   return 0
+    return 0
+}
+
+get_firstword() {
+    local firstword i
+
+    firstword=
+    for ((i = 1; i < ${#COMP_WORDS[@]}; ++i)); do
+        if [[ ${COMP_WORDS[i]} != -* ]]; then
+            firstword=${COMP_WORDS[i]}
+            break
+        fi
+    done
+
+    echo $firstword
 }
 
 # Bind completion to lxi command

@@ -5,48 +5,52 @@
 1. Introduction
 
     LXI tools (lxi-tools) is a collection of software tools for GNU/Linux
-    systems that enables control of LXI instruments such as modern
+    systems that enables control of LXI enabled instruments such as modern
     oscilloscopes, power supplies, spectrum analyzers etc..
 
-    The main tool is the 'lxi' application which provides commandline control
-    of LXI instruments.
+    All features are consolidated in the 'lxi' application which provides a
+    simple commandline to discover LXI devices, send SCPI commands, and capture
+    screenshots from supported LXI instruments (currently only Rigol 1000Z
+    series oscilloscopes are supported by the screenshot feature).
 
-    Also available is a small tool for grabbing screenshots from Rigol 1000Z
-    series oscilloscopes.
-
-    All tools rely on liblxi for LXI communication.
+    All features rely on liblxi for LXI communication.
 
 
 2. Usage
 
-
-2.1 lxi
-
-    The commandline interface of the lxi application is reflected in the output
+    The commandline interface of the lxi application is shown in the output
     from 'lxi --help':
 
-     Usage: ./lxi [--version] [--help] <command> [<options>] [<scpi command>]
+    Usage: lxi [--version] [--help] <command> [<args>]
 
-       -v, --version                Display version
-       -h, --help                   Display help
+      -v, --version                       Display version
+      -h, --help                          Display help
 
-     Commands:
-       discover                     Search for LXI devices
-       scpi                         Send SCPI command
+    Commands:
+      discover [<options>]                Search for LXI devices
+      scpi [<options>] <scpi-command>     Send SCPI command
+      screenshot [<options>] <filename>   Capture screenshot to file
 
-     Discover options:
-       -t, --timeout <seconds>      Timeout (default: 1)
+    Discover options:
+      -t, --timeout <seconds>             Timeout (default: 3)
 
-     Scpi options:
-       -a, --address <ip>           IP address
-       -t, --timeout <seconds>      Timeout (default: 1)
-       -x, --dump-hex               Print response in hexadecimal
-       -f, --dump-file <filename>   Save response to file
-       -i, --interactive            Enter interactive mode
-       -s, --script <filename>      Run script file
+    Scpi options:
+      -a, --address <ip>                  Device IP address
+      -t, --timeout <seconds>             Timeout (default: 3)
+      -x, --dump-hex                      Print response in hexadecimal
+      -f, --dump-file <filename>          Save response to file
+      -i, --interactive                   Enter interactive mode
+      -s, --script <filename>             Run script file
+
+    Screenshot options:
+      -a, --address <ip>                  Device IP address
+      -t, --timeout <seconds>             Timeout (default: 3)
+      -m, --model <name>                  Name of device model (model/family)
+      -l, --list                          List supported device models
 
 
-    Example - discovering LXI devices on your network:
+
+    Example - discovering LXI devices on available networks:
 
      $ lxi discover
      Searching for LXI devices - please wait...
@@ -67,23 +71,15 @@
     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
 
 
-2.2 rigol_1000z_screenshot
+    Example - capturing screenshot from a Rigol 1000Z series oscilloscope:
 
-    The commandline interface of the rigol_1000z_screenshot application is
-    quite simple:
-
-    Usage: rigol_1000z_screenshot <address> <filename>
-
-
-    Example - retrieve PNG screenshot:
-
-    $ rigol_1000z_screenshot 10.42.0.42 my_screen.png
-    Saved screenshot to my_screen.png
+    $ lxi screenshot --address 192.168.0.42 --model rigol-1000z my-screenshot.png
+    Saved PNG screenshot image to my-screenshot.png
 
 
 3. Installation
     
-    Install steps:
+3.1 Installation from source:
 
     $ ./configure
     $ make
@@ -91,6 +87,11 @@
 
     NOTE: 
      lxi-tools depends on liblxi so you need to go install liblxi first.
+
+3.2 Installation using package:
+
+    lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
+    https://lxi.github.io for package installation details.
 
 
 4. Contributing
