@@ -1,5 +1,21 @@
 
-=== lxi-tools v1.3 ===
+=== lxi-tools v1.4 ===
+
+
+Changes since lxi-tools v1.3:
+
+ * Add screenshot feature to lxi tool
+
+   The old rigol_1000z_screenshot tool is retired in favor of a screenshot feature
+   in the lxi tool. A new lxi command 'screenshot' is added and also a small
+   screenshot plugin framework which makes it easy to add new screenshot plugins
+   for new instruments.
+
+   Currently there is only a screenshot plugin for Rigol 1000Z series
+   oscilloscopes.
+
+ * Update README
+
 
 
 Changes since lxi-tools v1.2:
