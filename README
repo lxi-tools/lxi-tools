@@ -10,10 +10,9 @@
 
     All features are consolidated in the 'lxi' application which provides a
     simple commandline to discover LXI devices, send SCPI commands, and capture
-    screenshots from supported LXI instruments (currently only Rigol 1000Z
-    series oscilloscopes are supported by the screenshot feature).
+    screenshots from supported LXI instruments.
 
-    All features rely on liblxi for LXI communication.
+    lxi-tools rely on liblxi for LXI communication.
 
 
 2. Usage
