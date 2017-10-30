@@ -80,7 +80,7 @@ void print_help(char *argv[])
     printf("\n");
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                  Device IP address\n");
-    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
+    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout*5);
     printf("  -m, --model <name>                  Name of model\n");
     printf("  -l, --list                          List supported models\n");
     printf("\n");
@@ -192,6 +192,9 @@ void parse_options(int argc, char *argv[])
     } else if (strcmp(argv[1], "screenshot") == 0)
     {
         option.command = SCREENSHOT;
+
+        // Increase default timeout for screenshots
+        option.timeout *= 5;
 
         static struct option long_options[] =
         {
