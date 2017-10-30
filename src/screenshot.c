@@ -79,13 +79,29 @@ void screenshot_plugin_register(struct screenshot_plugin *plugin)
 
 void screenshot_list_plugins(void)
 {
-    int i = 0;
+    int i = 0, j = 0;
+    int length, length_max = 0;
 
-    // Print list of available plugins
-    printf("           Name   Description\n");
+    // Find length of longest plugin name
     while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
     {
-        printf("%15s   %s\n", plugin_list[i]->name, plugin_list[i]->description);
+        length = strlen(plugin_list[i]->name);
+        if (length_max < length)
+            length_max = length;
+        i++;
+    }
+
+    // Pretty print list of available plugins
+    i=0;
+    for (j=0; j<(length_max-4); j++)
+        putchar(' ');
+    printf("Name   Description\n");
+    while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
+    {
+        for (j=0; j<(length_max-strlen(plugin_list[i]->name)); j++)
+            putchar(' ');
+        printf("%s", plugin_list[i]->name);
+        printf("   %s\n", plugin_list[i]->description);
         i++;
     }
 }
