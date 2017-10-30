@@ -66,7 +66,7 @@ int rs_oscilloscope_screenshot(char *address, char *filename, int timeout)
         exit(1);
     }
 
-    // Strip TMC block header
+    // Strip header
     c = response[1];
     n = atoi(&c);
     image = &response[0];

@@ -41,13 +41,10 @@
 
 int rigol_oscilloscope_screenshot(char *address, char *filename, int timeout)
 {
-    char *command = "display:data? on,0,png";
-    char response[IMAGE_SIZE_MAX] = "";
-    char *image;
-    int device;
-    int length;
+    char response[IMAGE_SIZE_MAX];
+    char *command, *image;
+    int device, length, n;
     char c;
-    int n;
 
     // Connect to LXI instrument
     device = lxi_connect(address, NULL, timeout);
@@ -58,6 +55,7 @@ int rigol_oscilloscope_screenshot(char *address, char *filename, int timeout)
     }
 
     // Send SCPI command to grab PNG image
+    command = "display:data? on,0,png";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
