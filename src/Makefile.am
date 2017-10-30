@@ -5,6 +5,7 @@ lxi_SOURCES = lxi.c \
               include/options.h \
               include/screenshot.h \
               screenshot.c \
+              plugins/screenshot_keysight.c \
               plugins/screenshot_rigol.c \
               plugins/screenshot_rohde-schwarz.c
 

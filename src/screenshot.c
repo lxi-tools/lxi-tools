@@ -37,6 +37,7 @@
 
 #define PLUGIN_LIST_SIZE_MAX 50
 
+extern struct screenshot_plugin keysight_iv2000x;
 extern struct screenshot_plugin rigol_1000z;
 extern struct screenshot_plugin rigol_2000;
 extern struct screenshot_plugin rigol_4000;
@@ -94,6 +95,7 @@ void screenshot_list_plugins(void)
 void screenshot_register_plugins(void)
 {
     // Register screenshot plugins here
+    screenshot_plugin_register(&keysight_iv2000x);
     screenshot_plugin_register(&rigol_1000z);
     screenshot_plugin_register(&rigol_2000);
     screenshot_plugin_register(&rigol_4000);
