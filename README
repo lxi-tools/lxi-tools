@@ -9,8 +9,8 @@
     oscilloscopes, power supplies, spectrum analyzers etc..
 
     All features are consolidated in the 'lxi' application which provides a
-    simple commandline to discover LXI devices, send SCPI commands, and capture
-    screenshots from supported LXI instruments.
+    simple commandline interface to discover LXI devices, send SCPI commands,
+    and capture screenshots from supported LXI instruments.
 
     lxi-tools rely on liblxi for LXI communication.
 
