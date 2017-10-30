@@ -37,9 +37,9 @@
 #include <lxi.h>
 #include "screenshot.h"
 
-#define IMAGE_SIZE_MAX 0x200000 // 2 MB
+#define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_1000z_screenshot(char *address, char *filename, int timeout)
+int rigol_oscilloscope_screenshot(char *address, char *filename, int timeout)
 {
     char *command = "display:data? on,0,png";
     char response[IMAGE_SIZE_MAX] = "";
@@ -88,5 +88,21 @@ struct screenshot_plugin rigol_1000z =
 {
 	.name = "rigol-1000z",
 	.description = "Rigol 1000z series oscilloscopes",
-	.screenshot = rigol_1000z_screenshot
+	.screenshot = rigol_oscilloscope_screenshot
+};
+
+// Screenshot plugin configuration
+struct screenshot_plugin rigol_2000 =
+{
+	.name = "rigol-2000",
+	.description = "Rigol 2000 series oscilloscopes (experimental)",
+	.screenshot = rigol_oscilloscope_screenshot
+};
+
+// Screenshot plugin configuration
+struct screenshot_plugin rigol_4000 =
+{
+	.name = "rigol-4000",
+	.description = "Rigol 4000 series oscilloscopes (experimental)",
+	.screenshot = rigol_oscilloscope_screenshot
 };

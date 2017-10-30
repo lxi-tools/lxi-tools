@@ -5,7 +5,7 @@ lxi_SOURCES = lxi.c \
               include/options.h \
               include/screenshot.h \
               screenshot.c \
-              plugins/screenshot_rigol-1000z.c
+              plugins/screenshot_rigol.c
 
 lxi_CFLAGS =
 lxi_LDADD = -llxi -lreadline
