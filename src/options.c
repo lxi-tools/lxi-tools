@@ -81,8 +81,8 @@ void print_help(char *argv[])
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                  Device IP address\n");
     printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
-    printf("  -m, --model <name>                  Name of device model (model/family)\n");
-    printf("  -l, --list                          List supported device models\n");
+    printf("  -m, --model <name>                  Name of model\n");
+    printf("  -l, --list                          List supported models\n");
     printf("\n");
 }
 

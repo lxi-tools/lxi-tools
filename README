@@ -45,8 +45,8 @@
     Screenshot options:
       -a, --address <ip>                  Device IP address
       -t, --timeout <seconds>             Timeout (default: 3)
-      -m, --model <name>                  Name of device model (model/family)
-      -l, --list                          List supported device models
+      -m, --model <name>                  Name of model
+      -l, --list                          List supported models
 
 
 

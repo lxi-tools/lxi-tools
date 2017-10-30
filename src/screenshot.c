@@ -82,9 +82,10 @@ void screenshot_list_plugins(void)
     int i = 0;
 
     // Print list of available plugins
+    printf("           Name   Description\n");
     while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
     {
-        printf("%s : %s\n", plugin_list[i]->name, plugin_list[i]->description);
+        printf("%15s   %s\n", plugin_list[i]->name, plugin_list[i]->description);
         i++;
     }
 }
