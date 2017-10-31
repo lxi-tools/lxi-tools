@@ -22,30 +22,30 @@
 
     Usage: lxi [--version] [--help] <command> [<args>]
 
-      -v, --version                       Display version
-      -h, --help                          Display help
+      -v, --version                        Display version
+      -h, --help                           Display help
 
     Commands:
-      discover [<options>]                Search for LXI devices
-      scpi [<options>] <scpi-command>     Send SCPI command
-      screenshot [<options>] <filename>   Capture screenshot to file
+      discover [<options>]                 Search for LXI devices
+      scpi [<options>] <scpi-command>      Send SCPI command
+      screenshot [<options>] [<filename>]  Capture screenshot
 
     Discover options:
-      -t, --timeout <seconds>             Timeout (default: 3)
+      -t, --timeout <seconds>              Timeout (default: 3)
 
     Scpi options:
-      -a, --address <ip>                  Device IP address
-      -t, --timeout <seconds>             Timeout (default: 3)
-      -x, --dump-hex                      Print response in hexadecimal
-      -f, --dump-file <filename>          Save response to file
-      -i, --interactive                   Enter interactive mode
-      -s, --script <filename>             Run script file
+      -a, --address <ip>                   Device IP address
+      -t, --timeout <seconds>              Timeout (default: 3)
+      -x, --dump-hex                       Print response in hexadecimal
+      -f, --dump-file <filename>           Save response to file
+      -i, --interactive                    Enter interactive mode
+      -s, --script <filename>              Run script file
 
     Screenshot options:
-      -a, --address <ip>                  Device IP address
-      -t, --timeout <seconds>             Timeout (default: 3)
-      -m, --model <name>                  Name of model
-      -l, --list                          List supported models
+      -a, --address <ip>                   Device IP address
+      -t, --timeout <seconds>              Timeout (default: 3)
+      -m, --model <name>                   Name of model
+      -l, --list                           List supported models
 
 
 
@@ -70,10 +70,10 @@
     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
 
 
-    Example - capturing screenshot from a Rigol 1000Z series oscilloscope:
+    Example - capturing screenshot from a Rigol 1000z series oscilloscope:
 
-    $ lxi screenshot --address 192.168.0.42 --model rigol-1000z my-screenshot.png
-    Saved PNG screenshot image to my-screenshot.png
+    $ lxi screenshot --address 192.168.0.42 --model rigol
+    Saved screenshot image to screenshot-000.png
 
 
 3. Installation

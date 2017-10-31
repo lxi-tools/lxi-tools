@@ -33,6 +33,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "screenshot.h"
 
 #define PLUGIN_LIST_SIZE_MAX 50
@@ -43,20 +46,52 @@ extern struct screenshot_plugin rs_hmo1000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 
+static bool file_exists(char *filename)
+{
+   struct stat st;
+
+   if (stat(filename, &st) != 0)
+      return false;
+   else if (!S_ISREG(st.st_mode))
+      return false;
+
+   return true;
+}
+
 void screenshot_file_dump(void *data, int length, char *filename, char *format)
 {
+    char automatic_filename[80];
+    char *screenshot_filename;
     FILE *fp;
+    int i = 0;
 
-    fp = fopen(filename, "w+");
+    // Resolve screenshot filename
+    if (strlen(filename) == 0)
+    {
+        sprintf(automatic_filename, "screenshot-000.%s", format);
+
+        while (file_exists(automatic_filename))
+        {
+            i++;
+            sprintf(automatic_filename, "screenshot-%03d.%s", i, format);
+        }
+
+        screenshot_filename = automatic_filename;
+    } else
+    {
+        screenshot_filename = filename;
+    }
+
+    fp = fopen(screenshot_filename, "w+");
     if (fp == NULL)
     {
-        printf("Error: Could not write image file (%s)\n", strerror(errno));
+        printf("Error: Could not write screenshot file (%s)\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
     fwrite(data, 1, length, fp);
     fclose(fp);
 
-    printf("Saved %s screenshot image to %s\n", format, filename);
+    printf("Saved screenshot image to %s\n", screenshot_filename);
 }
 
 void screenshot_plugin_register(struct screenshot_plugin *plugin)
@@ -129,12 +164,6 @@ int screenshot(char *address, char *model, char *filename, int timeout)
     if (strlen(model) == 0)
     {
         printf("Error: Missing model\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (strlen(filename) == 0)
-    {
-        printf("Error: Missing filename\n");
         exit(EXIT_FAILURE);
     }
 

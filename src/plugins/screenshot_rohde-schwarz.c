@@ -74,7 +74,7 @@ int rs_oscilloscope_screenshot(char *address, char *filename, int timeout)
     length -= n+5;
 
     // Dump remaining PNG image data to file
-    screenshot_file_dump(image, length, filename, "PNG");
+    screenshot_file_dump(image, length, filename, "png");
 
     // Disconnect
     lxi_disconnect(device);

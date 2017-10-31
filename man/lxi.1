@@ -44,16 +44,16 @@ Send SCPI command
 
 .PP
 .B screenshot
-.I [<options>] <filename>
+.I [<options>] [<filename>]
 .RS
-Capture screenshot to file
+Capture screenshot
 .RE
 
 .SH "DISCOVER OPTIONS"
 
 .TP
 .B \-t, \--timeout <seconds>
-Timeout in seconds (default: 3)
+Timeout in seconds
 
 .SH "SCPI OPTIONS"
 
@@ -63,7 +63,7 @@ IP address of LXI device
 
 .TP
 .B \-t, \--timeout <seconds>
-Timeout in seconds (default: 3)
+Timeout in seconds
 
 .TP
 .B \-x, \--dump-hex
@@ -89,7 +89,7 @@ IP address of LXI device
 
 .TP
 .B \-t, \--timeout <seconds>
-Timeout in seconds (default: 3)
+Timeout in seconds
 
 .TP
 .B \-m, \--model <name>
@@ -101,14 +101,14 @@ List supported device models
 
 .SH "EXAMPLES"
 .TP
-Send SCPI command to LXI device:
+Send SCPI command:
 
 lxi scpi -a 192.168.0.42 "*IDN?"
 
 .TP
-Capture screenshot from LXI device with specific model/family:
+Capture screenshot from a Rigol 1000Z series oscilloscope:
 
-lxi screenshot -a 192.168.0.42 -m rigol-1000z my-screenshot.png
+lxi screenshot -a 192.168.0.42 -m rigol
 
 .PP
 Some LXI devices are slow to process SCPI commands, in which case you

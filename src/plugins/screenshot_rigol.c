@@ -72,7 +72,7 @@ int rigol_screenshot(char *address, char *filename, int timeout)
     length -= n+2;
 
     // Dump remaining PNG image data to file
-    screenshot_file_dump(image, length, filename, "PNG");
+    screenshot_file_dump(image, length, filename, "png");
 
     // Disconnect
     lxi_disconnect(device);

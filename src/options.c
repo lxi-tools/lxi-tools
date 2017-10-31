@@ -59,30 +59,30 @@ void print_help(char *argv[])
 {
     printf("Usage: %s [--version] [--help] <command> [<args>]\n", argv[0]);
     printf("\n");
-    printf("  -v, --version                       Display version\n");
-    printf("  -h, --help                          Display help\n");
+    printf("  -v, --version                        Display version\n");
+    printf("  -h, --help                           Display help\n");
     printf("\n");
     printf("Commands:\n");
-    printf("  discover [<options>]                Search for LXI devices\n");
-    printf("  scpi [<options>] <scpi-command>     Send SCPI command\n");
-    printf("  screenshot [<options>] <filename>   Capture screenshot to file\n");
+    printf("  discover [<options>]                 Search for LXI devices\n");
+    printf("  scpi [<options>] <scpi-command>      Send SCPI command\n");
+    printf("  screenshot [<options>] [<filename>]  Capture screenshot\n");
     printf("\n");
     printf("Discover options:\n");
-    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("\n");
     printf("Scpi options:\n");
-    printf("  -a, --address <ip>                  Device IP address\n");
-    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout);
-    printf("  -x, --dump-hex                      Print response in hexadecimal\n");
-    printf("  -f, --dump-file <filename>          Save response to file\n");
-    printf("  -i, --interactive                   Enter interactive mode\n");
-    printf("  -s, --script <filename>             Run script file\n");
+    printf("  -a, --address <ip>                   Device IP address\n");
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
+    printf("  -x, --dump-hex                       Print response in hexadecimal\n");
+    printf("  -f, --dump-file <filename>           Save response to file\n");
+    printf("  -i, --interactive                    Enter interactive mode\n");
+    printf("  -s, --script <filename>              Run script file\n");
     printf("\n");
     printf("Screenshot options:\n");
-    printf("  -a, --address <ip>                  Device IP address\n");
-    printf("  -t, --timeout <seconds>             Timeout (default: %d)\n", option.timeout*5);
-    printf("  -m, --model <name>                  Name of model\n");
-    printf("  -l, --list                          List supported models\n");
+    printf("  -a, --address <ip>                   Device IP address\n");
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout*5);
+    printf("  -m, --model <name>                   Name of model\n");
+    printf("  -l, --list                           List supported models\n");
     printf("\n");
 }
 
