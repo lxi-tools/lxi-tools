@@ -76,6 +76,15 @@
     Saved screenshot image to screenshot-000.png
 
 
+    Example - list models supported by screenshot feature:
+
+    $ lxi screenshot --list
+                Name   Description
+    keysight-iv2000x   Keysight InfiniVision 2000 X series oscilloscopes (experimental)
+               rigol   Rigol 1000z/2000/4000 series oscilloscopes
+          rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
+
+
 3. Installation
     
 3.1 Installation from source:
