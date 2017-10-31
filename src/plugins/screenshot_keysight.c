@@ -39,7 +39,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int keysight_oscilloscope_screenshot(char *address, char *filename, int timeout)
+int keysight_screenshot(char *address, char *filename, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -51,7 +51,7 @@ int keysight_oscilloscope_screenshot(char *address, char *filename, int timeout)
     if (device == LXI_ERROR)
     {
         printf("Error: Failed to connect\n");
-        exit(1);
+        return 1;
     }
 
     // Send SCPI commands to grab PNG image
@@ -63,7 +63,7 @@ int keysight_oscilloscope_screenshot(char *address, char *filename, int timeout)
     if (length < 0)
     {
         printf("Error: Failed to receive message\n");
-        exit(1);
+        return 1;
     }
 
     // Strip IEEE 488.2 Data Block header
@@ -73,7 +73,7 @@ int keysight_oscilloscope_screenshot(char *address, char *filename, int timeout)
     image += n+5;
     length -= n+5;
 
-    // Ignore ending newline
+    // Strip ending newline
     length--;
 
     // Dump remaining PNG image data to file
@@ -91,5 +91,5 @@ struct screenshot_plugin keysight_iv2000x =
 {
 	.name = "keysight-iv2000x",
 	.description = "Keysight InfiniVision 2000 X series oscilloscopes (experimental)",
-	.screenshot = keysight_oscilloscope_screenshot
+	.screenshot = keysight_screenshot
 };

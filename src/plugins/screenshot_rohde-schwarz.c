@@ -39,7 +39,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rs_oscilloscope_screenshot(char *address, char *filename, int timeout)
+int rs_screenshot(char *address, char *filename, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -51,7 +51,7 @@ int rs_oscilloscope_screenshot(char *address, char *filename, int timeout)
     if (device == LXI_ERROR)
     {
         printf("Error: Failed to connect\n");
-        exit(1);
+        return 1;
     }
 
     // Send SCPI commands to grab PNG image
@@ -63,7 +63,7 @@ int rs_oscilloscope_screenshot(char *address, char *filename, int timeout)
     if (length < 0)
     {
         printf("Error: Failed to receive message\n");
-        exit(1);
+        return 1;
     }
 
     // Strip header
@@ -88,5 +88,5 @@ struct screenshot_plugin rs_hmo1000 =
 {
 	.name = "rs-hmo1000",
 	.description = "Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)",
-	.screenshot = rs_oscilloscope_screenshot
+	.screenshot = rs_screenshot
 };

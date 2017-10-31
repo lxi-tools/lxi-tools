@@ -82,6 +82,7 @@ void screenshot_file_dump(void *data, int length, char *filename, char *format)
         screenshot_filename = filename;
     }
 
+    // Write screenshot file
     fp = fopen(screenshot_filename, "w+");
     if (fp == NULL)
     {
@@ -184,10 +185,6 @@ int screenshot(char *address, char *model, char *filename, int timeout)
         exit(EXIT_FAILURE);
     }
 
-    // Call screenshot function
-    plugin_list[i]->screenshot(address, filename, timeout);
-
-    // Return status result
-
-    return 0;
+    // Call capture screenshot function
+    return plugin_list[i]->screenshot(address, filename, timeout);
 }

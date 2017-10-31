@@ -51,7 +51,7 @@ int rigol_screenshot(char *address, char *filename, int timeout)
     if (device == LXI_ERROR)
     {
         printf("Error: Failed to connect\n");
-        exit(1);
+        return 1;
     }
 
     // Send SCPI command to grab PNG image
@@ -61,7 +61,7 @@ int rigol_screenshot(char *address, char *filename, int timeout)
     if (length < 0)
     {
         printf("Error: Failed to receive message\n");
-        exit(1);
+        return 1;
     }
 
     // Strip TMC block header
@@ -79,7 +79,6 @@ int rigol_screenshot(char *address, char *filename, int timeout)
 
     return 0;
 }
-
 
 // Screenshot plugin configuration
 struct screenshot_plugin rigol =
