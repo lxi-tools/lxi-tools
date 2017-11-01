@@ -99,7 +99,7 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
 
     if (option.protocol == RAW)
     {
-        // Add newline to command
+        // Add newline to command string
         strcpy(command_buffer, command);
         command_buffer[strlen(command)] = '\n';
         command_buffer[strlen(command)+1] = 0;
@@ -151,7 +151,12 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
         else if (option.dump_file)
             file_dump(response, length, filename);
         else
-            printf("%s", response);
+            {
+                if (response[length-1] == '\n')
+                    printf("%s", response);
+                else
+                    printf("%s\n", response);
+            }
     }
 
     // Disconnect
