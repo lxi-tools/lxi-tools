@@ -97,7 +97,7 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
     strip_trailing_space(command);
 
     // Connect
-    device = lxi_connect(ip, NULL, timeout);
+    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");
@@ -168,7 +168,7 @@ static int enter_interactive_mode(char *ip, int timeout)
     int length;
 
     // Connect
-    device = lxi_connect(ip, NULL, timeout);
+    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");
@@ -247,7 +247,7 @@ static int run_script(char *ip, int timeout, char *filename)
     }
 
     // Connect
-    device = lxi_connect(ip, NULL, timeout);
+    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");

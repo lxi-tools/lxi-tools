@@ -47,7 +47,7 @@ int rigol_screenshot(char *address, char *filename, int timeout)
     char c;
 
     // Connect to LXI instrument
-    device = lxi_connect(address, NULL, timeout);
+    device = lxi_connect(address, 0, NULL, timeout, VXI11);
     if (device == LXI_ERROR)
     {
         printf("Error: Failed to connect\n");
