@@ -38,6 +38,7 @@
 #include <termios.h>
 #include "config.h"
 #include "options.h"
+#include <lxi.h>
 
 struct option_t option =
 {
@@ -53,6 +54,8 @@ struct option_t option =
     "",      // Default model
     false,   // Default no list
     "",      // Default screenshot filename
+    VXI11,   // Default protocol
+    5555,    // Default raw/TCP port
 };
 
 void print_help(char *argv[])
@@ -77,6 +80,8 @@ void print_help(char *argv[])
     printf("  -f, --dump-file <filename>           Save response to file\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
     printf("  -s, --script <filename>              Run script file\n");
+    printf("  -r, --raw                            Use raw/TCP\n");
+    printf("  -p, --raw-port <port>                Use raw/TCP port (default: %d)\n", option.port);
     printf("\n");
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
@@ -149,13 +154,15 @@ void parse_options(int argc, char *argv[])
             {"dump-file",      required_argument, 0, 'f'},
             {"interactive",    no_argument,       0, 'i'},
             {"script",         required_argument, 0, 's'},
+            {"raw",            no_argument,       0, 'r'},
+            {"raw-port",       required_argument, 0, 'p'},
             {0,                0,                 0,  0 }
         };
 
         do
         {
             /* Parse scpi options */
-            c = getopt_long(argc, argv, "t:a:xf:is:", long_options, &option_index);
+            c = getopt_long(argc, argv, "t:a:xf:is:rp:", long_options, &option_index);
 
             switch (c)
             {
@@ -183,6 +190,14 @@ void parse_options(int argc, char *argv[])
                 case 's':
                     option.run_script = true;
                     option.filename = optarg;
+                    break;
+
+                case 'r':
+                    option.protocol = RAW;
+                    break;
+
+                case 'p':
+                    option.port = atoi(optarg);
                     break;
 
                 case '?':

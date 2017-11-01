@@ -33,6 +33,7 @@
 
 #include <stdbool.h>
 #include <sys/param.h>
+#include <lxi.h>
 
 /* Options */
 struct option_t
@@ -49,6 +50,8 @@ struct option_t
     char *model;
     bool list;
     char screenshot_filename[500];
+    lxi_protocol_t protocol;
+    int port;
 };
 
 enum command_t

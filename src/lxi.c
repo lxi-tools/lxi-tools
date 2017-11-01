@@ -93,11 +93,21 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
     char response[RESPONSE_LENGTH_MAX] = "";
     int device;
     int length;
+    char command_buffer[1000];
 
     strip_trailing_space(command);
 
+    if (option.protocol == RAW)
+    {
+        // Add newline to command
+        strcpy(command_buffer, command);
+        command_buffer[strlen(command)] = '\n';
+        command_buffer[strlen(command)+1] = 0;
+        command = command_buffer;
+    }
+
     // Connect
-    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    device = lxi_connect(ip, option.port, NULL, timeout, option.protocol);
     if (device != LXI_OK)
     {
         printf("Error: Unable to connect to LXI device\n");

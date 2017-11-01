@@ -40,6 +40,8 @@
       -f, --dump-file <filename>           Save response to file
       -i, --interactive                    Enter interactive mode
       -s, --script <filename>              Run script file
+      -r, --raw                            Use raw/TCP
+      -p, --raw-port                       Use raw/TCP port (default: 5555)
 
     Screenshot options:
       -a, --address <ip>                   Device IP address
