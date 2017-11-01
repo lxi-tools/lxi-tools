@@ -104,7 +104,15 @@
     https://lxi.github.io for package installation details.
 
 
-4. Contributing
+4. Tested instruments
+
+    lxi-tools is tested to work with the following LXI/LAN compatible
+    instruments:
+
+    - Rigol DS1104Z
+
+
+5. Contributing
 
     lxi-tools is open source. If you want to help out with the project please
     join in. Any contributions (bug reports, code, doc, ideas, etc.) are
@@ -113,12 +121,12 @@
     Please use the github issue tracker and pull request features.
 
 
-5. Website
+6. Website
 
     Visit https://lxi.github.io
 
 
-6. License
+7. License
 
     This code is released under BSD-3, commonly known as the 3-clause (or
     "modified") BSD license.
