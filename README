@@ -50,7 +50,6 @@
       -l, --list                           List supported models
 
 
-
     Example - discovering LXI devices on available networks:
 
      $ lxi discover
@@ -58,7 +57,7 @@
 
      Broadcasting on interface lo
      Broadcasting on interface eth0
-         Found "RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03.SP2" on address 10.42.0.42
+         Found "RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03.SP2" on address 10.42.0.42
      Broadcasting on interface wlan0
      Broadcasting on interface docker0
      Broadcasting on interface lxcbr0
@@ -68,23 +67,24 @@
 
     Example - sending a SCPI command to an instrument:
     
-    $ lxi scpi --address 10.42.0.42 "*IDN?"
-    RIGOL TECHNOLOGIES,DS1104Z,DS1ZA171206207,00.04.03
+     $ lxi scpi --address 10.42.0.42 "*IDN?"
+     RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
 
     Example - capturing screenshot from a Rigol 1000z series oscilloscope:
 
-    $ lxi screenshot --address 192.168.0.42 --model rigol
-    Saved screenshot image to screenshot-000.png
+     $ lxi screenshot --address 192.168.0.42 --model rigol
+     Saved screenshot image to screenshot-000.png
 
 
     Example - list models supported by screenshot feature:
 
-    $ lxi screenshot --list
-                Name   Description
-    keysight-iv2000x   Keysight InfiniVision 2000 X series oscilloscopes (experimental)
-               rigol   Rigol 1000z/2000/4000 series oscilloscopes
-          rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
+     $ lxi screenshot --list
+                 Name   Description
+     keysight-iv2000x   Keysight InfiniVision 2000 X series oscilloscopes (experimental)
+                rigol   Rigol 1000z/2000/4000 series oscilloscopes
+           rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
+       tektronix-2000   Tektronix MSO/DPO 2000 series oscilloscopes (experimental)
 
 
 3. Installation
