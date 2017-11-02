@@ -43,6 +43,7 @@
 extern struct screenshot_plugin keysight_iv2000x;
 extern struct screenshot_plugin rigol;
 extern struct screenshot_plugin rs_hmo1000;
+extern struct screenshot_plugin tektronix_2000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 
@@ -148,6 +149,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&keysight_iv2000x);
     screenshot_plugin_register(&rigol);
     screenshot_plugin_register(&rs_hmo1000);
+    screenshot_plugin_register(&tektronix_2000);
 }
 
 int screenshot(char *address, char *model, char *filename, int timeout)

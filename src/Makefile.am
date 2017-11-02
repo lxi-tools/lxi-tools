@@ -7,7 +7,8 @@ lxi_SOURCES = lxi.c \
               screenshot.c \
               plugins/screenshot_keysight.c \
               plugins/screenshot_rigol.c \
-              plugins/screenshot_rohde-schwarz.c
+              plugins/screenshot_rohde-schwarz.c \
+              plugins/screenshot_tektronix.c
 
 lxi_CFLAGS =
 lxi_LDADD = -llxi -lreadline
