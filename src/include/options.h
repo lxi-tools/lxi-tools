@@ -58,7 +58,8 @@ enum command_t
 {
     DISCOVER,
     SCPI,
-    SCREENSHOT
+    SCREENSHOT,
+    NO_COMMAND
 };
 
 extern struct option_t option;

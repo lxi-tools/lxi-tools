@@ -42,20 +42,20 @@
 
 struct option_t option =
 {
-    SCPI,    // Default command
-    3,       // Default timeout in seconds
-    "",      // Default IP address
-    "*IDN?", // Default SCPI command
-    false,   // Default no hex dump
-    false,   // Default no file dump
-    "",      // Default dump filename
-    false,   // Default no interactive mode
-    false,   // Default no run script
-    "",      // Default model
-    false,   // Default no list
-    "",      // Default screenshot filename
-    VXI11,   // Default protocol
-    5555,    // Default raw/TCP port
+    NO_COMMAND, // Default command
+    3,          // Default timeout in seconds
+    "",         // Default IP address
+    "*IDN?",    // Default SCPI command
+    false,      // Default no hex dump
+    false,      // Default no file dump
+    "",         // Default dump filename
+    false,      // Default no interactive mode
+    false,      // Default no run script
+    "",         // Default model
+    false,      // Default no list
+    "",         // Default screenshot filename
+    VXI11,      // Default protocol
+    5555,       // Default raw/TCP port
 };
 
 void print_help(char *argv[])
@@ -278,6 +278,12 @@ void parse_options(int argc, char *argv[])
                     exit(EXIT_FAILURE);
             }
         } while (c != -1);
+    }
+
+    if ((option.command == NO_COMMAND) && (optind != argc))
+    {
+        printf("Error: Unknown command\n");
+        exit(EXIT_FAILURE);
     }
 
     if ((option.command == SCPI) && (optind != argc))
