@@ -1,5 +1,69 @@
+=== lxi-tools v1.6 ===
 
-=== lxi-tools v1.5 ===
+
+Changes since lxi-tools v1.5:
+
+ * Add date-time stamp to screenshot filename
+
+ * Improve command handling
+
+   In case of a misspelled command the tool would misleadingly
+   respond: "Error: No IP address specified"
+
+   With this fix, it now responds: "Error: Unknown command"
+
+ * Update README
+
+ * Added screenshot plugin for Tektronix 2000 series scopes
+
+ * Improve scpi response output
+
+ * Add --raw and --raw-port options to scpi command
+
+   One can now use choose to use raw/TCP instead of VXI11 when firing SCPI
+   commands. Simply append the --raw option like so:
+
+   lxi scpi --raw --address 192.168.0.42 "*IDN?"
+
+   By default raw/TCP port 5555 is used but it can be changed using the
+   --raw-port <port> option.
+
+   Warning: Using raw/TCP is faster than VXI11 but does not provide any
+   timeout/control mechanisms so if your command somehow stalls it will
+   stall forever.
+
+ * Use new lxi_connect() function
+
+ * Cleanup
+
+ * Make screenshot filename optional
+
+   In case no screenshot filename is provided the tool will write the
+   screenshot image to an automatically resolved and incremented filename
+   on the form screenshot-###.<format>. For example, screenshot-000.png,
+   screenshot-001.png, etc..
+
+ * Improve screenshot model listing
+
+ * Increase default timeout for screenshot command
+
+   Transferring screenshot image data takes time so lets increase the
+   timeout so we do not easily interrupt a good but slow transfer.
+
+ * Collapse Rigol screenshot plugin
+
+   Support all Rigol oscilloscope models via one model name.
+
+ * Add screenshot support for Keysight IV 2000 X
+
+ * Cleanup plugins
+
+ * Add screenshot support for R&S HMO1000 series
+
+ * Add screenshot support for Rigol 2000/4000
+
+ * Create directory for screenshot plugins
+
 
 
 Changes since lxi-tools v1.4:
