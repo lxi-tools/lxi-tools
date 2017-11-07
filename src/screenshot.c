@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <time.h>
 #include "screenshot.h"
 
 #define PLUGIN_LIST_SIZE_MAX 50
@@ -47,16 +48,16 @@ extern struct screenshot_plugin tektronix_2000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 
-static bool file_exists(char *filename)
+char *date_time(void)
 {
-   struct stat st;
+    static char date_time_string[50];
 
-   if (stat(filename, &st) != 0)
-      return false;
-   else if (!S_ISREG(st.st_mode))
-      return false;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    sprintf(date_time_string, "%d-%02d-%02d_%02d:%02d:%02d", tm.tm_year + 1900,
+            tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
-   return true;
+    return date_time_string;
 }
 
 void screenshot_file_dump(void *data, int length, char *filename, char *format)
@@ -69,19 +70,11 @@ void screenshot_file_dump(void *data, int length, char *filename, char *format)
     // Resolve screenshot filename
     if (strlen(filename) == 0)
     {
-        sprintf(automatic_filename, "screenshot-000.%s", format);
-
-        while (file_exists(automatic_filename))
-        {
-            i++;
-            sprintf(automatic_filename, "screenshot-%03d.%s", i, format);
-        }
-
+        sprintf(automatic_filename, "screenshot_%s.%s", date_time(), format);
         screenshot_filename = automatic_filename;
-    } else
-    {
-        screenshot_filename = filename;
     }
+    else
+        screenshot_filename = filename;
 
     // Write screenshot file
     fp = fopen(screenshot_filename, "w+");
