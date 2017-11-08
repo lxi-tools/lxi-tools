@@ -73,7 +73,7 @@
 
     Example - Capturing screenshot from a Rigol 1000z series oscilloscope:
 
-     $ lxi screenshot --address 192.168.0.42 --model rigol
+     $ lxi screenshot --address 192.168.0.42 --model rigol-1000
      Saved screenshot image to screenshot-000.png
 
 
@@ -82,7 +82,8 @@
      $ lxi screenshot --list
                  Name   Description
      keysight-iv2000x   Keysight InfiniVision 2000 X series oscilloscopes (experimental)
-                rigol   Rigol 1000z/2000/4000 series oscilloscopes
+           rigol-1000   Rigol 1000z series oscilloscopes
+           rigol-2000   Rigol MSO/DS 2000 series oscilloscopes
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
        tektronix-2000   Tektronix MSO/DPO 2000 series oscilloscopes (experimental)
 
