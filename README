@@ -5,14 +5,14 @@
 1. Introduction
 
     LXI tools (lxi-tools) is a collection of software tools for GNU/Linux
-    systems that enables control of LXI enabled instruments such as modern
+    systems that enables control of LXI compatible instruments such as modern
     oscilloscopes, power supplies, spectrum analyzers etc..
 
     All features are consolidated in the 'lxi' application which provides a
-    simple commandline interface to discover LXI devices, send SCPI commands,
-    and capture screenshots from supported LXI instruments.
+    simple commandline interface to discover LXI instruments, send SCPI
+    commands, and capture screenshots from supported LXI instruments.
 
-    lxi-tools rely on liblxi for LXI communication.
+    lxi-tools rely on liblxi for all communication.
 
 
 2. Usage
@@ -50,7 +50,7 @@
       -l, --list                           List supported models
 
 
-    Example - discovering LXI devices on available networks:
+    Example - Discovering LXI devices on available networks:
 
      $ lxi discover
      Searching for LXI devices - please wait...
@@ -65,19 +65,19 @@
      Found 1 device
 
 
-    Example - sending a SCPI command to an instrument:
+    Example - Sending a SCPI command to an instrument:
     
      $ lxi scpi --address 10.42.0.42 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
 
-    Example - capturing screenshot from a Rigol 1000z series oscilloscope:
+    Example - Capturing screenshot from a Rigol 1000z series oscilloscope:
 
      $ lxi screenshot --address 192.168.0.42 --model rigol
      Saved screenshot image to screenshot-000.png
 
 
-    Example - list models supported by screenshot feature:
+    Example - List models supported by the screenshot feature:
 
      $ lxi screenshot --list
                  Name   Description
