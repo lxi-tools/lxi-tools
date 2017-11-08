@@ -39,7 +39,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_screenshot(char *address, char *filename, int timeout)
+int rigol_1000_screenshot(char *address, char *filename, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -81,9 +81,9 @@ int rigol_screenshot(char *address, char *filename, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin rigol =
+struct screenshot_plugin rigol_1000 =
 {
-	.name = "rigol",
-	.description = "Rigol 1000z/2000/4000 series oscilloscopes",
-	.screenshot = rigol_screenshot
+	.name = "rigol-1000",
+	.description = "Rigol 1000z series oscilloscopes",
+	.screenshot = rigol_1000_screenshot
 };
