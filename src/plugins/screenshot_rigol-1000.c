@@ -84,6 +84,6 @@ int rigol_1000_screenshot(char *address, char *filename, int timeout)
 struct screenshot_plugin rigol_1000 =
 {
 	.name = "rigol-1000",
-	.description = "Rigol 1000z series oscilloscopes",
+	.description = "Rigol DS/MSO 1000z series oscilloscopes",
 	.screenshot = rigol_1000_screenshot
 };
