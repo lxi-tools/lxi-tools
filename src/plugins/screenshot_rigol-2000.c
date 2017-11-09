@@ -71,6 +71,9 @@ int rigol_2000_screenshot(char *address, char *filename, int timeout)
     image += n+2;
     length -= n+2;
 
+    // Strip ending newline
+    length--;
+
     // Dump remaining BMP image data to file
     screenshot_file_dump(image, length, filename, "bmp");
 
