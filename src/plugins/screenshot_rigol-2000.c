@@ -54,7 +54,7 @@ int rigol_2000_screenshot(char *address, int timeout)
         return 1;
     }
 
-    // Send SCPI command to grab PNG image
+    // Send SCPI command to grab BMP image
     command = ":display:data?";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
