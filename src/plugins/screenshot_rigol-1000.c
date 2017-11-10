@@ -39,7 +39,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_1000_screenshot(char *address, char *filename, int timeout)
+int rigol_1000_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -72,7 +72,7 @@ int rigol_1000_screenshot(char *address, char *filename, int timeout)
     length -= n+2;
 
     // Dump remaining PNG image data to file
-    screenshot_file_dump(image, length, filename, "png");
+    screenshot_file_dump(image, length, "png");
 
     // Disconnect
     lxi_disconnect(device);

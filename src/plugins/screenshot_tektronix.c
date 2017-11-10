@@ -39,7 +39,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int tektronix_screenshot(char *address, char *filename, int timeout)
+int tektronix_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command;
@@ -68,7 +68,7 @@ int tektronix_screenshot(char *address, char *filename, int timeout)
     }
 
     // Dump PNG image data to file
-    screenshot_file_dump(response, length, filename, "png");
+    screenshot_file_dump(response, length, "png");
 
     // Disconnect
     lxi_disconnect(device);

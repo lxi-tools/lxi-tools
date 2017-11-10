@@ -39,6 +39,7 @@
 #include <time.h>
 #include <regex.h>
 #include "screenshot.h"
+#include "options.h"
 #include <lxi.h>
 
 #define PLUGIN_LIST_SIZE_MAX 50
@@ -111,31 +112,31 @@ char *date_time(void)
     return date_time_string;
 }
 
-void screenshot_file_dump(void *data, int length, char *filename, char *format)
+void screenshot_file_dump(void *data, int length, char *format)
 {
-    char automatic_filename[80];
+    char automatic_filename[1000];
     char *screenshot_filename;
-    FILE *fp;
+    FILE *fd;
     int i = 0;
 
     // Resolve screenshot filename
-    if (strlen(filename) == 0)
+    if (strlen(option.screenshot_filename) == 0)
     {
-        sprintf(automatic_filename, "screenshot_%s.%s", date_time(), format);
+        sprintf(automatic_filename, "screenshot_%s_%s.%s", option.ip, date_time(), format);
         screenshot_filename = automatic_filename;
     }
     else
-        screenshot_filename = filename;
+        screenshot_filename = option.screenshot_filename;
 
     // Write screenshot file
-    fp = fopen(screenshot_filename, "w+");
-    if (fp == NULL)
+    fd = fopen(screenshot_filename, "w+");
+    if (fd == NULL)
     {
         printf("Error: Could not write screenshot file (%s)\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
-    fwrite(data, 1, length, fp);
-    fclose(fp);
+    fwrite(data, 1, length, fd);
+    fclose(fd);
 
     printf("Saved screenshot image to %s\n", screenshot_filename);
 }
@@ -299,5 +300,5 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     }
 
     // Call capture screenshot function
-    return plugin_list[i]->screenshot(address, filename, timeout);
+    return plugin_list[i]->screenshot(address, timeout);
 }

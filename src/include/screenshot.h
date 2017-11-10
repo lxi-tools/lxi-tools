@@ -33,12 +33,12 @@ void screenshot_list_plugins(void);
 int screenshot(char *address, char *plugin_name, char *filename, int timeout);
 
 // Screenshot helper function used by plugins to dump image file
-void screenshot_file_dump(void *data, int length, char *filename, char *format);
+void screenshot_file_dump(void *data, int length, char *format);
 
 struct screenshot_plugin
 {
    const char *name;
    const char *description;
    const char *regex;
-   int (*screenshot)(char *address, char *filename, int timeout);
+   int (*screenshot)(char *address, int timeout);
 };
