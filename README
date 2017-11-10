@@ -96,8 +96,7 @@
     $ make
     $ make install
 
-    NOTE: 
-     lxi-tools depends on liblxi so you need to go install liblxi first.
+    NOTE: lxi-tools depends on liblxi so you need to go install liblxi first.
 
 3.2 Installation using package:
 
@@ -110,7 +109,14 @@
     lxi-tools is tested to work with the following LXI/LAN compatible
     instruments:
 
-    - Rigol DS1104Z
+    - Rigol Technologies DS1104Z
+    - Rigol Technologies DG4102
+    - Rigol Technologies DP832
+    - Siglent Technologies SSA3032X
+
+    NOTE: Not all instruments works with the screenshot feature because the
+    instruments themselves provide no mehanism to download screenshots
+    remotely.
 
 
 5. Contributing
