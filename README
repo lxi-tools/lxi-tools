@@ -82,8 +82,8 @@
      $ lxi screenshot --list
                  Name   Description
      keysight-iv2000x   Keysight InfiniVision 2000 X series oscilloscopes (experimental)
-           rigol-1000   Rigol 1000z series oscilloscopes
-           rigol-2000   Rigol MSO/DS 2000 series oscilloscopes
+           rigol-1000   Rigol DS/MSO 1000z series oscilloscopes
+           rigol-2000   Rigol DS/MSO 2000 series oscilloscopes
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
        tektronix-2000   Tektronix MSO/DPO 2000 series oscilloscopes (experimental)
 
