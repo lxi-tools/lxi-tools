@@ -1,7 +1,7 @@
-.TH "lxi" "1" "October 2017"
+.TH "lxi" "1" "November 2017"
 
 .SH "NAME"
-lxi \- a tool for controlling LXI enabled instruments.
+lxi \- a tool for controlling LXI compatible instruments.
 
 .SH "SYNOPSIS"
 .PP
@@ -13,7 +13,7 @@ lxi \- a tool for controlling LXI enabled instruments.
 
 .SH "DESCRIPTION"
 .PP
-lxi is a commandline tool for controlling LXI enabled instruments such as
+lxi is a commandline tool for controlling LXI compatible instruments such as
 modern oscilloscopes, power supplies, spectrum analyzers, etc..
 
 .SH "OPTIONS"
@@ -32,7 +32,7 @@ Display program version
 .B discover
 .I [<options>]
 .RS
-Search available networks for LXI devices
+Search available networks for LXI instruments
 .RE
 
 .PP
@@ -100,27 +100,28 @@ IP address of LXI device
 Timeout in seconds
 
 .TP
-.B \-m, \--model <name>
-Name of device model (model/family)
+.B \-p, \--plugin <name>
+Name of screenshot plugin to use
 
+If this option is omitted the tool will automatically try to select the most suitable plugin.
 .TP
 .B \-l, \--list
-List supported device models
+List available screenshot plugins
 
 .SH "EXAMPLES"
 .TP
 Send SCPI command:
 
-lxi scpi -a 192.168.0.42 "*IDN?"
+lxi scpi --address 192.168.0.42 "*IDN?"
 
 .TP
 Capture screenshot from a Rigol 1000Z series oscilloscope:
 
-lxi screenshot -a 192.168.0.42 -m rigol
+lxi screenshot --address 192.168.0.42 --plugin rigol-1000
 
 .PP
-Some LXI devices are slow to process SCPI commands, in which case you
-might need to take care to increase the timeout value.
+Some LXI instruments are slow to process SCPI commands, in which case you might
+need to take care to increase the timeout value.
 
 .SH "WEBSITE"
 .PP
