@@ -86,7 +86,8 @@ int rs_screenshot(char *address, char *filename, int timeout)
 // Screenshot plugin configuration
 struct screenshot_plugin rs_hmo1000 =
 {
-	.name = "rs-hmo1000",
-	.description = "Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)",
-	.screenshot = rs_screenshot
+    .name = "rs-hmo1000",
+    .description = "Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)",
+    .regex = "",
+    .screenshot = rs_screenshot
 };

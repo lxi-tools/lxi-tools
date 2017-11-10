@@ -39,5 +39,6 @@ struct screenshot_plugin
 {
    const char *name;
    const char *description;
+   const char *regex;
    int (*screenshot)(char *address, char *filename, int timeout);
 };

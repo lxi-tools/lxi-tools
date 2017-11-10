@@ -89,7 +89,8 @@ int keysight_screenshot(char *address, char *filename, int timeout)
 // Screenshot plugin configuration
 struct screenshot_plugin keysight_iv2000x =
 {
-	.name = "keysight-iv2000x",
-	.description = "Keysight InfiniVision 2000 X series oscilloscopes (experimental)",
-	.screenshot = keysight_screenshot
+    .name = "keysight-iv2000x",
+    .description = "Keysight InfiniVision 2000X series oscilloscopes (experimental)",
+    .regex = "",
+    .screenshot = keysight_screenshot
 };

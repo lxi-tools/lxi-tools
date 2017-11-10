@@ -37,9 +37,12 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
+#include <regex.h>
 #include "screenshot.h"
+#include <lxi.h>
 
 #define PLUGIN_LIST_SIZE_MAX 50
+#define ID_LENGTH_MAX 65536
 
 extern struct screenshot_plugin keysight_iv2000x;
 extern struct screenshot_plugin rigol_1000;
@@ -48,6 +51,53 @@ extern struct screenshot_plugin rs_hmo1000;
 extern struct screenshot_plugin tektronix_2000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
+
+static int get_device_id(char *address, char *id, int timeout)
+{
+    char *command;
+    int device, length;
+
+    // Connect to LXI instrument
+    device = lxi_connect(address, 0, NULL, timeout, VXI11);
+    if (device == LXI_ERROR)
+    {
+        printf("Error: Failed to connect\n");
+        return 1;
+    }
+
+    // Get instrument ID
+    command = "*IDN?";
+    lxi_send(device, command, strlen(command), timeout);
+    length = lxi_receive(device, id, ID_LENGTH_MAX, timeout);
+    if (length < 0)
+    {
+        printf("Error: Failed to receive message\n");
+        return 1;
+    }
+
+    // Remove trailing newline
+    if (id[length-1] == '\n')
+        id[length-1] = 0;
+
+    return 0;
+}
+
+static bool regex_match(const char *string, const char *pattern)
+{
+    int status;
+    regex_t regex;
+
+    if (regcomp(&regex, pattern, REG_EXTENDED | REG_NOSUB) != 0)
+        return false; // No match
+
+    status = regexec(&regex, string, (size_t) 0, NULL, 0);
+    regfree(&regex);
+
+    if (status != 0)
+        return false; // No match
+
+    return true; // Match
+}
 
 char *date_time(void)
 {
@@ -139,7 +189,7 @@ void screenshot_list_plugins(void)
 
 void screenshot_register_plugins(void)
 {
-    // Register screenshot plugins here
+    // Register screenshot plugins
     screenshot_plugin_register(&keysight_iv2000x);
     screenshot_plugin_register(&rigol_1000);
     screenshot_plugin_register(&rigol_2000);
@@ -151,6 +201,13 @@ int screenshot(char *address, char *model, char *filename, int timeout)
 {
     int i = 0;
     bool no_match = true;
+    char id[ID_LENGTH_MAX];
+    bool token_found = true;
+    char *token = NULL;
+    int plugin_winner = -1;
+    int match_count = 0;
+    int match_count_max = 0;
+    char *regex_buffer;
 
     // Check for required options
     if (strlen(address) == 0)
@@ -161,19 +218,78 @@ int screenshot(char *address, char *model, char *filename, int timeout)
 
     if (strlen(model) == 0)
     {
-        printf("Error: Missing model\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Find relevant screenshot plugin (match model to plugin name)
-    while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
-    {
-        if (strcmp(plugin_list[i]->name, model) == 0)
+        // Get instrument ID
+        if (get_device_id(address, id, timeout != 0))
         {
-            no_match = false;
-            break;
+            printf("Error: Unable to retrieve instrument ID\n");
+            exit(EXIT_FAILURE);
         }
-        i++;
+
+        // Find relevant screenshot plugin (match instrument ID to plugin)
+        while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
+        {
+            // Skip plugin if it has no .regex entry
+            if (plugin_list[i]->regex == NULL)
+            {
+                i++;
+                continue;
+            }
+
+            // Walk through space separated regular expressions in regex string
+            regex_buffer = strdup(plugin_list[i]->regex);
+            while (token_found == true)
+            {
+                if (token == NULL)
+                    token = strtok(regex_buffer, " ");
+                else
+                    token = strtok(NULL, " ");
+
+                if (token != NULL)
+                {
+                    // Match regular expression against ID
+                    if (regex_match(id, token))
+                        match_count++; // Successful match
+                }
+                else
+                    token_found = false;
+            }
+            free(regex_buffer);
+
+            // Plugin with most matches wins
+            if (match_count > match_count_max)
+            {
+                plugin_winner = i;
+                match_count_max = match_count;
+            }
+
+            // Reset
+            match_count = 0;
+            token_found = true;
+            i++;
+        }
+
+        if (plugin_winner == -1)
+        {
+            printf("Error: Could not autodetect which screenshot plugin to use - please specify model manually\n");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
+        no_match = false;
+        i = plugin_winner;
+    }
+    else
+    {
+        // Find relevant screenshot plugin (match specified model to plugin)
+        while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
+        {
+            if (strcmp(plugin_list[i]->name, model) == 0)
+            {
+                no_match = false;
+                break;
+            }
+            i++;
+        }
     }
 
     if (no_match)
