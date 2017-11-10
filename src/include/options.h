@@ -47,7 +47,7 @@ struct option_t
     char *filename;
     bool interactive;
     bool run_script;
-    char *model;
+    char *plugin_name;
     bool list;
     char screenshot_filename[500];
     lxi_protocol_t protocol;

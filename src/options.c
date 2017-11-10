@@ -51,7 +51,7 @@ struct option_t option =
     "",         // Default dump filename
     false,      // Default no interactive mode
     false,      // Default no run script
-    "",         // Default model
+    "",         // Default screenshot plugin name
     false,      // Default no list
     "",         // Default screenshot filename
     VXI11,      // Default protocol
@@ -86,8 +86,8 @@ void print_help(char *argv[])
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout*5);
-    printf("  -m, --model <name>                   Name of model\n");
-    printf("  -l, --list                           List supported models\n");
+    printf("  -p, --plugin <name>                  Name of screenshot plugin\n");
+    printf("  -l, --list                           List supported screenshot plugins\n");
     printf("\n");
 }
 
@@ -215,7 +215,7 @@ void parse_options(int argc, char *argv[])
         {
             {"address",        required_argument, 0, 'a'},
             {"timeout",        required_argument, 0, 't'},
-            {"model",          required_argument, 0, 'm'},
+            {"plugin",         required_argument, 0, 'p'},
             {"list",           no_argument,       0, 'l'},
             {0,                0,                 0,  0 }
         };
@@ -223,7 +223,7 @@ void parse_options(int argc, char *argv[])
         do
         {
             /* Parse screenshot options */
-            c = getopt_long(argc, argv, "a:t:m:l", long_options, &option_index);
+            c = getopt_long(argc, argv, "a:t:p:l", long_options, &option_index);
 
             switch (c)
             {
@@ -235,8 +235,8 @@ void parse_options(int argc, char *argv[])
                     option.timeout = atoi(optarg) * 1000;
                     break;
 
-                case 'm':
-                    option.model = optarg;
+                case 'p':
+                    option.plugin_name = optarg;
                     break;
 
                 case 'l':

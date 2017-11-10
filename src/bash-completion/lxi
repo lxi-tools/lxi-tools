@@ -26,7 +26,7 @@ _lxi()
                -s --script"
     screenshot_opts="-a --address \
                      -t --timeout \
-                     -m --model \
+                     -p --plugin \
                      -l --list"
 
     # Complete the options

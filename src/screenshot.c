@@ -197,7 +197,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&tektronix_2000);
 }
 
-int screenshot(char *address, char *model, char *filename, int timeout)
+int screenshot(char *address, char *plugin_name, char *filename, int timeout)
 {
     int i = 0;
     bool no_match = true;
@@ -216,7 +216,7 @@ int screenshot(char *address, char *model, char *filename, int timeout)
         exit(EXIT_FAILURE);
     }
 
-    if (strlen(model) == 0)
+    if (strlen(plugin_name) == 0)
     {
         // Get instrument ID
         if (get_device_id(address, id, timeout != 0))
@@ -270,7 +270,7 @@ int screenshot(char *address, char *model, char *filename, int timeout)
 
         if (plugin_winner == -1)
         {
-            printf("Error: Could not autodetect which screenshot plugin to use - please specify model manually\n");
+            printf("Error: Could not autodetect which screenshot plugin to use - please specify plugin name manually\n");
             exit(EXIT_FAILURE);
         }
 
@@ -280,10 +280,10 @@ int screenshot(char *address, char *model, char *filename, int timeout)
     }
     else
     {
-        // Find relevant screenshot plugin (match specified model to plugin)
+        // Find relevant screenshot plugin (match specified plugin name to plugin)
         while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
         {
-            if (strcmp(plugin_list[i]->name, model) == 0)
+            if (strcmp(plugin_list[i]->name, plugin_name) == 0)
             {
                 no_match = false;
                 break;
@@ -294,7 +294,7 @@ int screenshot(char *address, char *model, char *filename, int timeout)
 
     if (no_match)
     {
-        printf("Error: Unknown model\n");
+        printf("Error: Unknown plugin name\n");
         exit(EXIT_FAILURE);
     }
 

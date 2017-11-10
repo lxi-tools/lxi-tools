@@ -384,7 +384,7 @@ int main(int argc, char* argv[])
                 screenshot_list_plugins();
                 return 0;
             }
-            status = screenshot(option.ip, option.model, option.screenshot_filename, option.timeout);
+            status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout);
             break;
     }
 
