@@ -88,6 +88,6 @@ struct screenshot_plugin rs_hmo1000 =
 {
     .name = "rs-hmo1000",
     .description = "Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)",
-    .regex = "",
+    .regex = "Rohde&Schwarz HMO1...",
     .screenshot = rs_screenshot
 };
