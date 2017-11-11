@@ -1,4 +1,58 @@
-=== lxi-tools v1.6 ===
+=== lxi-tools v1.7 ===
+
+
+Changes since lxi-tools v1.6:
+
+ * Update README
+
+ * Cleanup
+
+ * Update .regex for Tektronix plugin
+
+ * Update .regex for R&S plugin
+
+ * Update .regex for Keysight plugin
+
+ * Update man page
+
+ * Embed instrument IP address in screenshot filename
+
+   This helps identify screenshot files when capturing screenshots from
+   multiple instruments.
+
+   It also allows to simplify the APIs used by the screenshot plugins.
+
+ * Change option '--model' to '--plugin'
+
+   Lets remove any model vs. plugin confusion and only deal with plugin
+   names. Each plugin includes support for one or more instruments models
+   as described in the plugin description.
+
+ * Add automatic loading of screenshot plugin feature
+
+   If no screenshot plugin is specified the tool will automatically try to
+   select the best plugin by matching the instruments ID string against the
+   regular expressions defined in each plugin.
+
+   Each screenshot plugin defines a .regex string entry containing space
+   separated regular expressions. Each regular expression is matched
+   against the instrument ID string. The plugin with most matches is
+   selected.
+
+   Note: This mechanism is slightly slower than manually specifying which
+   screenshot plugin because it needs to retrieve the instruments ID string
+   first.
+
+ * Improve description of Rigol plugins
+
+ * Fix Rigol 2000 screenshot plugin
+
+   Remove trailing newline in received image data.
+
+ * Add screenshot plugin for Rigol 2000 series
+
+   Also, make existing Rigol plugin only apply for 1000z series.
+
 
 
 Changes since lxi-tools v1.5:
