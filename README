@@ -50,14 +50,14 @@
       -l, --list                           List supported models
 
 
-    Example - Discovering LXI devices on available networks:
+    Example - Discover LXI devices on available networks:
 
      $ lxi discover
      Searching for LXI devices - please wait...
 
      Broadcasting on interface lo
      Broadcasting on interface eth0
-         Found "RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03.SP2" on address 10.42.0.42
+         Found "RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03.SP2" on address 10.42.1.20
      Broadcasting on interface wlan0
      Broadcasting on interface docker0
      Broadcasting on interface lxcbr0
@@ -65,19 +65,19 @@
      Found 1 device
 
 
-    Example - Sending a SCPI command to an instrument:
+    Example - Send SCPI command to an instrument:
     
-     $ lxi scpi --address 10.42.0.42 "*IDN?"
+     $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
 
-    Example - Capturing screenshot from a Rigol 1000z series oscilloscope:
+    Example - Capture screenshot from a Rigol 1000z series oscilloscope:
 
-     $ lxi screenshot --address 192.168.0.42 --model rigol-1000
-     Saved screenshot image to screenshot-000.png
+     $ lxi screenshot --address 10.42.1.20 --model rigol-1000
+     Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
 
 
-    Example - List models supported by the screenshot feature:
+    Example - List available screenshot plugins:
 
      $ lxi screenshot --list
                  Name   Description
