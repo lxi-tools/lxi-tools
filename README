@@ -106,13 +106,16 @@
 
 4. Tested instruments
 
-    lxi-tools is tested to work with the following LXI/LAN compatible
-    instruments:
+    The commandline lxi tool is tested to work successfully with the following
+    LXI/LAN compatible instruments:
 
-    - Rigol Technologies DS1104Z
-    - Rigol Technologies DG4102
-    - Rigol Technologies DP832
-    - Siglent Technologies SSA3032X
+     Instrument                           Working features
+
+     Rigol Technologies DS1104Z           (discover+scpi+screenshot)
+     Rigol Technologies DS2302            (discover+scpi+screenshot)
+     Rigol Technologies DG4102            (discover+scpi)
+     Rigol Technologies DP832             (discover+scpi)
+     Siglent Technologies SSA3032X        (scpi)
 
     NOTE: Not all instruments works with the screenshot feature because the
     instruments themselves provide no mehanism to download screenshots
