@@ -1,8 +1,7 @@
 IP=$1
 SCPI="lxi scpi --address $IP"
 
-#$SCPI "display:data?"
-
+$SCPI "*IDN?"
 $SCPI ":autoscale"
 $SCPI ":stop"
 $SCPI ":run"

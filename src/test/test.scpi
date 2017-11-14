@@ -5,12 +5,13 @@
 :clear
 :tforce
 :single
+
 :CHANnel1:DISPlay on
 :CHANnel2:DISPlay on
 :CHANnel3:DISPlay on
 :CHANnel4:DISPlay on
+
 :CHANnel1:DISPlay off
 :CHANnel2:DISPlay off
 :CHANnel3:DISPlay off
 :CHANnel4:DISPlay off
-*IDN?
