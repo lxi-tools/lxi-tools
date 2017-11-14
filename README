@@ -73,8 +73,14 @@
 
     Example - Capture screenshot from a Rigol 1000z series oscilloscope:
 
-     $ lxi screenshot --address 10.42.1.20 --model rigol-1000
+     $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
+
+     Or using plugin autodetection it simply becomes:
+
+     $ lxi screenshot --address 10.42.1.20
+     Loaded rigol-1000 screenshot plugin
+     Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:46:02.png
 
 
     Example - List available screenshot plugins:
