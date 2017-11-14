@@ -86,8 +86,8 @@ void print_help(char *argv[])
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout*5);
-    printf("  -p, --plugin <name>                  Name of screenshot plugin\n");
-    printf("  -l, --list                           List supported screenshot plugins\n");
+    printf("  -p, --plugin <name>                  Use screenshot plugin by name\n");
+    printf("  -l, --list                           List available screenshot plugins\n");
     printf("\n");
 }
 

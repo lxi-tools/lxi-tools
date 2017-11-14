@@ -46,8 +46,8 @@
     Screenshot options:
       -a, --address <ip>                   Device IP address
       -t, --timeout <seconds>              Timeout (default: 3)
-      -m, --model <name>                   Name of model
-      -l, --list                           List supported models
+      -p, --plugin <name>                  Use screenshot plugin by name
+      -l, --list                           List available screenshot plugins
 
 
     Example - Discover LXI devices on available networks:
