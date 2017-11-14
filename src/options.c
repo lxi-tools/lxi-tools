@@ -55,7 +55,7 @@ struct option_t option =
     false,      // Default no list
     "",         // Default screenshot filename
     VXI11,      // Default protocol
-    5555,       // Default raw/TCP port
+    5025,       // Default raw/TCP port (See http://www.lxistandard.org/About/LXI-Protocols.aspx)
 };
 
 void print_help(char *argv[])
