@@ -9,7 +9,7 @@ lxi_SOURCES = lxi.c \
               plugins/screenshot_rigol-1000.c \
               plugins/screenshot_rigol-2000.c \
               plugins/screenshot_rohde-schwarz.c \
-              plugins/screenshot_siglent-sds1000.c \
+              plugins/screenshot_siglent-sds1000x.c \
               plugins/screenshot_siglent-ssa3000x.c \
               plugins/screenshot_tektronix.c
 
