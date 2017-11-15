@@ -50,6 +50,7 @@ extern struct screenshot_plugin rigol_1000;
 extern struct screenshot_plugin rigol_2000;
 extern struct screenshot_plugin rs_hmo1000;
 extern struct screenshot_plugin siglent_sds1000;
+extern struct screenshot_plugin siglent_ssa3000x;
 extern struct screenshot_plugin tektronix_2000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
@@ -197,6 +198,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&rigol_2000);
     screenshot_plugin_register(&rs_hmo1000);
     screenshot_plugin_register(&siglent_sds1000);
+    screenshot_plugin_register(&siglent_ssa3000x);
     screenshot_plugin_register(&tektronix_2000);
 }
 
