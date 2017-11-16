@@ -287,9 +287,11 @@ void parse_options(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    if ((option.command == SCPI) && (optind != argc))
+    if (option.command == SCPI)
     {
-        strncpy(option.scpi_command, argv[optind++], 500);
+        if (optind != argc)
+            strncpy(option.scpi_command, argv[optind++], 500);
+
         if (strlen(option.ip) == 0)
         {
             error_printf("No IP address specified\n");
@@ -300,11 +302,6 @@ void parse_options(int argc, char *argv[])
     if ((option.command == SCREENSHOT) && (optind != argc))
     {
         strncpy(option.screenshot_filename, argv[optind++], 500);
-        if (strlen(option.screenshot_filename) == 0)
-        {
-            error_printf("No filename specified\n");
-            exit(EXIT_FAILURE);
-        }
     }
 
     /* Print any unknown arguments */
