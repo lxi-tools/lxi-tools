@@ -48,10 +48,9 @@ struct option_t option =
     "",         // Default IP address
     "*IDN?",    // Default SCPI command
     false,      // Default no hex dump
-    false,      // Default no file dump
-    "",         // Default dump filename
     false,      // Default no interactive mode
     false,      // Default no run script
+    "",         // Default script filename
     "",         // Default screenshot plugin name
     false,      // Default no list
     "",         // Default screenshot filename
@@ -78,7 +77,6 @@ void print_help(char *argv[])
     printf("  -a, --address <ip>                   Device IP address\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -x, --dump-hex                       Print response in hexadecimal\n");
-    printf("  -f, --dump-file <filename>           Save response to file\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
     printf("  -s, --script <filename>              Run script file\n");
     printf("  -r, --raw                            Use raw/TCP\n");
@@ -152,7 +150,6 @@ void parse_options(int argc, char *argv[])
             {"address",        required_argument, 0, 'a'},
             {"timeout",        required_argument, 0, 't'},
             {"dump-hex",       no_argument,       0, 'x'},
-            {"dump-file",      required_argument, 0, 'f'},
             {"interactive",    no_argument,       0, 'i'},
             {"script",         required_argument, 0, 's'},
             {"raw",            no_argument,       0, 'r'},
@@ -163,7 +160,7 @@ void parse_options(int argc, char *argv[])
         do
         {
             /* Parse scpi options */
-            c = getopt_long(argc, argv, "t:a:xf:is:rp:", long_options, &option_index);
+            c = getopt_long(argc, argv, "t:a:xis:rp:", long_options, &option_index);
 
             switch (c)
             {
@@ -179,18 +176,13 @@ void parse_options(int argc, char *argv[])
                     option.dump_hex = true;
                     break;
 
-                case 'f':
-                    option.dump_file = true;
-                    option.filename = optarg;
-                    break;
-
                 case 'i':
                     option.interactive = true;
                     break;
 
                 case 's':
                     option.run_script = true;
-                    option.filename = optarg;
+                    option.script_filename = optarg;
                     break;
 
                 case 'r':

@@ -43,10 +43,9 @@ struct option_t
     char ip[500];
     char scpi_command[500];
     bool dump_hex;
-    bool dump_file;
-    char *filename;
     bool interactive;
     bool run_script;
+    char *script_filename;
     char *plugin_name;
     bool list;
     char screenshot_filename[500];

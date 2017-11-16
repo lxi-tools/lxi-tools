@@ -45,17 +45,6 @@
 
 static int device_count = 0;
 
-static void file_dump(void *data, int length, char *filename)
-{
-    FILE *fp;
-
-    fp=fopen(filename, "w+");
-    fwrite(data, 1, length, fp);
-    fclose(fp);
-
-    printf("Saved %d bytes to %s\n", length, filename);
-}
-
 static void hex_dump(void *data, int length)
 {
     int i;
@@ -89,7 +78,7 @@ static void strip_trailing_space(char *line)
     }
 }
 
-static int scpi(char *ip, char *command, int timeout, char *filename)
+static int scpi(char *ip, char *command, int timeout)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
     int device;
@@ -149,14 +138,11 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
         // Print response
         if (option.dump_hex)
             hex_dump(response, length);
-        else if (option.dump_file)
-            file_dump(response, length, filename);
         else
             {
-                if (response[length-1] == '\n')
-                    printf("%s", response);
-                else
-                    printf("%s\n", response);
+                int i;
+                for (i=0; i<length; i++)
+                    putchar(response[i]);
             }
     }
 
@@ -374,9 +360,9 @@ int main(int argc, char* argv[])
             if (option.interactive)
                 status = enter_interactive_mode(option.ip, option.timeout);
             else if (option.run_script)
-                status = run_script(option.ip, option.timeout, option.filename);
+                status = run_script(option.ip, option.timeout, option.script_filename);
             else
-                status = scpi(option.ip, option.scpi_command, option.timeout, option.filename);
+                status = scpi(option.ip, option.scpi_command, option.timeout);
             break;
         case SCREENSHOT:
             screenshot_register_plugins();
