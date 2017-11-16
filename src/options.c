@@ -47,7 +47,7 @@ struct option_t option =
     3,          // Default timeout in seconds
     "",         // Default IP address
     "",         // Default SCPI command
-    false,      // Default no hex dump
+    false,      // Default no hexadecimal print
     false,      // Default no interactive mode
     false,      // Default no run script
     "",         // Default script filename
@@ -76,7 +76,7 @@ void print_help(char *argv[])
     printf("Scpi options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
-    printf("  -x, --dump-hex                       Print response in hexadecimal\n");
+    printf("  -x, --hex                            Print response in hexadecimal\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
     printf("  -s, --script <filename>              Run script file\n");
     printf("  -r, --raw                            Use raw/TCP\n");
@@ -149,7 +149,7 @@ void parse_options(int argc, char *argv[])
         {
             {"address",        required_argument, 0, 'a'},
             {"timeout",        required_argument, 0, 't'},
-            {"dump-hex",       no_argument,       0, 'x'},
+            {"hex",            no_argument,       0, 'x'},
             {"interactive",    no_argument,       0, 'i'},
             {"script",         required_argument, 0, 's'},
             {"raw",            no_argument,       0, 'r'},
@@ -173,7 +173,7 @@ void parse_options(int argc, char *argv[])
                     break;
 
                 case 'x':
-                    option.dump_hex = true;
+                    option.hex = true;
                     break;
 
                 case 'i':

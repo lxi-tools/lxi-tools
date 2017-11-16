@@ -42,7 +42,7 @@ struct option_t
     int timeout;
     char ip[500];
     char scpi_command[500];
-    bool dump_hex;
+    bool hex;
     bool interactive;
     bool run_script;
     char *script_filename;

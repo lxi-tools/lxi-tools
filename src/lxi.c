@@ -45,7 +45,7 @@
 
 static int device_count = 0;
 
-static void hex_dump(void *data, int length)
+static void hex_print(void *data, int length)
 {
     int i;
     char *bufferp;
@@ -136,8 +136,8 @@ static int scpi(char *ip, char *command, int timeout)
         }
 
         // Print response
-        if (option.dump_hex)
-            hex_dump(response, length);
+        if (option.hex)
+            hex_print(response, length);
         else
             {
                 int i;

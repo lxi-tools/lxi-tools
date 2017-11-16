@@ -20,8 +20,7 @@ _lxi()
     discover_opts="-t --timeout"
     scpi_opts="-a --address \
                -t --timeout \
-               -x --dump-hex \
-               -f --dump-file \
+               -x --hex \
                -i --interactive \
                -s --script"
     screenshot_opts="-a --address \
