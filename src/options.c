@@ -46,7 +46,7 @@ struct option_t option =
     NO_COMMAND, // Default command
     3,          // Default timeout in seconds
     "",         // Default IP address
-    "*IDN?",    // Default SCPI command
+    "",         // Default SCPI command
     false,      // Default no hex dump
     false,      // Default no interactive mode
     false,      // Default no run script
@@ -287,6 +287,12 @@ void parse_options(int argc, char *argv[])
         if (strlen(option.ip) == 0)
         {
             error_printf("No IP address specified\n");
+            exit(EXIT_FAILURE);
+        }
+
+        if (strlen(option.scpi_command) == 0)
+        {
+            error_printf("No SCPI command specified\n");
             exit(EXIT_FAILURE);
         }
     }
