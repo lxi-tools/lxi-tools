@@ -61,7 +61,10 @@ static void hex_print(void *data, int length)
         }
         printf("0x%02x ", (unsigned char) bufferp[i]);
     }
-    printf("\n");
+
+    // Append newline if printing to tty terminal (not file)
+    if (isatty(fileno(stdout)))
+        printf("\n");
 }
 
 static void strip_trailing_space(char *line)
@@ -143,6 +146,10 @@ static int scpi(char *ip, char *command, int timeout)
                 int i;
                 for (i=0; i<length; i++)
                     putchar(response[i]);
+
+                // Append newline if printing to tty terminal (not file)
+                if ( isatty(fileno(stdout)) && (response[length-1] != '\n'))
+                    printf("\n");
             }
     }
 
