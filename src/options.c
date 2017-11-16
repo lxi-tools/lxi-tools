@@ -38,6 +38,7 @@
 #include <termios.h>
 #include "config.h"
 #include "options.h"
+#include "error.h"
 #include <lxi.h>
 
 struct option_t option =
@@ -282,7 +283,7 @@ void parse_options(int argc, char *argv[])
 
     if ((option.command == NO_COMMAND) && (optind != argc))
     {
-        printf("Error: Unknown command\n");
+        error_printf("Unknown command\n");
         exit(EXIT_FAILURE);
     }
 
@@ -291,7 +292,7 @@ void parse_options(int argc, char *argv[])
         strncpy(option.scpi_command, argv[optind++], 500);
         if (strlen(option.ip) == 0)
         {
-            printf("Error: No IP address specified\n");
+            error_printf("No IP address specified\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -301,7 +302,7 @@ void parse_options(int argc, char *argv[])
         strncpy(option.screenshot_filename, argv[optind++], 500);
         if (strlen(option.screenshot_filename) == 0)
         {
-            printf("Error: No filename specified\n");
+            error_printf("No filename specified\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -309,10 +310,10 @@ void parse_options(int argc, char *argv[])
     /* Print any unknown arguments */
     if (optind < argc)
     {
-        printf("Unknown arguments: ");
+        error_printf("Unknown arguments: ");
         while (optind < argc)
-            printf("%s ", argv[optind++]);
-        printf("\n");
+            fprintf(stderr, "%s ", argv[optind++]);
+        fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
     }
 }

@@ -40,6 +40,7 @@
 #include <regex.h>
 #include "screenshot.h"
 #include "options.h"
+#include "error.h"
 #include <lxi.h>
 
 #define PLUGIN_LIST_SIZE_MAX 50
@@ -64,7 +65,7 @@ static int get_device_id(char *address, char *id, int timeout)
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
     if (device == LXI_ERROR)
     {
-        printf("Error: Failed to connect\n");
+        error_printf("Failed to connect\n");
         return 1;
     }
 
@@ -74,7 +75,7 @@ static int get_device_id(char *address, char *id, int timeout)
     length = lxi_receive(device, id, ID_LENGTH_MAX, timeout);
     if (length < 0)
     {
-        printf("Error: Failed to receive message\n");
+        error_printf("Failed to receive message\n");
         return 1;
     }
 
@@ -134,7 +135,7 @@ void screenshot_file_dump(void *data, int length, char *format)
     fd = fopen(screenshot_filename, "w+");
     if (fd == NULL)
     {
-        printf("Error: Could not write screenshot file (%s)\n", strerror(errno));
+        error_printf("Could not write screenshot file (%s)\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
     fwrite(data, 1, length, fd);
@@ -153,7 +154,7 @@ void screenshot_plugin_register(struct screenshot_plugin *plugin)
 
     if (i >= PLUGIN_LIST_SIZE_MAX)
     {
-        printf("Error: Screenshot plugin list full\n");
+        error_printf("Screenshot plugin list full\n");
         exit(EXIT_FAILURE);
     }
 
@@ -217,7 +218,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     // Check for required options
     if (strlen(address) == 0)
     {
-        printf("Error: Missing address\n");
+        error_printf("Missing address\n");
         exit(EXIT_FAILURE);
     }
 
@@ -226,7 +227,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
         // Get instrument ID
         if (get_device_id(address, id, timeout != 0))
         {
-            printf("Error: Unable to retrieve instrument ID\n");
+            error_printf("Unable to retrieve instrument ID\n");
             exit(EXIT_FAILURE);
         }
 
@@ -275,7 +276,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
 
         if (plugin_winner == -1)
         {
-            printf("Error: Could not autodetect which screenshot plugin to use - please specify plugin name manually\n");
+            error_printf("Could not autodetect which screenshot plugin to use - please specify plugin name manually\n");
             exit(EXIT_FAILURE);
         }
 
@@ -299,7 +300,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
 
     if (no_match)
     {
-        printf("Error: Unknown plugin name\n");
+        error_printf("Unknown plugin name\n");
         exit(EXIT_FAILURE);
     }
 

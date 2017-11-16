@@ -28,57 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h>
-#include <lxi.h>
-#include "error.h"
-#include "screenshot.h"
+#ifndef ERROR_H
+#define ERROR_H
 
-#define IMAGE_SIZE_MAX 0x400000 // 4 MB
+#define error_printf(format, args...) \
+    fprintf(stderr, "Error: " format, ## args)
 
-int siglent_sds1000x_screenshot(char *address, int timeout)
-{
-    char response[IMAGE_SIZE_MAX];
-    char *command, *image;
-    int device, length, n;
-    char c;
-
-    // Connect to LXI instrument
-    device = lxi_connect(address, 0, NULL, timeout, VXI11);
-    if (device == LXI_ERROR)
-    {
-        error_printf("Failed to connect\n");
-        return 1;
-    }
-
-    // Send SCPI command to grab BMP image
-    command = "scdp";
-    lxi_send(device, command, strlen(command), timeout);
-    length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
-    if (length < 0)
-    {
-        error_printf("Failed to receive message\n");
-        return 1;
-    }
-
-    // Dump remaining BMP image data to file
-    screenshot_file_dump(image, length, "bmp");
-
-    // Disconnect
-    lxi_disconnect(device);
-
-    return 0;
-}
-
-// Screenshot plugin configuration
-struct screenshot_plugin siglent_sds1000x =
-{
-    .name = "siglent-sds1000x",
-    .description = "Siglent SDS 1000X series oscilloscopes (experimental)",
-    .regex = "SIGLENT SDS1...",
-    .screenshot = siglent_sds1000x_screenshot
-};
+#endif

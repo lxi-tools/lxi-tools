@@ -35,6 +35,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <lxi.h>
+#include "error.h"
 #include "screenshot.h"
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
@@ -49,7 +50,7 @@ int tektronix_screenshot(char *address, int timeout)
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
     if (device == LXI_ERROR)
     {
-        printf("Error: Failed to connect\n");
+        error_printf("Failed to connect\n");
         return 1;
     }
 
@@ -63,7 +64,7 @@ int tektronix_screenshot(char *address, int timeout)
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
     {
-        printf("Error: Failed to receive message\n");
+        error_printf("Failed to receive message\n");
         return 1;
     }
 

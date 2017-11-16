@@ -3,6 +3,7 @@ bin_PROGRAMS = lxi
 lxi_SOURCES = lxi.c \
               options.c \
               include/options.h \
+              include/error.h \
               include/screenshot.h \
               screenshot.c \
               plugins/screenshot_keysight.c \

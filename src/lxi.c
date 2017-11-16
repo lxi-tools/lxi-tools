@@ -37,6 +37,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "options.h"
+#include "error.h"
 #include "screenshot.h"
 #include <lxi.h>
 
@@ -110,7 +111,7 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
     device = lxi_connect(ip, option.port, NULL, timeout, option.protocol);
     if (device != LXI_OK)
     {
-        printf("Error: Unable to connect to LXI device\n");
+        error_printf("Unable to connect to LXI device\n");
         goto error_connect;
     }
 
@@ -118,7 +119,7 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
     length = lxi_send(device, command, strlen(command), timeout);
     if (length < 0)
     {
-        printf("Error: Failed to send message\n");
+        error_printf("Failed to send message\n");
         goto error_send;
     }
 
@@ -141,7 +142,7 @@ static int scpi(char *ip, char *command, int timeout, char *filename)
         length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
         if (length < 0)
         {
-            printf("Error: Failed to receive message\n");
+            error_printf("Failed to receive message\n");
             goto error_receive;
         }
 
@@ -186,7 +187,7 @@ static int enter_interactive_mode(char *ip, int timeout)
     device = lxi_connect(ip, 0, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
-        printf("Error: Unable to connect to LXI device\n");
+        error_printf("Unable to connect to LXI device\n");
         goto error_connect;
     }
 
@@ -211,7 +212,7 @@ static int enter_interactive_mode(char *ip, int timeout)
         // Send entered input as SCPI command
         length = lxi_send(device, input, strlen(input), timeout);
         if (length < 0)
-            printf("Error: Failed to send message\n");
+            error_printf("Failed to send message\n");
 
         // Only expect response in case we are firing a question command
         if (input[strlen(input)-1] == '?')
@@ -219,7 +220,7 @@ static int enter_interactive_mode(char *ip, int timeout)
             length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
             if (length < 0)
             {
-                printf("Error: Failed to receive message\n");
+                error_printf("Failed to receive message\n");
             } else
             {
                 // Make sure we terminate response string
@@ -257,7 +258,7 @@ static int run_script(char *ip, int timeout, char *filename)
     fp = fopen(filename, "r");
     if (fp == NULL)
     {
-        printf("Error: Unable to open file %s\n", filename);
+        error_printf("Unable to open file %s\n", filename);
         goto error_fopen;
     }
 
@@ -265,7 +266,7 @@ static int run_script(char *ip, int timeout, char *filename)
     device = lxi_connect(ip, 0, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
-        printf("Error: Unable to connect to LXI device\n");
+        error_printf("Unable to connect to LXI device\n");
         goto error_connect;
     }
 
@@ -285,7 +286,7 @@ static int run_script(char *ip, int timeout, char *filename)
         // Send read line as SCPI command
         length = lxi_send(device, line, strlen(line), timeout);
         if (length < 0)
-            printf("Error: Failed to send message\n");
+            error_printf("Failed to send message\n");
 
         // Only expect response in case we are firing a question command
         if (line[strlen(line)-1] == '?')
@@ -293,7 +294,7 @@ static int run_script(char *ip, int timeout, char *filename)
             length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
             if (length < 0)
             {
-                printf("Error: Failed to receive message\n");
+                error_printf("Failed to receive message\n");
             } else
             {
                 // Make sure we terminate response string
