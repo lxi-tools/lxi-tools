@@ -115,6 +115,11 @@ Send SCPI command:
 lxi scpi --address 192.168.0.42 "*IDN?"
 
 .TP
+Send SCPI command and dump response to file:
+
+lxi scpi --address 192.168.0.42 "*IDN?" > response.txt
+
+.TP
 Capture screenshot from a Rigol 1000Z series oscilloscope:
 
 lxi screenshot --address 192.168.0.42 --plugin rigol-1000
