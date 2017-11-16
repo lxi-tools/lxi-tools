@@ -36,8 +36,7 @@
     Scpi options:
       -a, --address <ip>                   Device IP address
       -t, --timeout <seconds>              Timeout (default: 3)
-      -x, --dump-hex                       Print response in hexadecimal
-      -f, --dump-file <filename>           Save response to file
+      -x, --hex                            Print response in hexadecimal
       -i, --interactive                    Enter interactive mode
       -s, --script <filename>              Run script file
       -r, --raw                            Use raw/TCP
@@ -91,7 +90,8 @@
            rigol-1000   Rigol DS/MSO 1000z series oscilloscopes
            rigol-2000   Rigol DS/MSO 2000 series oscilloscopes
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
-      siglent-sds1000   Siglent SDS 1000X series oscilloscopes (experimental)
+     siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)                                  
+     siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)  
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
 
 
@@ -108,7 +108,7 @@
 3.2 Installation using package:
 
     lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
-    https://lxi.github.io for package installation details.
+    https://lxi.github.io to see list of supported distributions.
 
 
 4. Tested instruments
@@ -124,7 +124,7 @@
      Rigol Technologies DP832             (discover+scpi)
      Siglent Technologies SSA3032X        (scpi)
 
-    NOTE: Not all instruments works with the screenshot feature because the
+    NOTE: Not all instruments work with the screenshot feature because the
     instruments themselves provide no mehanism to download screenshots
     remotely.
 
