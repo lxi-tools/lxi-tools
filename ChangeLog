@@ -1,4 +1,49 @@
-=== lxi-tools v1.8 ===
+=== lxi-tools v1.9 ===
+
+
+Changes since lxi-tools v1.8:
+
+ * Update README
+
+ * Fix newlines when redirecting to file or terminal
+
+ * Rename --dump-hex to --hex
+
+ * Fix missing error message when no SCPI command defined
+
+ * Update man page
+
+ * Remove --dump-file option
+
+   The correct way to dump response to file is to use pipe output
+   redirection. For example:
+
+   lxi scpi --address 192.168.1.210 "*IDN?" > response.txt
+
+   This way it is possible to dump any binary reponse to file.
+
+ * Fix missing error message when no IP address defined
+
+ * Print errors to stderr
+
+ * Cleanup Siglent SDS1000 plugin name
+
+ * Add Siglent SSA 3000X screenshot plugin
+
+ * Cleanup script examples
+
+ * Correct default SCPI raw/TCP port
+
+   By default use port 5025 as described here:
+   http://www.lxistandard.org/About/LXI-Protocols.aspx
+
+   If a different port is needed use the '--raw-port' option.
+
+   Apparently Rigol is not using the recommended port for raw SCPI
+   commands.
+
+ * Update descriptions of the plugin options
+
 
 
 Changes since lxi-tools v1.7:
