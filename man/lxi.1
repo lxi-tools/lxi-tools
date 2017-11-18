@@ -55,6 +55,10 @@ Capture screenshot
 .B \-t, \--timeout <seconds>
 Timeout in seconds
 
+.TP
+.B \-m, \--mdns
+Search via mDNS/DNS-SD
+
 .SH "SCPI OPTIONS"
 
 .TP
@@ -105,6 +109,16 @@ If this option is omitted the tool will automatically try to select the most sui
 List available screenshot plugins
 
 .SH "EXAMPLES"
+.TP
+Seach for LXI instruments:
+
+lxi discover
+
+.TP
+Seach for LXI instruments using mDNS/DNS-SD:
+
+lxi discover --mdns
+
 .TP
 Send SCPI command:
 
