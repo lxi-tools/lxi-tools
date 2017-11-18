@@ -17,7 +17,8 @@ _lxi()
           discover \
           scpi \
           screenshot"
-    discover_opts="-t --timeout"
+    discover_opts="-t --timeout \
+                   -m --mdns"
     scpi_opts="-a --address \
                -t --timeout \
                -x --hex \

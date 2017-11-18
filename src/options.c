@@ -56,6 +56,7 @@ struct option_t option =
     "",         // Default screenshot filename
     VXI11,      // Default protocol
     5025,       // Default raw/TCP port (See http://www.lxistandard.org/About/LXI-Protocols.aspx)
+    false,      // Default no mDNS discover
 };
 
 void print_help(char *argv[])
@@ -72,6 +73,7 @@ void print_help(char *argv[])
     printf("\n");
     printf("Discover options:\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
+    printf("  -m, --mdns                           Search via mDNS/DNS-SD\n");
     printf("\n");
     printf("Scpi options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
@@ -122,11 +124,12 @@ void parse_options(int argc, char *argv[])
         static struct option long_options[] =
         {
             {"timeout",        required_argument, 0, 't'},
+            {"mdns",           no_argument,       0, 'm'},
             {0,                0,                 0,  0 }
         };
 
         /* Parse discover options */
-        c = getopt_long(argc, argv, "t:", long_options, &option_index);
+        c = getopt_long(argc, argv, "t:m", long_options, &option_index);
 
         while (c != -1)
         {
@@ -135,10 +138,13 @@ void parse_options(int argc, char *argv[])
                 case 't':
                     option.timeout = atoi(optarg) * 1000;
                     break;
+                case 'm':
+                    option.mdns = true;
+                    break;
                 case '?':
                     exit(EXIT_FAILURE);
             }
-            c = getopt_long(argc, argv, "t:", long_options, &option_index);
+            c = getopt_long(argc, argv, "t:m", long_options, &option_index);
         }
     }
     else if (strcmp(argv[1], "scpi") == 0)

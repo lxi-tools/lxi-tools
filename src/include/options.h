@@ -51,6 +51,7 @@ struct option_t
     char screenshot_filename[500];
     lxi_protocol_t protocol;
     int port;
+    bool mdns;
 };
 
 enum command_t

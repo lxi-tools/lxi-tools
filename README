@@ -32,6 +32,7 @@
 
     Discover options:
       -t, --timeout <seconds>              Timeout (default: 3)
+      -m, --mdns                           Search via mDNS/DNS-SD
 
     Scpi options:
       -a, --address <ip>                   Device IP address

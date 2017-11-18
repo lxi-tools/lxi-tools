@@ -44,6 +44,7 @@
 #define RESPONSE_LENGTH_MAX 0x500000
 
 static int device_count = 0;
+static int service_count = 0;
 
 static void hex_print(void *data, int length)
 {
@@ -321,29 +322,47 @@ void broadcast(char *address, char *interface)
 
 void device(char *address, char *id)
 {
-    printf("    Found \"%s\" on address %s\n", id, address);
+    printf("  Found \"%s\" on address %s\n", id, address);
     device_count++;
+}
+
+void service(char *address, char *id, char *service, int port)
+{
+    printf("  Found %s on address %s\n    %s service on port %u\n", id, address, service, port);
+    service_count++;
 }
 
 static int discover(void)
 {
-    struct lxi_info_t info;
+    lxi_info_t info;
 
     // Set up info callbacks
     info.broadcast = &broadcast;
     info.device = &device;
+    info.service = &service;
 
     printf("Searching for LXI devices - please wait...\n\n");
 
-    // Search for LXI devices
-    lxi_discover(&info, option.timeout);
+    // Search for LXI devices / services
+    if (option.mdns)
+    {
+        lxi_discover(&info, option.timeout, DISCOVER_MDNS);
+        if (service_count == 0)
+            printf("No services found\n");
+        else
+            printf("\nFound %d service%c\n", service_count, service_count > 1 ? 's' : ' ');
+    }
+    else
+    {
+        lxi_discover(&info, option.timeout, DISCOVER_VXI11);
+        printf("\n");
+        if (device_count == 0)
+            printf("No devices found\n");
+        else
+            printf("Found %d device%c\n", device_count, device_count > 1 ? 's' : ' ');
+    }
 
     printf("\n");
-
-    if (device_count == 0)
-        printf("No devices found\n\n");
-    else
-        printf("Found %d device%c\n\n", device_count, device_count > 1 ? 's' : ' ');
 
     return 0;
 }
