@@ -1,4 +1,17 @@
-=== lxi-tools v1.9 ===
+=== lxi-tools v1.10 ===
+
+
+Changes since lxi-tools v1.9:
+
+ * Add support for mDNS/DNS-SD discovery
+
+   Add "--mdns" option which enables the discover command to search for LXI
+   devices/services using mDNS/DNS-SD.
+
+ * Fix Siglent screenshot plugins
+
+   Write correct response buffer to file. Improve .regex match expression.
+
 
 
 Changes since lxi-tools v1.8:
