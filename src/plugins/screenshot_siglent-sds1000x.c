@@ -42,8 +42,8 @@
 
 int siglent_sds1000x_screenshot(char *address, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
-    char *command, *image;
+    char response[IMAGE_SIZE_MAX] = {};
+    char *command;
     int device, length, n;
     char c;
 
@@ -66,7 +66,7 @@ int siglent_sds1000x_screenshot(char *address, int timeout)
     }
 
     // Dump remaining BMP image data to file
-    screenshot_file_dump(image, length, "bmp");
+    screenshot_file_dump(response, length, "bmp");
 
     // Disconnect
     lxi_disconnect(device);
@@ -79,6 +79,6 @@ struct screenshot_plugin siglent_sds1000x =
 {
     .name = "siglent-sds1000x",
     .description = "Siglent SDS 1000X series oscilloscopes (experimental)",
-    .regex = "SIGLENT SDS1...",
+    .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDS1...",
     .screenshot = siglent_sds1000x_screenshot
 };

@@ -42,8 +42,8 @@
 
 int siglent_ssa3000x_screenshot(char *address, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
-    char *command, *image;
+    char response[IMAGE_SIZE_MAX] = {};
+    char *command;
     int device, length, n;
     char c;
 
@@ -66,7 +66,7 @@ int siglent_ssa3000x_screenshot(char *address, int timeout)
     }
 
     // Dump remaining BMP image data to file
-    screenshot_file_dump(image, length, "bmp");
+    screenshot_file_dump(response, length, "bmp");
 
     // Disconnect
     lxi_disconnect(device);
@@ -79,6 +79,6 @@ struct screenshot_plugin siglent_ssa3000x =
 {
     .name = "siglent-ssa3000x",
     .description = "Siglent SSA 3000X series spectrum analyzers (experimental)",
-    .regex = "SIGLENT SSA3...",
+    .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SSA3...X",
     .screenshot = siglent_ssa3000x_screenshot
 };
