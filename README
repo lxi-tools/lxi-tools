@@ -41,11 +41,11 @@
       -i, --interactive                    Enter interactive mode
       -s, --script <filename>              Run script file
       -r, --raw                            Use raw/TCP
-      -p, --raw-port                       Use raw/TCP port (default: 5555)
+      -p, --raw-port                       Use raw/TCP port (default: 5025)
 
     Screenshot options:
       -a, --address <ip>                   Device IP address
-      -t, --timeout <seconds>              Timeout (default: 3)
+      -t, --timeout <seconds>              Timeout (default: 15)
       -p, --plugin <name>                  Use screenshot plugin by name
       -l, --list                           List available screenshot plugins
 
@@ -123,7 +123,7 @@
      Rigol Technologies DS2302            (discover+scpi+screenshot)
      Rigol Technologies DG4102            (discover+scpi)
      Rigol Technologies DP832             (discover+scpi)
-     Siglent Technologies SSA3032X        (scpi)
+     Siglent Technologies SSA3032X        (discover+scpi)
 
     NOTE: Not all instruments work with the screenshot feature because the
     instruments themselves provide no mehanism to download screenshots
