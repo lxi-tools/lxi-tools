@@ -33,7 +33,7 @@ Changes since lxi-tools v1.8:
 
    lxi scpi --address 192.168.1.210 "*IDN?" > response.txt
 
-   This way it is possible to dump any binary reponse to file.
+   This way it is possible to dump any binary response to file.
 
  * Fix missing error message when no IP address defined
 
@@ -86,7 +86,7 @@ Changes since lxi-tools v1.6:
    This helps identify screenshot files when capturing screenshots from
    multiple instruments.
 
-   It also allows to simplify the APIs used by the screenshot plugins.
+   It also allows simplifying the APIs used by the screenshot plugins.
 
  * Change option '--model' to '--plugin'
 
@@ -161,7 +161,7 @@ Changes since lxi-tools v1.5:
    In case no screenshot filename is provided the tool will write the
    screenshot image to an automatically resolved and incremented filename
    on the form screenshot-###.<format>. For example, screenshot-000.png,
-   screenshot-001.png, etc..
+   screenshot-001.png, etc.
 
  * Improve screenshot model listing
 
