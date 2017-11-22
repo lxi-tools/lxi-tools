@@ -6,7 +6,7 @@
 
     LXI tools (lxi-tools) is a collection of software tools for GNU/Linux
     systems that enables control of LXI compatible instruments such as modern
-    oscilloscopes, power supplies, spectrum analyzers etc..
+    oscilloscopes, power supplies, spectrum analyzers etc.
 
     All features are consolidated in the 'lxi' application which provides a
     simple commandline interface to discover LXI instruments, send SCPI
@@ -126,7 +126,7 @@
      Siglent Technologies SSA3032X        (discover+scpi)
 
     NOTE: Not all instruments work with the screenshot feature because the
-    instruments themselves provide no mehanism to download screenshots
+    instruments themselves provide no mechanism to download screenshots
     remotely.
 
 
