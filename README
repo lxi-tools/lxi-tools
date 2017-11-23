@@ -1,12 +1,12 @@
 
-=== LXI Tools (lxi-tools) ===
+=== lxi-tools ===
 
 
 1. Introduction
 
-    LXI tools (lxi-tools) is a collection of software tools for GNU/Linux
-    systems that enables control of LXI compatible instruments such as modern
-    oscilloscopes, power supplies, spectrum analyzers etc.
+    lxi-tools is a collection of software tools for GNU/Linux systems that
+    enables control of LXI compatible instruments such as modern oscilloscopes,
+    power supplies, spectrum analyzers etc.
 
     All features are consolidated in the 'lxi' application which provides a
     simple commandline interface to discover LXI instruments, send SCPI
@@ -17,7 +17,7 @@
 
 2. Usage
 
-    The commandline interface of the lxi application is shown in the output
+    The commandline interface of the lxi application is described in the output
     from 'lxi --help':
 
     Usage: lxi [--version] [--help] <command> [<args>]
@@ -50,7 +50,7 @@
       -l, --list                           List available screenshot plugins
 
 
-    Example - Discover LXI devices on available networks:
+2.1 Example - Discover LXI devices on available networks
 
      $ lxi discover
      Searching for LXI devices - please wait...
@@ -65,13 +65,13 @@
      Found 1 device
 
 
-    Example - Send SCPI command to an instrument:
+2.2 Example - Send SCPI command to an instrument
     
      $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
 
-    Example - Capture screenshot from a Rigol 1000z series oscilloscope:
+2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope:
 
      $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
@@ -83,7 +83,7 @@
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:46:02.png
 
 
-    Example - List available screenshot plugins:
+2.4 Example - List available screenshot plugins
 
      $ lxi screenshot --list
                  Name   Description
@@ -104,7 +104,7 @@
     $ make
     $ make install
 
-    NOTE: lxi-tools depends on liblxi so you need to go install liblxi first.
+    Note: lxi-tools depends on liblxi so you need to go install liblxi first.
 
 3.2 Installation using package:
 
@@ -115,7 +115,7 @@
 4. Tested instruments
 
     The commandline lxi tool is tested to work successfully with the following
-    LXI/LAN compatible instruments:
+    LXI compatible instruments:
 
      Instrument                           Working features
 
@@ -125,18 +125,25 @@
      Rigol Technologies DP832             (discover+scpi)
      Siglent Technologies SSA3032X        (discover+scpi)
 
-    NOTE: Not all instruments work with the screenshot feature because the
+    Note: Not all instruments work with the screenshot feature because the
     instruments themselves provide no mechanism to download screenshots
     remotely.
+
+    Note: Feel free to add your instrument(s) to the list via GitHub pull
+    request or simply create a GitHub issue reporting your instrument(s) and
+    which features work.
 
 
 5. Contributing
 
     lxi-tools is open source. If you want to help out with the project please
-    join in. Any contributions (bug reports, code, doc, ideas, etc.) are
+    join in. All contributions (bug reports, code, doc, ideas, etc.) are
     welcome.
 
     Please use the github issue tracker and pull request features.
+
+    Also, if you find this free open source software useful please consider
+    making a donation: https://www.paypal.me/lundmar
 
 
 6. Website
