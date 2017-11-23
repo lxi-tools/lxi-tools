@@ -9,6 +9,11 @@ lxi_SOURCES = lxi.c \
               plugins/screenshot_keysight.c \
               plugins/screenshot_rigol-1000.c \
               plugins/screenshot_rigol-2000.c \
+              plugins/screenshot_rigol-dg4000.c \
+              plugins/screenshot_rigol-dm3000.c \
+              plugins/screenshot_rigol-dp800.c \
+              plugins/screenshot_rigol-dsa700.c \
+              plugins/screenshot_rigol-dsa800.c \
               plugins/screenshot_rohde-schwarz.c \
               plugins/screenshot_siglent-sds1000x.c \
               plugins/screenshot_siglent-ssa3000x.c \
