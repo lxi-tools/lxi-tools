@@ -103,7 +103,7 @@ Or using plugin autodetection it simply becomes:
 ```
 
 ## 3. Installation
-    
+
 ### 3.1 Installation from source
 
 ```
