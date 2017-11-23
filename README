@@ -66,7 +66,7 @@
 
 
 2.2 Example - Send SCPI command to an instrument
-    
+
      $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
@@ -91,13 +91,13 @@
            rigol-1000   Rigol DS/MSO 1000z series oscilloscopes
            rigol-2000   Rigol DS/MSO 2000 series oscilloscopes
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
-     siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)                                  
-     siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)  
+     siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)
+     siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
 
 
 3. Installation
-    
+
 3.1 Installation from source:
 
     $ ./configure

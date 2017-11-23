@@ -188,11 +188,11 @@ Changes since lxi-tools v1.5:
 
 Changes since lxi-tools v1.4:
 
- * Remove -Og flag       
+ * Remove -Og flag
 
-   Not supported by older gcc versions.             
+   Not supported by older gcc versions.
 
- * Fix various bugs in script and interactive mode  
+ * Fix various bugs in script and interactive mode
 
 
 

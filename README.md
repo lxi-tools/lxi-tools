@@ -103,7 +103,7 @@ Or using plugin autodetection it simply becomes:
 ```
 
 ## 3. Installation
-    
+
 The latest release version can be downloaded from https://lxi.github.io
 
 ### 3.1 Installation using release tarball
