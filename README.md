@@ -166,3 +166,10 @@ Visit https://lxi.github.io
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
+
+
+## 8. Authors
+
+Created by Martin Lund \<martin.lund@keep-it-simple.com>
+
+See the AUTHORS file for full list of authors.
