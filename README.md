@@ -156,7 +156,9 @@ work.
 ## 5. Contributing
 
 lxi-tools is open source. If you want to help out with the project please join
-in. All contributions (bug reports, code, doc, ideas, etc.) are welcome.
+in.
+
+All contributions (bug reports, code, doc, ideas, etc.) are welcome.
 
 Please use the github issue tracker and pull request features.
 
