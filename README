@@ -98,15 +98,19 @@
 
 3. Installation
 
-3.1 Installation from source:
+    The latest release version can be downloaded from https://lxi.github.io
 
-    $ ./configure
-    $ make
-    $ make install
+3.1 Installation from release tarball
+
+    Install steps:
+
+     $ ./configure
+     $ make
+     $ make install
 
     Note: lxi-tools depends on liblxi so you need to go install liblxi first.
 
-3.2 Installation using package:
+3.2 Installation using package
 
     lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
     https://lxi.github.io to see list of supported distributions.
@@ -136,9 +140,8 @@
 
 5. Contributing
 
-    lxi-tools is open source. If you want to help out with the project please
-    join in. All contributions (bug reports, code, doc, ideas, etc.) are
-    welcome.
+    lxi-tools is open source. All contributions (bug reports, code, doc, ideas,
+    etc.) are welcome.
 
     Please use the github issue tracker and pull request features.
 
