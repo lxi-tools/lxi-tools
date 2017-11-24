@@ -1,5 +1,4 @@
 AC_PREREQ([2.68])
-
 AC_INIT([lxi-tools], [1.12], [], [lxi-tools], [https://lxi.github.io])
 AC_CONFIG_HEADERS([src/include/config.h])
 AM_INIT_AUTOMAKE([1.11 foreign dist-xz no-dist-gzip subdir-objects -Wall -Werror])
