@@ -1,4 +1,45 @@
-=== lxi-tools v1.10 ===
+=== lxi-tools v1.11 ===
+
+
+Changes since lxi-tools v1.10:
+
+ * Update README
+
+ * Update man page
+
+ * Update AUTHORS
+
+ * Expand tested instruments list
+
+ * Rename screenshot plugin rigol-1000 -> rigol-1000z
+
+ * Add various Rigol screenshot plugins
+
+   Add the following Rigol screenshot plugins:
+
+   rigol-dg4000   Rigol DG4000 series function generator
+   rigol-dm3000   Rigol DM3000 series digital multimeter
+    rigol-dp800   Rigol DP800 series power supply
+   rigol-dsa800   Rigol DSA800 series spectrum analyzer
+   rigol-dsa700   Rigol DSA700 series spectrum analyzer
+
+   The code is added on behalf of PeDre from the EEVBlog forum.
+
+ * Add authors section in README
+
+ * Add README.md to prettify GitHub page
+
+   The original README is still preserved because it is more readable when
+   not reading it via GitHub.
+
+Jakub Wilk:
+
+ * Strip trailing spaces
+
+ * Fix typo
+
+ * Fix grammar and typos
+
 
 
 Changes since lxi-tools v1.9:

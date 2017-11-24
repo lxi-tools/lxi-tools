@@ -134,9 +134,13 @@ Capture screenshot from a Rigol 1000Z series oscilloscope:
 
 lxi screenshot --address 192.168.0.42 --plugin rigol-1000
 
+Or by using screenshot plugin autodetection simply:
+
+lxi screenshot --address 192.168.0.42
+
 .PP
-Some LXI devices are slow to process SCPI commands, in which case you might
-need to take care to increase the timeout value.
+Note: Some LXI devices are slow to process SCPI commands, in which case you
+might need to take care to increase the timeout value.
 
 .SH "WEBSITE"
 .PP
