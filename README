@@ -69,6 +69,10 @@
      $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 
+    And to dump response to file simply do:
+
+     $ lxi scpi --address 10.42.1.20 "*IDN?" > response.txt
+
 
 2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope:
 
