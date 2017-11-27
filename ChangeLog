@@ -1,4 +1,22 @@
-=== lxi-tools v1.11 ===
+=== lxi-tools v1.12 ===
+
+
+Changes since lxi-tools v1.11:
+
+ * Update to new URL
+
+ * Add snap status
+
+ * Fix redirection of output to file
+
+ * Update README
+
+ * Cleanup configure.ac
+
+Jakub Wilk:
+
+ * Use HTTPS in the configure script
+
 
 
 Changes since lxi-tools v1.10:
