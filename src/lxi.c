@@ -245,8 +245,7 @@ static int run_script(char *ip, int timeout, char *filename)
     size_t len = 0;
     ssize_t read;
     char response[RESPONSE_LENGTH_MAX] = "";
-    int device;
-    int length;
+    int device, length, i;
 
     // Open script file
     fp = fopen(filename, "r");
@@ -295,7 +294,8 @@ static int run_script(char *ip, int timeout, char *filename)
                 response[length] = 0;
 
                 // Print response
-                printf("%s", response);
+                for (i=0; i<length; i++)
+                putchar(response[i]);
             }
         }
     }
