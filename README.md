@@ -1,7 +1,7 @@
 # lxi-tools
 
-[![Build Status](https://travis-ci.org/lxi/lxi-tools.svg?branch=master)](https://travis-ci.org/lxi/lxi-tools)
-[![Snap Status](https://build.snapcraft.io/badge/lxi/lxi-tools.snapcraft.svg)](https://build.snapcraft.io/user/lxi/lxi-tools.snapcraft)
+[![Build Status](https://travis-ci.org/lxi-tools/lxi-tools.svg?branch=master)](https://travis-ci.org/lxi-tools/lxi-tools)
+[![Snap Status](https://build.snapcraft.io/badge/lxi-tools/lxi-tools.snapcraft.svg)](https://build.snapcraft.io/user/lxi-tools/lxi-tools.snapcraft)
 
 ## 1. Introduction
 
@@ -113,7 +113,7 @@ Or using plugin autodetection it simply becomes:
 
 ## 3. Installation
 
-The latest release version can be downloaded from https://lxi.github.io
+The latest release version can be downloaded from https://lxi-tools.github.io
 
 ### 3.1 Installation using release tarball
 
@@ -129,7 +129,7 @@ Note: lxi-tools depends on liblxi so you need to go install liblxi first.
 ### 3.2 Installation using package
 
 lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
-https://lxi.github.io to see list of supported distributions.
+https://lxi-tools.github.io to see list of supported distributions.
 
 
 ## 4. Tested instruments
@@ -175,7 +175,7 @@ a donation:
 
 ## 6. Website
 
-Visit https://lxi.github.io
+Visit https://lxi-tools.github.io
 
 
 ## 7. License
