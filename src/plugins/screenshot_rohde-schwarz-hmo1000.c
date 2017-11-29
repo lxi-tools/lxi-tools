@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rs_screenshot(char *address, int timeout)
+int rs_hmo1000_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -71,8 +71,8 @@ int rs_screenshot(char *address, int timeout)
     c = response[1];
     n = atoi(&c);
     image = &response[0];
-    image += n+5;
-    length -= n+5;
+    image += n+2;
+    length -= n+2;
 
     // Dump remaining PNG image data to file
     screenshot_file_dump(image, length, "png");
@@ -90,5 +90,5 @@ struct screenshot_plugin rs_hmo1000 =
     .name = "rs-hmo1000",
     .description = "Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)",
     .regex = "Rohde&Schwarz HMO1...",
-    .screenshot = rs_screenshot
+    .screenshot = rs_hmo1000_screenshot
 };
