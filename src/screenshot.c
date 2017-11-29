@@ -63,7 +63,7 @@ static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 
 static int get_device_id(char *address, char *id, int timeout)
 {
-    int device, length;
+    int device, bytes_sent, bytes_received;
     char *command;
 
     // Connect to LXI instrument
@@ -71,24 +71,37 @@ static int get_device_id(char *address, char *id, int timeout)
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
-        return 1;
+        goto error_connect;
     }
 
     // Get instrument ID
     command = "*IDN?";
-    lxi_send(device, command, strlen(command), timeout);
-    length = lxi_receive(device, id, ID_LENGTH_MAX, timeout);
-    if (length < 0)
+
+    bytes_sent = lxi_send(device, command, strlen(command), timeout);
+    if (bytes_sent < 0)
+        goto error_send;
+
+    bytes_received = lxi_receive(device, id, ID_LENGTH_MAX, timeout);
+    if (bytes_received < 0)
     {
         error_printf("Failed to receive message\n");
-        return 1;
+        goto error_receive;
     }
 
+    // Disconnect
+    lxi_disconnect(device);
+
     // Remove trailing newline
-    if (id[length-1] == '\n')
-        id[length-1] = 0;
+    if (id[bytes_received-1] == '\n')
+        id[bytes_received-1] = 0;
 
     return 0;
+
+error_receive:
+error_send:
+    lxi_disconnect(device);
+error_connect:
+    return 1;
 }
 
 static bool regex_match(const char *string, const char *pattern)
