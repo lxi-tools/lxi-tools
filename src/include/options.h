@@ -52,6 +52,7 @@ struct option_t
     lxi_protocol_t protocol;
     int port;
     bool mdns;
+    int repeats;
 };
 
 enum command_t
@@ -59,6 +60,7 @@ enum command_t
     DISCOVER,
     SCPI,
     SCREENSHOT,
+    BENCHMARK,
     NO_COMMAND
 };
 

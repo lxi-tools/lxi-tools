@@ -57,6 +57,7 @@ struct option_t option =
     VXI11,      // Default protocol
     5025,       // Default raw/TCP port (See http://www.lxistandard.org/About/LXI-Protocols.aspx)
     false,      // Default no mDNS discover
+    100,        // Default number of repeats in benchmark
 };
 
 void print_help(char *argv[])
@@ -70,6 +71,7 @@ void print_help(char *argv[])
     printf("  discover [<options>]                 Search for LXI devices\n");
     printf("  scpi [<options>] <scpi-command>      Send SCPI command\n");
     printf("  screenshot [<options>] [<filename>]  Capture screenshot\n");
+    printf("  benchmark [<options>]                Benchmark\n");
     printf("\n");
     printf("Discover options:\n");
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
@@ -89,6 +91,11 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout*5);
     printf("  -p, --plugin <name>                  Use screenshot plugin by name\n");
     printf("  -l, --list                           List available screenshot plugins\n");
+    printf("\n");
+    printf("Benchmark options:\n");
+    printf("  -a, --address <ip>                   Device IP address\n");
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
+    printf("  -r, --repeat <count>                 Number of repeats (default: %d)\n", option.repeats);
     printf("\n");
 }
 
@@ -240,6 +247,41 @@ void parse_options(int argc, char *argv[])
 
                 case 'l':
                     option.list = true;
+                    break;
+
+                case '?':
+                    exit(EXIT_FAILURE);
+            }
+        } while (c != -1);
+    } else if (strcmp(argv[1], "benchmark") == 0)
+    {
+        option.command = BENCHMARK;
+
+        static struct option long_options[] =
+        {
+            {"address",        required_argument, 0, 'a'},
+            {"timeout",        required_argument, 0, 't'},
+            {"repeats",        required_argument, 0, 'r'},
+            {0,                0,                 0,  0 }
+        };
+
+        do
+        {
+            /* Parse benchmark options */
+            c = getopt_long(argc, argv, "a:t:r:", long_options, &option_index);
+
+            switch (c)
+            {
+                case 'a':
+                    strncpy(option.ip, optarg, 500);
+                    break;
+
+                case 't':
+                    option.timeout = atoi(optarg) * 1000;
+                    break;
+
+                case 'r':
+                    option.repeats = atoi(optarg);
                     break;
 
                 case '?':

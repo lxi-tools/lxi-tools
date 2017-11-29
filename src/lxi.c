@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include <ctype.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -42,6 +43,7 @@
 #include <lxi.h>
 
 #define RESPONSE_LENGTH_MAX 0x500000
+#define ID_LENGTH_MAX 65536
 
 static int device_count = 0;
 static int service_count = 0;
@@ -365,6 +367,76 @@ static int discover(void)
     return 0;
 }
 
+static int benchmark(char *ip, int timeout, int repeats)
+{
+    struct timespec start, stop;
+    double elapsed_time;
+    int device, i, bytes_received;
+    char id[ID_LENGTH_MAX];
+    char *command = "*IDN?";
+
+    // Check for required options
+    if (strlen(ip) == 0)
+    {
+        error_printf("Missing address\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Connect
+    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    if (device != LXI_OK)
+    {
+        error_printf("Unable to connect to LXI device\n");
+        return 1;
+    }
+
+    printf("Benchmarking by sending %d ID requests. Please wait...\n", repeats);
+
+    // Start time
+    if ( clock_gettime(CLOCK_MONOTONIC, &start) == -1 )
+    {
+        error_printf("Failed to get start time\n");
+        return 1;
+    }
+
+    // Run benchmark
+    for (i=0; i<repeats; i++)
+    {
+        // Get instrument ID
+        lxi_send(device, command, strlen(command), timeout);
+        bytes_received = lxi_receive(device, id, ID_LENGTH_MAX, timeout);
+        if (bytes_received < 0)
+        {
+            error_printf("Failed to receive instrument ID\n");
+            return 1;
+        }
+
+        // Print progress
+        printf("\r%d", i+1);
+        fflush(stdout);
+    }
+
+    // Stop time
+    if( clock_gettime(CLOCK_MONOTONIC, &stop) == -1 )
+    {
+        error_printf("Failed to get stop time\n");
+        return 1;
+    }
+
+    // Calculate elapsed time in seconds
+    elapsed_time =
+        (double)(stop.tv_sec - start.tv_sec) +
+        (double)(stop.tv_nsec - start.tv_nsec)*1.0e-9;
+
+    // Print benchmark result
+    printf("\rResult: %.1f requests/second\n", option.repeats/elapsed_time);
+
+    // Disconnect
+    lxi_disconnect(device);
+
+    return 0;
+}
+
 int main(int argc, char* argv[])
 {
     int status = EXIT_SUCCESS;
@@ -396,6 +468,9 @@ int main(int argc, char* argv[])
                 return 0;
             }
             status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout);
+            break;
+        case BENCHMARK:
+            status = benchmark(option.ip, option.timeout, option.repeats);
             break;
     }
 
