@@ -63,8 +63,8 @@ static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 
 static int get_device_id(char *address, char *id, int timeout)
 {
-    char *command;
     int device, length;
+    char *command;
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
@@ -93,8 +93,8 @@ static int get_device_id(char *address, char *id, int timeout)
 
 static bool regex_match(const char *string, const char *pattern)
 {
-    int status;
     regex_t regex;
+    int status;
 
     if (regcomp(&regex, pattern, REG_EXTENDED | REG_NOSUB) != 0)
         return false; // No match
@@ -124,8 +124,8 @@ void screenshot_file_dump(void *data, int length, char *format)
 {
     char automatic_filename[1000];
     char *screenshot_filename;
-    FILE *fd;
     int i = 0;
+    FILE *fd;
 
     // Resolve screenshot filename
     if (strlen(option.screenshot_filename) == 0)
@@ -169,8 +169,8 @@ void screenshot_plugin_register(struct screenshot_plugin *plugin)
 
 void screenshot_list_plugins(void)
 {
-    int i = 0, j = 0;
     int length, length_max = 0;
+    int i = 0, j = 0;
 
     // Find length of longest plugin name
     while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
@@ -215,7 +215,6 @@ void screenshot_register_plugins(void)
 
 int screenshot(char *address, char *plugin_name, char *filename, int timeout)
 {
-    int i = 0;
     bool no_match = true;
     char id[ID_LENGTH_MAX];
     bool token_found = true;
@@ -224,6 +223,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     int match_count = 0;
     int match_count_max = 0;
     char *regex_buffer;
+    int i = 0;
 
     // Check for required options
     if (strlen(address) == 0)

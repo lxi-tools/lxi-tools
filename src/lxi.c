@@ -48,8 +48,8 @@ static int service_count = 0;
 
 static void hex_print(void *data, int length)
 {
-    int i;
     char *bufferp;
+    int i;
 
     bufferp = data;
     (void)bufferp;
@@ -85,9 +85,8 @@ static void strip_trailing_space(char *line)
 static int scpi(char *ip, char *command, int timeout)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
-    int device;
-    int length;
     char command_buffer[1000];
+    int device, length;;
 
     strip_trailing_space(command);
 
@@ -173,9 +172,8 @@ error_connect:
 static int enter_interactive_mode(char *ip, int timeout)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
+    int device, length;
     char *input = "";
-    int device;
-    int length;
 
     // Connect
     device = lxi_connect(ip, 0, NULL, timeout, VXI11);
