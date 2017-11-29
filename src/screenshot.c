@@ -235,7 +235,7 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     if (strlen(plugin_name) == 0)
     {
         // Get instrument ID
-        if (get_device_id(address, id, timeout != 0))
+        if (get_device_id(address, id, timeout) != 0)
         {
             error_printf("Unable to retrieve instrument ID\n");
             exit(EXIT_FAILURE);
