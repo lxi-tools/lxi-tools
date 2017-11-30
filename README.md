@@ -79,7 +79,7 @@ from 'lxi --help':
      $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
 ```
-And to dump response to file simply do:
+To dump response to file simply do:
 ```
      $ lxi scpi --address 10.42.1.20 "*IDN?" > response.txt
 ```
@@ -91,7 +91,7 @@ And to dump response to file simply do:
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
 ```
 
-Or using plugin autodetection it simply becomes:
+Or using plugin autodetection simply:
 
 ```
      $ lxi screenshot --address 10.42.1.20
@@ -121,7 +121,7 @@ Or using plugin autodetection it simply becomes:
 ### 2.5 Example - Benchmark instrument request/response performance
 
 ```
-     $ lxi benchmark -a 192.168.1.210
+     $ lxi benchmark -a 10.42.1.20
      Benchmarking by sending 100 ID requests. Please wait...
      Result: 24.7 requests/second
 ```
