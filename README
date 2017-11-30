@@ -29,6 +29,7 @@
       discover [<options>]                 Search for LXI devices
       scpi [<options>] <scpi-command>      Send SCPI command
       screenshot [<options>] [<filename>]  Capture screenshot
+      benchmark [<options>]                Benchmark
 
     Discover options:
       -t, --timeout <seconds>              Timeout (default: 3)
@@ -48,6 +49,11 @@
       -t, --timeout <seconds>              Timeout (default: 15)
       -p, --plugin <name>                  Use screenshot plugin by name
       -l, --list                           List available screenshot plugins
+
+    Benchmark options:
+      -a, --address <ip>                   Device IP address
+      -t, --timeout <seconds>              Timeout (default: 3)
+      -r, --repeat <count>                 Number of repeats (default: 100)
 
 
 2.1 Example - Discover LXI devices on available networks
@@ -102,6 +108,13 @@
      siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)
      siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
+
+
+2.5 Example - Benchmark instrument request/response performance
+
+    $ lxi benchmark -a 192.168.1.210
+    Benchmarking by sending 100 ID requests. Please wait...
+    Result: 24.7 requests/second
 
 
 3. Installation
