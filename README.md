@@ -105,7 +105,7 @@ Or using plugin autodetection it simply becomes:
           rigol-dp800   Rigol DP800 series power supply
          rigol-dsa700   Rigol DSA700 series spectrum analyzer
          rigol-dsa800   Rigol DSA800 series spectrum analyzer
-           rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
+           rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes
      siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)
      siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
@@ -148,6 +148,7 @@ compatible instruments:
 | Rigol Technologies DS2302     | (discover+scpi+screenshot) |
 | Rigol Technologies DSA815     | (discover+scpi+screenshot) |
 | Rigol Technologies MSO2302A   | (discover+scpi+screenshot) |
+| Rohde & Schwarz HMO 1202      | (discover+scpi+screenshot) |
 | Siglent Technologies SSA3032X | (discover+scpi)            |
 
 

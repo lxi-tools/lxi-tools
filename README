@@ -140,6 +140,7 @@
      Rigol Technologies DS2302            (discover+scpi+screenshot)
      Rigol Technologies DSA815            (discover+scpi+screenshot)
      Rigol Technologies MSO2302A          (discover+scpi+screenshot)
+     Rohde & Schwarz HMO 1202             (discover+scpi+screenshot)
      Siglent Technologies SSA3032X        (discover+scpi)
 
     Note: Not all instruments work with the screenshot feature because the
