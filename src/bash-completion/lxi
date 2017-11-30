@@ -16,7 +16,8 @@ _lxi()
           -v --version \
           discover \
           scpi \
-          screenshot"
+          screenshot \
+          benchmark"
     discover_opts="-t --timeout \
                    -m --mdns"
     scpi_opts="-a --address \
@@ -28,6 +29,10 @@ _lxi()
                      -t --timeout \
                      -p --plugin \
                      -l --list"
+
+    benchmark_opts="-a --address \
+                    -t --timeout \
+                    -r --repeat"
 
     # Complete the options
     case "${COMP_CWORD}" in
@@ -44,6 +49,9 @@ _lxi()
                     ;;
                 screenshot)
                     COMPREPLY=( $(compgen -W "${screenshot_opts}" -- ${cur}) )
+                    ;;
+                benchmark)
+                    COMPREPLY=( $(compgen -W "${benchmark_opts}" -- ${cur}) )
                     ;;
                 *)
                     COMPREPLY=()
