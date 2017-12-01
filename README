@@ -112,7 +112,7 @@
 
 2.5 Example - Benchmark instrument request/response performance
 
-     $ lxi benchmark -a 10.42.1.20
+     $ lxi benchmark --address 10.42.1.20
      Benchmarking by sending 100 ID requests. Please wait...
      Result: 24.7 requests/second
 
