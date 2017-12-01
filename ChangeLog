@@ -1,4 +1,48 @@
-=== lxi-tools v1.12 ===
+=== lxi-tools v1.13 ===
+
+
+Changes since lxi-tools v1.12:
+
+ * Update README
+
+ * Update SSA3000X capture command
+
+ * Add completion for benchmark command
+
+ * Update AUTHORS
+
+ * Fix get_device_id()
+
+   This function was missing a call to lxi_disconnect() which resulted in
+   some instruments being left hanging when capturing screenshots.
+   Instruments that presumable only allow one active connection.
+
+ * Add benchmark feature
+
+   This benchmark feature is useful if you want to compare the VXI-11
+   request/response performance of your instruments.
+
+   By default the benchmark sends 100 SCPI ID requests ("*IDN?" commands)
+   to the instrument. For each request it waits for and reads the response.
+   When done the resulting request rate is printed.
+
+ * Fix screenshot command when using plugin autodetection
+
+   The wrong timeout value was passed when trying to autodetect which
+   screenshot plugin to use.
+
+ * Cleanup
+
+ * Fix Rohde & Schwarz HMO 1000 screenshot plugin
+
+   Fix plugin so that it does not strip off the PNG header of the PNG image
+   stream.
+
+   Also, the source files and functions of the plugin is now named more
+   explicitly according to the name of the instrument series (HMO 1000).
+
+ * Fix Siglent SSA3000 screenshot plugin
+
 
 
 Changes since lxi-tools v1.11:
