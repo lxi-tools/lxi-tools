@@ -43,7 +43,7 @@ from 'lxi --help':
       -i, --interactive                    Enter interactive mode
       -s, --script <filename>              Run script file
       -r, --raw                            Use raw/TCP
-      -p, --raw-port                       Use raw/TCP port (default: 5025)
+      -p, --raw-port <port>                Use raw/TCP port (default: 5025)
 
     Screenshot options:
       -a, --address <ip>                   Device IP address
@@ -87,7 +87,7 @@ To dump response to file simply do:
 ### 2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope
 
 ```
-     $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000
+     $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000z
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
 ```
 
