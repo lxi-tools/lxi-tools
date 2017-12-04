@@ -152,23 +152,27 @@ https://lxi-tools.github.io to see list of supported distributions.
 The commandline lxi tool is tested to work successfully with the following LXI
 compatible instruments:
 
-| Instrument                    | Working features           |
-|-------------------------------|----------------------------|
-| Rigol Technologies DG4102     | (discover+scpi+screenshot) |
-| Rigol Technologies DG4162     | (discover+scpi+screenshot) |
-| Rigol Technologies DP831      | (discover+scpi+screenshot) |
-| Rigol Technologies DP832      | (discover+scpi+screenshot) |
-| Rigol Technologies DM3068     | (discover+scpi+screenshot) |
-| Rigol Technologies DS1104Z    | (discover+scpi+screenshot) |
-| Rigol Technologies DS2302     | (discover+scpi+screenshot) |
-| Rigol Technologies DSA815     | (discover+scpi+screenshot) |
-| Rigol Technologies MSO2302A   | (discover+scpi+screenshot) |
-| Rohde & Schwarz HMO 1202      | (discover+scpi+screenshot) |
-| Siglent Technologies SSA3032X | (discover+scpi)            |
-
-
-Note: Not all instruments work with the screenshot feature because the
-instruments themselves provide no mechanism to download screenshots remotely.
+| Instrument                      | Working features           |
+|---------------------------------|----------------------------|
+| Rigol Technologies DG4102       | (discover+scpi+screenshot) |
+| Rigol Technologies DG4162       | (discover+scpi+screenshot) |
+| Rigol Technologies DP831        | (discover+scpi+screenshot) |
+| Rigol Technologies DP832        | (discover+scpi+screenshot) |
+| Rigol Technologies DM3068       | (discover+scpi+screenshot) |
+| Rigol Technologies DS1104Z      | (discover+scpi+screenshot) |
+| Rigol Technologies DS2302       | (discover+scpi+screenshot) |
+| Rigol Technologies DSA815       | (discover+scpi+screenshot) |
+| Rigol Technologies MSO2302A     | (discover+scpi+screenshot) |
+| Rohde & Schwarz HMO 1202        | (discover+scpi+screenshot) |
+| Siglent Technologies SDG1032X   | (discover+scpi)            |
+| Siglent Technologies SDG2122X   | (discover+scpi)            |
+| Siglent Technologies SDG6052    | (discover+scpi)            |
+| Siglent Technologies SDS1202X-E | (discover+scpi)            |
+| Siglent Technologies SDS1204X-E | (discover+scpi)            |
+| Siglent Technologies SDM3045X   | (discover+scpi)            |
+| Siglent Technologies SDM3055    | (discover+scpi)            |
+| Siglent Technologies SDM3065X   | (discover+scpi)            |
+| Siglent Technologies SSA3032X   | (discover+scpi)            |
 
 Note: Feel free to add your instrument(s) to the list via GitHub pull request
 or simply create a GitHub issue reporting your instrument(s) and which features
