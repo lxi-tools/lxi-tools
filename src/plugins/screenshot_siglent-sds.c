@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int siglent_sds1000x_screenshot(char *address, int timeout)
+int siglent_sds_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX] = {};
     char *command;
@@ -75,10 +75,10 @@ int siglent_sds1000x_screenshot(char *address, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin siglent_sds1000x =
+struct screenshot_plugin siglent_sds =
 {
-    .name = "siglent-sds1000x",
-    .description = "Siglent SDS 1000X series oscilloscopes (experimental)",
-    .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDS1...",
-    .screenshot = siglent_sds1000x_screenshot
+    .name = "siglent-sds",
+    .description = "Siglent SDS 1000X/2000X series oscilloscopes (experimental)",
+    .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDS1... SDS2...",
+    .screenshot = siglent_sds_screenshot
 };
