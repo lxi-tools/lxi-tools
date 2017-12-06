@@ -78,7 +78,7 @@ int siglent_sds_screenshot(char *address, int timeout)
 struct screenshot_plugin siglent_sds =
 {
     .name = "siglent-sds",
-    .description = "Siglent SDS 1000X/2000X series oscilloscopes (experimental)",
+    .description = "Siglent SDS 1000X/2000X series oscilloscopes",
     .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDS1... SDS2...",
     .screenshot = siglent_sds_screenshot
 };
