@@ -105,7 +105,9 @@
          rigol-dsa700   Rigol DSA700 series spectrum analyzer
          rigol-dsa800   Rigol DSA800 series spectrum analyzer
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes (experimental)
-     siglent-sds1000x   Siglent SDS 1000X series oscilloscopes (experimental)
+      siglent-sdm3000   Siglent SDM 3000/3000X series digital multimeters (experimental)
+          siglent-sdg   Siglent SDG 1000X/2000X/6000X series waveform generators (experimental)
+          siglent-sds   Siglent SDS 1000X/2000X series oscilloscopes
      siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
 
@@ -157,8 +159,9 @@
      Siglent Technologies SDG1032X        (discover+scpi)
      Siglent Technologies SDG2122X        (discover+scpi)
      Siglent Technologies SDG6052         (discover+scpi)
-     Siglent Technologies SDS1202X-E      (discover+scpi)
-     Siglent Technologies SDS1204X-E      (discover+scpi)
+     Siglent Technologies SDS1202X-E      (discover+scpi+screenshot)
+     Siglent Technologies SDS1204X-E      (discover+scpi+screenshot)
+     Siglent Technologies SDS2304X        (discover+scpi+screenshot)
      Siglent Technologies SDM3045X        (discover+scpi)
      Siglent Technologies SDM3055         (discover+scpi)
      Siglent Technologies SDM3065X        (discover+scpi)
