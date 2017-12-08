@@ -44,8 +44,7 @@ int siglent_sdm3000_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX] = {};
     char *command;
-    int device, length, n;
-    char c;
+    int device, length;
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
@@ -65,7 +64,7 @@ int siglent_sdm3000_screenshot(char *address, int timeout)
         return 1;
     }
 
-    // Dump remaining BMP image data to file
+    // Dump received BMP image data to file
     screenshot_file_dump(response, length, "bmp");
 
     // Disconnect
