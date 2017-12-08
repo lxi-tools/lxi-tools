@@ -55,8 +55,8 @@ int siglent_ssa3000x_screenshot(char *address, int timeout)
         return 1;
     }
 
-    // Send SCPI command to grab BMP image (partial, not full screen)
-    command = "SCDP.\r\n";
+    // Send SCPI command to grab BMP image
+    command = "scdp";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
