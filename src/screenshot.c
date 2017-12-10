@@ -139,17 +139,29 @@ void screenshot_file_dump(void *data, int length, char *format)
 {
     char automatic_filename[1000];
     char *screenshot_filename;
+    char *image_data = data;
     int i = 0;
     FILE *fd;
 
-    // Resolve screenshot filename
+    // Handle screenshot output
     if (strlen(option.screenshot_filename) == 0)
     {
+        // Automatically resolve screenshot filename if no filename is provided
         sprintf(automatic_filename, "screenshot_%s_%s.%s", option.ip, date_time(), format);
         screenshot_filename = automatic_filename;
     }
+    else if (strcmp(option.screenshot_filename, "-") == 0)
+    {
+        // Write image data to stdout in case filename is '-'
+        for (i=0; i<length; i++)
+           putchar(*(image_data+i));
+        return;
+    }
     else
+    {
+        // Write image data to specified filename
         screenshot_filename = option.screenshot_filename;
+    }
 
     // Write screenshot file
     fd = fopen(screenshot_filename, "w+");
@@ -307,7 +319,9 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
             exit(EXIT_FAILURE);
         }
 
-        printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
+        if (isatty(fileno(stdout)))
+            printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
+
         no_match = false;
         i = plugin_winner;
     }
