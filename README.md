@@ -99,7 +99,21 @@ Or using plugin autodetection simply:
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:46:02.png
 ```
 
-### 2.4 Example - List available screenshot plugins
+### 2.4 Example - Capture screenshot and convert it to any image format
+
+By default the format of the captured screenshot image is dictated by which
+screenshot plugin and instrument are in play. However, it is possible to write
+the screenshot image to stdout and pipe it directly to other tools for image
+processing.
+
+For example, use ImageMagicks convert tool to automatically convert screenshot
+image to JPG:
+
+```
+    $ lxi screenshot --address 10.42.1.20 - | convert - screenshot.jpg
+```
+
+### 2.5 Example - List available screenshot plugins
 
 ```
      $ lxi screenshot --list
@@ -120,7 +134,7 @@ Or using plugin autodetection simply:
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
 ```
 
-### 2.5 Example - Benchmark instrument request/response performance
+### 2.6 Example - Benchmark instrument request/response performance
 
 ```
      $ lxi benchmark --address 10.42.1.20
