@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_dsa700_screenshot(char *address, int timeout)
+int rigol_dsa_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -82,10 +82,10 @@ int rigol_dsa700_screenshot(char *address, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin rigol_dsa700 =
+struct screenshot_plugin rigol_dsa =
 {
-    .name = "rigol-dsa700",
-    .description = "Rigol DSA700 series spectrum analyzer",
-    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DSA7..",
-    .screenshot = rigol_dsa700_screenshot
+    .name = "rigol-dsa",
+    .description = "Rigol DSA 700/800 series spectrum analyzer",
+    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DSA[78]..",
+    .screenshot = rigol_dsa_screenshot
 };
