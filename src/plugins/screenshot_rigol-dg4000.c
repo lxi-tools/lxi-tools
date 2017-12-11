@@ -85,7 +85,7 @@ int rigol_dg4000_screenshot(char *address, int timeout)
 struct screenshot_plugin rigol_dg4000 =
 {
     .name = "rigol-dg4000",
-    .description = "Rigol DG4000 series function generator",
+    .description = "Rigol DG 4000 series function generator",
     .regex = "RIGOL TECHNOLOGIES Rigol Technologies DG4...",
     .screenshot = rigol_dg4000_screenshot
 };

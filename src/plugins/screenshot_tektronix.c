@@ -82,7 +82,7 @@ int tektronix_screenshot(char *address, int timeout)
 struct screenshot_plugin tektronix_2000 =
 {
     .name = "tektronix-2000",
-    .description = "Tektronix DPO/MSO 2000 series oscilloscopes (experimental)",
+    .description = "Tektronix DPO/MSO 2000 series oscilloscope (experimental)",
     .regex = "TEKTRONIX DPO2... MSO2...",
     .screenshot = tektronix_screenshot
 };

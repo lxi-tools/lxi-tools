@@ -85,7 +85,7 @@ int rigol_dp800_screenshot(char *address, int timeout)
 struct screenshot_plugin rigol_dp800 =
 {
     .name = "rigol-dp800",
-    .description = "Rigol DP800 series power supply",
+    .description = "Rigol DP 800 series power supply",
     .regex = "RIGOL TECHNOLOGIES Rigol Technologies DP8..",
     .screenshot = rigol_dp800_screenshot
 };

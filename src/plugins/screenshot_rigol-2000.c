@@ -88,7 +88,7 @@ int rigol_2000_screenshot(char *address, int timeout)
 struct screenshot_plugin rigol_2000 =
 {
     .name = "rigol-2000",
-    .description = "Rigol DS/MSO 2000 series oscilloscopes",
+    .description = "Rigol DS/MSO 2000 series oscilloscope",
     .regex = "RIGOL TECHNOLOGIES Rigol Technologies DS2... MSO2...",
     .screenshot = rigol_2000_screenshot
 };

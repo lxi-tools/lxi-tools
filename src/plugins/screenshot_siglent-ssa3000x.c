@@ -77,7 +77,7 @@ int siglent_ssa3000x_screenshot(char *address, int timeout)
 struct screenshot_plugin siglent_ssa3000x =
 {
     .name = "siglent-ssa3000x",
-    .description = "Siglent SSA 3000X series spectrum analyzers (experimental)",
+    .description = "Siglent SSA 3000X series spectrum analyzer (experimental)",
     .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SSA3...X",
     .screenshot = siglent_ssa3000x_screenshot
 };

@@ -88,7 +88,7 @@ int rs_hmo1000_screenshot(char *address, int timeout)
 struct screenshot_plugin rs_hmo1000 =
 {
     .name = "rs-hmo1000",
-    .description = "Rohde & Schwarz HMO 1000 series oscilloscopes",
+    .description = "Rohde & Schwarz HMO 1000 series oscilloscope",
     .regex = "Rohde&Schwarz HMO1...",
     .screenshot = rs_hmo1000_screenshot
 };

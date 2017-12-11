@@ -77,7 +77,7 @@ int siglent_sdm3000_screenshot(char *address, int timeout)
 struct screenshot_plugin siglent_sdm3000 =
 {
     .name = "siglent-sdm3000",
-    .description = "Siglent SDM 3000/3000X series digital multimeters (experimental)",
+    .description = "Siglent SDM 3000/3000X series digital multimeter (experimental)",
     .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDM3...",
     .screenshot = siglent_sdm3000_screenshot
 };

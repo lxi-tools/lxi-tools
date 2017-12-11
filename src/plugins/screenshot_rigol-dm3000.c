@@ -85,7 +85,7 @@ int rigol_dm3000_screenshot(char *address, int timeout)
 struct screenshot_plugin rigol_dm3000 =
 {
     .name = "rigol-dm3000",
-    .description = "Rigol DM3000 series digital multimeter",
+    .description = "Rigol DM 3000 series digital multimeter",
     .regex = "RIGOL TECHNOLOGIES Rigol Technologies DM3...",
     .screenshot = rigol_dm3000_screenshot
 };
