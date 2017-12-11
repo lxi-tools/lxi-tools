@@ -77,7 +77,7 @@ int siglent_sdg_screenshot(char *address, int timeout)
 struct screenshot_plugin siglent_sdg =
 {
     .name = "siglent-sdg",
-    .description = "Siglent SDG 1000X/2000X/6000X series waveform generator (experimental)",
+    .description = "Siglent SDG 1000X/2000X/6000X series waveform generator",
     .regex = "SIGLENT TECHNOLOGIES Siglent Technologies SDG[126]...",
     .screenshot = siglent_sdg_screenshot
 };
