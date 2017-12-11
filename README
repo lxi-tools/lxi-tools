@@ -158,6 +158,7 @@
 
      Instrument                           Working features
 
+     Rigol Technologies DG4062            (discover+scpi+screenshot)
      Rigol Technologies DG4102            (discover+scpi+screenshot)
      Rigol Technologies DG4162            (discover+scpi+screenshot)
      Rigol Technologies DP831             (discover+scpi+screenshot)
@@ -166,6 +167,7 @@
      Rigol Technologies DS1104Z           (discover+scpi+screenshot)
      Rigol Technologies DS2302            (discover+scpi+screenshot)
      Rigol Technologies DSA815            (discover+scpi+screenshot)
+     Rigol Technologies MSO1104Z          (discover+scpi+screenshot)
      Rigol Technologies MSO2302A          (discover+scpi+screenshot)
      Rohde & Schwarz HMO 1202             (discover+scpi+screenshot)
      Siglent Technologies SDG1032X        (discover+scpi)
