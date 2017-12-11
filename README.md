@@ -118,20 +118,19 @@ image to JPG:
 ```
      $ lxi screenshot --list
                  Name   Description
-     keysight-iv2000x   Keysight InfiniVision 2000X series oscilloscopes (experimental)
-          rigol-1000z   Rigol DS/MSO 1000z series oscilloscopes
-           rigol-2000   Rigol DS/MSO 2000 series oscilloscopes
+     keysight-iv2000x   Keysight InfiniVision 2000X series oscilloscope (experimental)
+          rigol-1000z   Rigol DS/MSO 1000z series oscilloscope
+           rigol-2000   Rigol DS/MSO 2000 series oscilloscope
          rigol-dg4000   Rigol DG4000 series function generator
          rigol-dm3000   Rigol DM3000 series digital multimeter
           rigol-dp800   Rigol DP800 series power supply
-         rigol-dsa700   Rigol DSA700 series spectrum analyzer
-         rigol-dsa800   Rigol DSA800 series spectrum analyzer
-           rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscopes
-      siglent-sdm3000   Siglent SDM 3000/3000X series digital multimeters (experimental)
-          siglent-sdg   Siglent SDG 1000X/2000X/6000X series waveform generators (experimental)
-          siglent-sds   Siglent SDS 1000X/2000X series oscilloscopes
-     siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzers (experimental)
-       tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscopes (experimental)
+            rigol-dsa   Rigol DSA 700/800 series spectrum analyzer
+           rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscope
+      siglent-sdm3000   Siglent SDM 3000/3000X series digital multimeter
+          siglent-sdg   Siglent SDG 1000X/2000X/6000X series waveform generator
+          siglent-sds   Siglent SDS 1000X/2000X series oscilloscope
+     siglent-ssa3000x   Siglent SSA 3000X series spectrum analyzer
+       tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscope (experimental)
 ```
 
 ### 2.6 Example - Benchmark instrument request/response performance
@@ -186,10 +185,11 @@ compatible instruments:
 | Siglent Technologies SDS1202X-E | (discover+scpi+screenshot) |
 | Siglent Technologies SDS1204X-E | (discover+scpi+screenshot) |
 | Siglent Technologies SDS2304X   | (discover+scpi+screenshot) |
-| Siglent Technologies SDM3045X   | (discover+scpi)            |
-| Siglent Technologies SDM3055    | (discover+scpi)            |
-| Siglent Technologies SDM3065X   | (discover+scpi)            |
-| Siglent Technologies SSA3032X   | (discover+scpi)            |
+| Siglent Technologies SDM3045X   | (discover+scpi+screenshot) |
+| Siglent Technologies SDM3055    | (discover+scpi+screenshot) |
+| Siglent Technologies SDM3065X   | (discover+scpi+screenshot) |
+| Siglent Technologies SPD3303X-E | (scpi)                     |
+| Siglent Technologies SSA3032X   | (discover+scpi+screenshot) |
 
 Note: Feel free to add your instrument(s) to the list via GitHub pull request
 or simply create a GitHub issue reporting your instrument(s) and which features
