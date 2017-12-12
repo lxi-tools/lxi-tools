@@ -181,9 +181,9 @@ compatible instruments:
 | Rigol Technologies MSO1104Z     | (discover+scpi+screenshot) |
 | Rigol Technologies MSO2302A     | (discover+scpi+screenshot) |
 | Rohde & Schwarz HMO 1202        | (discover+scpi+screenshot) |
-| Siglent Technologies SDG1032X   | (discover+scpi)            |
-| Siglent Technologies SDG2122X   | (discover+scpi)            |
-| Siglent Technologies SDG6052    | (discover+scpi)            |
+| Siglent Technologies SDG1032X   | (discover+scpi+screenshot) |
+| Siglent Technologies SDG2122X   | (discover+scpi+screenshot) |
+| Siglent Technologies SDG6052    | (discover+scpi+screenshot) |
 | Siglent Technologies SDS1202X-E | (discover+scpi+screenshot) |
 | Siglent Technologies SDS1204X-E | (discover+scpi+screenshot) |
 | Siglent Technologies SDS2304X   | (discover+scpi+screenshot) |
