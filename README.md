@@ -121,9 +121,9 @@ image to JPG:
      keysight-iv2000x   Keysight InfiniVision 2000X series oscilloscope (experimental)
           rigol-1000z   Rigol DS/MSO 1000z series oscilloscope
            rigol-2000   Rigol DS/MSO 2000 series oscilloscope
-         rigol-dg4000   Rigol DG4000 series function generator
-         rigol-dm3000   Rigol DM3000 series digital multimeter
-          rigol-dp800   Rigol DP800 series power supply
+         rigol-dg4000   Rigol DG 4000 series function generator
+         rigol-dm3000   Rigol DM 3000 series digital multimeter
+          rigol-dp800   Rigol DP 800 series power supply
             rigol-dsa   Rigol DSA 700/800 series spectrum analyzer
            rs-hmo1000   Rohde & Schwarz HMO 1000 series oscilloscope
       siglent-sdm3000   Siglent SDM 3000/3000X series digital multimeter
