@@ -1,4 +1,54 @@
-=== lxi-tools v1.13 ===
+=== lxi-tools v1.14 ===
+
+
+Changes since lxi-tools v1.13:
+
+ * Make screenshot plugin only support Rigol DM3068
+
+   Rigol DM3068 is the only DM3000 series digital multimeter that seems to
+   have screenshot support.
+
+ * Fix entering interactive mode
+
+   Regardless of using --interactive a SCPI command was still required to
+   be provided to enter interactive mode.
+
+ * Update AUTHORS
+
+ * Remove experimental label from Siglent plugins
+
+   Thanks to Siglent who helped fix and test all the screenshot plugins for
+   their instruments.
+
+ * Cleanup screenshot plugins
+
+ * Consolidate Rigol DSA plugins into one
+
+ * Update README and man page
+
+ * Support writing screenshot image to stdout
+
+   To write screenshot image to stdout simply use '-' as the output
+   filename. This allows to pipe the screenshot image directly to other
+   tools for image processing.
+
+   For example, using imagemagick to automatically convert captured
+   screenshot image to JPG:
+
+    $ lxi screenshot -a 10.0.0.42 - | convert - screenshot.jpg
+
+ * Cleanup Siglent screenshot plugins
+
+ * Update siglent-ssa3000x plugin
+
+ * Add siglent-sdg plugin
+
+ * Add siglent-sdm3000 plugin
+
+ * Move siglent-sds out of experimental
+
+ * Extend Siglent plugin to include SDS2000X
+
 
 
 Changes since lxi-tools v1.12:
