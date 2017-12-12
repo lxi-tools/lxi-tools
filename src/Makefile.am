@@ -10,7 +10,7 @@ lxi_SOURCES = lxi.c \
               plugins/screenshot_rigol-1000z.c \
               plugins/screenshot_rigol-2000.c \
               plugins/screenshot_rigol-dg4000.c \
-              plugins/screenshot_rigol-dm3000.c \
+              plugins/screenshot_rigol-dm3068.c \
               plugins/screenshot_rigol-dp800.c \
               plugins/screenshot_rigol-dsa.c \
               plugins/screenshot_rohde-schwarz-hmo1000.c \

@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_dm3000_screenshot(char *address, int timeout)
+int rigol_dm3068_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -82,10 +82,10 @@ int rigol_dm3000_screenshot(char *address, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin rigol_dm3000 =
+struct screenshot_plugin rigol_dm3068 =
 {
-    .name = "rigol-dm3000",
-    .description = "Rigol DM 3000 series digital multimeter",
-    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DM3...",
-    .screenshot = rigol_dm3000_screenshot
+    .name = "rigol-dm3068",
+    .description = "Rigol DM 3068 digital multimeter",
+    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DM3068",
+    .screenshot = rigol_dm3068_screenshot
 };

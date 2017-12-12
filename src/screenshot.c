@@ -50,7 +50,7 @@ extern struct screenshot_plugin keysight_iv2000x;
 extern struct screenshot_plugin rigol_1000z;
 extern struct screenshot_plugin rigol_2000;
 extern struct screenshot_plugin rigol_dg4000;
-extern struct screenshot_plugin rigol_dm3000;
+extern struct screenshot_plugin rigol_dm3068;
 extern struct screenshot_plugin rigol_dp800;
 extern struct screenshot_plugin rigol_dsa;
 extern struct screenshot_plugin rs_hmo1000;
@@ -229,7 +229,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&rigol_1000z);
     screenshot_plugin_register(&rigol_2000);
     screenshot_plugin_register(&rigol_dg4000);
-    screenshot_plugin_register(&rigol_dm3000);
+    screenshot_plugin_register(&rigol_dm3068);
     screenshot_plugin_register(&rigol_dp800);
     screenshot_plugin_register(&rigol_dsa);
     screenshot_plugin_register(&rs_hmo1000);
