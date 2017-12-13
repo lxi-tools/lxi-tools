@@ -41,6 +41,9 @@
 #include "error.h"
 #include <lxi.h>
 
+#define TIMEOUT_SCREENSHOT 15
+#define TIMEOUT_DISCOVER 2
+
 struct option_t option =
 {
     NO_COMMAND, // Default command
@@ -74,7 +77,7 @@ void print_help(char *argv[])
     printf("  benchmark [<options>]                Benchmark\n");
     printf("\n");
     printf("Discover options:\n");
-    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", TIMEOUT_DISCOVER);
     printf("  -m, --mdns                           Search via mDNS/DNS-SD\n");
     printf("\n");
     printf("Scpi options:\n");
@@ -88,7 +91,7 @@ void print_help(char *argv[])
     printf("\n");
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
-    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout*5);
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", TIMEOUT_SCREENSHOT);
     printf("  -p, --plugin <name>                  Use screenshot plugin by name\n");
     printf("  -l, --list                           List available screenshot plugins\n");
     printf("\n");
@@ -127,6 +130,9 @@ void parse_options(int argc, char *argv[])
     if (strcmp(argv[1], "discover") == 0)
     {
         option.command = DISCOVER;
+
+        // Set default timeout for discovery
+        option.timeout = TIMEOUT_DISCOVER * 1000;
 
         static struct option long_options[] =
         {
@@ -214,8 +220,8 @@ void parse_options(int argc, char *argv[])
     {
         option.command = SCREENSHOT;
 
-        // Increase default timeout for screenshots
-        option.timeout *= 5;
+        // Set default timeout for screenshots
+        option.timeout = TIMEOUT_SCREENSHOT * 1000;
 
         static struct option long_options[] =
         {
