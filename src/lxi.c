@@ -84,7 +84,7 @@ static void strip_trailing_space(char *line)
     }
 }
 
-static int scpi(char *ip, char *command, int timeout)
+static int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
     char command_buffer[1000];
@@ -92,7 +92,7 @@ static int scpi(char *ip, char *command, int timeout)
 
     strip_trailing_space(command);
 
-    if (option.protocol == RAW)
+    if (protocol == RAW)
     {
         // Add newline to command string
         strcpy(command_buffer, command);
@@ -102,7 +102,7 @@ static int scpi(char *ip, char *command, int timeout)
     }
 
     // Connect
-    device = lxi_connect(ip, option.port, NULL, timeout, option.protocol);
+    device = lxi_connect(ip, port, NULL, timeout, protocol);
     if (device != LXI_OK)
     {
         error_printf("Unable to connect to LXI device\n");
@@ -171,14 +171,14 @@ error_connect:
     return 1;
 }
 
-static int enter_interactive_mode(char *ip, int timeout)
+static int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t protocol)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
     int device, length;
     char *input = "";
 
     // Connect
-    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    device = lxi_connect(ip, port, NULL, timeout, protocol);
     if (device != LXI_OK)
     {
         error_printf("Unable to connect to LXI device\n");
@@ -238,7 +238,7 @@ error_connect:
     return 1;
 }
 
-static int run_script(char *ip, int timeout, char *filename)
+static int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *filename)
 {
     FILE *fp;
     char *line = NULL;
@@ -256,7 +256,7 @@ static int run_script(char *ip, int timeout, char *filename)
     }
 
     // Connect
-    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    device = lxi_connect(ip, port, NULL, timeout, VXI11);
     if (device != LXI_OK)
     {
         error_printf("Unable to connect to LXI device\n");
@@ -367,7 +367,7 @@ static int discover(void)
     return 0;
 }
 
-static int benchmark(char *ip, int timeout, int repeats)
+static int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count)
 {
     struct timespec start, stop;
     double elapsed_time;
@@ -382,15 +382,18 @@ static int benchmark(char *ip, int timeout, int repeats)
         exit(EXIT_FAILURE);
     }
 
+    if (protocol == RAW)
+        command = "*IDN?\n";
+
     // Connect
-    device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    device = lxi_connect(ip, port, NULL, timeout, protocol);
     if (device != LXI_OK)
     {
         error_printf("Unable to connect to LXI device\n");
         return 1;
     }
 
-    printf("Benchmarking by sending %d ID requests. Please wait...\n", repeats);
+    printf("Benchmarking by sending %d ID requests. Please wait...\n", count);
 
     // Start time
     if ( clock_gettime(CLOCK_MONOTONIC, &start) == -1 )
@@ -400,7 +403,7 @@ static int benchmark(char *ip, int timeout, int repeats)
     }
 
     // Run benchmark
-    for (i=0; i<repeats; i++)
+    for (i=0; i<count; i++)
     {
         // Get instrument ID
         lxi_send(device, command, strlen(command), timeout);
@@ -429,7 +432,7 @@ static int benchmark(char *ip, int timeout, int repeats)
         (double)(stop.tv_nsec - start.tv_nsec)*1.0e-9;
 
     // Print benchmark result
-    printf("\rResult: %.1f requests/second\n", option.repeats/elapsed_time);
+    printf("\rResult: %.1f requests/second\n", option.count/elapsed_time);
 
     // Disconnect
     lxi_disconnect(device);
@@ -454,11 +457,11 @@ int main(int argc, char* argv[])
             break;
         case SCPI:
             if (option.interactive)
-                status = enter_interactive_mode(option.ip, option.timeout);
+                status = enter_interactive_mode(option.ip, option.port, option.timeout, option.protocol);
             else if (option.run_script)
-                status = run_script(option.ip, option.timeout, option.script_filename);
+                status = run_script(option.ip, option.port, option.timeout, option.protocol, option.script_filename);
             else
-                status = scpi(option.ip, option.scpi_command, option.timeout);
+                status = scpi(option.ip, option.port, option.timeout, option.protocol, option.scpi_command);
             break;
         case SCREENSHOT:
             screenshot_register_plugins();
@@ -470,7 +473,7 @@ int main(int argc, char* argv[])
             status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout);
             break;
         case BENCHMARK:
-            status = benchmark(option.ip, option.timeout, option.repeats);
+            status = benchmark(option.ip, option.port, option.timeout, option.protocol, option.count);
             break;
     }
 

@@ -73,6 +73,10 @@ Search via mDNS/DNS-SD
 IP address of LXI device
 
 .TP
+.B \-p, \--port
+Use port
+
+.TP
 .B \-t, \--timeout <seconds>
 Timeout in seconds
 
@@ -89,12 +93,8 @@ Enter interactive mode
 Run script (plain text file with one SCPI command per line)
 
 .TP
-.B \-s, \--raw
+.B \-r, \--raw
 Use raw/TCP protocol
-
-.TP
-.B \-s, \--raw-port
-Use raw/TCP port
 
 .SH "SCREENSHOT OPTIONS"
 
@@ -125,12 +125,20 @@ To write screenshot image to stdout simply use '-' as the output filename.
 IP address of LXI device
 
 .TP
+.B \-p, \--port
+Use port
+
+.TP
 .B \-t, \--timeout <seconds>
 Timeout in seconds
 
 .TP
-.B \-r, \--repeat <count>
-Number of repeats
+.B \-s, \--raw
+Use raw/TCP protocol
+
+.TP
+.B \-c, \--count <count>
+Number of request messages
 
 .SH "EXAMPLES"
 .TP

@@ -37,12 +37,12 @@
 
      Scpi options:
        -a, --address <ip>                   Device IP address
+       -p, --port <port>                    Use port (default: VXI11: 111, RAW: 5025)
        -t, --timeout <seconds>              Timeout (default: 3)
        -x, --hex                            Print response in hexadecimal
        -i, --interactive                    Enter interactive mode
        -s, --script <filename>              Run script file
        -r, --raw                            Use raw/TCP
-       -p, --raw-port <port>                Use raw/TCP port (default: 5025)
 
      Screenshot options:
        -a, --address <ip>                   Device IP address
@@ -52,8 +52,10 @@
 
      Benchmark options:
        -a, --address <ip>                   Device IP address
+       -p, --port <port>                    Use port (default: VXI11: 111, RAW: 5025)
        -t, --timeout <seconds>              Timeout (default: 3)
-       -r, --repeat <count>                 Number of repeats (default: 100)
+       -c, --count <count>                  Number of request messages (default: 100)
+       -r, --raw                            Use raw/TCP
 
 
 2.1 Example - Discover LXI devices on available networks

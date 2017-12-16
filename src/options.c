@@ -44,6 +44,9 @@
 #define TIMEOUT_SCREENSHOT 15
 #define TIMEOUT_DISCOVER 2
 
+#define PORT_VXI11 111
+#define PORT_RAW 5025
+
 struct option_t option =
 {
     NO_COMMAND, // Default command
@@ -58,9 +61,9 @@ struct option_t option =
     false,      // Default no list
     "",         // Default screenshot filename
     VXI11,      // Default protocol
-    5025,       // Default raw/TCP port (See http://www.lxistandard.org/About/LXI-Protocols.aspx)
+    0,          // Default port (set later)
     false,      // Default no mDNS discover
-    100,        // Default number of repeats in benchmark
+    100,        // Default number of requests in benchmark
 };
 
 void print_help(char *argv[])
@@ -82,12 +85,12 @@ void print_help(char *argv[])
     printf("\n");
     printf("Scpi options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
+    printf("  -p, --port <port>                    Use port (default: VXI11: %d, RAW: %d)\n", PORT_VXI11, PORT_RAW);
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -x, --hex                            Print response in hexadecimal\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
     printf("  -s, --script <filename>              Run script file\n");
     printf("  -r, --raw                            Use raw/TCP\n");
-    printf("  -p, --raw-port <port>                Use raw/TCP port (default: %d)\n", option.port);
     printf("\n");
     printf("Screenshot options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
@@ -97,8 +100,10 @@ void print_help(char *argv[])
     printf("\n");
     printf("Benchmark options:\n");
     printf("  -a, --address <ip>                   Device IP address\n");
+    printf("  -p, --port <port>                    Use port (default: VXI11: %d, RAW: %d)\n", PORT_VXI11, PORT_RAW);
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
-    printf("  -r, --repeat <count>                 Number of repeats (default: %d)\n", option.repeats);
+    printf("  -c, --count <count>                  Number of requests (default: %d)\n", option.count);
+    printf("  -r, --raw                            Use raw/TCP\n");
     printf("\n");
 }
 
@@ -167,24 +172,28 @@ void parse_options(int argc, char *argv[])
         static struct option long_options[] =
         {
             {"address",        required_argument, 0, 'a'},
+            {"port",           required_argument, 0, 'p'},
             {"timeout",        required_argument, 0, 't'},
             {"hex",            no_argument,       0, 'x'},
             {"interactive",    no_argument,       0, 'i'},
             {"script",         required_argument, 0, 's'},
             {"raw",            no_argument,       0, 'r'},
-            {"raw-port",       required_argument, 0, 'p'},
             {0,                0,                 0,  0 }
         };
 
         do
         {
             /* Parse scpi options */
-            c = getopt_long(argc, argv, "t:a:xis:rp:", long_options, &option_index);
+            c = getopt_long(argc, argv, "a:p:t:xis:r", long_options, &option_index);
 
             switch (c)
             {
                 case 'a':
                     strncpy(option.ip, optarg, 500);
+                    break;
+
+                case 'p':
+                    option.port = atoi(optarg);
                     break;
 
                 case 't':
@@ -206,10 +215,6 @@ void parse_options(int argc, char *argv[])
 
                 case 'r':
                     option.protocol = RAW;
-                    break;
-
-                case 'p':
-                    option.port = atoi(optarg);
                     break;
 
                 case '?':
@@ -266,15 +271,17 @@ void parse_options(int argc, char *argv[])
         static struct option long_options[] =
         {
             {"address",        required_argument, 0, 'a'},
+            {"port",           required_argument, 0, 'p'},
             {"timeout",        required_argument, 0, 't'},
-            {"repeats",        required_argument, 0, 'r'},
+            {"count",          required_argument, 0, 'c'},
+            {"raw",            no_argument,       0, 'r'},
             {0,                0,                 0,  0 }
         };
 
         do
         {
             /* Parse benchmark options */
-            c = getopt_long(argc, argv, "a:t:r:", long_options, &option_index);
+            c = getopt_long(argc, argv, "a:p:t:rc:", long_options, &option_index);
 
             switch (c)
             {
@@ -282,12 +289,20 @@ void parse_options(int argc, char *argv[])
                     strncpy(option.ip, optarg, 500);
                     break;
 
+                case 'p':
+                    option.port = atoi(optarg);
+                    break;
+
                 case 't':
                     option.timeout = atoi(optarg) * 1000;
                     break;
 
+                case 'c':
+                    option.count = atoi(optarg);
+                    break;
+
                 case 'r':
-                    option.repeats = atoi(optarg);
+                    option.protocol = RAW;
                     break;
 
                 case '?':
@@ -364,5 +379,15 @@ void parse_options(int argc, char *argv[])
             fprintf(stderr, "%s ", argv[optind++]);
         fprintf(stderr, "\n");
         exit(EXIT_FAILURE);
+    }
+
+    /* Configure port */
+    if (option.port == 0)
+    {
+        // See http://www.lxistandard.org/About/LXI-Protocols.aspx
+        if (option.protocol == RAW)
+            option.port = 5025; // Default TCP/RAW port
+        else
+            option.port = 111; // Default TCP/VXI11 port
     }
 }

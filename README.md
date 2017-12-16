@@ -21,41 +21,42 @@ lxi-tools rely on liblxi for all communication.
 The commandline interface of the lxi application is described in the output
 from 'lxi --help':
 ```
-    Usage: lxi [--version] [--help] <command> [<args>]
+     Usage: lxi [--version] [--help] <command> [<args>]
 
-      -v, --version                        Display version
-      -h, --help                           Display help
+       -v, --version                        Display version
+       -h, --help                           Display help
 
-    Commands:
-      discover [<options>]                 Search for LXI devices
-      scpi [<options>] <scpi-command>      Send SCPI command
-      screenshot [<options>] [<filename>]  Capture screenshot
-      benchmark [<options>]                Benchmark
+     Commands:
+       discover [<options>]                 Search for LXI devices
+       scpi [<options>] <scpi-command>      Send SCPI command
+       screenshot [<options>] [<filename>]  Capture screenshot
+       benchmark [<options>]                Benchmark
 
-    Discover options:
-      -t, --timeout <seconds>              Timeout (default: 3)
-      -m, --mdns                           Search via mDNS/DNS-SD
+     Discover options:
+       -t, --timeout <seconds>              Timeout (default: 3)
+       -m, --mdns                           Search via mDNS/DNS-SD
 
-    Scpi options:
-      -a, --address <ip>                   Device IP address
-      -t, --timeout <seconds>              Timeout (default: 3)
-      -x, --hex                            Print response in hexadecimal
-      -i, --interactive                    Enter interactive mode
-      -s, --script <filename>              Run script file
-      -r, --raw                            Use raw/TCP
-      -p, --raw-port <port>                Use raw/TCP port (default: 5025)
+     Scpi options:
+       -a, --address <ip>                   Device IP address
+       -p, --port <port>                    Use port (default: VXI11: 111, RAW: 5025)
+       -t, --timeout <seconds>              Timeout (default: 3)
+       -x, --hex                            Print response in hexadecimal
+       -i, --interactive                    Enter interactive mode
+       -s, --script <filename>              Run script file
+       -r, --raw                            Use raw/TCP
 
-    Screenshot options:
-      -a, --address <ip>                   Device IP address
-      -t, --timeout <seconds>              Timeout (default: 15)
-      -p, --plugin <name>                  Use screenshot plugin by name
-      -l, --list                           List available screenshot plugins
+     Screenshot options:
+       -a, --address <ip>                   Device IP address
+       -t, --timeout <seconds>              Timeout (default: 15)
+       -p, --plugin <name>                  Use screenshot plugin by name
+       -l, --list                           List available screenshot plugins
 
-    Benchmark options:
-      -a, --address <ip>                   Device IP address
-      -t, --timeout <seconds>              Timeout (default: 3)
-      -r, --repeat <count>                 Number of repeats (default: 100)
-
+     Benchmark options:
+       -a, --address <ip>                   Device IP address
+       -p, --port <port>                    Use port (default: VXI11: 111, RAW: 5025)
+       -t, --timeout <seconds>              Timeout (default: 3)
+       -c, --count <count>                  Number of request messages (default: 100)
+       -r, --raw                            Use raw/TCP
 ```
 
 ### 2.1 Example - Discover LXI devices on available networks

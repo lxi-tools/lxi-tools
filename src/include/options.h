@@ -52,7 +52,7 @@ struct option_t
     lxi_protocol_t protocol;
     int port;
     bool mdns;
-    int repeats;
+    int count;
 };
 
 enum command_t
