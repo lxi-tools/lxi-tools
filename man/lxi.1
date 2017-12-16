@@ -133,12 +133,12 @@ Use port
 Timeout in seconds
 
 .TP
-.B \-s, \--raw
-Use raw/TCP protocol
-
-.TP
 .B \-c, \--count <count>
 Number of request messages
+
+.TP
+.B \-r, \--raw
+Use raw/TCP protocol
 
 .SH "EXAMPLES"
 .TP
@@ -154,21 +154,21 @@ lxi discover --mdns
 .TP
 Send SCPI command:
 
-lxi scpi --address 192.168.0.42 "*IDN?"
+lxi scpi --address 10.0.0.42 "*IDN?"
 
 .TP
 Send SCPI command and dump response to file:
 
-lxi scpi --address 192.168.0.42 "*IDN?" > response.txt
+lxi scpi --address 10.0.0.42 "*IDN?" > response.txt
 
 .TP
 Capture screenshot from a Rigol 1000Z series oscilloscope:
 
-lxi screenshot --address 192.168.0.42 --plugin rigol-1000
+lxi screenshot --address 10.0.0.42 --plugin rigol-1000z
 
 Or by using screenshot plugin autodetection simply:
 
-lxi screenshot --address 192.168.0.42
+lxi screenshot --address 10.0.0.42
 
 .PP
 Note: Some LXI devices are slow to process SCPI commands, in which case you
