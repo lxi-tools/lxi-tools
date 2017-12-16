@@ -1,4 +1,21 @@
-=== lxi-tools v1.14 ===
+=== lxi-tools v1.15 ===
+
+
+Changes since lxi-tools v1.14:
+
+ * Update man page
+
+ * Add support for using raw/TCP in benchmark mode
+
+   Add the option to run benchmark using raw/TCP. For example:
+
+   $ lxi benchmark --address 10.0.0.42 --port 5555 --raw
+
+   Also, cleanup all port handling code and update documentation
+   accordingly.
+
+ * Decrease timeout for discover to 2 s
+
 
 
 Changes since lxi-tools v1.13:
