@@ -386,8 +386,8 @@ void parse_options(int argc, char *argv[])
     {
         // See http://www.lxistandard.org/About/LXI-Protocols.aspx
         if (option.protocol == RAW)
-            option.port = 5025; // Default TCP/RAW port
+            option.port = PORT_RAW; // Default TCP/RAW port
         else
-            option.port = 111; // Default TCP/VXI11 port
+            option.port = PORT_VXI11; // Default TCP/VXI11 port
     }
 }
