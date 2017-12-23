@@ -21,18 +21,22 @@ _lxi()
     discover_opts="-t --timeout \
                    -m --mdns"
     scpi_opts="-a --address \
+               -p --port \
                -t --timeout \
                -x --hex \
                -i --interactive \
-               -s --script"
+               -s --script \
+               -r --raw"
     screenshot_opts="-a --address \
                      -t --timeout \
                      -p --plugin \
                      -l --list"
 
     benchmark_opts="-a --address \
+                    -p --port \
                     -t --timeout \
-                    -r --repeat"
+                    -c --count \
+                    -r --raw"
 
     # Complete the options
     case "${COMP_CWORD}" in
