@@ -56,6 +56,8 @@ int rigol_dg4000_screenshot(char *address, int timeout)
     }
 
     // Send SCPI command to grab BMP image
+    command = "HCOPy:SDUMp:DATA:FORMat BMP";
+    lxi_send(device, command, strlen(command), timeout);
     command = ":HCOPy:SDUMp:DATA?";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
