@@ -58,7 +58,7 @@ int keysight_screenshot(char *address, int timeout)
     // Send SCPI commands to grab PNG image
     command = ":hardcopy:inksaver off";
     lxi_send(device, command, strlen(command), timeout);
-    command = ":display:data? PNG, color";
+    command = ":display:data? BMP, color";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
@@ -71,14 +71,14 @@ int keysight_screenshot(char *address, int timeout)
     c = response[1];
     n = atoi(&c);
     image = &response[0];
-    image += n+5;
-    length -= n+5;
+    image += n+2;
+    length -= n+2;
 
     // Strip ending newline
     length--;
 
-    // Dump remaining PNG image data to file
-    screenshot_file_dump(image, length, "png");
+    // Dump remaining image data to file
+    screenshot_file_dump(image, length, "bmp");
 
     // Disconnect
     lxi_disconnect(device);
@@ -91,7 +91,7 @@ int keysight_screenshot(char *address, int timeout)
 struct screenshot_plugin keysight_iv2000x =
 {
     .name = "keysight-iv2000x",
-    .description = "Keysight InfiniVision 2000X series oscilloscope (experimental)",
-    .regex = "AGILENT KEYSIGHT TECHNOLOGIES DSOX2...A MSOX2...A",
+    .description = "Keysight InfiniVision 2000X/3000X series oscilloscope (experimental)",
+    .regex = "AGILENT KEYSIGHT TECHNOLOGIES [MD]SO-X.[23]...",
     .screenshot = keysight_screenshot
 };
