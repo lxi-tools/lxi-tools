@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int keysight_screenshot(char *address, int timeout)
+int keysight_ivx_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -88,10 +88,10 @@ int keysight_screenshot(char *address, int timeout)
 
 
 // Screenshot plugin configuration
-struct screenshot_plugin keysight_iv2000x =
+struct screenshot_plugin keysight_ivx =
 {
-    .name = "keysight-iv2000x",
-    .description = "Keysight InfiniVision 2000X/3000X series oscilloscope (experimental)",
+    .name = "keysight-ivx",
+    .description = "Keysight InfiniiVision 2000X/3000X series oscilloscope",
     .regex = "AGILENT KEYSIGHT TECHNOLOGIES [MD]SO-X.[23]...",
-    .screenshot = keysight_screenshot
+    .screenshot = keysight_ivx_screenshot
 };

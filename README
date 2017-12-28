@@ -111,7 +111,7 @@
 
      $ lxi screenshot --list
                  Name   Description
-     keysight-iv2000x   Keysight InfiniVision 2000X series oscilloscope (experimental)
+         keysight-ivx   Keysight InfiniVision 2000X/3000X series oscilloscope
           rigol-1000z   Rigol DS/MSO 1000z series oscilloscope
            rigol-2000   Rigol DS/MSO 2000 series oscilloscope
          rigol-dg4000   Rigol DG 4000 series function generator
@@ -160,6 +160,7 @@
 
      Instrument                           Working features
 
+     Keysight Technologies MSO-X 3024T    (discover+scpi+screenshot)
      Rigol Technologies DG4062            (discover+scpi+screenshot)
      Rigol Technologies DG4102            (discover+scpi+screenshot)
      Rigol Technologies DG4162            (discover+scpi+screenshot)
