@@ -86,15 +86,15 @@ static void strip_trailing_space(char *line)
 
 static int question(char *string)
 {
-	int i;
+    int i;
 
-	for (i = 0; string[i] != '\0'; i++)
-	{
-		if (string[i] == '?')
-			return true;
-	}
+    for (i = 0; string[i] != '\0'; i++)
+    {
+        if (string[i] == '?')
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 static int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
