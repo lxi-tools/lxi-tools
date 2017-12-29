@@ -1,4 +1,30 @@
-=== lxi-tools v1.15 ===
+=== lxi-tools v1.16 ===
+
+
+Changes since lxi-tools v1.15:
+
+ * Update AUTHORS
+
+ * Convert tabs to spaces
+
+ * Remove experimental label from keysight-ivx plugin
+
+   Tested with MSO-X 3024T by ralphrmartin from EEVBlog forum.
+
+ * Fix keysight-iv2000x plugin
+
+   Fix header strip and change image format to BMP. Improve regex.
+
+ * Fix image format for rigol-dg4000 plugin
+
+ * Update completion script
+
+ * Cleanup
+
+Dmitri Goutnik:
+
+ * Make code clang friendly
+
 
 
 Changes since lxi-tools v1.14:
