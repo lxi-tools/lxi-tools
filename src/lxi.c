@@ -84,6 +84,19 @@ static void strip_trailing_space(char *line)
     }
 }
 
+static int question(char *string)
+{
+	int i;
+
+	for (i = 0; string[i] != '\0'; i++)
+	{
+		if (string[i] == '?')
+			return true;
+	}
+
+	return false;
+}
+
 static int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
 {
     char response[RESPONSE_LENGTH_MAX] = "";
@@ -115,19 +128,6 @@ static int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *
     {
         error_printf("Failed to send message\n");
         goto error_send;
-    }
-
-    int question(char *string)
-    {
-        int i;
-
-        for (i = 0; string[i] != '\0'; i++)
-        {
-            if (string[i] == '?')
-                return true;
-        }
-
-        return false;
     }
 
     // Only expect response in case we are firing a question command
