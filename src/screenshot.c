@@ -39,7 +39,6 @@
 #include <time.h>
 #include <regex.h>
 #include "screenshot.h"
-#include "options.h"
 #include "error.h"
 #include <lxi.h>
 
@@ -61,6 +60,8 @@ extern struct screenshot_plugin siglent_ssa3000x;
 extern struct screenshot_plugin tektronix_2000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
+static char *screenshot_filename = NULL;
+static char *screenshot_address = NULL;
 
 static int get_device_id(char *address, char *id, int timeout)
 {
@@ -122,7 +123,7 @@ static bool regex_match(const char *string, const char *pattern)
     return true; // Match
 }
 
-char *date_time(void)
+static char *date_time(void)
 {
     static char date_time_string[50];
 
@@ -137,19 +138,19 @@ char *date_time(void)
 void screenshot_file_dump(void *data, int length, char *format)
 {
     char automatic_filename[1000];
-    char *screenshot_filename;
+    char *filename;
     char *image_data = data;
     int i = 0;
     FILE *fd;
 
     // Handle screenshot output
-    if (strlen(option.screenshot_filename) == 0)
+    if (strlen(screenshot_filename) == 0)
     {
         // Automatically resolve screenshot filename if no filename is provided
-        sprintf(automatic_filename, "screenshot_%s_%s.%s", option.ip, date_time(), format);
-        screenshot_filename = automatic_filename;
+        sprintf(automatic_filename, "screenshot_%s_%s.%s", screenshot_address, date_time(), format);
+        filename = automatic_filename;
     }
-    else if (strcmp(option.screenshot_filename, "-") == 0)
+    else if (strcmp(screenshot_filename, "-") == 0)
     {
         // Write image data to stdout in case filename is '-'
         for (i=0; i<length; i++)
@@ -159,11 +160,11 @@ void screenshot_file_dump(void *data, int length, char *format)
     else
     {
         // Write image data to specified filename
-        screenshot_filename = option.screenshot_filename;
+        filename = screenshot_filename;
     }
 
     // Write screenshot file
-    fd = fopen(screenshot_filename, "w+");
+    fd = fopen(filename, "w+");
     if (fd == NULL)
     {
         error_printf("Could not write screenshot file (%s)\n", strerror(errno));
@@ -172,7 +173,7 @@ void screenshot_file_dump(void *data, int length, char *format)
     fwrite(data, 1, length, fd);
     fclose(fd);
 
-    printf("Saved screenshot image to %s\n", screenshot_filename);
+    printf("Saved screenshot image to %s\n", filename);
 }
 
 void screenshot_plugin_register(struct screenshot_plugin *plugin)
@@ -252,12 +253,16 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     char *regex_buffer;
     int i = 0;
 
-    // Check for required options
+    // Check parameters
     if (strlen(address) == 0)
     {
         error_printf("Missing address\n");
         exit(EXIT_FAILURE);
     }
+
+    // Save variables
+    screenshot_address = address;
+    screenshot_filename = filename;
 
     if (strlen(plugin_name) == 0)
     {
