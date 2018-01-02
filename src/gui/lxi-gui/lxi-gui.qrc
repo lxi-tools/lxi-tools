@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>lxi-tools_256x256.png</file>
+    </qresource>
+</RCC>

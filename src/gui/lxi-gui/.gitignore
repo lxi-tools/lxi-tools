@@ -1,0 +1,6 @@
+.qmake.stash
+*.qmake
+moc_*
+qrc_*
+ui_mainwindow.h
+/lxi-gui
