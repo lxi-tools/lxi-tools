@@ -42,7 +42,7 @@
 #include <lxi.h>
 
 #define TIMEOUT_SCREENSHOT 15
-#define TIMEOUT_DISCOVER 2
+#define TIMEOUT_DISCOVER 1
 
 #define PORT_VXI11 111
 #define PORT_RAW 5025
