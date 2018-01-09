@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017  Martin Lund
+ * Copyright (c) 2017-2018  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int keysight_ivx_screenshot(char *address, int timeout)
+int keysight_dmm_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -55,10 +55,10 @@ int keysight_ivx_screenshot(char *address, int timeout)
         return 1;
     }
 
-    // Send SCPI commands to grab PNG image
-    command = ":hardcopy:inksaver off";
+    // Send SCPI commands to grab image
+    command = "HCOP:SDUM:DATA:FORM BMP";
     lxi_send(device, command, strlen(command), timeout);
-    command = ":display:data? BMP, color";
+    command = "HCOP:SDUM:DATA?";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
@@ -88,10 +88,10 @@ int keysight_ivx_screenshot(char *address, int timeout)
 
 
 // Screenshot plugin configuration
-struct screenshot_plugin keysight_ivx =
+struct screenshot_plugin keysight_dmm =
 {
-    .name = "keysight-ivx",
-    .description = "Keysight InfiniiVision 2000X/3000X series oscilloscope",
-    .regex = "AGILENT KEYSIGHT TECHNOLOGIES [MD]SO-X.[23]...",
-    .screenshot = keysight_ivx_screenshot
+    .name = "keysight-dmm",
+    .description = "Keysight Truevolt Digital Multimeter",
+    .regex = "Agilent Keysight Technologies 34...A",
+    .screenshot = keysight_dmm_screenshot
 };

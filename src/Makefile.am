@@ -6,7 +6,8 @@ lxi_SOURCES = lxi.c \
               include/error.h \
               include/screenshot.h \
               screenshot.c \
-              plugins/screenshot_keysight.c \
+              plugins/screenshot_keysight-dmm.c \
+              plugins/screenshot_keysight-ivx.c \
               plugins/screenshot_rigol-1000z.c \
               plugins/screenshot_rigol-2000.c \
               plugins/screenshot_rigol-dg4000.c \
