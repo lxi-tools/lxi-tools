@@ -12,4 +12,4 @@ check-local: Makefile.qmake
 
 clean-local: Makefile.qmake
 	$(MAKE) -f Makefile.qmake $(AM_MAKEFLAGS) clean
-	rm -f Makefile.qmake
+	rm -f Makefile.qmake lxi-gui

@@ -8,12 +8,13 @@ static lxi_info_t lxi_info;
 
 void broadcast(char *address, char *interface)
 {
-    std::cout << "Broadcasting on interface " << interface << std::endl;
+    std::string broadcast_message = "Broadcasting on interface "
+                                    + std::string(interface);
+    main_window->update_statusbar(broadcast_message.c_str());
 }
 
 void device(char *address, char *id)
 {
-    std::cout << " Found " << id << " on address " << address << std::endl;
     main_window->add_instrument(id, address);
 }
 
