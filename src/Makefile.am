@@ -1,28 +1,35 @@
 bin_PROGRAMS = lxi
+noinst_LIBRARIES = libapp.a
 
-lxi_SOURCES = lxi.c \
-              options.c \
-              include/options.h \
-              include/error.h \
-              include/screenshot.h \
-              screenshot.c \
-              plugins/screenshot_keysight-dmm.c \
-              plugins/screenshot_keysight-ivx.c \
-              plugins/screenshot_rigol-1000z.c \
-              plugins/screenshot_rigol-2000.c \
-              plugins/screenshot_rigol-dg4000.c \
-              plugins/screenshot_rigol-dm3068.c \
-              plugins/screenshot_rigol-dp800.c \
-              plugins/screenshot_rigol-dsa.c \
-              plugins/screenshot_rohde-schwarz-hmo1000.c \
-              plugins/screenshot_siglent-sdm3000.c \
-              plugins/screenshot_siglent-sdg.c \
-              plugins/screenshot_siglent-sds.c \
-              plugins/screenshot_siglent-ssa3000x.c \
-              plugins/screenshot_tektronix.c
+lxi_SOURCES = main.c
+libapp_a_SOURCES = options.c \
+                   discover.c \
+                   scpi.c \
+                   screenshot.c \
+                   benchmark.c \
+                   include/error.h \
+                   include/options.h \
+                   include/discover.h \
+                   include/scpi.h \
+                   include/screenshot.h \
+                   include/benchmark.h \
+                   plugins/screenshot_keysight-dmm.c \
+                   plugins/screenshot_keysight-ivx.c \
+                   plugins/screenshot_rigol-1000z.c \
+                   plugins/screenshot_rigol-2000.c \
+                   plugins/screenshot_rigol-dg4000.c \
+                   plugins/screenshot_rigol-dm3068.c \
+                   plugins/screenshot_rigol-dp800.c \
+                   plugins/screenshot_rigol-dsa.c \
+                   plugins/screenshot_rohde-schwarz-hmo1000.c \
+                   plugins/screenshot_siglent-sdm3000.c \
+                   plugins/screenshot_siglent-sdg.c \
+                   plugins/screenshot_siglent-sds.c \
+                   plugins/screenshot_siglent-ssa3000x.c \
+                   plugins/screenshot_tektronix.c
 
 lxi_CFLAGS =
-lxi_LDADD = -llxi -lreadline
+lxi_LDADD = -llxi -lreadline libapp.a
 
 if ENABLE_BASH_COMPLETION
 bashcompletiondir=@BASH_COMPLETION_DIR@

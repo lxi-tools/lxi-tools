@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017  Martin Lund
+ * Copyright (c) 2016-2017  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,30 +27,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SCREENSHOT_H
-#define SCREENSHOT_H
+#ifndef BENCHMARK_H
+#define BENCHMARK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include "options.h"
+#include "error.h"
+#include <lxi.h>
 
-void screenshot_register_plugins(void);
-void screenshot_list_plugins(void);
-int screenshot(char *address, char *plugin_name, char *filename, int timeout);
-
-// Screenshot helper function used by plugins to dump image file
-void screenshot_file_dump(void *data, int length, char *format);
-
-struct screenshot_plugin
-{
-   const char *name;
-   const char *description;
-   const char *regex;
-   int (*screenshot)(char *address, int timeout);
-};
-
-#ifdef __cplusplus
-}
-#endif
+int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count);
 
 #endif

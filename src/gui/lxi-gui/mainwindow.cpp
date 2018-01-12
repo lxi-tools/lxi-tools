@@ -3,7 +3,10 @@
 #include <QString>
 #include <QClipboard>
 #include <QAction>
+#include <QMessageBox>
 #include <iostream>
+#include <lxi.h>
+#include "../../include/scpi.h"
 
 extern void lxi_discover_(void);
 
@@ -28,12 +31,58 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->addAction(copyIPAction);
 
     lineEdit = ui->comboBox->lineEdit();
-    connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(sendCommand()));
+    connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SCPIsendCommand()));
 }
 
-void MainWindow::sendCommand()
+void MainWindow::SCPIsendCommand()
 {
-    std::cout << "Sending " << ui->comboBox->currentText().toUtf8().constData() << std::endl;
+    QMessageBox messageBox(this);
+    QString q_response;
+    int device, length;
+    char response[10000];
+    char command[10000];
+    char *ip = (char *) IP.toUtf8().data();
+
+    if (IP.size() == 0)
+    {
+        messageBox.warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    if (ui->comboBox->currentText().size() > 0)
+    {
+        // Connect
+        device = lxi_connect(ip, 0, NULL, 1000, VXI11);
+        if (device == LXI_ERROR)
+        {
+            messageBox.critical(this, "Error", "Failed to connect!");
+            return;
+        }
+
+        // Prepare SCPI command string
+        strcpy(command, ui->comboBox->currentText().toUtf8().constData());
+        strip_trailing_space(command);
+
+        // Send command
+        lxi_send(device, command, strlen(command), 1000);
+
+        // If command is a question then receive response
+        if (question(command))
+        {
+            length = lxi_receive(device, response, 10000, 3000);
+            if (length < 0)
+            {
+                messageBox.critical(this, "Error", "Failed to receive message!");
+                return;
+            }
+
+            // Print response
+            q_response = QString::fromStdString(response);
+            ui->textBrowser->append(q_response.left(length));
+        }
+
+        lxi_disconnect(device);
+    }
 }
 
 void MainWindow::copyID()
@@ -93,5 +142,14 @@ void MainWindow::update_statusbar(const char *message)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    sendCommand();
+    SCPIsendCommand();
+}
+
+void MainWindow::on_tableWidget_cellClicked(int row, int column)
+{
+    QTableWidgetItem *item;
+    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
+
+    // Update IP
+    IP = item->text();
 }

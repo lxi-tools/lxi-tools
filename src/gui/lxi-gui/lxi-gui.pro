@@ -12,7 +12,7 @@ TARGET = lxi-gui
 TEMPLATE = app
 
 INCLUDEPATH += $$INCDIR
-LIBS += -L"$$LIBDIR" -llxi
+LIBS += -L"$$LIBDIR" -llxi ../../libapp.a -lreadline
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

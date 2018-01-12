@@ -24,11 +24,13 @@ private slots:
     void on_pushButton_2_clicked();
     void copyID();
     void copyIP();
-    void sendCommand();
+    void SCPIsendCommand();
+    void on_tableWidget_cellClicked(int row, int column);
 
 private:
     Ui::MainWindow *ui;
     QLineEdit *lineEdit;
+    QString IP;
 };
 
 #endif // MAINWINDOW_H
