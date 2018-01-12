@@ -170,6 +170,7 @@ compatible instruments:
 
 | Instrument                        | Working features           |
 |-----------------------------------|----------------------------|
+| Keysight Technologies DMM 34461A  | (discover+scpi+screenshot) |
 | Keysight Technologies MSO-X 3024T | (discover+scpi+screenshot) |
 | Rigol Technologies DG4062         | (discover+scpi+screenshot) |
 | Rigol Technologies DG4102         | (discover+scpi+screenshot) |
