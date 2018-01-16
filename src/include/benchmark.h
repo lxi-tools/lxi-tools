@@ -30,6 +30,10 @@
 #ifndef BENCHMARK_H
 #define BENCHMARK_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -43,6 +47,10 @@
 #include "error.h"
 #include <lxi.h>
 
-int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count);
+int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(void));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

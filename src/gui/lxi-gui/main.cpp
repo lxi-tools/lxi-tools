@@ -6,6 +6,11 @@
 static MainWindow *main_window;
 static lxi_info_t lxi_info;
 
+void benchmark_progress(void)
+{
+    main_window->update_progressbar();
+}
+
 void broadcast(char *address, char *interface)
 {
     std::string broadcast_message = "Broadcasting on interface "

@@ -17,6 +17,7 @@ public:
     ~MainWindow();
     void add_instrument(char *id, char *address);
     void update_statusbar(const char *message);
+    void update_progressbar();
     void pushButton_reset();
 
 private slots:
@@ -26,6 +27,7 @@ private slots:
     void copyIP();
     void SCPIsendCommand();
     void on_tableWidget_cellClicked(int row, int column);
+    void on_pushButton_3_clicked();
 
 private:
     Ui::MainWindow *ui;

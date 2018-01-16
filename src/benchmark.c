@@ -43,7 +43,7 @@
 
 #define ID_LENGTH_MAX 65536
 
-int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count)
+int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(void))
 {
     struct timespec start, stop;
     double elapsed_time;
@@ -69,7 +69,8 @@ int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int coun
         return 1;
     }
 
-    printf("Benchmarking by sending %d ID requests. Please wait...\n", count);
+    if (no_gui)
+        printf("Benchmarking by sending %d ID requests. Please wait...\n", count);
 
     // Start time
     if ( clock_gettime(CLOCK_MONOTONIC, &start) == -1 )
@@ -90,9 +91,13 @@ int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int coun
             return 1;
         }
 
-        // Print progress
-        printf("\r%d", i+1);
-        fflush(stdout);
+        if (no_gui)
+        {
+            // Print progress
+            printf("\r%d", i+1);
+            fflush(stdout);
+        } else if (progress != NULL)
+            progress();
     }
 
     // Stop time
@@ -107,8 +112,10 @@ int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int coun
         (double)(stop.tv_sec - start.tv_sec) +
         (double)(stop.tv_nsec - start.tv_nsec)*1.0e-9;
 
-    // Print benchmark result
-    printf("\rResult: %.1f requests/second\n", option.count/elapsed_time);
+    *result = count / elapsed_time;
+
+    if (no_gui)
+        printf("\rResult: %.1f requests/second\n", *result);
 
     // Disconnect
     lxi_disconnect(device);

@@ -7,8 +7,10 @@
 #include <iostream>
 #include <lxi.h>
 #include "../../include/scpi.h"
+#include "../../include/benchmark.h"
 
 extern void lxi_discover_(void);
+extern void benchmark_progress(void);
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SCPIsendCommand()));
 }
 
+// SCPI Send action
 void MainWindow::SCPIsendCommand()
 {
     QMessageBox messageBox(this);
@@ -108,6 +111,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Search button
 void MainWindow::on_pushButton_clicked()
 {
     ui->tableWidget->clearContents();
@@ -140,6 +144,7 @@ void MainWindow::update_statusbar(const char *message)
     ui->statusBar->showMessage(status_message);
 }
 
+// SCPI Send button
 void MainWindow::on_pushButton_2_clicked()
 {
     SCPIsendCommand();
@@ -152,4 +157,34 @@ void MainWindow::on_tableWidget_cellClicked(int row, int column)
 
     // Update IP
     IP = item->text();
+}
+
+void MainWindow::update_progressbar()
+{
+    ui->progressBar->setValue(ui->progressBar->value() + 1);
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    double result;
+    QString q_result;
+    QMessageBox messageBox(this);
+
+    if (IP.size() == 0)
+    {
+        messageBox.warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    // Reset
+    ui->label_6->clear();
+    ui->progressBar->setValue(0);
+    ui->progressBar->setMaximum(ui->spinBox->value());
+
+    // Run benchmark
+    benchmark(IP.toUtf8().data(), 0, 1000, VXI11, ui->spinBox->value(), false, &result, benchmark_progress);
+
+    // Print result
+    q_result = QString::number(result, 'f', 1);
+    ui->label_6->setText(q_result + " requests/second");
 }

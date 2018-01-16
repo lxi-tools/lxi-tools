@@ -48,6 +48,7 @@
 int main(int argc, char* argv[])
 {
     int status = EXIT_SUCCESS;
+    double result;
 
     // Parse options
     parse_options(argc, argv);
@@ -78,7 +79,7 @@ int main(int argc, char* argv[])
             status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout);
             break;
         case BENCHMARK:
-            status = benchmark(option.ip, option.port, option.timeout, option.protocol, option.count);
+            status = benchmark(option.ip, option.port, option.timeout, option.protocol, option.count, true, &result, NULL);
             break;
     }
 
