@@ -8,6 +8,7 @@
 #include <lxi.h>
 #include "../../include/scpi.h"
 #include "../../include/benchmark.h"
+#include "../../include/screenshot.h"
 
 extern void lxi_discover_(void);
 extern void benchmark_progress(void);
@@ -34,6 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     lineEdit = ui->comboBox->lineEdit();
     connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SCPIsendCommand()));
+
+    ui->graphicsView->setStyleSheet("background: transparent");
+
+    // Register screenshot plugins
+    screenshot_register_plugins();
 }
 
 // SCPI Send action
@@ -187,4 +193,35 @@ void MainWindow::on_pushButton_3_clicked()
     // Print result
     q_result = QString::number(result, 'f', 1);
     ui->label_6->setText(q_result + " requests/second");
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    char image_buffer[0x200000];
+    int image_size = 0;
+
+    QMessageBox messageBox(this);
+
+    if (IP.size() == 0)
+    {
+        messageBox.warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    // Take screenshot
+    screenshot(IP.toUtf8().data(), "", "", 1000, false, image_buffer, &image_size);
+
+    int width = ui->graphicsView->geometry().width();
+    int height = ui->graphicsView->geometry().height();
+
+    QPixmap *q_pixmap = new QPixmap;
+    q_pixmap->loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
+    q_pixmap->scaled(QSize(width, height), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QGraphicsScene* scene = new QGraphicsScene();
+    ui->graphicsView->setScene(scene);
+    scene->addPixmap(*q_pixmap);
+    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+
+    ui->graphicsView->show();
 }

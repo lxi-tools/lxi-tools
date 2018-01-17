@@ -63,6 +63,9 @@ extern struct screenshot_plugin tektronix_2000;
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 static char *screenshot_filename = NULL;
 static char *screenshot_address = NULL;
+static bool screenshot_no_gui;
+static void *screenshot_image_buffer;
+static int *screenshot_image_size;
 
 static int get_device_id(char *address, char *id, int timeout)
 {
@@ -144,37 +147,45 @@ void screenshot_file_dump(void *data, int length, char *format)
     int i = 0;
     FILE *fd;
 
-    // Handle screenshot output
-    if (strlen(screenshot_filename) == 0)
+    if (screenshot_no_gui)
     {
-        // Automatically resolve screenshot filename if no filename is provided
-        sprintf(automatic_filename, "screenshot_%s_%s.%s", screenshot_address, date_time(), format);
-        filename = automatic_filename;
-    }
-    else if (strcmp(screenshot_filename, "-") == 0)
-    {
-        // Write image data to stdout in case filename is '-'
-        for (i=0; i<length; i++)
-           putchar(*(image_data+i));
-        return;
-    }
-    else
-    {
-        // Write image data to specified filename
-        filename = screenshot_filename;
-    }
+        // Handle screenshot output
+        if (strlen(screenshot_filename) == 0)
+        {
+            // Automatically resolve screenshot filename if no filename is provided
+            sprintf(automatic_filename, "screenshot_%s_%s.%s", screenshot_address, date_time(), format);
+            filename = automatic_filename;
+        }
+        else if (strcmp(screenshot_filename, "-") == 0)
+        {
+            // Write image data to stdout in case filename is '-'
+            for (i=0; i<length; i++)
+                putchar(*(image_data+i));
+            return;
+        }
+        else
+        {
+            // Write image data to specified filename
+            filename = screenshot_filename;
+        }
 
-    // Write screenshot file
-    fd = fopen(filename, "w+");
-    if (fd == NULL)
-    {
-        error_printf("Could not write screenshot file (%s)\n", strerror(errno));
-        exit(EXIT_FAILURE);
-    }
-    fwrite(data, 1, length, fd);
-    fclose(fd);
+        // Write screenshot file
+        fd = fopen(filename, "w+");
+        if (fd == NULL)
+        {
+            error_printf("Could not write screenshot file (%s)\n", strerror(errno));
+            exit(EXIT_FAILURE);
+        }
+        fwrite(data, 1, length, fd);
+        fclose(fd);
 
-    printf("Saved screenshot image to %s\n", filename);
+        printf("Saved screenshot image to %s\n", filename);
+    } else
+    {
+        // Save screenshot to buffer
+        memcpy(screenshot_image_buffer, data, length);
+        *screenshot_image_size = length;
+    }
 }
 
 void screenshot_plugin_register(struct screenshot_plugin *plugin)
@@ -243,7 +254,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&tektronix_2000);
 }
 
-int screenshot(char *address, char *plugin_name, char *filename, int timeout)
+int screenshot(char *address, char *plugin_name, char *filename, int timeout, bool no_gui, void *image_buffer, int *image_size)
 {
     bool no_match = true;
     char id[ID_LENGTH_MAX];
@@ -265,6 +276,9 @@ int screenshot(char *address, char *plugin_name, char *filename, int timeout)
     // Save variables
     screenshot_address = address;
     screenshot_filename = filename;
+    screenshot_no_gui = no_gui;
+    screenshot_image_buffer = image_buffer;
+    screenshot_image_size = image_size;
 
     if (strlen(plugin_name) == 0)
     {

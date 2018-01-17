@@ -125,7 +125,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -204,8 +204,8 @@
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>390</y>
+        <x>400</x>
+        <y>380</y>
         <width>121</width>
         <height>25</height>
        </rect>
@@ -214,22 +214,44 @@
        <string>Take screenshot</string>
       </property>
      </widget>
-     <widget class="QFrame" name="frame">
+     <widget class="QGraphicsView" name="graphicsView">
       <property name="geometry">
        <rect>
-        <x>180</x>
+        <x>200</x>
         <y>30</y>
-        <width>521</width>
-        <height>341</height>
+        <width>511</width>
+        <height>331</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
      </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>110</y>
+        <width>181</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="lxi-gui.qrc">:/images/photo-camera.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>label_7</zorder>
+     <zorder>pushButton_4</zorder>
+     <zorder>graphicsView</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -291,7 +313,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>360</x>
