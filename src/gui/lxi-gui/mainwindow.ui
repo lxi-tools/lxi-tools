@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>961</width>
-    <height>791</height>
+    <height>793</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -96,13 +96,13 @@
      <bool>false</bool>
     </property>
     <attribute name="horizontalHeaderVisible">
-     <bool>true</bool>
+     <bool>false</bool>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>false</bool>
     </attribute>
     <attribute name="verticalHeaderVisible">
-     <bool>true</bool>
+     <bool>false</bool>
     </attribute>
     <column>
      <property name="text">
@@ -201,26 +201,13 @@
      <attribute name="title">
       <string>Screenshot</string>
      </attribute>
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>380</y>
-        <width>121</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Take screenshot</string>
-      </property>
-     </widget>
      <widget class="QGraphicsView" name="graphicsView">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>170</x>
         <y>30</y>
-        <width>511</width>
-        <height>331</height>
+        <width>581</width>
+        <height>351</height>
        </rect>
       </property>
       <property name="verticalScrollBarPolicy">
@@ -234,7 +221,7 @@
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>110</y>
+        <y>120</y>
         <width>181</width>
         <height>141</height>
        </rect>
@@ -249,8 +236,37 @@
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>357</x>
+        <y>391</y>
+        <width>206</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="text">
+          <string>Take screenshot</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <zorder>label_7</zorder>
-     <zorder>pushButton_4</zorder>
+     <zorder>layoutWidget</zorder>
      <zorder>graphicsView</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -260,9 +276,9 @@
      <widget class="QProgressBar" name="progressBar">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>120</y>
-        <width>211</width>
+        <x>310</x>
+        <y>150</y>
+        <width>271</width>
         <height>71</height>
        </rect>
       </property>
@@ -280,7 +296,7 @@
       <property name="geometry">
        <rect>
         <x>400</x>
-        <y>280</y>
+        <y>310</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -292,8 +308,8 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>50</y>
+        <x>245</x>
+        <y>80</y>
         <width>401</width>
         <height>51</height>
        </rect>
@@ -316,8 +332,8 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>221</y>
+        <x>359</x>
+        <y>252</y>
         <width>173</width>
         <height>28</height>
        </rect>
@@ -325,13 +341,24 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLabel" name="label_4">
+         <property name="font">
+          <font>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="text">
           <string>Send</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QSpinBox" name="spinBox">
+         <property name="minimum">
+          <number>1</number>
+         </property>
          <property name="maximum">
           <number>9999</number>
          </property>
@@ -362,34 +389,84 @@
     </widget>
     <widget class="QWidget" name="tab_6">
      <attribute name="title">
-      <string>Settings</string>
+      <string>Script</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tab_7">
      <attribute name="title">
-      <string>About</string>
+      <string>Settings</string>
      </attribute>
     </widget>
-   </widget>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>270</y>
-      <width>921</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
+    <widget class="QWidget" name="tab_8">
+     <attribute name="title">
+      <string>About</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>160</y>
+        <width>323</width>
+        <height>88</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>lxi-gui</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>VERSION</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Tools for managing LXI compatible instruments</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>lxi-tools.github.io</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </widget>
    <zorder>label</zorder>
    <zorder>checkBox</zorder>
    <zorder>tableWidget</zorder>
    <zorder>pushButton</zorder>
    <zorder>tabWidget</zorder>
-   <zorder>line</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

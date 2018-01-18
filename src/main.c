@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
                 screenshot_list_plugins();
                 return 0;
             }
-            status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout, true, NULL, NULL);
+            status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout, true, NULL, NULL, NULL, NULL);
             break;
         case BENCHMARK:
             status = benchmark(option.ip, option.port, option.timeout, option.protocol, option.count, true, &result, NULL);

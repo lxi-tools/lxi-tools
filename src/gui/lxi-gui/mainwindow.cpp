@@ -4,8 +4,10 @@
 #include <QClipboard>
 #include <QAction>
 #include <QMessageBox>
+#include <QFileDialog>
 #include <iostream>
 #include <lxi.h>
+#include "../../include/config.h"
 #include "../../include/scpi.h"
 #include "../../include/benchmark.h"
 #include "../../include/screenshot.h"
@@ -19,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Setup table widget
+    // Setup instrument table widget
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget->verticalHeader()->setVisible(false);
     ui->tableWidget->setShowGrid(false);
@@ -33,10 +35,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->addAction(copyIDAction);
     ui->tableWidget->addAction(copyIPAction);
 
+    // Set up SCPI send action for line edit box
     lineEdit = ui->comboBox->lineEdit();
     connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SCPIsendCommand()));
 
+    // Set up background of screenshot view
     ui->graphicsView->setStyleSheet("background: transparent");
+
+    // Set up About page labels
+    ui->label_10->setText("<a href=\"https://lxi-tools.github.io/\"><span style=\"color:darkorange;\">Website</span></a>");
+    ui->label_10->setTextFormat(Qt::RichText);
+    ui->label_10->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->label_10->setOpenExternalLinks(true);
+    QString string_version;
+    string_version.sprintf("%s", VERSION);
+    ui->label_11->setText(string_version);
+
+    // Screenshot image
+    q_pixmap = new QPixmap;
 
     // Register screenshot plugins
     screenshot_register_plugins();
@@ -127,6 +143,7 @@ void MainWindow::on_pushButton_clicked()
     lxi_discover_();
     ui->statusBar->clearMessage();
     ui->pushButton->setText("Search");
+    IP.clear();
 }
 
 void MainWindow::add_instrument(char *id, char *address)
@@ -156,7 +173,7 @@ void MainWindow::on_pushButton_2_clicked()
     SCPIsendCommand();
 }
 
-void MainWindow::on_tableWidget_cellClicked(int row, int column)
+void MainWindow::on_tableWidget_cellClicked(__attribute__((unused)) int row, __attribute__((unused)) int column)
 {
     QTableWidgetItem *item;
     item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
@@ -170,6 +187,7 @@ void MainWindow::update_progressbar()
     ui->progressBar->setValue(ui->progressBar->value() + 1);
 }
 
+// Benchmark start
 void MainWindow::on_pushButton_3_clicked()
 {
     double result;
@@ -195,10 +213,13 @@ void MainWindow::on_pushButton_3_clicked()
     ui->label_6->setText(q_result + " requests/second");
 }
 
+// Take screenshot
 void MainWindow::on_pushButton_4_clicked()
 {
     char image_buffer[0x200000];
     int image_size = 0;
+    char image_format[10];
+    char image_filename[1000];
 
     QMessageBox messageBox(this);
 
@@ -208,13 +229,18 @@ void MainWindow::on_pushButton_4_clicked()
         return;
     }
 
-    // Take screenshot
-    screenshot(IP.toUtf8().data(), "", "", 1000, false, image_buffer, &image_size);
+    // Capture screenshot
+    screenshot(IP.toUtf8().data(), "", "", 1000, false, image_buffer, &image_size, image_format, image_filename);
+
+    screenshotImageFormat.clear();
+    screenshotImageFormat.append(image_format);
+
+    screenshotImageFilename.clear();
+    screenshotImageFilename.append(image_filename);
 
     int width = ui->graphicsView->geometry().width();
     int height = ui->graphicsView->geometry().height();
 
-    QPixmap *q_pixmap = new QPixmap;
     q_pixmap->loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
     q_pixmap->scaled(QSize(width, height), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -224,4 +250,16 @@ void MainWindow::on_pushButton_4_clicked()
     ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
     ui->graphicsView->show();
+
+    ui->pushButton_5->setEnabled(true);
+}
+
+// Save screenshot
+void MainWindow::on_pushButton_5_clicked()
+{
+    QString q_filename = QFileDialog::getSaveFileName(this, "Save file", screenshotImageFilename, "." + screenshotImageFormat);
+    QFile q_file(q_filename);
+    q_file.open(QIODevice::WriteOnly);
+    q_pixmap->save(&q_file, screenshotImageFormat.toUtf8().constData());
+    q_file.close();
 }

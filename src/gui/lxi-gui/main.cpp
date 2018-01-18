@@ -11,7 +11,7 @@ void benchmark_progress(void)
     main_window->update_progressbar();
 }
 
-void broadcast(char *address, char *interface)
+void broadcast(__attribute__((unused)) char *address, char *interface)
 {
     std::string broadcast_message = "Broadcasting on interface "
                                     + std::string(interface);
