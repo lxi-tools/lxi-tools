@@ -25,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget->verticalHeader()->setVisible(false);
     ui->tableWidget->setShowGrid(false);
-    ui->tableWidget->setColumnWidth(0, 559);
-    ui->tableWidget->setColumnWidth(1, 100);
+    ui->tableWidget->setColumnWidth(0, 539);
+    ui->tableWidget->setColumnWidth(1, 120);
     ui->tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* copyIDAction = new QAction("Copy ID", this);
     QAction* copyIPAction = new QAction("Copy IP", this);
@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 // SCPI Send action
-void MainWindow::SCPIsendCommand()
+void MainWindow::SCPIsendCommand(const char *cmd)
 {
     QMessageBox messageBox(this);
     QString q_response;
@@ -74,7 +74,7 @@ void MainWindow::SCPIsendCommand()
         return;
     }
 
-    if (ui->comboBox->currentText().size() > 0)
+    if (strlen(cmd) > 0)
     {
         // Connect
         device = lxi_connect(ip, 0, NULL, 1000, VXI11);
@@ -85,7 +85,7 @@ void MainWindow::SCPIsendCommand()
         }
 
         // Prepare SCPI command string
-        strcpy(command, ui->comboBox->currentText().toUtf8().constData());
+        strcpy(command, cmd);
         strip_trailing_space(command);
 
         // Send command
@@ -98,16 +98,23 @@ void MainWindow::SCPIsendCommand()
             if (length < 0)
             {
                 messageBox.critical(this, "Error", "Failed to receive message!");
+                lxi_disconnect(device);
                 return;
             }
 
             // Print response
             q_response = QString::fromStdString(response);
-            ui->textBrowser->append(q_response.left(length));
+            ui->textBrowser->insertPlainText(q_response.left(length));
+            ui->textBrowser->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
         }
 
         lxi_disconnect(device);
     }
+}
+
+void MainWindow::SCPIsendCommand()
+{
+    SCPIsendCommand(ui->comboBox->currentText().toUtf8().constData());
 }
 
 void MainWindow::copyID()
@@ -154,6 +161,7 @@ void MainWindow::add_instrument(char *id, char *address)
     ui->tableWidget->insertRow(0);
     ui->tableWidget->setItem(0,0, new QTableWidgetItem(instrument_id));
     ui->tableWidget->setItem(0,1, new QTableWidgetItem(instrument_address));
+    ui->tableWidget->item(0,1)->setTextAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::pushButton_reset()
@@ -262,4 +270,88 @@ void MainWindow::on_pushButton_5_clicked()
     q_file.open(QIODevice::WriteOnly);
     q_pixmap->save(&q_file, screenshotImageFormat.toUtf8().constData());
     q_file.close();
+}
+
+// *CLS
+void MainWindow::on_pushButton_6_clicked()
+{
+    SCPIsendCommand("*CLS");
+}
+
+// *ESE
+void MainWindow::on_pushButton_7_clicked()
+{
+    SCPIsendCommand("*ESE");
+}
+
+// *ESE?
+void MainWindow::on_pushButton_8_clicked()
+{
+    SCPIsendCommand("*ESE?");
+}
+
+// *ESR?
+void MainWindow::on_pushButton_9_clicked()
+{
+    SCPIsendCommand("*ESR?");
+}
+
+// *IDN?
+void MainWindow::on_pushButton_10_clicked()
+{
+    SCPIsendCommand("*IDN?");
+}
+
+// *OPC
+void MainWindow::on_pushButton_11_clicked()
+{
+    SCPIsendCommand("*OPC");
+}
+
+// *OPC?
+void MainWindow::on_pushButton_12_clicked()
+{
+    SCPIsendCommand("*OPC?");
+}
+
+// *OPT?
+void MainWindow::on_pushButton_13_clicked()
+{
+    SCPIsendCommand("*OPT?");
+}
+
+// *RST
+void MainWindow::on_pushButton_14_clicked()
+{
+    SCPIsendCommand("*RST");
+}
+
+// *SRE
+void MainWindow::on_pushButton_15_clicked()
+{
+    SCPIsendCommand("*SRE");
+}
+
+// *SRE?
+void MainWindow::on_pushButton_16_clicked()
+{
+    SCPIsendCommand("*SRE?");
+}
+
+// *STB?
+void MainWindow::on_pushButton_17_clicked()
+{
+    SCPIsendCommand("*STB?");
+}
+
+// *TST?
+void MainWindow::on_pushButton_18_clicked()
+{
+    SCPIsendCommand("*TST?");
+}
+
+// *WAI
+void MainWindow::on_pushButton_19_clicked()
+{
+    SCPIsendCommand("*WAI");
 }
