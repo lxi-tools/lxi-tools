@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDesktopServices>
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -30,10 +31,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* copyIDAction = new QAction("Copy ID", this);
     QAction* copyIPAction = new QAction("Copy IP", this);
+    QAction* openBrowserAction = new QAction("Open in browser", this);
     connect(copyIDAction, SIGNAL(triggered()), this, SLOT(copyID()));
     connect(copyIPAction, SIGNAL(triggered()), this, SLOT(copyIP()));
+    connect(openBrowserAction, SIGNAL(triggered()), this, SLOT(openBrowser()));
     ui->tableWidget->addAction(copyIDAction);
     ui->tableWidget->addAction(copyIPAction);
+    ui->tableWidget->addAction(openBrowserAction);
 
     // Set up SCPI send action for line edit box
     lineEdit = ui->comboBox->lineEdit();
@@ -135,6 +139,15 @@ void MainWindow::copyIP()
     clipboard->setText(item->text());
 }
 
+void MainWindow::openBrowser()
+{
+    QTableWidgetItem *item;
+    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
+
+    QString URL = "http://" + item->text();
+    QDesktopServices::openUrl(QUrl(URL));
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -162,11 +175,6 @@ void MainWindow::add_instrument(char *id, char *address)
     ui->tableWidget->setItem(0,0, new QTableWidgetItem(instrument_id));
     ui->tableWidget->setItem(0,1, new QTableWidgetItem(instrument_address));
     ui->tableWidget->item(0,1)->setTextAlignment(Qt::AlignCenter);
-}
-
-void MainWindow::pushButton_reset()
-{
-
 }
 
 void MainWindow::update_statusbar(const char *message)

@@ -37,9 +37,6 @@ void lxi_discover_(void)
 {
     // Search for LXI devices, 1 second timeout
     lxi_discover(&lxi_info, 1000, DISCOVER_VXI11);
-
-    // Reset push button text
-    main_window->pushButton_reset();
 }
 
 int main(int argc, char *argv[])
@@ -48,6 +45,7 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     lxi_setup();
+
     main_window = &w;
 
     w.show();
