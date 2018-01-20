@@ -1,3 +1,13 @@
+EXTRA_DIST = lxi-gui.pro \
+             lxi-gui.pro.user \
+             lxi-gui.qrc \
+             lxi-tools_256x256.png \
+             main.cpp \
+             mainwindow.cpp \
+             mainwindow.h \
+             mainwindow.ui \
+             photo-camera.png
+
 Makefile.qmake: lxi-gui.pro
 	$(QMAKE) -makefile -o Makefile.qmake lxi-gui.pro "INCDIR=$(STAGE)/$(includedir)" "LIBDIR=$(STAGE)/$(libdir)"
                 
