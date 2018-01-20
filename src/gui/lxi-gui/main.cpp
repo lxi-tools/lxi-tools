@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     main_window = &w;
 
     w.show();
+    w.resize();
 
     return a.exec();
 }

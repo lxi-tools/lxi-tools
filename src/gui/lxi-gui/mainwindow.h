@@ -19,6 +19,8 @@ public:
     void update_statusbar(const char *message);
     void update_progressbar();
     void pushButton_reset();
+    void resizeEvent(QResizeEvent *event);
+    void resize();
 
 private slots:
     void on_pushButton_clicked();

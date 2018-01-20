@@ -26,8 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget->verticalHeader()->setVisible(false);
     ui->tableWidget->setShowGrid(false);
-    ui->tableWidget->setColumnWidth(0, 539);
-    ui->tableWidget->setColumnWidth(1, 120);
     ui->tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* copyIDAction = new QAction("Copy ID", this);
     QAction* copyIPAction = new QAction("Copy IP", this);
@@ -56,11 +54,31 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_11->setText(string_version);
 
     // Screenshot image
-    q_pixmap = new QPixmap;
+    q_pixmap = new QPixmap(":/images/photo-camera.png");
+    QGraphicsScene* scene = new QGraphicsScene();
+    ui->graphicsView->setScene(scene);
+    scene->addPixmap(*q_pixmap);
+
+    ui->graphicsView->show();
 
     // Register screenshot plugins
     screenshot_register_plugins();
 }
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()*4/5);
+    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/5-1);
+
+    QMainWindow::resizeEvent(event);
+}
+
+void MainWindow::resize()
+{
+    ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()*4/5);
+    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/5-1);
+}
+
 
 // SCPI Send action
 void MainWindow::SCPIsendCommand(const char *cmd)
@@ -254,19 +272,19 @@ void MainWindow::on_pushButton_4_clicked()
     screenshotImageFilename.clear();
     screenshotImageFilename.append(image_filename);
 
-    int width = ui->graphicsView->geometry().width();
-    int height = ui->graphicsView->geometry().height();
+    int width = ui->graphicsView->width();
+    int height = ui->graphicsView->height() - 2;
 
     q_pixmap->loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
-    q_pixmap->scaled(QSize(width, height), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    *q_pixmap = q_pixmap->scaled(QSize(std::min(width, q_pixmap->width()), std::min(height, q_pixmap->height())), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QGraphicsScene* scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
     scene->addPixmap(*q_pixmap);
-    ui->graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
     ui->graphicsView->show();
 
+    // Enable Save button
     ui->pushButton_5->setEnabled(true);
 }
 
