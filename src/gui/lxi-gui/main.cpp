@@ -33,10 +33,10 @@ void lxi_setup(void)
     lxi_info.device = &device;
 }
 
-void lxi_discover_(void)
+void lxi_discover_(int timeout, lxi_discover_t type)
 {
-    // Search for LXI devices, 1 second timeout
-    lxi_discover(&lxi_info, 1000, DISCOVER_VXI11);
+    // Search for LXI devices
+    lxi_discover(&lxi_info, timeout, type);
 }
 
 int main(int argc, char *argv[])

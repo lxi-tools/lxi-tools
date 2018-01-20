@@ -13,7 +13,7 @@
 #include "../../include/benchmark.h"
 #include "../../include/screenshot.h"
 
-extern void lxi_discover_(void);
+extern void lxi_discover_(int timeout, lxi_discover_t type);
 extern void benchmark_progress(void);
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -89,6 +89,7 @@ void MainWindow::SCPIsendCommand(const char *cmd)
     char response[10000];
     char command[10000];
     char *ip = (char *) IP.toUtf8().data();
+    int timeout = ui->spinBox_SCPITimeout->value() * 1000;
 
     if (IP.size() == 0)
     {
@@ -99,7 +100,7 @@ void MainWindow::SCPIsendCommand(const char *cmd)
     if (strlen(cmd) > 0)
     {
         // Connect
-        device = lxi_connect(ip, 0, NULL, 1000, VXI11);
+        device = lxi_connect(ip, 0, NULL, timeout, VXI11);
         if (device == LXI_ERROR)
         {
             messageBox.critical(this, "Error", "Failed to connect!");
@@ -111,12 +112,12 @@ void MainWindow::SCPIsendCommand(const char *cmd)
         strip_trailing_space(command);
 
         // Send command
-        lxi_send(device, command, strlen(command), 1000);
+        lxi_send(device, command, strlen(command), timeout);
 
         // If command is a question then receive response
         if (question(command))
         {
-            length = lxi_receive(device, response, 10000, 3000);
+            length = lxi_receive(device, response, 10000, timeout);
             if (length < 0)
             {
                 messageBox.critical(this, "Error", "Failed to receive message!");
@@ -126,8 +127,8 @@ void MainWindow::SCPIsendCommand(const char *cmd)
 
             // Print response
             q_response = QString::fromStdString(response);
-            ui->textBrowser->insertPlainText(q_response.left(length));
             ui->textBrowser->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
+            ui->textBrowser->insertPlainText(q_response.left(length));
         }
 
         lxi_disconnect(device);
@@ -174,11 +175,13 @@ MainWindow::~MainWindow()
 // Search button
 void MainWindow::on_pushButton_clicked()
 {
+    int timeout = ui->spinBox_SearchTimeout->value() * 1000;
+
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
     ui->pushButton->setText("Searching");
     ui->pushButton->repaint();
-    lxi_discover_();
+    lxi_discover_(timeout, ui->checkBox_mDNS->isChecked() ? DISCOVER_MDNS : DISCOVER_VXI11);
     ui->statusBar->clearMessage();
     ui->pushButton->setText("Search");
     IP.clear();
@@ -237,10 +240,10 @@ void MainWindow::on_pushButton_3_clicked()
     // Reset
     ui->label_6->clear();
     ui->progressBar->setValue(0);
-    ui->progressBar->setMaximum(ui->spinBox->value());
+    ui->progressBar->setMaximum(ui->spinBox_BenchmarkRequests->value());
 
     // Run benchmark
-    benchmark(IP.toUtf8().data(), 0, 1000, VXI11, ui->spinBox->value(), false, &result, benchmark_progress);
+    benchmark(IP.toUtf8().data(), 0, 1000, VXI11, ui->spinBox_BenchmarkRequests->value(), false, &result, benchmark_progress);
 
     // Print result
     q_result = QString::number(result, 'f', 1);
@@ -254,6 +257,7 @@ void MainWindow::on_pushButton_4_clicked()
     int image_size = 0;
     char image_format[10];
     char image_filename[1000];
+    int timeout = ui->spinBox_ScreenshotTimeout->value() * 1000;
 
     QMessageBox messageBox(this);
 
@@ -264,7 +268,7 @@ void MainWindow::on_pushButton_4_clicked()
     }
 
     // Capture screenshot
-    screenshot(IP.toUtf8().data(), "", "", 1000, false, image_buffer, &image_size, image_format, image_filename);
+    screenshot(IP.toUtf8().data(), "", "", timeout, false, image_buffer, &image_size, image_format, image_filename);
 
     screenshotImageFormat.clear();
     screenshotImageFormat.append(image_format);
