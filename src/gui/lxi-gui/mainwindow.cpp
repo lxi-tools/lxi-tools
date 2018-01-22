@@ -6,6 +6,9 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QChartView>
+#include <QLineSeries>
+#include <QTimer>
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -16,11 +19,16 @@
 extern void lxi_discover_(int timeout, lxi_discover_t type);
 extern void benchmark_progress(void);
 
+QT_CHARTS_USE_NAMESPACE
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Create message box for error messages etc.
+    messageBox = new QMessageBox(this);
 
     // Setup instrument table widget
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -53,13 +61,42 @@ MainWindow::MainWindow(QWidget *parent) :
     string_version.sprintf("%s", VERSION);
     ui->label_11->setText(string_version);
 
-    // Screenshot image
+    // Add screenshot camera image
     q_pixmap = new QPixmap(":/images/photo-camera.png");
     QGraphicsScene* scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
     scene->addPixmap(*q_pixmap);
-
     ui->graphicsView->show();
+
+    // Set search button icon
+    //ui->pushButton->setIcon(ui->pushButton->style()->standardIcon(QStyle::SP_DialogApplyButton));
+
+    // Set up Data Recorder stuff
+    datarecorder_chart = new QChart();
+    datarecorder_chart->legend()->hide();
+    line_series0 = new QLineSeries();
+    line_series1 = new QLineSeries();
+    datarecorder_chart->addSeries(line_series0);
+    datarecorder_chart->addSeries(line_series1);
+    datarecorder_chart->createDefaultAxes();
+    //datarecorder_chart->setTitle("Data recorder chart");
+    ui->chartView->setChart(datarecorder_chart);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(data_recorder_update()));
+    data_recorder_active = false;
+    data_recorder_sample_counter = 0;
+    ui->chartView->setRenderHint(QPainter::Antialiasing);
+    ui->chartView->setRubberBand(QChartView::HorizontalRubberBand);
+    ui->chartView->setContextMenuPolicy(Qt::ActionsContextMenu);
+    QAction* zoomInAction = new QAction("Zoom In", this);
+    QAction* zoomOutAction = new QAction("Zoom Out", this);
+    QAction* zoomResetAction = new QAction("Zoom Reset", this);
+    connect(zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
+    connect(zoomResetAction, SIGNAL(triggered()), this, SLOT(zoomReset()));
+    ui->chartView->addAction(zoomInAction);
+    ui->chartView->addAction(zoomOutAction);
+    ui->chartView->addAction(zoomResetAction);
 
     // Register screenshot plugins
     screenshot_register_plugins();
@@ -79,65 +116,115 @@ void MainWindow::resize()
     ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/5-1);
 }
 
-
-// SCPI Send action
-void MainWindow::SCPIsendCommand(const char *cmd)
+// Connect
+int MainWindow::LXI_connect()
 {
-    QMessageBox messageBox(this);
-    QString q_response;
-    int device, length;
-    char response[10000];
-    char command[10000];
     char *ip = (char *) IP.toUtf8().data();
     int timeout = ui->spinBox_SCPITimeout->value() * 1000;
 
-    if (IP.size() == 0)
+    // Connect
+    lxi_device = lxi_connect(ip, 0, NULL, timeout, VXI11);
+    if (lxi_device == LXI_ERROR)
     {
-        messageBox.warning(this, "Warning", "Please select instrument!");
+        messageBox->critical(this, "Error", "Failed to connect!");
+        return -1;
+    }
+
+    return 0;
+}
+
+// Send command
+int MainWindow::LXI_send_receive(QString *command, QString *response, int timeout)
+{
+    int length;
+    char response_buffer[10000] = "";
+    char command_buffer[10000] = "";
+
+    if (command->size() > 0)
+    {
+
+        // Prepare SCPI command string
+        strcpy(command_buffer, command->toUtf8().constData());
+        strip_trailing_space(command_buffer);
+
+        // Send command
+        lxi_send(lxi_device, command_buffer, strlen(command_buffer), timeout);
+
+        // If command is a question then receive response
+        if (question(command_buffer))
+        {
+            length = lxi_receive(lxi_device, response_buffer, 10000, timeout);
+            if (length < 0)
+            {
+                messageBox->critical(this, "Error", "Failed to receive message!");
+                lxi_disconnect(lxi_device);
+                return -1;
+            }
+
+            // Return response
+            *response = QString::fromStdString(response_buffer);
+        }
+    }
+
+    return 0;
+}
+
+// Disconnect
+int MainWindow::LXI_disconnect()
+{
+    if (lxi_disconnect(lxi_device) != LXI_OK)
+        return -1;
+    else
+        return 0;
+}
+
+void MainWindow::SCPIsendCommand(QString *command)
+{
+    int status;
+    QString response;
+    int timeout = ui->spinBox_SCPITimeout->value() * 1000;
+
+    if (IP.isEmpty())
+    {
+        messageBox->warning(this, "Warning", "Please select instrument!");
         return;
     }
 
-    if (strlen(cmd) > 0)
+    LXI_connect();
+
+    status = LXI_send_receive(command, &response, timeout);
+    if (status == 0)
     {
-        // Connect
-        device = lxi_connect(ip, 0, NULL, timeout, VXI11);
-        if (device == LXI_ERROR)
-        {
-            messageBox.critical(this, "Error", "Failed to connect!");
-            return;
-        }
+        // Print response
+        ui->textBrowser->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
+        ui->textBrowser->insertPlainText(response);
 
-        // Prepare SCPI command string
-        strcpy(command, cmd);
-        strip_trailing_space(command);
-
-        // Send command
-        lxi_send(device, command, strlen(command), timeout);
-
-        // If command is a question then receive response
-        if (question(command))
-        {
-            length = lxi_receive(device, response, 10000, timeout);
-            if (length < 0)
-            {
-                messageBox.critical(this, "Error", "Failed to receive message!");
-                lxi_disconnect(device);
-                return;
-            }
-
-            // Print response
-            q_response = QString::fromStdString(response);
-            ui->textBrowser->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
-            ui->textBrowser->insertPlainText(q_response.left(length));
-        }
-
-        lxi_disconnect(device);
+        LXI_disconnect();
     }
 }
 
 void MainWindow::SCPIsendCommand()
 {
-    SCPIsendCommand(ui->comboBox->currentText().toUtf8().constData());
+    if (IP.isEmpty())
+    {
+        messageBox->warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    QString command(ui->comboBox->currentText());
+    SCPIsendCommand(&command);
+}
+
+void MainWindow::SCPIsendCommand(const char *command)
+{
+    if (IP.isEmpty())
+    {
+        messageBox->warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    QString *q_command = new QString(command);
+    SCPIsendCommand(q_command);
 }
 
 void MainWindow::copyID()
@@ -231,7 +318,7 @@ void MainWindow::on_pushButton_3_clicked()
     QString q_result;
     QMessageBox messageBox(this);
 
-    if (IP.size() == 0)
+    if (IP.isEmpty())
     {
         messageBox.warning(this, "Warning", "Please select instrument!");
         return;
@@ -243,7 +330,11 @@ void MainWindow::on_pushButton_3_clicked()
     ui->progressBar->setMaximum(ui->spinBox_BenchmarkRequests->value());
 
     // Run benchmark
+    ui->pushButton_3->setText("Testing");
+    ui->pushButton_3->repaint();
     benchmark(IP.toUtf8().data(), 0, 1000, VXI11, ui->spinBox_BenchmarkRequests->value(), false, &result, benchmark_progress);
+    ui->pushButton_3->setText("Start");
+    ui->pushButton_3->repaint();
 
     // Print result
     q_result = QString::number(result, 'f', 1);
@@ -261,7 +352,7 @@ void MainWindow::on_pushButton_4_clicked()
 
     QMessageBox messageBox(this);
 
-    if (IP.size() == 0)
+    if (IP.isEmpty())
     {
         messageBox.warning(this, "Warning", "Please select instrument!");
         return;
@@ -384,4 +475,104 @@ void MainWindow::on_pushButton_18_clicked()
 void MainWindow::on_pushButton_19_clicked()
 {
     SCPIsendCommand("*WAI");
+}
+
+// Data recorder start
+void MainWindow::on_pushButton_20_clicked()
+{
+    if (IP.isEmpty())
+    {
+        messageBox->warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    if (data_recorder_active)
+    {
+        timer->stop();
+        ui->pushButton_20->setText("Start");
+        LXI_disconnect();
+
+        // Enable inputs
+        ui->lineEdit->setEnabled(true);
+        ui->lineEdit_2->setEnabled(true);
+        ui->pushButton_21->setEnabled(true);
+        ui->spinBox_DataRecorderRate->setEnabled(true);
+    }
+    else
+    {
+        data_recorder_time_slice = 1000 / ui->spinBox_DataRecorderRate->value();
+        timer->start(data_recorder_time_slice);
+        ui->pushButton_20->setText("Stop");
+
+        LXI_connect();
+
+        // Disable inputs
+        ui->lineEdit->setEnabled(false);
+        ui->lineEdit_2->setEnabled(false);
+        ui->pushButton_21->setEnabled(false);
+        ui->spinBox_DataRecorderRate->setEnabled(false);
+    }
+
+    ui->pushButton_20->repaint();
+
+    data_recorder_active = !data_recorder_active;
+}
+
+void MainWindow::data_recorder_update()
+{
+    QString response;
+
+    if (!ui->lineEdit->text().isEmpty())
+    {
+        // Retrieve sample 1
+        QString command = ui->lineEdit->text();
+        LXI_send_receive(&command, &response, 1000);
+        line_series0->append(data_recorder_sample_counter * data_recorder_time_slice / 1000, response.toDouble());
+    }
+
+    if (!ui->lineEdit_2->text().isEmpty())
+    {
+        // Retrieve sample 2
+        QString command = ui->lineEdit_2->text();
+        LXI_send_receive(&command, &response, 1000);
+        line_series1->append(data_recorder_sample_counter * data_recorder_time_slice / 1000, response.toDouble());
+    }
+
+    datarecorder_chart->removeSeries(line_series0);
+    datarecorder_chart->addSeries(line_series0);
+    datarecorder_chart->removeSeries(line_series1);
+    datarecorder_chart->addSeries(line_series1);
+    datarecorder_chart->createDefaultAxes();
+    ui->chartView->setChart(datarecorder_chart);
+
+    data_recorder_sample_counter++;
+}
+
+// Data recorder clear
+void MainWindow::on_pushButton_21_clicked()
+{
+    datarecorder_chart->removeSeries(line_series0);
+    line_series0->clear();
+    datarecorder_chart->addSeries(line_series0);
+    datarecorder_chart->removeSeries(line_series1);
+    line_series1->clear();
+    datarecorder_chart->addSeries(line_series1);
+    datarecorder_chart->createDefaultAxes();
+    ui->chartView->setChart(datarecorder_chart);
+    data_recorder_sample_counter = 0;
+}
+
+void MainWindow::zoomOut()
+{
+    ui->chartView->chart()->zoomOut();
+}
+
+void MainWindow::zoomIn()
+{
+    ui->chartView->chart()->zoomIn();
+}
+
+void MainWindow::zoomReset()
+{
+    ui->chartView->chart()->zoomReset();
 }
