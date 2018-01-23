@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QLineEdit>
-#include <QChartView>
-#include <QLineSeries>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
 #include <QString>
 #include <QMessageBox>
 #include <QTimer>

@@ -6,13 +6,34 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = lxi-gui
 TEMPLATE = app
 
-INCLUDEPATH += $$INCDIR
-LIBS += -L"$$LIBDIR" -llxi ../../libapp.a -lreadline
+system("if [ \"`uname -m`\" = \"x86_64\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=x86_64-linux-gnu
+system("if [ \"`uname -m`\" = \"i686\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=i386-linux-gnu
+system("if [ \"`uname -m`\" = \"armv7l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
+
+isEmpty(SNAPCRAFT) {
+    QT += charts
+}
+
+!isEmpty(SNAPCRAFT) {
+    LIBS += -lQt5Charts
+    LIBS += -L"$$LIBDIR/$$TRIPLET"
+    INCLUDEPATH += $$INCDIR/$$TRIPLET/qt5
+}
+
+!isEmpty(INCDIR) {
+    INCLUDEPATH += $$INCDIR
+}
+
+!isEmpty(LIBDIR) {
+    LIBS += -L"$$LIBDIR"
+}
+
+LIBS += -llxi ../../libapp.a -lreadline
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

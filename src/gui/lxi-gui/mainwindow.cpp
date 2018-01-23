@@ -6,8 +6,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDesktopServices>
-#include <QChartView>
-#include <QLineSeries>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
 #include <QTimer>
 #include <iostream>
 #include <lxi.h>
