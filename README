@@ -12,10 +12,22 @@
     simple commandline interface to discover LXI instruments, send SCPI
     commands, and capture screenshots from supported LXI instruments.
 
+    Also provided is a GUI application which provide some of the features of
+    the commandline tool.
+
     lxi-tools rely on liblxi for all communication.
 
 
 2. Usage
+
+2.1 lxi-gui (BETA)
+
+               (See screenshot images/lxi-gui-beta.png)
+
+    The lxi-gui application provides some of the same features as the
+    commandline tool but presents them in a GUI frontend.
+
+2.2 lxi
 
     The commandline interface of the lxi application is described in the output
     from 'lxi --help':
@@ -58,7 +70,7 @@
        -r, --raw                            Use raw/TCP
 
 
-2.1 Example - Discover LXI devices on available networks
+2.2.1 Example - Discover LXI devices on available networks
 
      $ lxi discover
      Searching for LXI devices - please wait...
@@ -72,7 +84,7 @@
      Found 2 devices
 
 
-2.2 Example - Send SCPI command to an instrument
+2.2.2 Example - Send SCPI command to an instrument
 
      $ lxi scpi --address 10.42.1.20 "*IDN?"
      RIGOL TECHNOLOGIES,DS1104Z,DS1ZA1234567890,00.04.03
@@ -82,7 +94,7 @@
      $ lxi scpi --address 10.42.1.20 "*IDN?" > response.txt
 
 
-2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope:
+2.2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope:
 
      $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000z
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:45:47.png
@@ -94,7 +106,7 @@
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:46:02.png
 
 
-2.4 Example - Capture screenshot and convert it to any image format
+2.2.4 Example - Capture screenshot and convert it to any image format
 
    By default the format of the captured screenshot image is dictated by which
    screenshot plugin and instrument are in play. However, it is possible to
@@ -107,7 +119,7 @@
     $ lxi screenshot --address 10.42.1.20 - | convert - screenshot.jpg
 
 
-2.5 Example - List available screenshot plugins
+2.2.5 Example - List available screenshot plugins
 
      $ lxi screenshot --list
                  Name   Description
@@ -126,7 +138,7 @@
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscope (experimental)
 
 
-2.6 Example - Benchmark instrument request/response performance
+2.2.6 Example - Benchmark instrument request/response performance
 
      $ lxi benchmark --address 10.42.1.20
      Benchmarking by sending 100 ID requests. Please wait...
