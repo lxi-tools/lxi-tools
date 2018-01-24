@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_10->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->label_10->setOpenExternalLinks(true);
     QString string_version;
-    string_version.sprintf("%s", VERSION);
+    string_version.sprintf("%s (BETA)", VERSION);
     ui->label_11->setText(string_version);
 
     // Add screenshot camera image
