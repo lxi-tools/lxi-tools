@@ -8,6 +8,7 @@
 #include <QString>
 #include <QMessageBox>
 #include <QTimer>
+#include <QThread>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -47,8 +48,9 @@ private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
-    void on_pushButton_4_clicked();
-    void on_pushButton_5_clicked();
+    void on_pushButton_Screenshot_TakeScreenshot_clicked();
+    void on_pushButton_Screenshot_Save_clicked();
+    void on_pushButton_Screenshot_LiveView_clicked();
     void on_pushButton_6_clicked();
     void on_pushButton_7_clicked();
     void on_pushButton_8_clicked();
@@ -65,6 +67,7 @@ private slots:
     void on_pushButton_19_clicked();
     void on_pushButton_20_clicked();
     void on_pushButton_21_clicked();
+    void updateUI(QPixmap pixmap, QString image_format, QString image_filename);
 
 private:
     Ui::MainWindow *ui;
@@ -79,9 +82,12 @@ private:
     QChart *datarecorder_chart;
     int lxi_device;
     QTimer *timer;
+    bool live_view_active;
     bool data_recorder_active;
     int data_recorder_sample_counter;
     double data_recorder_time_slice;
+    QGraphicsScene* scene;
+    QGraphicsPixmapItem* pixmapItem = NULL;
 
 };
 

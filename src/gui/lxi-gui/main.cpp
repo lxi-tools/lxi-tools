@@ -28,7 +28,7 @@ void lxi_setup(void)
     // Initialize LXI library
     lxi_init();
 
-    // Set up search information callbacks
+    // Setup search information callbacks
     lxi_info.broadcast = &broadcast;
     lxi_info.device = &device;
 }
@@ -44,11 +44,14 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
+    // Setup lxi library
     lxi_setup();
 
     main_window = &w;
 
     w.show();
+
+    // Make sure things are resized correctly at startup
     w.resize();
 
     return a.exec();

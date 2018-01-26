@@ -9,6 +9,8 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QTimer>
+#include <QThread>
+#include "workerthread.h"
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -61,17 +63,18 @@ MainWindow::MainWindow(QWidget *parent) :
     string_version.sprintf("%s (BETA)", VERSION);
     ui->label_11->setText(string_version);
 
-    // Add screenshot camera image
+    // Setup Screenshot stuff
     q_pixmap = new QPixmap(":/images/photo-camera.png");
-    QGraphicsScene* scene = new QGraphicsScene();
+    scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
     scene->addPixmap(*q_pixmap);
     ui->graphicsView->show();
+    live_view_active = false;
 
     // Set search button icon
     //ui->pushButton->setIcon(ui->pushButton->style()->standardIcon(QStyle::SP_DialogApplyButton));
 
-    // Set up Data Recorder stuff
+    // Setup Data Recorder stuff
     datarecorder_chart = new QChart();
     datarecorder_chart->legend()->hide();
     line_series0 = new QLineSeries();
@@ -102,14 +105,14 @@ MainWindow::MainWindow(QWidget *parent) :
     screenshot_register_plugins();
 }
 
+// Handle resize events
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()*4/5);
-    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/5-1);
-
+    resize();
     QMainWindow::resizeEvent(event);
 }
 
+// Handle resize
 void MainWindow::resize()
 {
     ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()*4/5);
@@ -341,8 +344,82 @@ void MainWindow::on_pushButton_3_clicked()
     ui->label_6->setText(q_result + " requests/second");
 }
 
+void MainWindow::updateUI(QPixmap pixmap, QString image_format, QString image_filename)
+{
+    // Update UI
+    // TODO: Refactor common screenshot code
+
+    int width = ui->graphicsView->width();
+    int height = ui->graphicsView->height() - 2;
+
+    screenshotImageFormat.clear();
+    screenshotImageFormat.append(image_format);
+
+    screenshotImageFilename.clear();
+    screenshotImageFilename.append(image_filename);
+
+    pixmap = pixmap.scaled(QSize(std::min(width, pixmap.width()), std::min(height, pixmap.height())), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    *q_pixmap = pixmap;
+
+    if (!pixmapItem)
+        pixmapItem = scene->addPixmap(pixmap);
+    else
+        pixmapItem->setPixmap(pixmap);
+
+    ui->graphicsView->show();
+}
+
+// Live View
+void MainWindow::on_pushButton_Screenshot_LiveView_clicked()
+{
+    QMessageBox messageBox(this);
+    static WorkerThread *workerthread;
+
+    if (IP.isEmpty())
+    {
+        messageBox.warning(this, "Warning", "Please select instrument!");
+        return;
+    }
+
+    if (live_view_active)
+    {
+        // Stop live view
+
+        // Wait for worker thread to finish
+        workerthread->live = false;
+        workerthread->wait();
+        delete workerthread;
+
+        ui->pushButton_Screenshot_LiveView->setText("Live View");
+        ui->pushButton_Screenshot_LiveView->repaint();
+
+        // Enable buttons
+        ui->pushButton_Screenshot_Save->setEnabled(true);
+        ui->pushButton_Screenshot_TakeScreenshot->setEnabled(true);
+
+        live_view_active = false;
+    } else
+    {
+        // Start live view
+        ui->pushButton_Screenshot_LiveView->setText("Stop");
+        ui->pushButton_Screenshot_LiveView->repaint();
+
+        // Disable buttons
+        ui->pushButton_Screenshot_Save->setEnabled(false);
+        ui->pushButton_Screenshot_TakeScreenshot->setEnabled(false);
+
+        // Start worker thread
+        int timeout = ui->spinBox_ScreenshotTimeout->value() * 1000;
+        workerthread = new WorkerThread;
+        connect(workerthread, SIGNAL(requestUpdateUI(QPixmap, QString, QString)), this, SLOT(updateUI(QPixmap, QString, QString)));
+        workerthread->startLiveUpdate(IP, timeout);
+
+        live_view_active = true;
+    }
+}
+
 // Take screenshot
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
 {
     char image_buffer[0x200000];
     int image_size = 0;
@@ -373,18 +450,19 @@ void MainWindow::on_pushButton_4_clicked()
     q_pixmap->loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
     *q_pixmap = q_pixmap->scaled(QSize(std::min(width, q_pixmap->width()), std::min(height, q_pixmap->height())), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    QGraphicsScene* scene = new QGraphicsScene();
-    ui->graphicsView->setScene(scene);
-    scene->addPixmap(*q_pixmap);
+    if (!pixmapItem)
+        pixmapItem = scene->addPixmap(*q_pixmap);
+    else
+        pixmapItem->setPixmap(*q_pixmap);
 
     ui->graphicsView->show();
 
-    // Enable Save button
-    ui->pushButton_5->setEnabled(true);
+    // Enable buttons
+    ui->pushButton_Screenshot_Save->setEnabled(true);
 }
 
 // Save screenshot
-void MainWindow::on_pushButton_5_clicked()
+void MainWindow::on_pushButton_Screenshot_Save_clicked()
 {
     QString q_filename = QFileDialog::getSaveFileName(this, "Save file", screenshotImageFilename, "." + screenshotImageFormat);
     QFile q_file(q_filename);

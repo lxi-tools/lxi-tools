@@ -350,7 +350,7 @@ int screenshot(char *address, char *plugin_name, char *filename,
             exit(EXIT_FAILURE);
         }
 
-        if (isatty(fileno(stdout)))
+        if (isatty(fileno(stdout)) && screenshot_no_gui)
             printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
 
         no_match = false;

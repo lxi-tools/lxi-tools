@@ -84,7 +84,7 @@
            <bool>false</bool>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>542</number>
@@ -496,14 +496,21 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="pushButton_Screenshot_LiveView">
+              <property name="text">
+               <string>Live View</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_Screenshot_TakeScreenshot">
               <property name="text">
                <string>Take screenshot</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="pushButton_Screenshot_Save">
               <property name="enabled">
                <bool>false</bool>
               </property>
