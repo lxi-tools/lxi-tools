@@ -11,6 +11,7 @@
 #include <QtCharts/QLineSeries>
 #include <QTimer>
 #include <QThread>
+#include <QInputDialog>
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -470,7 +471,15 @@ void MainWindow::on_pushButton_SCPI_CLS_clicked()
 // *ESE
 void MainWindow::on_pushButton_SCPI_ESE_clicked()
 {
-    SCPIsendCommand("*ESE");
+    QString command;
+    bool ok;
+    int i = QInputDialog::getInt(this, tr("*ESE <value>"),
+                                     tr("Value:"), 0, 0, 255, 1, &ok);
+    if (ok)
+    {
+        command = tr("*ESE %1").arg(i);
+        SCPIsendCommand(&command);
+    }
 }
 
 // *ESE?
@@ -518,7 +527,15 @@ void MainWindow::on_pushButton_SCPI_RST_clicked()
 // *SRE
 void MainWindow::on_pushButton_SCPI_SRE_clicked()
 {
-    SCPIsendCommand("*SRE");
+    QString command;
+    bool ok;
+    int i = QInputDialog::getInt(this, tr("*SRE <value>"),
+                                     tr("Value:"), 0, 0, 255, 1, &ok);
+    if (ok)
+    {
+        command = tr("*SRE %1").arg(i);
+        SCPIsendCommand(&command);
+    }
 }
 
 // *SRE?
