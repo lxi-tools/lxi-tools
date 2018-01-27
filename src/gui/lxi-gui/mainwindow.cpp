@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "workerthread.h"
 #include <QString>
 #include <QClipboard>
 #include <QAction>
@@ -10,7 +11,6 @@
 #include <QtCharts/QLineSeries>
 #include <QTimer>
 #include <QThread>
-#include "workerthread.h"
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -33,26 +33,32 @@ MainWindow::MainWindow(QWidget *parent) :
     messageBox = new QMessageBox(this);
 
     // Setup instrument table widget
-    ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableWidget->verticalHeader()->setVisible(false);
-    ui->tableWidget->setShowGrid(false);
-    ui->tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+    ui->tableWidget_InstrumentList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidget_InstrumentList->verticalHeader()->setVisible(false);
+    ui->tableWidget_InstrumentList->setShowGrid(false);
+    ui->tableWidget_InstrumentList->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* copyIDAction = new QAction("Copy ID", this);
     QAction* copyIPAction = new QAction("Copy IP", this);
     QAction* openBrowserAction = new QAction("Open in browser", this);
-    connect(copyIDAction, SIGNAL(triggered()), this, SLOT(copyID()));
-    connect(copyIPAction, SIGNAL(triggered()), this, SLOT(copyIP()));
-    connect(openBrowserAction, SIGNAL(triggered()), this, SLOT(openBrowser()));
-    ui->tableWidget->addAction(copyIDAction);
-    ui->tableWidget->addAction(copyIPAction);
-    ui->tableWidget->addAction(openBrowserAction);
+    connect(copyIDAction, SIGNAL(triggered()), this, SLOT(InstrumentList_copyID()));
+    connect(copyIPAction, SIGNAL(triggered()), this, SLOT(InstrumentList_copyIP()));
+    connect(openBrowserAction, SIGNAL(triggered()), this, SLOT(InstrumentList_openBrowser()));
+    ui->tableWidget_InstrumentList->addAction(copyIDAction);
+    ui->tableWidget_InstrumentList->addAction(copyIPAction);
+    ui->tableWidget_InstrumentList->addAction(openBrowserAction);
 
     // Set up SCPI send action for line edit box
-    lineEdit = ui->comboBox->lineEdit();
+    lineEdit = ui->comboBox_SCPI_Command->lineEdit();
     connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(SCPIsendCommand()));
 
-    // Set up background of screenshot view
-    ui->graphicsView->setStyleSheet("background: transparent");
+    // Setup Screenshot page
+    ui->graphicsView_Screenshot->setStyleSheet("background: transparent");
+    q_pixmap = new QPixmap(":/images/photo-camera.png");
+    scene = new QGraphicsScene();
+    ui->graphicsView_Screenshot->setScene(scene);
+    scene->addPixmap(*q_pixmap);
+    ui->graphicsView_Screenshot->show();
+    live_view_active = false;
 
     // Set up About page labels
     ui->label_10->setText("<a href=\"https://lxi-tools.github.io/\"><span style=\"color:darkorange;\">Website</span></a>");
@@ -63,18 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     string_version.sprintf("%s (BETA)", VERSION);
     ui->label_11->setText(string_version);
 
-    // Setup Screenshot stuff
-    q_pixmap = new QPixmap(":/images/photo-camera.png");
-    scene = new QGraphicsScene();
-    ui->graphicsView->setScene(scene);
-    scene->addPixmap(*q_pixmap);
-    ui->graphicsView->show();
-    live_view_active = false;
-
     // Set search button icon
     //ui->pushButton->setIcon(ui->pushButton->style()->standardIcon(QStyle::SP_DialogApplyButton));
 
-    // Setup Data Recorder stuff
+    // Setup Data Recorder page
     datarecorder_chart = new QChart();
     datarecorder_chart->legend()->hide();
     line_series0 = new QLineSeries();
@@ -85,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //datarecorder_chart->setTitle("Data recorder chart");
     ui->chartView->setChart(datarecorder_chart);
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(data_recorder_update()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(DataRecorder_Update()));
     data_recorder_active = false;
     data_recorder_sample_counter = 0;
     ui->chartView->setRenderHint(QPainter::Antialiasing);
@@ -94,9 +92,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction* zoomInAction = new QAction("Zoom In", this);
     QAction* zoomOutAction = new QAction("Zoom Out", this);
     QAction* zoomResetAction = new QAction("Zoom Reset", this);
-    connect(zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
-    connect(zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
-    connect(zoomResetAction, SIGNAL(triggered()), this, SLOT(zoomReset()));
+    connect(zoomInAction, SIGNAL(triggered()), this, SLOT(DataRecorder_zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered()), this, SLOT(DataRecorder_zoomOut()));
+    connect(zoomResetAction, SIGNAL(triggered()), this, SLOT(DataRecorder_zoomReset()));
     ui->chartView->addAction(zoomInAction);
     ui->chartView->addAction(zoomOutAction);
     ui->chartView->addAction(zoomResetAction);
@@ -115,15 +113,15 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 // Handle resize
 void MainWindow::resize()
 {
-    ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()*4/5);
-    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/5-1);
+    ui->tableWidget_InstrumentList->setColumnWidth(0, ui->tableWidget_InstrumentList->width()*4/5);
+    ui->tableWidget_InstrumentList->setColumnWidth(1, ui->tableWidget_InstrumentList->width()/5-1);
 }
 
 // Connect
 int MainWindow::LXI_connect()
 {
-    char *ip = (char *) IP.toUtf8().data();
     int timeout = ui->spinBox_SCPITimeout->value() * 1000;
+    char *ip = (char *) IP.toUtf8().data();
 
     // Connect
     lxi_device = lxi_connect(ip, 0, NULL, timeout, VXI11);
@@ -139,13 +137,12 @@ int MainWindow::LXI_connect()
 // Send command
 int MainWindow::LXI_send_receive(QString *command, QString *response, int timeout)
 {
-    int length;
     char response_buffer[10000] = "";
     char command_buffer[10000] = "";
+    int length;
 
     if (command->size() > 0)
     {
-
         // Prepare SCPI command string
         strcpy(command_buffer, command->toUtf8().constData());
         strip_trailing_space(command_buffer);
@@ -183,9 +180,9 @@ int MainWindow::LXI_disconnect()
 
 void MainWindow::SCPIsendCommand(QString *command)
 {
-    int status;
-    QString response;
     int timeout = ui->spinBox_SCPITimeout->value() * 1000;
+    QString response;
+    int status;
 
     if (IP.isEmpty())
     {
@@ -199,8 +196,8 @@ void MainWindow::SCPIsendCommand(QString *command)
     if (status == 0)
     {
         // Print response
-        ui->textBrowser->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
-        ui->textBrowser->insertPlainText(response);
+        ui->textBrowser_SCPI_Response->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
+        ui->textBrowser_SCPI_Response->insertPlainText(response);
 
         LXI_disconnect();
     }
@@ -214,7 +211,7 @@ void MainWindow::SCPIsendCommand()
         return;
     }
 
-    QString command(ui->comboBox->currentText());
+    QString command(ui->comboBox_SCPI_Command->currentText());
     SCPIsendCommand(&command);
 }
 
@@ -226,33 +223,27 @@ void MainWindow::SCPIsendCommand(const char *command)
         return;
     }
 
-    QString *q_command = new QString(command);
-    SCPIsendCommand(q_command);
+    QString *command_ = new QString(command);
+    SCPIsendCommand(command_);
 }
 
-void MainWindow::copyID()
+void MainWindow::InstrumentList_copyID()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QTableWidgetItem *item;
-
-    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 0);
+    QTableWidgetItem *item = ui->tableWidget_InstrumentList->item(ui->tableWidget_InstrumentList->currentRow(), 0);
     clipboard->setText(item->text());
 }
 
-void MainWindow::copyIP()
+void MainWindow::InstrumentList_copyIP()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QTableWidgetItem *item;
-
-    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
+    QTableWidgetItem *item = ui->tableWidget_InstrumentList->item(ui->tableWidget_InstrumentList->currentRow(), 1);
     clipboard->setText(item->text());
 }
 
-void MainWindow::openBrowser()
+void MainWindow::InstrumentList_openBrowser()
 {
-    QTableWidgetItem *item;
-    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
-
+    QTableWidgetItem *item = ui->tableWidget_InstrumentList->item(ui->tableWidget_InstrumentList->currentRow(), 1);
     QString URL = "http://" + item->text();
     QDesktopServices::openUrl(QUrl(URL));
 }
@@ -263,17 +254,17 @@ MainWindow::~MainWindow()
 }
 
 // Search button
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_Search_clicked()
 {
     int timeout = ui->spinBox_SearchTimeout->value() * 1000;
 
-    ui->tableWidget->clearContents();
-    ui->tableWidget->setRowCount(0);
-    ui->pushButton->setText("Searching");
-    ui->pushButton->repaint();
+    ui->tableWidget_InstrumentList->clearContents();
+    ui->tableWidget_InstrumentList->setRowCount(0);
+    ui->pushButton_Search->setText("Searching");
+    ui->pushButton_Search->repaint();
     lxi_discover_(timeout, ui->checkBox_mDNS->isChecked() ? DISCOVER_MDNS : DISCOVER_VXI11);
     ui->statusBar->clearMessage();
-    ui->pushButton->setText("Search");
+    ui->pushButton_Search->setText("Search");
     IP.clear();
 }
 
@@ -282,10 +273,10 @@ void MainWindow::add_instrument(char *id, char *address)
     QString instrument_id = QString::fromStdString(id);
     QString instrument_address = QString::fromStdString(address);
 
-    ui->tableWidget->insertRow(0);
-    ui->tableWidget->setItem(0,0, new QTableWidgetItem(instrument_id));
-    ui->tableWidget->setItem(0,1, new QTableWidgetItem(instrument_address));
-    ui->tableWidget->item(0,1)->setTextAlignment(Qt::AlignCenter);
+    ui->tableWidget_InstrumentList->insertRow(0);
+    ui->tableWidget_InstrumentList->setItem(0,0, new QTableWidgetItem(instrument_id));
+    ui->tableWidget_InstrumentList->setItem(0,1, new QTableWidgetItem(instrument_address));
+    ui->tableWidget_InstrumentList->item(0,1)->setTextAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::update_statusbar(const char *message)
@@ -295,15 +286,14 @@ void MainWindow::update_statusbar(const char *message)
 }
 
 // SCPI Send button
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_SCPI_Send_clicked()
 {
     SCPIsendCommand();
 }
 
-void MainWindow::on_tableWidget_cellClicked(__attribute__((unused)) int row, __attribute__((unused)) int column)
+void MainWindow::on_tableWidget_InstrumentList_cellClicked(__attribute__((unused)) int row, __attribute__((unused)) int column)
 {
-    QTableWidgetItem *item;
-    item = ui->tableWidget->item(ui->tableWidget->currentRow(), 1);
+    QTableWidgetItem *item = ui->tableWidget_InstrumentList->item(ui->tableWidget_InstrumentList->currentRow(), 1);
 
     // Update IP
     IP = item->text();
@@ -315,7 +305,7 @@ void MainWindow::update_progressbar()
 }
 
 // Benchmark start
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_pushButton_Benchmark_Start_clicked()
 {
     double result;
     QString q_result;
@@ -333,24 +323,24 @@ void MainWindow::on_pushButton_3_clicked()
     ui->progressBar->setMaximum(ui->spinBox_BenchmarkRequests->value());
 
     // Run benchmark
-    ui->pushButton_3->setText("Testing");
-    ui->pushButton_3->repaint();
+    ui->pushButton_Benchmark_Start->setText("Testing");
+    ui->pushButton_Benchmark_Start->repaint();
     benchmark(IP.toUtf8().data(), 0, 1000, VXI11, ui->spinBox_BenchmarkRequests->value(), false, &result, benchmark_progress);
-    ui->pushButton_3->setText("Start");
-    ui->pushButton_3->repaint();
+    ui->pushButton_Benchmark_Start->setText("Start");
+    ui->pushButton_Benchmark_Start->repaint();
 
     // Print result
     q_result = QString::number(result, 'f', 1);
     ui->label_6->setText(q_result + " requests/second");
 }
 
-void MainWindow::updateUI(QPixmap pixmap, QString image_format, QString image_filename)
+void MainWindow::Screenshot_UpdateUI(QPixmap pixmap, QString image_format, QString image_filename)
 {
     // Update UI
     // TODO: Refactor common screenshot code
 
-    int width = ui->graphicsView->width();
-    int height = ui->graphicsView->height() - 2;
+    int width = ui->graphicsView_Screenshot->width();
+    int height = ui->graphicsView_Screenshot->height() - 2;
 
     screenshotImageFormat.clear();
     screenshotImageFormat.append(image_format);
@@ -366,14 +356,14 @@ void MainWindow::updateUI(QPixmap pixmap, QString image_format, QString image_fi
     else
         pixmapItem->setPixmap(pixmap);
 
-    ui->graphicsView->show();
+    ui->graphicsView_Screenshot->show();
 }
 
 // Live View
 void MainWindow::on_pushButton_Screenshot_LiveView_clicked()
 {
-    QMessageBox messageBox(this);
     static WorkerThread *workerthread;
+    QMessageBox messageBox(this);
 
     if (IP.isEmpty())
     {
@@ -411,7 +401,7 @@ void MainWindow::on_pushButton_Screenshot_LiveView_clicked()
         // Start worker thread
         int timeout = ui->spinBox_ScreenshotTimeout->value() * 1000;
         workerthread = new WorkerThread;
-        connect(workerthread, SIGNAL(requestUpdateUI(QPixmap, QString, QString)), this, SLOT(updateUI(QPixmap, QString, QString)));
+        connect(workerthread, SIGNAL(requestUpdateUI(QPixmap, QString, QString)), this, SLOT(Screenshot_UpdateUI(QPixmap, QString, QString)));
         workerthread->startLiveUpdate(IP, timeout);
 
         live_view_active = true;
@@ -444,8 +434,8 @@ void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
     screenshotImageFilename.clear();
     screenshotImageFilename.append(image_filename);
 
-    int width = ui->graphicsView->width();
-    int height = ui->graphicsView->height() - 2;
+    int width = ui->graphicsView_Screenshot->width();
+    int height = ui->graphicsView_Screenshot->height() - 2;
 
     q_pixmap->loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
     *q_pixmap = q_pixmap->scaled(QSize(std::min(width, q_pixmap->width()), std::min(height, q_pixmap->height())), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -455,7 +445,7 @@ void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
     else
         pixmapItem->setPixmap(*q_pixmap);
 
-    ui->graphicsView->show();
+    ui->graphicsView_Screenshot->show();
 
     // Enable buttons
     ui->pushButton_Screenshot_Save->setEnabled(true);
@@ -464,99 +454,99 @@ void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
 // Save screenshot
 void MainWindow::on_pushButton_Screenshot_Save_clicked()
 {
-    QString q_filename = QFileDialog::getSaveFileName(this, "Save file", screenshotImageFilename, "." + screenshotImageFormat);
-    QFile q_file(q_filename);
-    q_file.open(QIODevice::WriteOnly);
-    q_pixmap->save(&q_file, screenshotImageFormat.toUtf8().constData());
-    q_file.close();
+    QString filename = QFileDialog::getSaveFileName(this, "Save file", screenshotImageFilename, "." + screenshotImageFormat);
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    q_pixmap->save(&file, screenshotImageFormat.toUtf8().constData());
+    file.close();
 }
 
 // *CLS
-void MainWindow::on_pushButton_6_clicked()
+void MainWindow::on_pushButton_SCPI_CLS_clicked()
 {
     SCPIsendCommand("*CLS");
 }
 
 // *ESE
-void MainWindow::on_pushButton_7_clicked()
+void MainWindow::on_pushButton_SCPI_ESE_clicked()
 {
     SCPIsendCommand("*ESE");
 }
 
 // *ESE?
-void MainWindow::on_pushButton_8_clicked()
+void MainWindow::on_pushButton_SCPI_ESEQuestion_clicked()
 {
     SCPIsendCommand("*ESE?");
 }
 
 // *ESR?
-void MainWindow::on_pushButton_9_clicked()
+void MainWindow::on_pushButton_SCPI_ESRQuestion_clicked()
 {
     SCPIsendCommand("*ESR?");
 }
 
 // *IDN?
-void MainWindow::on_pushButton_10_clicked()
+void MainWindow::on_pushButton_SCPI_IDNQuestion_clicked()
 {
     SCPIsendCommand("*IDN?");
 }
 
 // *OPC
-void MainWindow::on_pushButton_11_clicked()
+void MainWindow::on_pushButton_SCPI_OPC_clicked()
 {
     SCPIsendCommand("*OPC");
 }
 
 // *OPC?
-void MainWindow::on_pushButton_12_clicked()
+void MainWindow::on_pushButton_SCPI_OPCQuestion_clicked()
 {
     SCPIsendCommand("*OPC?");
 }
 
 // *OPT?
-void MainWindow::on_pushButton_13_clicked()
+void MainWindow::on_pushButton_SCPI_OPTQuestion_clicked()
 {
     SCPIsendCommand("*OPT?");
 }
 
 // *RST
-void MainWindow::on_pushButton_14_clicked()
+void MainWindow::on_pushButton_SCPI_RST_clicked()
 {
     SCPIsendCommand("*RST");
 }
 
 // *SRE
-void MainWindow::on_pushButton_15_clicked()
+void MainWindow::on_pushButton_SCPI_SRE_clicked()
 {
     SCPIsendCommand("*SRE");
 }
 
 // *SRE?
-void MainWindow::on_pushButton_16_clicked()
+void MainWindow::on_pushButton_SCPI_SREQuestion_clicked()
 {
     SCPIsendCommand("*SRE?");
 }
 
 // *STB?
-void MainWindow::on_pushButton_17_clicked()
+void MainWindow::on_pushButton_SCPI_STBQuestion_clicked()
 {
     SCPIsendCommand("*STB?");
 }
 
 // *TST?
-void MainWindow::on_pushButton_18_clicked()
+void MainWindow::on_pushButton_SCPI_TSTQuestion_clicked()
 {
     SCPIsendCommand("*TST?");
 }
 
 // *WAI
-void MainWindow::on_pushButton_19_clicked()
+void MainWindow::on_pushButton_SCPI_WAI_clicked()
 {
     SCPIsendCommand("*WAI");
 }
 
 // Data recorder start
-void MainWindow::on_pushButton_20_clicked()
+void MainWindow::on_pushButton_DataRecorder_Start_clicked()
 {
     if (IP.isEmpty())
     {
@@ -567,36 +557,36 @@ void MainWindow::on_pushButton_20_clicked()
     if (data_recorder_active)
     {
         timer->stop();
-        ui->pushButton_20->setText("Start");
+        ui->pushButton_DataRecorder_Start->setText("Start");
         LXI_disconnect();
 
         // Enable inputs
         ui->lineEdit->setEnabled(true);
         ui->lineEdit_2->setEnabled(true);
-        ui->pushButton_21->setEnabled(true);
+        ui->pushButton_DataRecorder_Clear->setEnabled(true);
         ui->spinBox_DataRecorderRate->setEnabled(true);
     }
     else
     {
         data_recorder_time_slice = 1000 / ui->spinBox_DataRecorderRate->value();
         timer->start(data_recorder_time_slice);
-        ui->pushButton_20->setText("Stop");
+        ui->pushButton_DataRecorder_Start->setText("Stop");
 
         LXI_connect();
 
         // Disable inputs
         ui->lineEdit->setEnabled(false);
         ui->lineEdit_2->setEnabled(false);
-        ui->pushButton_21->setEnabled(false);
+        ui->pushButton_DataRecorder_Clear->setEnabled(false);
         ui->spinBox_DataRecorderRate->setEnabled(false);
     }
 
-    ui->pushButton_20->repaint();
+    ui->pushButton_DataRecorder_Start->repaint();
 
     data_recorder_active = !data_recorder_active;
 }
 
-void MainWindow::data_recorder_update()
+void MainWindow::DataRecorder_Update()
 {
     QString response;
 
@@ -627,7 +617,7 @@ void MainWindow::data_recorder_update()
 }
 
 // Data recorder clear
-void MainWindow::on_pushButton_21_clicked()
+void MainWindow::on_pushButton_DataRecorder_Clear_clicked()
 {
     datarecorder_chart->removeSeries(line_series0);
     line_series0->clear();
@@ -640,17 +630,22 @@ void MainWindow::on_pushButton_21_clicked()
     data_recorder_sample_counter = 0;
 }
 
-void MainWindow::zoomOut()
+void MainWindow::DataRecorder_zoomOut()
 {
     ui->chartView->chart()->zoomOut();
 }
 
-void MainWindow::zoomIn()
+void MainWindow::DataRecorder_zoomIn()
 {
     ui->chartView->chart()->zoomIn();
 }
 
-void MainWindow::zoomReset()
+void MainWindow::DataRecorder_zoomReset()
 {
     ui->chartView->chart()->zoomReset();
+}
+
+void MainWindow::on_pushButton_SCPI_Clear_clicked()
+{
+    ui->comboBox_SCPI_Command->lineEdit()->clear();
 }

@@ -33,7 +33,7 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="label_Logo">
         <property name="text">
          <string/>
         </property>
@@ -64,12 +64,15 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="tableWidget_InstrumentList">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
           </property>
           <property name="showDropIndicator" stdset="0">
            <bool>false</bool>
@@ -84,7 +87,7 @@
            <bool>false</bool>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>false</bool>
+           <bool>true</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>542</number>
@@ -138,7 +141,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pushButton_Search">
             <property name="text">
              <string>Search</string>
             </property>
@@ -223,9 +226,9 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tab_SCPI">
        <attribute name="title">
         <string>SCPI</string>
        </attribute>
@@ -244,7 +247,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <widget class="QComboBox" name="comboBox">
+               <widget class="QComboBox" name="comboBox_SCPI_Command">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -266,7 +269,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_2">
+               <widget class="QPushButton" name="pushButton_SCPI_Clear">
+                <property name="text">
+                 <string>Clear</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_SCPI_Send">
                 <property name="text">
                  <string>Send</string>
                 </property>
@@ -286,7 +296,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QTextBrowser" name="textBrowser">
+             <widget class="QTextBrowser" name="textBrowser_SCPI_Response">
               <property name="cursor" stdset="0">
                <cursorShape>IBeamCursor</cursorShape>
               </property>
@@ -309,7 +319,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QPushButton" name="pushButton_6">
+               <widget class="QPushButton" name="pushButton_SCPI_CLS">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Clear Status&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Clears the instrument status byte by emptying the error queue and clearing all event registers. Also cancels any preceding *OPC command or query.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -319,7 +329,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_7">
+               <widget class="QPushButton" name="pushButton_SCPI_ESE">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Event Status Enable&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets bits in the standard event status enable register.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -329,7 +339,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_8">
+               <widget class="QPushButton" name="pushButton_SCPI_ESEQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Event Status Enable Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns the results of the standard event enable register. The register is cleared after reading it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -339,7 +349,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_9">
+               <widget class="QPushButton" name="pushButton_SCPI_ESRQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Event Status Enable Register Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reads and clears event status enable register.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -349,7 +359,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_10">
+               <widget class="QPushButton" name="pushButton_SCPI_IDNQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Identify Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns a string that uniquely identifies the analyzer. The string is of the form &amp;quot;&amp;lt;manufacturer name&amp;gt;,&amp;lt;model number&amp;gt;,&amp;lt;serial number&amp;gt;,&amp;lt;software revision&amp;gt;&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -359,7 +369,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_11">
+               <widget class="QPushButton" name="pushButton_SCPI_OPC">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Operation Complete Command&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Generates the OPC message in the standard event status register when all pending overlapped operations have been completed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -369,7 +379,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_12">
+               <widget class="QPushButton" name="pushButton_SCPI_OPCQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Operation Complete Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns &amp;quot;1&amp;quot; when all pending overlapped operations have been completed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -383,7 +393,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QPushButton" name="pushButton_13">
+               <widget class="QPushButton" name="pushButton_SCPI_OPTQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Identify Options Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns a comma-separated string identifying the instrument option configuration.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -393,7 +403,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_14">
+               <widget class="QPushButton" name="pushButton_SCPI_RST">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Reset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Executes a device reset and cancels any pending *OPC command or query.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -403,7 +413,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_15">
+               <widget class="QPushButton" name="pushButton_SCPI_SRE">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Service Request Enable&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Before reading a status register, bits must be enabled. This command enables bits in the service request register.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -413,7 +423,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_16">
+               <widget class="QPushButton" name="pushButton_SCPI_SREQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Service Request Enable Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reads the current state of the service request enable register. The register is cleared after reading it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -423,7 +433,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_17">
+               <widget class="QPushButton" name="pushButton_SCPI_STBQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Status Byte Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reads the value of the instrument status byte. The register is cleared only when the registers feeding it are cleared.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -433,7 +443,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_18">
+               <widget class="QPushButton" name="pushButton_SCPI_TSTQuestion">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Result of Self-test Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns the result of a query of the analyzer hardward status. An &amp;quot;0&amp;quot; indicates no failures found. Any other value indicates one or more failures.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -443,7 +453,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_19">
+               <widget class="QPushButton" name="pushButton_SCPI_WAI">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Wait&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Prohibits the instrument from executing any new commands until all pending overlapped commands have been completed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
@@ -460,7 +470,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_Screenshot">
        <attribute name="title">
         <string>Screenshot</string>
        </attribute>
@@ -468,7 +478,7 @@
         <item row="0" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QGraphicsView" name="graphicsView">
+           <widget class="QGraphicsView" name="graphicsView_Screenshot">
             <property name="verticalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -554,7 +564,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_3">
+      <widget class="QWidget" name="tab_Benchmark">
        <attribute name="title">
         <string>Benchmark</string>
        </attribute>
@@ -698,7 +708,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="pushButton_Benchmark_Start">
               <property name="text">
                <string>Start</string>
               </property>
@@ -739,7 +749,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_5">
+      <widget class="QWidget" name="tab_DataRecorder">
        <attribute name="title">
         <string>Data Recorder</string>
        </attribute>
@@ -855,14 +865,14 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_20">
+           <widget class="QPushButton" name="pushButton_DataRecorder_Start">
             <property name="text">
              <string>Start</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_21">
+           <widget class="QPushButton" name="pushButton_DataRecorder_Clear">
             <property name="text">
              <string>Clear</string>
             </property>
@@ -885,12 +895,12 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_6">
+      <widget class="QWidget" name="tab_Automation">
        <attribute name="title">
         <string>Automation</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tab_7">
+      <widget class="QWidget" name="tab_Settings">
        <attribute name="title">
         <string>Settings</string>
        </attribute>
@@ -1034,7 +1044,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_8">
+      <widget class="QWidget" name="tab_About">
        <attribute name="title">
         <string>About</string>
        </attribute>
