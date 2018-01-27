@@ -33,7 +33,8 @@ AM_CONDITIONAL([ENABLE_BASH_COMPLETION],[test "x$with_bash_completion_dir" != "x
 AC_ARG_ENABLE([lxi-gui], AS_HELP_STRING([--enable-lxi-gui], [Enable lxi-gui]))
 AS_IF([test "x$enable_lxi_gui" = "xyes"], [
     # Check for Qt libraries
-    PKG_CHECK_MODULES(QT, [Qt5Core, Qt5Gui, Qt5Widgets], [], [AC_MSG_ERROR([Qt libraries are required.])])
+    PKG_CHECK_MODULES(Qt5, [Qt5Core, Qt5Gui, Qt5Widgets], [], [AC_MSG_ERROR([Qt libraries are missing.])])
+    PKG_CHECK_MODULES(Qt5Charts, [Qt5Charts], [], [AC_MSG_ERROR([Qt5Charts is missing.])])
 
     if ! `$PKG_CONFIG --atleast-version=5.0.0 Qt5Core`; then
         AC_MSG_ERROR([Qt >= 5.0.0 is required.])
