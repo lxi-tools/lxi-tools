@@ -2,11 +2,13 @@ EXTRA_DIST = lxi-gui.pro \
              lxi-gui.pro.user \
              lxi-gui.qrc \
              lxi-tools_256x256.png \
+             photo-camera.png \
              main.cpp \
              mainwindow.cpp \
              mainwindow.h \
              mainwindow.ui \
-             photo-camera.png
+             workerthread.cpp \
+             workerthread.h
 
 Makefile.qmake: lxi-gui.pro
 	$(QMAKE) -makefile -o Makefile.qmake lxi-gui.pro \
