@@ -1,4 +1,80 @@
-=== lxi-tools v1.16 ===
+=== lxi-tools v1.17 ===
+
+
+
+Changes since lxi-tools v1.16:
+
+ * lxi-gui: Add input dialog for *ESE and *SRE commands
+
+ * lxi-gui: Fix qmake compile flags
+
+ * lxi-gui: Start with SCPI page
+
+ * Add configure check for Qt5Charts
+
+ * lxi-gui: Cleanup
+
+   Name UI elements accordingly
+
+ * lxi-gui: Add screenshot live view
+
+ * Update README screenshot
+
+ * lxi-gui: Add ID/IP instrument table header
+
+ * lxi-gui: Tag as BETA
+
+ * Update README
+
+   Introduce lxi-gui and include screenshot.
+
+ * Link QT5 Charts manually
+
+   To avoid build issue with snap.
+
+ * lxi-gui: Add data recorder feature
+
+ * lxi-gui: Add settings
+
+ * lxi-gui: Add QT5 source files
+
+ * lxi-gui: Introduce responsive layout
+
+   The lxi-gui application can now automatically resize to fit any window
+   size.
+
+ * lxi-gui: Add 'Open in browser' right-click feature
+
+ * lxi-gui: Add IEEE 488.2 Common Commands
+
+ * lxi-gui: Add about details
+
+ * lxi-gui: Add screenshot feature
+
+ * lxi-gui: Add benchmark feature
+
+ * Split features into separate files
+
+ * Update README
+
+ * Update lxi-gui
+
+ * Add keysight-dmm screenshot plugin
+
+   This plugin supports Keysight Truevolt digital multimeters.
+
+ * Set default discover timeout to 1 s
+
+ * Add experimental QT5 GUI
+
+   Can be enabled using configure option --enable-lxi-gui
+
+   Requires QT 5.0.0 or newer.
+
+ * Cleanup
+
+ * Update Travis
+
 
 
 Changes since lxi-tools v1.15:
