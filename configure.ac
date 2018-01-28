@@ -43,9 +43,10 @@ AS_IF([test "x$enable_lxi_gui" = "xyes"], [
     AC_CHECK_PROGS(MOC, [moc-qt5 moc])
     AC_CHECK_PROGS(UIC, [uic-qt5 uic])
     AC_CHECK_PROGS(RCC, [rcc])
-    AC_CHECK_PROGS(QMAKE, [qmake])
+    AC_CHECK_PROGS(QMAKE, [qmake-qt5 qmake])
+    AC_CHECK_PROGS(QTCHOOSER, [qtchooser])
     if test -z "$QMAKE" || test -z "$MOC" || test -z "$UIC" || test -z "$RCC"; then
-        AC_MSG_ERROR([Qt utility programs qmake, moc, uic, and rcc are required.])
+        AC_MSG_ERROR([Qt utility programs qmake, qtchooser, moc, uic, and rcc are required.])
     fi
     lxi_gui=yes
 ])

@@ -11,7 +11,7 @@ EXTRA_DIST = lxi-gui.pro \
              workerthread.h
 
 Makefile.qmake: lxi-gui.pro
-	$(QMAKE) -makefile -o Makefile.qmake lxi-gui.pro \
+	$(QTCHOOSER) -run-tool=qmake -qt=5 -makefile -o Makefile.qmake lxi-gui.pro \
 		INCDIR="$(SNAPCRAFT_STAGE)/$(includedir)" \
 		LIBDIR="$(SNAPCRAFT_STAGE)/$(libdir)" \
 		SNAPCRAFT=$(SNAPCRAFT) \
