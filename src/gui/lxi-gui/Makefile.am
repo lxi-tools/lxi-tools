@@ -14,8 +14,9 @@ Makefile.qmake: lxi-gui.pro
 	$(QTCHOOSER) -run-tool=qmake -qt=5 -makefile -o Makefile.qmake lxi-gui.pro \
 		INCDIR="$(SNAPCRAFT_STAGE)/$(includedir)" \
 		LIBDIR="$(SNAPCRAFT_STAGE)/$(libdir)" \
-		SNAPCRAFT=$(SNAPCRAFT) \
-		SNAPCRAFT_STAGE=$(SNAPCRAFT_STAGE)
+		SNAPCRAFT="$(SNAPCRAFT)" \
+		SNAPCRAFT_STAGE="$(SNAPCRAFT_STAGE)" \
+		$(QMAKE_ARGUMENTS)
 
 all-local: Makefile.qmake
 	$(MAKE) -f Makefile.qmake $(AM_MAKEFLAGS) all
