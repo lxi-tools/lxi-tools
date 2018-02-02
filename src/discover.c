@@ -35,7 +35,6 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include "options.h"
 #include "error.h"
 #include <lxi.h>
 
@@ -55,11 +54,11 @@ static void device(char *address, char *id)
 
 static void service(char *address, char *id, char *service, int port)
 {
-    printf("  Found %s on address %s\n    %s service on port %u\n", id, address, service, port);
+    printf("  Found \"%s\" on address %s\n    %s service on port %u\n", id, address, service, port);
     service_count++;
 }
 
-int discover(void)
+int discover(bool mdns, int timeout)
 {
     lxi_info_t info;
 
@@ -71,9 +70,9 @@ int discover(void)
     printf("Searching for LXI devices - please wait...\n\n");
 
     // Search for LXI devices / services
-    if (option.mdns)
+    if (mdns)
     {
-        lxi_discover(&info, option.timeout, DISCOVER_MDNS);
+        lxi_discover(&info, timeout, DISCOVER_MDNS);
         if (service_count == 0)
             printf("No services found\n");
         else
@@ -81,7 +80,7 @@ int discover(void)
     }
     else
     {
-        lxi_discover(&info, option.timeout, DISCOVER_VXI11);
+        lxi_discover(&info, timeout, DISCOVER_VXI11);
         printf("\n");
         if (device_count == 0)
             printf("No devices found\n");

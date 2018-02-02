@@ -41,8 +41,11 @@
 #include "error.h"
 #include <lxi.h>
 
-#define TIMEOUT_SCREENSHOT 15
-#define TIMEOUT_DISCOVER 1
+// Default timeouts in seconds
+#define TIMEOUT                3
+#define TIMEOUT_SCREENSHOT    15
+#define TIMEOUT_DISCOVER       1
+#define TIMEOUT_DISCOVER_MDNS  3
 
 #define PORT_VXI11 111
 #define PORT_RAW 5025
@@ -50,7 +53,7 @@
 struct option_t option =
 {
     NO_COMMAND, // Default command
-    3,          // Default timeout in seconds
+    TIMEOUT,    // Default timeout in seconds
     "",         // Default IP address
     "",         // Default SCPI command
     false,      // Default no hexadecimal print
@@ -80,7 +83,7 @@ void print_help(char *argv[])
     printf("  benchmark [<options>]                Benchmark\n");
     printf("\n");
     printf("Discover options:\n");
-    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", TIMEOUT_DISCOVER);
+    printf("  -t, --timeout <seconds>              Timeout (default: Normal: %d, mDNS: %d)\n", TIMEOUT_DISCOVER, TIMEOUT_DISCOVER_MDNS);
     printf("  -m, --mdns                           Search via mDNS/DNS-SD\n");
     printf("\n");
     printf("Scpi options:\n");
@@ -136,15 +139,14 @@ void parse_options(int argc, char *argv[])
     {
         option.command = DISCOVER;
 
-        // Set default timeout for discovery
-        option.timeout = TIMEOUT_DISCOVER * 1000;
-
         static struct option long_options[] =
         {
             {"timeout",        required_argument, 0, 't'},
             {"mdns",           no_argument,       0, 'm'},
             {0,                0,                 0,  0 }
         };
+
+        static bool no_timeout_provided = true;
 
         /* Parse discover options */
         c = getopt_long(argc, argv, "t:m", long_options, &option_index);
@@ -155,6 +157,7 @@ void parse_options(int argc, char *argv[])
             {
                 case 't':
                     option.timeout = atoi(optarg) * 1000;
+                    no_timeout_provided = false;
                     break;
                 case 'm':
                     option.mdns = true;
@@ -163,6 +166,15 @@ void parse_options(int argc, char *argv[])
                     exit(EXIT_FAILURE);
             }
             c = getopt_long(argc, argv, "t:m", long_options, &option_index);
+        }
+
+        // Set discover timeout if none provided
+        if (no_timeout_provided)
+        {
+            if (option.mdns)
+                option.timeout = TIMEOUT_DISCOVER_MDNS * 1000;
+            else
+                option.timeout = TIMEOUT_DISCOVER * 1000;
         }
     }
     else if (strcmp(argv[1], "scpi") == 0)

@@ -59,7 +59,10 @@ int main(int argc, char* argv[])
     switch (option.command)
     {
         case DISCOVER:
-            status = discover();
+            if (option.mdns)
+                status = discover(true, option.timeout);
+            else
+                status = discover(false, option.timeout);
             break;
         case SCPI:
             if (option.interactive)

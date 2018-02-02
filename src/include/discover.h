@@ -31,6 +31,8 @@
 #ifndef DISCOVER_H
 #define DISCOVER_H
 
-int discover(void);
+#include <stdbool.h>
+
+int discover(bool mdns, int timeout);
 
 #endif
