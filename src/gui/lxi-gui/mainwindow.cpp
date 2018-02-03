@@ -182,7 +182,7 @@ int MainWindow::LXI_disconnect()
 void MainWindow::SCPIsendCommand(QString *command)
 {
     int timeout = ui->spinBox_SCPITimeout->value() * 1000;
-    QString response;
+    QString request, response;
     int status;
 
     if (IP.isEmpty())
@@ -193,12 +193,21 @@ void MainWindow::SCPIsendCommand(QString *command)
 
     LXI_connect();
 
+    // Print request
+    request = "<span style=\" font-size:10pt; font-weight:600; color:#808080;\">";
+    request.append(*command);
+    request.append("<br></span>");
+    ui->textBrowser_SCPI_Response->insertHtml(request);
+    ui->textBrowser_SCPI_Response->ensureCursorVisible();
+
     status = LXI_send_receive(command, &response, timeout);
     if (status == 0)
     {
         // Print response
-        ui->textBrowser_SCPI_Response->moveCursor(QTextCursor::Start, QTextCursor::MoveAnchor);
-        ui->textBrowser_SCPI_Response->insertPlainText(response);
+        response.insert(0, "<span style=\" font-size:10pt; font-weight:600; color:#000000;\">");
+        response.append("<br></span>");
+        ui->textBrowser_SCPI_Response->insertHtml(response);
+        ui->textBrowser_SCPI_Response->ensureCursorVisible();
 
         LXI_disconnect();
     }

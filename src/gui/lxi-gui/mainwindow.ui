@@ -291,7 +291,7 @@
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Response:</string>
+               <string>Request/Response:</string>
               </property>
              </widget>
             </item>
@@ -980,6 +980,47 @@
             <property name="text">
              <string>second(s)</string>
             </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Search mDNS service:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBox">
+            <item>
+             <property name="text">
+              <string>_lxi._tcp</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>_hislip._tcp</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>_http._tcp</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>_scpi-raw._tcp</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>_scpi-telnet._tcp</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>_vxi-11._tcp</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
