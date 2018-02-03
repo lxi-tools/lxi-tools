@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rs_hmo1000_screenshot(char *address, int timeout)
+int rs_hmo_rtb_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -85,10 +85,10 @@ int rs_hmo1000_screenshot(char *address, int timeout)
 
 
 // Screenshot plugin configuration
-struct screenshot_plugin rs_hmo1000 =
+struct screenshot_plugin rs_hmo_rtb =
 {
-    .name = "rs-hmo1000",
-    .description = "Rohde & Schwarz HMO 1000 series oscilloscope",
-    .regex = "Rohde&Schwarz HMO1...",
-    .screenshot = rs_hmo1000_screenshot
+    .name = "rs-hmo-rtb",
+    .description = "Rohde & Schwarz HMO 1000 / RTB 2000 series oscilloscope",
+    .regex = "Rohde&Schwarz HMO1... RTB2...",
+    .screenshot = rs_hmo_rtb_screenshot
 };

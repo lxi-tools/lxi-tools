@@ -21,7 +21,7 @@ libapp_a_SOURCES = options.c \
                    plugins/screenshot_rigol-dm3068.c \
                    plugins/screenshot_rigol-dp800.c \
                    plugins/screenshot_rigol-dsa.c \
-                   plugins/screenshot_rohde-schwarz-hmo1000.c \
+                   plugins/screenshot_rohde-schwarz-hmo-rtb.c \
                    plugins/screenshot_siglent-sdm3000.c \
                    plugins/screenshot_siglent-sdg.c \
                    plugins/screenshot_siglent-sds.c \
