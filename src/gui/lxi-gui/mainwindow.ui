@@ -393,16 +393,6 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QPushButton" name="pushButton_SCPI_OPTQuestion">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Identify Options Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns a comma-separated string identifying the instrument option configuration.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>*OPT?</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QPushButton" name="pushButton_SCPI_RST">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Reset Command&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Executes a device reset and cancels any pending *OPC command or query.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -459,6 +449,16 @@
                 </property>
                 <property name="text">
                  <string>*WAI</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_SCPI_SystemErrorQuestion">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;System Error Query&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Returns and clears the latest error message from the instrument. It is not strictly part of the IEEE 488.2 Common Commands but considered mandatory for all SCPI instruments (SCPI 1991+).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>:system:error?</string>
                 </property>
                </widget>
               </item>

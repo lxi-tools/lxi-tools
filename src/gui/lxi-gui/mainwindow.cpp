@@ -204,11 +204,14 @@ void MainWindow::SCPIsendCommand(QString *command)
     status = LXI_send_receive(command, &response, timeout);
     if (status == 0)
     {
-        // Print response
-        response.insert(0, "<span style=\" font-size:10pt; font-weight:600; color:#000000;\">");
-        response.append("<br></span>");
-        ui->textBrowser_SCPI_Response->insertHtml(response);
-        ui->textBrowser_SCPI_Response->ensureCursorVisible();
+        if (response.size() > 0)
+        {
+            // Print response
+            response.insert(0, "<span style=\" font-size:10pt; font-weight:600; color:#000000;\">");
+            response.append("<br></span>");
+            ui->textBrowser_SCPI_Response->insertHtml(response);
+            ui->textBrowser_SCPI_Response->ensureCursorVisible();
+        }
 
         LXI_disconnect();
     }
@@ -522,9 +525,9 @@ void MainWindow::on_pushButton_SCPI_OPCQuestion_clicked()
 }
 
 // *OPT?
-void MainWindow::on_pushButton_SCPI_OPTQuestion_clicked()
+void MainWindow::on_pushButton_SCPI_SystemErrorQuestion_clicked()
 {
-    SCPIsendCommand("*OPT?");
+    SCPIsendCommand(":system:error?");
 }
 
 // *RST

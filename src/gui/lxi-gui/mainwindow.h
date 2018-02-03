@@ -61,7 +61,7 @@ private slots:
     void on_pushButton_SCPI_IDNQuestion_clicked();
     void on_pushButton_SCPI_OPC_clicked();
     void on_pushButton_SCPI_OPCQuestion_clicked();
-    void on_pushButton_SCPI_OPTQuestion_clicked();
+    void on_pushButton_SCPI_SystemErrorQuestion_clicked();
     void on_pushButton_SCPI_RST_clicked();
     void on_pushButton_SCPI_SRE_clicked();
     void on_pushButton_SCPI_SREQuestion_clicked();
