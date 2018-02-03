@@ -8,6 +8,7 @@
 #include <QString>
 #include <QMessageBox>
 #include <QTimer>
+#include <QTime>
 #include <QThread>
 
 QT_CHARTS_USE_NAMESPACE
@@ -83,6 +84,7 @@ private:
     QChart *datarecorder_chart;
     int lxi_device;
     QTimer *timer;
+    QTime time;
     bool live_view_active;
     bool data_recorder_active;
     int data_recorder_sample_counter;

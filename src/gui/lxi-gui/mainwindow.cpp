@@ -10,6 +10,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QTimer>
+#include <QTime>
 #include <QThread>
 #include <QInputDialog>
 #include <iostream>
@@ -482,8 +483,7 @@ void MainWindow::on_pushButton_SCPI_ESE_clicked()
 {
     QString command;
     bool ok;
-    int i = QInputDialog::getInt(this, tr("*ESE <value>"),
-                                     tr("Value:"), 0, 0, 255, 1, &ok);
+    int i = QInputDialog::getInt(this, "*ESE <value>", "Value:", 0, 0, 255, 1, &ok);
     if (ok)
     {
         command = tr("*ESE %1").arg(i);
@@ -538,8 +538,7 @@ void MainWindow::on_pushButton_SCPI_SRE_clicked()
 {
     QString command;
     bool ok;
-    int i = QInputDialog::getInt(this, tr("*SRE <value>"),
-                                     tr("Value:"), 0, 0, 255, 1, &ok);
+    int i = QInputDialog::getInt(this, "*SRE <value>", "Value:", 0, 0, 255, 1, &ok);
     if (ok)
     {
         command = tr("*SRE %1").arg(i);
@@ -594,6 +593,7 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
     }
     else
     {
+        time.start();
         data_recorder_time_slice = 1000 / ui->spinBox_DataRecorderRate->value();
         timer->start(data_recorder_time_slice);
         ui->pushButton_DataRecorder_Start->setText("Stop");
@@ -615,13 +615,15 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
 void MainWindow::DataRecorder_Update()
 {
     QString response;
+    double elapsed_time;
 
     if (!ui->lineEdit->text().isEmpty())
     {
         // Retrieve sample 1
         QString command = ui->lineEdit->text();
         LXI_send_receive(&command, &response, 1000);
-        line_series0->append(data_recorder_sample_counter * data_recorder_time_slice / 1000, response.toDouble());
+        elapsed_time = ((double) time.elapsed()) / 1000;
+        line_series0->append(elapsed_time, response.toDouble());
     }
 
     if (!ui->lineEdit_2->text().isEmpty())
@@ -629,7 +631,8 @@ void MainWindow::DataRecorder_Update()
         // Retrieve sample 2
         QString command = ui->lineEdit_2->text();
         LXI_send_receive(&command, &response, 1000);
-        line_series1->append(data_recorder_sample_counter * data_recorder_time_slice / 1000, response.toDouble());
+        elapsed_time = ((double) time.elapsed()) / 1000;
+        line_series1->append(elapsed_time, response.toDouble());
     }
 
     datarecorder_chart->removeSeries(line_series0);
