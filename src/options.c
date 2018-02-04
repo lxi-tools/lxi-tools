@@ -45,7 +45,7 @@
 #define TIMEOUT                3
 #define TIMEOUT_SCREENSHOT    15
 #define TIMEOUT_DISCOVER       1
-#define TIMEOUT_DISCOVER_MDNS  3
+#define TIMEOUT_DISCOVER_MDNS  6
 
 #define PORT_VXI11 111
 #define PORT_RAW 5025
