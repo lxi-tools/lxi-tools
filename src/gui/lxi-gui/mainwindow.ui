@@ -87,7 +87,7 @@
            <bool>false</bool>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>542</number>
@@ -840,9 +840,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_DataRecorder_Clear">
+           <widget class="QPushButton" name="pushButton_DataRecorder_Save">
             <property name="text">
-             <string>Clear</string>
+             <string>Save</string>
             </property>
            </widget>
           </item>

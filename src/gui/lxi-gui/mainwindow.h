@@ -70,7 +70,7 @@ private slots:
     void on_pushButton_SCPI_TSTQuestion_clicked();
     void on_pushButton_SCPI_WAI_clicked();
     void on_pushButton_DataRecorder_Start_clicked();
-    void on_pushButton_DataRecorder_Clear_clicked();
+    void on_pushButton_DataRecorder_Save_clicked();
 
 private:
     Ui::MainWindow *ui;

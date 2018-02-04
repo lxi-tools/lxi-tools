@@ -14,6 +14,7 @@
 #include <QTime>
 #include <QThread>
 #include <QInputDialog>
+#include <QTextStream>
 #include <iostream>
 #include <lxi.h>
 #include "../../include/config.h"
@@ -108,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->chartView->addAction(zoomInAction);
     ui->chartView->addAction(zoomOutAction);
     ui->chartView->addAction(zoomResetAction);
+    ui->pushButton_DataRecorder_Save->setEnabled(false);
 
     // Register screenshot plugins
     screenshot_register_plugins();
@@ -600,13 +602,23 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
         // Enable inputs
         ui->lineEdit->setEnabled(true);
         ui->lineEdit_2->setEnabled(true);
-        ui->pushButton_DataRecorder_Clear->setEnabled(true);
+        if (line_series0->count() || line_series1->count())
+            ui->pushButton_DataRecorder_Save->setEnabled(true);
+        else
+            ui->pushButton_DataRecorder_Save->setEnabled(false);
         ui->spinBox_DataRecorderRate->setEnabled(true);
     }
     else
     {
+        // Reset
+        line_series0->clear();
+        line_series1->clear();
+        axisX->setRange(0, 1);
+        axisY->setRange(0, 1);
+        data_recorder_first_sample = true;
+        data_recorder_sample_counter = 0;
+
         // Start recording
-        on_pushButton_DataRecorder_Clear_clicked(); // Reset
         time.start();
         data_recorder_time_slice = 1000 / ui->spinBox_DataRecorderRate->value();
         timer->start(data_recorder_time_slice);
@@ -617,7 +629,7 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
         // Disable inputs
         ui->lineEdit->setEnabled(false);
         ui->lineEdit_2->setEnabled(false);
-        ui->pushButton_DataRecorder_Clear->setEnabled(false);
+        ui->pushButton_DataRecorder_Save->setEnabled(false);
         ui->spinBox_DataRecorderRate->setEnabled(false);
     }
 
@@ -672,15 +684,28 @@ void MainWindow::DataRecorder_Update()
     data_recorder_sample_counter++;
 }
 
-// Data recorder clear
-void MainWindow::on_pushButton_DataRecorder_Clear_clicked()
+// Data recorder save
+void MainWindow::on_pushButton_DataRecorder_Save_clicked()
 {
-    line_series0->clear();
-    line_series1->clear();
-    axisX->setRange(0, 1);
-    axisY->setRange(0, 1);
-    data_recorder_first_sample = true;
-    data_recorder_sample_counter = 0;
+    int i;
+
+    QString filename = QFileDialog::getSaveFileName(this, "Save file", "data.csv", "Text CSV (.csv)");
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly|QFile::Truncate);
+    QTextStream stream(&file);
+    for (i=0;i<data_recorder_sample_counter; i++)
+    {
+        stream << line_series0->at(i).x();
+
+        if (line_series0->count())
+            stream << "," << line_series0->at(i).y();
+
+        if (line_series1->count())
+            stream << "," << line_series0->at(i).y();
+
+        stream << "\n";
+    }
+    file.close();
 }
 
 void MainWindow::DataRecorder_zoomOut()
