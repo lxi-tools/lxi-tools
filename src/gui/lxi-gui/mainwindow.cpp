@@ -534,10 +534,9 @@ void MainWindow::on_pushButton_SCPI_OPCQuestion_clicked()
     SCPIsendCommand("*OPC?");
 }
 
-// *OPT?
-void MainWindow::on_pushButton_SCPI_SystemErrorQuestion_clicked()
+// Blank button
+void MainWindow::on_pushButton_SCPI_Blank_clicked()
 {
-    SCPIsendCommand(":system:error?");
 }
 
 // *RST
@@ -581,6 +580,31 @@ void MainWindow::on_pushButton_SCPI_TSTQuestion_clicked()
 void MainWindow::on_pushButton_SCPI_WAI_clicked()
 {
     SCPIsendCommand("*WAI");
+}
+
+void MainWindow::on_pushButton_SCPI_SystemVersionQuery_clicked()
+{
+    SCPIsendCommand(":SYSTem:VERSion?");
+}
+
+void MainWindow::on_pushButton_SCPI_SystemErrorQuery_clicked()
+{
+    SCPIsendCommand(":SYSTem:ERRor?");
+}
+
+void MainWindow::on_pushButton_SCPI_SystemErrorNextQuery_clicked()
+{
+    SCPIsendCommand(":SYSTem:ERRor:NEXT?");
+}
+
+void MainWindow::on_pushButton_SCPIP_StatusOperationQuery_clicked()
+{
+    SCPIsendCommand(":STATus:OPERation?");
+}
+
+void MainWindow::on_pushButton_SCPI_StatusPreset_clicked()
+{
+    SCPIsendCommand(":SYSTem:PRESet");
 }
 
 // Data recorder start

@@ -62,7 +62,7 @@ private slots:
     void on_pushButton_SCPI_IDNQuestion_clicked();
     void on_pushButton_SCPI_OPC_clicked();
     void on_pushButton_SCPI_OPCQuestion_clicked();
-    void on_pushButton_SCPI_SystemErrorQuestion_clicked();
+    void on_pushButton_SCPI_Blank_clicked();
     void on_pushButton_SCPI_RST_clicked();
     void on_pushButton_SCPI_SRE_clicked();
     void on_pushButton_SCPI_SREQuestion_clicked();
@@ -71,6 +71,11 @@ private slots:
     void on_pushButton_SCPI_WAI_clicked();
     void on_pushButton_DataRecorder_Start_clicked();
     void on_pushButton_DataRecorder_Save_clicked();
+    void on_pushButton_SCPI_SystemVersionQuery_clicked();
+    void on_pushButton_SCPI_SystemErrorQuery_clicked();
+    void on_pushButton_SCPI_SystemErrorNextQuery_clicked();
+    void on_pushButton_SCPIP_StatusOperationQuery_clicked();
+    void on_pushButton_SCPI_StatusPreset_clicked();
 
 private:
     Ui::MainWindow *ui;
