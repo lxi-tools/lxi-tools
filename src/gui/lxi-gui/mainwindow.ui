@@ -924,11 +924,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_Automation">
-       <attribute name="title">
-        <string>Automation</string>
-       </attribute>
-      </widget>
       <widget class="QWidget" name="tab_Settings">
        <attribute name="title">
         <string>Settings</string>

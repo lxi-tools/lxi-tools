@@ -79,6 +79,14 @@ MainWindow::MainWindow(QWidget *parent) :
     // Setup Data Recorder page
     datarecorder_chart = new QChart();
     datarecorder_chart->legend()->hide();
+    datarecorder_chart->setBackgroundVisible(false);
+    datarecorder_chart->setPlotAreaBackgroundVisible(true);
+    datarecorder_chart->setContentsMargins(0, 0, 0, 0);
+    datarecorder_chart->setBackgroundRoundness(0);
+    QBrush brush;
+    brush.setStyle(Qt::SolidPattern);
+    brush.setColor(Qt::white);
+    datarecorder_chart->setPlotAreaBackgroundBrush(brush);
     line_series0 = new QLineSeries();
     line_series1 = new QLineSeries();
     datarecorder_chart->addSeries(line_series0);
@@ -100,6 +108,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->chartView->setRenderHint(QPainter::Antialiasing);
     ui->chartView->setRubberBand(QChartView::HorizontalRubberBand);
     ui->chartView->setContextMenuPolicy(Qt::ActionsContextMenu);
+    QPalette pal;
+    pal.setColor(QPalette::Window, QColor(0,0,0,0));
+    ui->chartView->setPalette(pal);
+    ui->chartView->setBackgroundRole(QPalette::Window);
     QAction* zoomInAction = new QAction("Zoom In", this);
     QAction* zoomOutAction = new QAction("Zoom Out", this);
     QAction* zoomResetAction = new QAction("Zoom Reset", this);
@@ -725,7 +737,7 @@ void MainWindow::on_pushButton_DataRecorder_Save_clicked()
             stream << "," << line_series0->at(i).y();
 
         if (line_series1->count())
-            stream << "," << line_series0->at(i).y();
+            stream << "," << line_series1->at(i).y();
 
         stream << "\n";
     }
