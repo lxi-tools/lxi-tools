@@ -9,6 +9,7 @@
 #include <QDesktopServices>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
 #include <QTimer>
 #include <QTime>
 #include <QThread>
@@ -81,7 +82,14 @@ MainWindow::MainWindow(QWidget *parent) :
     line_series1 = new QLineSeries();
     datarecorder_chart->addSeries(line_series0);
     datarecorder_chart->addSeries(line_series1);
-    datarecorder_chart->createDefaultAxes();
+    axisX = new QValueAxis();
+    datarecorder_chart->setAxisX(axisX, line_series0);
+    datarecorder_chart->setAxisX(axisX, line_series1);
+    axisX->setRange(0, 1);
+    axisY = new QValueAxis();
+    datarecorder_chart->setAxisY(axisY, line_series0);
+    datarecorder_chart->setAxisY(axisY, line_series1);
+    axisY->setRange(0, 1);
     //datarecorder_chart->setTitle("Data recorder chart");
     ui->chartView->setChart(datarecorder_chart);
     timer = new QTimer(this);
@@ -584,6 +592,7 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
 
     if (data_recorder_active)
     {
+        // Stop recording
         timer->stop();
         ui->pushButton_DataRecorder_Start->setText("Start");
         LXI_disconnect();
@@ -596,6 +605,8 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
     }
     else
     {
+        // Start recording
+        on_pushButton_DataRecorder_Clear_clicked(); // Reset
         time.start();
         data_recorder_time_slice = 1000 / ui->spinBox_DataRecorderRate->value();
         timer->start(data_recorder_time_slice);
@@ -618,7 +629,8 @@ void MainWindow::on_pushButton_DataRecorder_Start_clicked()
 void MainWindow::DataRecorder_Update()
 {
     QString response;
-    double elapsed_time;
+    double elapsed_time = 0;
+    double sample_max, sample0 = 0, sample1 = 0;
 
     if (!ui->lineEdit->text().isEmpty())
     {
@@ -626,7 +638,8 @@ void MainWindow::DataRecorder_Update()
         QString command = ui->lineEdit->text();
         LXI_send_receive(&command, &response, 1000);
         elapsed_time = ((double) time.elapsed()) / 1000;
-        line_series0->append(elapsed_time, response.toDouble());
+        sample0 = response.toDouble();
+        line_series0->append(elapsed_time, sample0);
     }
 
     if (!ui->lineEdit_2->text().isEmpty())
@@ -635,15 +648,26 @@ void MainWindow::DataRecorder_Update()
         QString command = ui->lineEdit_2->text();
         LXI_send_receive(&command, &response, 1000);
         elapsed_time = ((double) time.elapsed()) / 1000;
-        line_series1->append(elapsed_time, response.toDouble());
+        sample1 = response.toDouble();
+        line_series1->append(elapsed_time, sample1);
     }
 
-    datarecorder_chart->removeSeries(line_series0);
-    datarecorder_chart->addSeries(line_series0);
-    datarecorder_chart->removeSeries(line_series1);
-    datarecorder_chart->addSeries(line_series1);
-    datarecorder_chart->createDefaultAxes();
-    ui->chartView->setChart(datarecorder_chart);
+    // Update chart
+    sample_max = sample0 < sample1 ? sample1 : sample0;
+
+    if (data_recorder_first_sample)
+    {
+        axisY->setMax(sample_max);
+        data_recorder_first_sample = false;
+    }
+
+    if (sample_max > axisY->max())
+    {
+        axisY->setMax(sample_max);
+        axisY->applyNiceNumbers();
+    }
+
+    axisX->setMax(elapsed_time);
 
     data_recorder_sample_counter++;
 }
@@ -651,14 +675,11 @@ void MainWindow::DataRecorder_Update()
 // Data recorder clear
 void MainWindow::on_pushButton_DataRecorder_Clear_clicked()
 {
-    datarecorder_chart->removeSeries(line_series0);
     line_series0->clear();
-    datarecorder_chart->addSeries(line_series0);
-    datarecorder_chart->removeSeries(line_series1);
     line_series1->clear();
-    datarecorder_chart->addSeries(line_series1);
-    datarecorder_chart->createDefaultAxes();
-    ui->chartView->setChart(datarecorder_chart);
+    axisX->setRange(0, 1);
+    axisY->setRange(0, 1);
+    data_recorder_first_sample = true;
     data_recorder_sample_counter = 0;
 }
 

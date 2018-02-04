@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
 #include <QString>
 #include <QMessageBox>
 #include <QTimer>
@@ -89,8 +90,11 @@ private:
     bool data_recorder_active;
     int data_recorder_sample_counter;
     double data_recorder_time_slice;
+    bool data_recorder_first_sample = true;
     QGraphicsScene* scene;
     QGraphicsPixmapItem* pixmapItem = NULL;
+    QValueAxis *axisX;
+    QValueAxis *axisY;
 
 };
 
