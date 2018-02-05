@@ -1,4 +1,46 @@
-=== lxi-tools v1.17 ===
+=== lxi-tools v1.18 ===
+
+
+
+Changes since lxi-tools v1.17:
+
+ * lxi-gui: Add X-axis title to data recorder chart
+
+ * lxi-gui: Fix data recorder chart colors and csv export
+
+ * lxi-gui: Add SCPI 1999.0 commands
+
+ * lxi-gui: Add data recorder save data feauture
+
+   Add a save button which allows to save recorded data to file in CSV
+   format.
+
+ * lxi: Increase default discover mDNS timeout
+
+ * lxi-gui: Optimize data recorder plotting
+
+ * lxi-gui: Fix arm snap build
+
+ * lxi-gui: Print machine type during qmake build
+
+ * lxi-gui: Remove *OPT? SCPI command
+
+ * lxi-gui: Use elapsed real time in data recorder
+
+ * lxi-gui: Print SCPI command requests
+
+ * Add screenshot support for RTB 2000
+
+ * Cleanup timeout handling, etc.
+
+ * lxi-gui: Reduce minimum window size
+
+ * Add support for adding custom Qt qmake arguments
+
+   Add QMAKE_ARGUMENTS flag which allows to pass on arguments to qmake when
+   building lxi-gui.
+
+ * lxi-gui: Make sure to call QT5 qmake
 
 
 
@@ -528,3 +570,4 @@ Changes since lxi-tools v1.0:
 lxi-tools v1.0:
 
  * First release (stable)
+
