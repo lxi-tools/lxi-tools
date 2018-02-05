@@ -89,13 +89,17 @@ MainWindow::MainWindow(QWidget *parent) :
     datarecorder_chart->setPlotAreaBackgroundBrush(brush);
     line_series0 = new QLineSeries();
     line_series1 = new QLineSeries();
+    line_series0->setName("Series 0");
+    line_series1->setName("Series 1");
     datarecorder_chart->addSeries(line_series0);
     datarecorder_chart->addSeries(line_series1);
     axisX = new QValueAxis();
+    axisX->setTitleText("Time [s]");
     datarecorder_chart->setAxisX(axisX, line_series0);
     datarecorder_chart->setAxisX(axisX, line_series1);
     axisX->setRange(0, 1);
     axisY = new QValueAxis();
+    //axisY->setTitleText("Value");
     datarecorder_chart->setAxisY(axisY, line_series0);
     datarecorder_chart->setAxisY(axisY, line_series1);
     axisY->setRange(0, 1);
