@@ -55,8 +55,8 @@ int rs_hmo_rtb_screenshot(char *address, int timeout)
         return 1;
     }
 
-    // Send SCPI commands to grab PNG image
-    command = "HCOPy:FORMat PNG";
+    // Send SCPI commands to grab image
+    command = "HCOPy:FORMat BMP";
     lxi_send(device, command, strlen(command), timeout);
     command = "HCOPy:DATA?";
     lxi_send(device, command, strlen(command), timeout);
@@ -74,8 +74,8 @@ int rs_hmo_rtb_screenshot(char *address, int timeout)
     image += n+2;
     length -= n+2;
 
-    // Dump remaining PNG image data to file
-    screenshot_file_dump(image, length, "png");
+    // Dump remaining image data to file
+    screenshot_file_dump(image, length, "bmp");
 
     // Disconnect
     lxi_disconnect(device);
