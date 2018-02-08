@@ -11,31 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = lxi-gui
 TEMPLATE = app
 
-system("echo \"Machine: `uname -m`\""): ;
-system("if [ \"`uname -m`\" = \"x86_64\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=x86_64-linux-gnu
-system("if [ \"`uname -m`\" = \"i686\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=i386-linux-gnu
-system("if [ \"`uname -m`\" = \"armv7l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
-system("if [ \"`uname -m`\" = \"armv8l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
-
 isEmpty(SNAPCRAFT) {
     QT += charts
 }
 
 !isEmpty(SNAPCRAFT) {
+    system("echo \"Machine: `uname -m`\""): ;
+    system("if [ \"`uname -m`\" = \"x86_64\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=x86_64-linux-gnu
+    system("if [ \"`uname -m`\" = \"i686\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=i386-linux-gnu
+    system("if [ \"`uname -m`\" = \"armv7l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
+    system("if [ \"`uname -m`\" = \"armv8l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
     LIBS += -lQt5Charts
     LIBS += -L"$$LIBDIR/$$TRIPLET"
-    INCLUDEPATH += $$INCDIR/$$TRIPLET/qt5
+    INCLUDEPATH += $$QT_INCLUDEPATH/$$TRIPLET/qt5
 }
 
-!isEmpty(INCDIR) {
-    INCLUDEPATH += $$INCDIR
-}
+INCLUDEPATH += $$QT_INCLUDEPATH
 
-!isEmpty(LIBDIR) {
-    LIBS += -L"$$LIBDIR"
-}
-
-LIBS += -llxi ../../libapp.a -lreadline
+LIBS += -llxi ../../libapp.a -lreadline $$QT_LIBS
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
