@@ -32,16 +32,21 @@ AM_CONDITIONAL([ENABLE_BASH_COMPLETION],[test "x$with_bash_completion_dir" != "x
 # Handle GUI option
 AC_ARG_ENABLE([lxi-gui], AS_HELP_STRING([--enable-lxi-gui], [Enable lxi-gui]))
 AS_IF([test "x$enable_lxi_gui" = "xyes"], [
-    # Check for Qt libraries
-    OLD_LIBS=$LIBS
-    AC_CHECK_LIB([Qt5Gui], [_init], [], [AC_MSG_ERROR(libQt5Gui not found)])
-    AC_CHECK_LIB([Qt5Widgets], [_init], [], [AC_MSG_ERROR(libQt5Widgets not found)])
-    AC_CHECK_LIB([Qt5Charts], [_init], [], [AC_MSG_ERROR(libQt5Charts not found)])
-    AC_ARG_VAR([QMAKE_ARGUMENTS],[arguments to pass on to Qt qmake])
-    LIBS=$OLD_LIBS
 
-    if ! `$PKG_CONFIG --atleast-version=5.0.0 Qt5Core`; then
-        AC_MSG_ERROR([Qt >= 5.0.0 is required.])
+    if ! `$PKG_CONFIG Qt5Core`; then
+        AC_MSG_ERROR([Qt5Core is required.])
+    fi
+
+    if ! `$PKG_CONFIG Qt5Gui`; then
+        AC_MSG_ERROR([Qt5Gui is required.])
+    fi
+
+    if ! `$PKG_CONFIG Qt5Widgets`; then
+        AC_MSG_ERROR([Qt5Widgets is required.])
+    fi
+
+    if ! `$PKG_CONFIG Qt5Charts`; then
+        AC_MSG_ERROR([Qt5Charts is required.])
     fi
 
     AC_CHECK_PROGS(MOC, [moc-qt5 moc])
@@ -52,6 +57,9 @@ AS_IF([test "x$enable_lxi_gui" = "xyes"], [
     if test -z "$QMAKE" || test -z "$MOC" || test -z "$UIC" || test -z "$RCC"; then
         AC_MSG_ERROR([Qt utility programs qmake, qtchooser, moc, uic, and rcc not found])
     fi
+
+    AC_ARG_VAR([QMAKE_ARGUMENTS],[arguments to pass on to Qt qmake])
+
     lxi_gui=yes
 ])
 AM_CONDITIONAL([LXI_GUI], [test "$lxi_gui" = yes])
