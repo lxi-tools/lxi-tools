@@ -14,8 +14,8 @@ QT_SELECT ?= 5
 
 Makefile.qmake: lxi-gui.pro
 	$(QTCHOOSER) -run-tool=qmake -qt=$(QT_SELECT) -makefile -o Makefile.qmake lxi-gui.pro \
-		QT_INCLUDEPATH="$(SNAPCRAFT_STAGE)/$(includedir)" \
-		QT_LIBS="-L$(SNAPCRAFT_STAGE)/$(libdir)" \
+		QT_INCDIR="$(SNAPCRAFT_STAGE)/$(includedir)" \
+		QT_LIBDIR="$(SNAPCRAFT_STAGE)/$(libdir)" \
 		SNAPCRAFT="$(SNAPCRAFT)" \
 		$(QMAKE_ARGUMENTS)
 

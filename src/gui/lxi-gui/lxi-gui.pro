@@ -22,13 +22,15 @@ isEmpty(SNAPCRAFT) {
     system("if [ \"`uname -m`\" = \"armv7l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
     system("if [ \"`uname -m`\" = \"armv8l\" ]; then exit 0 ; else exit 1; fi"): TRIPLET=arm-linux-gnueabihf
     LIBS += -lQt5Charts
-    LIBS += -L"$$LIBDIR/$$TRIPLET"
-    INCLUDEPATH += $$QT_INCLUDEPATH/$$TRIPLET/qt5
+    LIBS += -L"$$QT_LIBDIR/$$TRIPLET"
+    INCLUDEPATH += $$QT_INCDIR/$$TRIPLET/qt5
 }
 
-INCLUDEPATH += $$QT_INCLUDEPATH
+INCLUDEPATH += $$QT_INCDIR
 
-LIBS += -llxi ../../libapp.a -lreadline $$QT_LIBS
+LIBS += -llxi ../../libapp.a -lreadline -L"$$QT_LIBDIR"
+
+CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
