@@ -27,6 +27,7 @@
     The lxi-gui application provides some of the same features as the
     commandline tool but presents them in a GUI frontend.
 
+
 2.2 lxi
 
     The commandline interface of the lxi application is described in the output
@@ -159,6 +160,7 @@
 
     Note: lxi-tools depends on liblxi so you need to go install liblxi first.
 
+
 3.2 Installation using package
 
     lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
@@ -233,3 +235,12 @@
     Created by Martin Lund <martin.lund@keep-it-simple.com>
 
     See the AUTHORS file for full list of authors.
+
+
+9. Sponsors
+
+    A thank you to the following sponsors that have donated test equipment to
+    support the lxi-tools open source effort:
+
+     * KIKUSUI Electronics Corp.
+

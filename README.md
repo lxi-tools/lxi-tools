@@ -176,7 +176,6 @@ Note: lxi-tools depends on liblxi so you need to go install liblxi first.
 lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
 https://lxi-tools.github.io to see list of supported distributions.
 
-
 ## 4. Tested instruments
 
 The commandline lxi tool is tested to work successfully with the following LXI
@@ -229,20 +228,25 @@ a donation:
 
 [![Donate](https://www.paypal.com/en_US/i/btn/x-click-but21.gif)](https://www.paypal.me/lundmar)
 
-
 ## 6. Website
 
 Visit https://lxi-tools.github.io
-
 
 ## 7. License
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
 
-
 ## 8. Authors
 
-Created by Martin Lund \<martin.lund@keep-it-simple.com>
+Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
 See the AUTHORS file for full list of authors.
+
+## 9. Sponsors
+
+A thank you to the following sponsors that have donated test equipment to
+support the lxi-tools open source effort:
+
+ * KIKUSUI Electronics Corp.
+
