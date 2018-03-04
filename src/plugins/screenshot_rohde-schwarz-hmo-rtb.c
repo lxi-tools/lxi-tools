@@ -88,7 +88,7 @@ int rs_hmo_rtb_screenshot(char *address, int timeout)
 struct screenshot_plugin rs_hmo_rtb =
 {
     .name = "rs-hmo-rtb",
-    .description = "Rohde & Schwarz HMO 1000 / RTB 2000 series oscilloscope",
-    .regex = "Rohde&Schwarz HMO1... RTB2...",
+    .description = "Rohde & Schwarz HMO 1000/2000/3000 / RTB 2000 series oscilloscope",
+    .regex = "Rohde&Schwarz HAMEG HMO[123]... RTB2...",
     .screenshot = rs_hmo_rtb_screenshot
 };
