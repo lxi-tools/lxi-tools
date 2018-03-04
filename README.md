@@ -196,7 +196,10 @@ compatible instruments:
 | Rigol Technologies DSA815         | (discover+scpi+screenshot) |
 | Rigol Technologies MSO1104Z       | (discover+scpi+screenshot) |
 | Rigol Technologies MSO2302A       | (discover+scpi+screenshot) |
+| Rohde & Schwarz HMC 8012          | (discover+scpi+screenshot) |
+| Rohde & Schwarz HMC 8043          | (discover+scpi+screenshot) |
 | Rohde & Schwarz HMO 1202          | (discover+scpi+screenshot) |
+| Rohde & Schwarz HMO 3054          | (scpi+screenshot)          |
 | Rohde & Schwarz RTB 2004          | (discover+scpi+screenshot) |
 | Siglent Technologies SDG1032X     | (discover+scpi+screenshot) |
 | Siglent Technologies SDG2122X     | (discover+scpi+screenshot) |
