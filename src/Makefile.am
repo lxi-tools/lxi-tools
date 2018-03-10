@@ -7,12 +7,16 @@ libapp_a_SOURCES = options.c \
                    scpi.c \
                    screenshot.c \
                    benchmark.c \
+				   run.c \
+				   lxilua.c \
                    include/error.h \
                    include/options.h \
                    include/discover.h \
                    include/scpi.h \
                    include/screenshot.h \
                    include/benchmark.h \
+                   include/run.h \
+                   include/lxilua.h \
                    plugins/screenshot_keysight-dmm.c \
                    plugins/screenshot_keysight-ivx.c \
                    plugins/screenshot_rigol-1000z.c \
@@ -28,8 +32,9 @@ libapp_a_SOURCES = options.c \
                    plugins/screenshot_siglent-ssa3000x.c \
                    plugins/screenshot_tektronix.c
 
-lxi_CFLAGS =
-lxi_LDADD = -llxi -lreadline libapp.a
+libapp_a_CFLAGS = @lua_CFLAGS@
+
+lxi_LDADD = -llxi -lreadline libapp.a @lua_LIBS@
 
 if ENABLE_BASH_COMPLETION
 bashcompletiondir=@BASH_COMPLETION_DIR@

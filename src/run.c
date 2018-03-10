@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016  Martin Lund
+ * Copyright (c) 2016-2018  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,46 +28,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
-
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <sys/param.h>
+#include <string.h>
+#include <time.h>
+#include "options.h"
+#include "error.h"
+#include "lxilua.h"
 #include <lxi.h>
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
 
-/* Options */
-struct option_t
+int run(char *filename, int timeout)
 {
-    int command;
-    int timeout;
-    char ip[500];
-    char scpi_command[500];
-    bool hex;
-    bool interactive;
-    bool run_script;
-    char *script_filename;
-    char lua_script_filename[1000];
-    char *plugin_name;
-    bool list;
-    char screenshot_filename[1000];
-    lxi_protocol_t protocol;
-    int port;
-    bool mdns;
-    int count;
-};
+    lua_State *L;
 
-enum command_t
-{
-    DISCOVER,
-    SCPI,
-    SCREENSHOT,
-    BENCHMARK,
-    RUN,
-    NO_COMMAND
-};
+    if (strlen(filename) == 0)
+    {
+        error_printf("Missing filename\n");
+        return 1;
+    }
 
-extern struct option_t option;
+    L = luaL_newstate();
+    luaL_openlibs(L);
 
-void parse_options(int argc, char *argv[]);
+    // Add lxi functions
+    luaopen_lxilua(L);
 
-#endif
+    if (luaL_dofile(L, filename))
+    {
+        error_printf("%s\n", lua_tostring(L, -1));
+        lua_close(L);
+        return 0;
+    }
+
+    lua_close(L);
+
+    return 0;
+}

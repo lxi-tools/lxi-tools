@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016  Martin Lund
+ * Copyright (c) 2016-2018  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,47 +27,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef RUN_H
+#define RUN_H
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <sys/param.h>
+#include <string.h>
+#include <time.h>
+#include "options.h"
+#include "error.h"
 #include <lxi.h>
 
-/* Options */
-struct option_t
-{
-    int command;
-    int timeout;
-    char ip[500];
-    char scpi_command[500];
-    bool hex;
-    bool interactive;
-    bool run_script;
-    char *script_filename;
-    char lua_script_filename[1000];
-    char *plugin_name;
-    bool list;
-    char screenshot_filename[1000];
-    lxi_protocol_t protocol;
-    int port;
-    bool mdns;
-    int count;
-};
+int run(char *filename, int timeout);
 
-enum command_t
-{
-    DISCOVER,
-    SCPI,
-    SCREENSHOT,
-    BENCHMARK,
-    RUN,
-    NO_COMMAND
-};
-
-extern struct option_t option;
-
-void parse_options(int argc, char *argv[]);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

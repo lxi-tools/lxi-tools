@@ -1,4 +1,4 @@
-.TH "lxi" "1" "November 2017"
+.TH "lxi" "1" "March 2018"
 
 .SH "NAME"
 lxi \- a tool for controlling LXI compatible instruments.
@@ -54,6 +54,13 @@ Capture screenshot
 .I [<options>]
 .RS
 Benchmark
+.RE
+
+.PP
+.B run
+.I [<options>] <filename>
+.RS
+Run Lua script
 .RE
 
 .SH "DISCOVER OPTIONS"
@@ -139,6 +146,12 @@ Number of request messages
 .TP
 .B \-r, \--raw
 Use raw/TCP protocol
+
+.SH "RUN OPTIONS"
+
+.TP
+.B \-t, \--timeout <seconds>
+Timeout in seconds
 
 .SH "EXAMPLES"
 .TP

@@ -17,9 +17,12 @@ _lxi()
           discover \
           scpi \
           screenshot \
-          benchmark"
+          benchmark \
+          run"
+
     discover_opts="-t --timeout \
                    -m --mdns"
+
     scpi_opts="-a --address \
                -p --port \
                -t --timeout \
@@ -27,6 +30,7 @@ _lxi()
                -i --interactive \
                -s --script \
                -r --raw"
+
     screenshot_opts="-a --address \
                      -t --timeout \
                      -p --plugin \
@@ -37,6 +41,8 @@ _lxi()
                     -t --timeout \
                     -c --count \
                     -r --raw"
+
+    run_opts="-t --timeout"
 
     # Complete the options
     case "${COMP_CWORD}" in
@@ -56,6 +62,9 @@ _lxi()
                     ;;
                 benchmark)
                     COMPREPLY=( $(compgen -W "${benchmark_opts}" -- ${cur}) )
+                    ;;
+                run)
+                    COMPREPLY=( $(compgen -W "${run_opts}" -- ${cur}) )
                     ;;
                 *)
                     COMPREPLY=()

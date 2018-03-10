@@ -43,6 +43,7 @@
 #include "scpi.h"
 #include "screenshot.h"
 #include "benchmark.h"
+#include "run.h"
 #include <lxi.h>
 
 int main(int argc, char* argv[])
@@ -84,7 +85,10 @@ int main(int argc, char* argv[])
         case BENCHMARK:
             status = benchmark(option.ip, option.port, option.timeout, option.protocol, option.count, true, &result, NULL);
             break;
-    }
+         case RUN:
+            status = run(option.lua_script_filename, option.timeout);
+            break;
+   }
 
     return status;
 }

@@ -60,6 +60,7 @@ struct option_t option =
     false,      // Default no interactive mode
     false,      // Default no run script
     "",         // Default script filename
+    "",         // Default lua script filename
     "",         // Default screenshot plugin name
     false,      // Default no list
     "",         // Default screenshot filename
@@ -81,6 +82,7 @@ void print_help(char *argv[])
     printf("  scpi [<options>] <scpi-command>      Send SCPI command\n");
     printf("  screenshot [<options>] [<filename>]  Capture screenshot\n");
     printf("  benchmark [<options>]                Benchmark\n");
+    printf("  run [<options>] <filename>           Run Lua script\n");
     printf("\n");
     printf("Discover options:\n");
     printf("  -t, --timeout <seconds>              Timeout (default: Normal: %d, mDNS: %d)\n", TIMEOUT_DISCOVER, TIMEOUT_DISCOVER_MDNS);
@@ -107,6 +109,9 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -c, --count <count>                  Number of requests (default: %d)\n", option.count);
     printf("  -r, --raw                            Use raw/TCP\n");
+    printf("\n");
+    printf("Run options:\n");
+    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("\n");
 }
 
@@ -321,6 +326,31 @@ void parse_options(int argc, char *argv[])
                     exit(EXIT_FAILURE);
             }
         } while (c != -1);
+    } else if (strcmp(argv[1], "run") == 0)
+    {
+        option.command = RUN;
+
+        static struct option long_options[] =
+        {
+            {"timeout",        required_argument, 0, 't'},
+            {0,                0,                 0,  0 }
+        };
+
+        do
+        {
+            /* Parse run options */
+            c = getopt_long(argc, argv, "t:", long_options, &option_index);
+
+            switch (c)
+            {
+                case 't':
+                    option.timeout = atoi(optarg) * 1000;
+                    break;
+
+                case '?':
+                    exit(EXIT_FAILURE);
+            }
+        } while (c != -1);
     } else
     {
         // No command provided so we restore index
@@ -380,7 +410,12 @@ void parse_options(int argc, char *argv[])
 
     if ((option.command == SCREENSHOT) && (optind != argc))
     {
-        strncpy(option.screenshot_filename, argv[optind++], 500);
+        strncpy(option.screenshot_filename, argv[optind++], 1000);
+    }
+
+    if ((option.command == RUN) && (optind != argc))
+    {
+        strncpy(option.lua_script_filename, argv[optind++], 1000);
     }
 
     /* Print any unknown arguments */
