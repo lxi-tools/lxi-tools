@@ -1,4 +1,56 @@
-=== lxi-tools v1.18 ===
+=== lxi-tools v1.19 ===
+
+
+
+Changes since lxi-tools v1.18:
+
+ * Downgrade to Lua 5.2
+
+ * Update Travis configuration
+
+ * Add Lua scripting feature to support automation
+
+   Add run command which makes it possible to run Lua scripts to support
+   advanced instrument automation.
+
+   To run a Lua script simply do:
+   $ lxi run test.lua
+
+   The following LXI specific Lua functions are added and made available
+   for use in the Lua scripts:
+
+   device = connect(ip)
+   scpi(device, command)
+   scpi_raw(device, command)
+   msleep(miliseconds)
+   sleep(seconds)
+   disconnect(device)
+
+   See src/test/test.lua for a simple Lua script example.
+
+ * Update README
+
+ * Update AUTHORS
+
+ * Improve regex of rs-hmo-rtb screenshot plugin
+
+   Include instruments made with "HAMEG" identifier.
+
+ * README: Add sponsors section
+
+ * lxi-gui: Fix snap build
+
+ * configure: use pkg-config to check for Qt5
+
+ * lxi-gui: Cleanup Qt5 configuration
+
+ * Reconfigure R&S screenshot plugin to BMP
+
+ * Add RTB2004 to list of tested instruments
+
+Dmitri Goutnik:
+
+ * Use QT_SELECT value instead of hardcoded QT version
 
 
 
