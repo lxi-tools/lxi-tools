@@ -64,7 +64,7 @@ _lxi()
                     COMPREPLY=( $(compgen -W "${benchmark_opts}" -- ${cur}) )
                     ;;
                 run)
-                    COMPREPLY=( $(compgen -W "${run_opts}" -- ${cur}) )
+                    COMPREPLY=( $(compgen -o filenames -A file -W "${run_opts}" -- ${cur}) )
                     ;;
                 *)
                     COMPREPLY=()
