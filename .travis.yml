@@ -3,7 +3,7 @@ language: c
 dist: trusty
 install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libavahi-core-dev libavahi-common-dev libavahi-client-dev libxml2-dev liblua5.2-dev
+  - sudo apt-get install -y libavahi-core-dev libavahi-common-dev libavahi-client-dev libxml2-dev liblua5.2-dev libtirpc-dev
   - wget https://github.com/lxi/liblxi/archive/master.tar.gz
   - tar -xvf master.tar.gz
   - pushd liblxi-master && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install && popd
