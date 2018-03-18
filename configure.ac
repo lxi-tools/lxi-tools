@@ -14,8 +14,16 @@ PKG_PROG_PKG_CONFIG
 AC_CHECK_LIB([readline], [readline], [], [AC_MSG_ERROR(libreadline not found)])
 AC_CHECK_LIB([lxi], [lxi_connect], [], [AC_MSG_ERROR(liblxi not found)])
 
-# Check for Lua 5.2
-PKG_CHECK_MODULES([lua], [lua5.2])
+# Check for Lua 5.1 or newer
+lua_found=0
+PKG_CHECK_MODULES([lua], [lua5.3],[lua_found=1],[x=0])
+PKG_CHECK_MODULES([lua], [lua5.2],[lua_found=1],[x=0])
+PKG_CHECK_MODULES([lua], [lua5.1],[lua_found=1],[x=0])
+PKG_CHECK_MODULES([lua], [lua >= 5.1],[lua_found=1],[x=0])
+if test $lua_found == 0
+then
+    AC_MSG_ERROR([lua not found])
+fi
 
 # Handle bash completion
 AC_ARG_WITH([bash-completion-dir],
