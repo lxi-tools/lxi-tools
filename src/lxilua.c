@@ -39,7 +39,7 @@
 
 #define RESPONSE_LENGTH_MAX 0x400000
 
-extern int question(char *string);
+extern int question(const char *string);
 
 // lua: device = lxi_connect(address)
 static int connect(lua_State *L)

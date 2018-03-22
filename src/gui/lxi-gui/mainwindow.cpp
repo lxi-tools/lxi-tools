@@ -308,7 +308,7 @@ void MainWindow::on_pushButton_Search_clicked()
     IP.clear();
 }
 
-void MainWindow::add_instrument(char *id, char *address)
+void MainWindow::add_instrument(const char *id, const char *address)
 {
     QString instrument_id = QString::fromStdString(id);
     QString instrument_address = QString::fromStdString(address);

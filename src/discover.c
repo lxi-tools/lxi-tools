@@ -41,18 +41,18 @@
 static int device_count = 0;
 static int service_count = 0;
 
-static void broadcast(char *address, char *interface)
+static void broadcast(const char *address, const char *interface)
 {
     printf("Broadcasting on interface %s\n", interface);
 }
 
-static void device(char *address, char *id)
+static void device(const char *address, const char *id)
 {
     printf("  Found \"%s\" on address %s\n", id, address);
     device_count++;
 }
 
-static void service(char *address, char *id, char *service, int port)
+static void service(const char *address, const char *id, const char *service, int port)
 {
     printf("  Found \"%s\" on address %s\n    %s service on port %u\n", id, address, service, port);
     service_count++;

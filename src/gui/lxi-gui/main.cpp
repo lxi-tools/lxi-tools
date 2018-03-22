@@ -11,14 +11,14 @@ void benchmark_progress(void)
     main_window->update_progressbar();
 }
 
-void broadcast(__attribute__((unused)) char *address, char *interface)
+void broadcast(__attribute__((unused)) const char *address, const char *interface)
 {
     std::string broadcast_message = "Broadcasting on interface "
                                     + std::string(interface);
     main_window->update_statusbar(broadcast_message.c_str());
 }
 
-void device(char *address, char *id)
+void device(const char *address, const char *id)
 {
     main_window->add_instrument(id, address);
 }

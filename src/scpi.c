@@ -80,7 +80,7 @@ void strip_trailing_space(char *line)
     }
 }
 
-int question(char *string)
+int question(const char *string)
 {
     int i;
 

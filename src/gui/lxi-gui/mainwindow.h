@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void add_instrument(char *id, char *address);
+    void add_instrument(const char *id, const char *address);
     void update_statusbar(const char *message);
     void update_progressbar();
     void pushButton_reset();
