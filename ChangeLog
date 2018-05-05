@@ -1,4 +1,32 @@
-=== lxi-tools v1.19 ===
+=== lxi-tools v1.20 ===
+
+
+
+Changes since lxi-tools v1.19:
+
+ * Add bash completion for snap
+
+ * Update README
+
+   Add tested instrument Keysight AWG 33612A as tested by Timur Aydin.
+
+ * Add const qualifier
+
+ * Update AUTHORS
+
+ * Require Lua 5.1 or newer
+
+ * Include test dir in distribution
+
+ * Update Travis
+
+ * Fix bash completion for run command
+
+ * Update basic-tests.lua
+
+ * Move test directory
+
+ * Add basic Lua tests
 
 
 
@@ -622,4 +650,4 @@ Changes since lxi-tools v1.0:
 lxi-tools v1.0:
 
  * First release (stable)
-
+ 
