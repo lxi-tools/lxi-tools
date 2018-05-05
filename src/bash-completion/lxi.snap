@@ -1,0 +1,94 @@
+#
+# Bash completion script for lxi
+#
+
+get_firstword() {
+    local firstword i
+
+    firstword=
+    for ((i = 1; i < ${#COMP_WORDS[@]}; ++i)); do
+        if [[ ${COMP_WORDS[i]} != -* ]]; then
+            firstword=${COMP_WORDS[i]}
+            break
+        fi
+    done
+
+    echo $firstword
+}
+
+_lxi()
+{
+    local cur prev firstword opts discover_opts scpi_opts screenshot_opts
+
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+	firstword=$(get_firstword)
+
+    # The options we'll complete.
+    opts="-h --help \
+          -v --version \
+          discover \
+          scpi \
+          screenshot \
+          benchmark \
+          run"
+
+    discover_opts="-t --timeout \
+                   -m --mdns"
+
+    scpi_opts="-a --address \
+               -p --port \
+               -t --timeout \
+               -x --hex \
+               -i --interactive \
+               -s --script \
+               -r --raw"
+
+    screenshot_opts="-a --address \
+                     -t --timeout \
+                     -p --plugin \
+                     -l --list"
+
+    benchmark_opts="-a --address \
+                    -p --port \
+                    -t --timeout \
+                    -c --count \
+                    -r --raw"
+
+    run_opts="-t --timeout"
+
+    # Complete the options
+    case "${COMP_CWORD}" in
+        1)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            ;;
+        *)
+            case ${firstword} in
+                discover)
+                    COMPREPLY=( $(compgen -W "${discover_opts}" -- ${cur}) )
+                    ;;
+                scpi)
+                    COMPREPLY=( $(compgen -W "${scpi_opts}" -- ${cur}) )
+                    ;;
+                screenshot)
+                    COMPREPLY=( $(compgen -W "${screenshot_opts}" -- ${cur}) )
+                    ;;
+                benchmark)
+                    COMPREPLY=( $(compgen -W "${benchmark_opts}" -- ${cur}) )
+                    ;;
+                run)
+                    COMPREPLY=( $(compgen -o filenames -A file -W "${run_opts}" -- ${cur}) )
+                    ;;
+                *)
+                    COMPREPLY=()
+                    ;;
+	        esac
+            ;;
+    esac
+
+    return 0
+}
+
+# Bind completion to lxi-tools.lxi command
+complete -o default -F _lxi lxi-tools.lxi

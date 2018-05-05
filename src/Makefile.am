@@ -38,5 +38,6 @@ lxi_LDADD = -llxi -lreadline libapp.a @lua_LIBS@
 
 if ENABLE_BASH_COMPLETION
 bashcompletiondir=@BASH_COMPLETION_DIR@
-dist_bashcompletion_DATA=bash-completion/lxi
+dist_bashcompletion_DATA=bash-completion/lxi \
+                         bash-completion/lxi.snap
 endif
