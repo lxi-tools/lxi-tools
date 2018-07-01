@@ -205,7 +205,7 @@ int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t proto
             error_printf("Failed to send message\n");
 
         // Only expect response in case we are firing a question command
-        if (input[strlen(input)-1] == '?')
+        if (question(input))
         {
             length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
             if (length < 0)
