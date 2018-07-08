@@ -1,4 +1,10 @@
-=== lxi-tools v1.20 ===
+=== lxi-tools v1.21 ===
+
+
+
+Changes since lxi-tools v1.20:
+
+ * Fix handling of question commands in interactive mode
 
 
 
