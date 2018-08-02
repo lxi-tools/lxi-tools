@@ -17,7 +17,7 @@ void WorkerThread::run()
     {
         // Capture screenshot
         // TODO: Optmize so we avoid plugin autodetect overhead at every capture
-        screenshot(IP.toUtf8().data(), "", "", timeout, false, image_buffer, &image_size, image_format, image_filename);
+        screenshot(IP.toUtf8().data(), NULL, NULL, timeout, false, image_buffer, &image_size, image_format, image_filename);
 
         pixmap.loadFromData((const uchar*) image_buffer, image_size, "", Qt::AutoColor);
 
