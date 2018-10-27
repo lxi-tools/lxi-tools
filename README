@@ -150,7 +150,17 @@
 
     The latest release version can be downloaded from https://lxi-tools.github.io
 
-3.1 Installation from release tarball
+3.1 Installation using source
+
+    To compile and install successfully from source you need to install the
+    following dependencies:
+
+     * liblxi
+     * lua
+     * Qt5Core     (optional)
+     * Qt5Gui      (optional)
+     * Qt5Widgets  (optional)
+     * Qt5Charts   (optional)
 
     Install steps:
 
@@ -158,7 +168,11 @@
      $ make
      $ make install
 
-    Note: lxi-tools depends on liblxi so you need to go install liblxi first.
+    Note: Please do no try to install from source if you are not familiar with
+          using autotools.
+
+    Note: If you are installing from git source remember to run the autogen.sh
+          script to generate the configure script.
 
 
 3.2 Installation using package
