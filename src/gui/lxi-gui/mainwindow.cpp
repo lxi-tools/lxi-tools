@@ -451,6 +451,8 @@ void MainWindow::on_pushButton_Screenshot_LiveView_clicked()
 // Take screenshot
 void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
 {
+    char *plugin_name = (char *) "";
+    char *filename = (char *) "";
     char image_buffer[0x200000];
     int image_size = 0;
     char image_format[10];
@@ -466,7 +468,7 @@ void MainWindow::on_pushButton_Screenshot_TakeScreenshot_clicked()
     }
 
     // Capture screenshot
-    screenshot(IP.toUtf8().data(), NULL, NULL, timeout, false, image_buffer, &image_size, image_format, image_filename);
+    screenshot(IP.toUtf8().data(), plugin_name, filename, timeout, false, image_buffer, &image_size, image_format, image_filename);
 
     screenshotImageFormat.clear();
     screenshotImageFormat.append(image_format);
