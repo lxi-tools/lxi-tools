@@ -28,7 +28,7 @@ isEmpty(SNAPCRAFT) {
 
 INCLUDEPATH += $$QT_INCDIR
 
-LIBS += -llxi ../../libapp.a -lreadline -L"$$QT_LIBDIR"
+LIBS += -llxi ../../libapp.a -lreadline #-L"$$QT_LIBDIR"
 
 CONFIG += c++11
 

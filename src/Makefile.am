@@ -30,7 +30,8 @@ libapp_a_SOURCES = options.c \
                    plugins/screenshot_siglent-sdg.c \
                    plugins/screenshot_siglent-sds.c \
                    plugins/screenshot_siglent-ssa3000x.c \
-                   plugins/screenshot_tektronix.c
+                   plugins/screenshot_tektronix.c \
+		   plugins/screenshot_tektronix_3000.c
 
 libapp_a_CFLAGS = @lua_CFLAGS@
 
