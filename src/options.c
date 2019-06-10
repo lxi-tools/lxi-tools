@@ -401,7 +401,7 @@ void parse_options(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        if ((strlen(option.scpi_command) == 0) && (option.interactive == false))
+        if ((strlen(option.scpi_command) == 0) && (option.interactive == false) && (option.run_script == false))
         {
             error_printf("No SCPI command specified\n");
             exit(EXIT_FAILURE);

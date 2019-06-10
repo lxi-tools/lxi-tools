@@ -60,6 +60,7 @@ extern struct screenshot_plugin siglent_sdg;
 extern struct screenshot_plugin siglent_sds;
 extern struct screenshot_plugin siglent_ssa3000x;
 extern struct screenshot_plugin tektronix_2000;
+extern struct screenshot_plugin tektronix_3000;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 static char *screenshot_filename = NULL;
@@ -262,6 +263,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&siglent_sds);
     screenshot_plugin_register(&siglent_ssa3000x);
     screenshot_plugin_register(&tektronix_2000);
+    screenshot_plugin_register(&tektronix_3000);
 }
 
 int screenshot(char *address, char *plugin_name, char *filename,
