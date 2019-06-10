@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017  Martin Lund
+ * Copyright (c) 12019  Sam harry Tzavaras
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
