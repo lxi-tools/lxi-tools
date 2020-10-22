@@ -22,6 +22,7 @@ libapp_a_SOURCES = options.c \
                    plugins/screenshot_rigol-1000z.c \
                    plugins/screenshot_rigol-2000.c \
                    plugins/screenshot_rigol-dg4000.c \
+                   plugins/screenshot_rigol-dl3000.c \
                    plugins/screenshot_rigol-dm3068.c \
                    plugins/screenshot_rigol-dp800.c \
                    plugins/screenshot_rigol-dsa.c \
