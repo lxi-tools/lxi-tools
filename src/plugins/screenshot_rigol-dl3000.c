@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017  Martin Lund
+ * Copyright (c) 2017  Martin Lund, 2020 Heiko Jakob
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_dg4000_screenshot(char *address, int timeout)
+int rigol_dl3000_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -56,9 +56,7 @@ int rigol_dg4000_screenshot(char *address, int timeout)
     }
 
     // Send SCPI command to grab BMP image
-    command = "HCOPy:SDUMp:DATA:FORMat BMP";
-    lxi_send(device, command, strlen(command), timeout);
-    command = ":HCOPy:SDUMp:DATA?";
+    command = ":PROJ:WND:DATA?";
     lxi_send(device, command, strlen(command), timeout);
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
@@ -84,10 +82,10 @@ int rigol_dg4000_screenshot(char *address, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin rigol_dg4000 =
+struct screenshot_plugin rigol_dl3000 =
 {
-    .name = "rigol-dg4000",
-    .description = "Rigol DG 4000 & 1000Z series function generator",
-    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DG4... DG1...Z",
-    .screenshot = rigol_dg4000_screenshot
+    .name = "rigol-dl3000",
+    .description = "Rigol DL3000 Series Programmable DC Electronic Load",
+    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DL30..",
+    .screenshot = rigol_dl3000_screenshot
 };
