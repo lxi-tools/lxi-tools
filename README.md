@@ -204,6 +204,7 @@ compatible instruments:
 | Rigol Technologies DG4062         | (discover+scpi+screenshot) |
 | Rigol Technologies DG4102         | (discover+scpi+screenshot) |
 | Rigol Technologies DG4162         | (discover+scpi+screenshot) |
+| Rigol Technologies DL3021         | (discover+scpi)            |
 | Rigol Technologies DP831          | (discover+scpi+screenshot) |
 | Rigol Technologies DP832          | (discover+scpi+screenshot) |
 | Rigol Technologies DM3068         | (discover+scpi+screenshot) |
