@@ -165,7 +165,9 @@ To compile and install successfully from source you need to install the
 following dependencies:
 
  * liblxi
+ * libreadline
  * lua
+ * bash-completion (optional)
 
 Install steps:
 ```

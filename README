@@ -156,7 +156,9 @@
     the following dependencies:
 
      * liblxi
+     * libreadline
      * lua
+     * bash-completion (optional)
 
     Install steps:
 
