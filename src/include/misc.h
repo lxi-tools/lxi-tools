@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018  Martin Lund
+ * Copyright (c) 2021  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,47 +28,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
-#include "options.h"
-#include "error.h"
-#include "lxilua.h"
-#include "misc.h"
-#include <lxi.h>
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
+#ifndef MISC_H
+#define MISC_H
 
-int run(char *filename, int timeout)
-{
-    lua_State *L;
+#define UNUSED(expr) do { (void)(expr); } while (0)
 
-    UNUSED(timeout);
-
-    if (strlen(filename) == 0)
-    {
-        error_printf("Missing filename\n");
-        return 1;
-    }
-
-    L = luaL_newstate();
-    luaL_openlibs(L);
-
-    // Add lxi functions
-    luaopen_lxilua(L);
-
-    if (luaL_dofile(L, filename))
-    {
-        error_printf("%s\n", lua_tostring(L, -1));
-        lua_close(L);
-        return 0;
-    }
-
-    lua_close(L);
-
-    return 0;
-}
+#endif

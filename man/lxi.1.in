@@ -1,7 +1,7 @@
-.TH "lxi" "1" "March 2018"
+.TH "lxi" "1" "@version_date@" "lxi-tools @version@" "User Commands"
 
 .SH "NAME"
-lxi \- a tool for controlling LXI compatible instruments.
+lxi \- a tool for managing LXI compatible instruments.
 
 .SH "SYNOPSIS"
 .PP

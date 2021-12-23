@@ -167,23 +167,16 @@ following dependencies:
 
  * liblxi
  * lua
- * Qt5Core     (optional)
- * Qt5Gui      (optional)
- * Qt5Widgets  (optional)
- * Qt5Charts   (optional)
 
 Install steps:
 ```
-    $ ./configure
-    $ make
-    $ make install
+    $ meson build
+    $ meson compile -C build
+    $ meson install -C build
 ```
 
 Note: Please do no try to install from source if you are not familiar with
-using autotools.
-
-Note: If you are installing from git source remember to run the autogen.sh
-script to generate the configure script.
+using meson.
 
 ### 3.2 Installation using package
 
@@ -238,8 +231,8 @@ work.
 
 ## 5. Contributing
 
-lxi-tools is open source. If you want to help out with the project please join
-in.
+lxi-tools is open source. If you want to help out with the project please feel
+free to join in.
 
 All contributions (bug reports, code, doc, ideas, etc.) are welcome.
 

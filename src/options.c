@@ -206,7 +206,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 'a':
-                    strncpy(option.ip, optarg, 500);
+                    strncpy(option.ip, optarg, 499);
                     break;
 
                 case 'p':
@@ -262,11 +262,11 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 'a':
-                    strncpy(option.ip, optarg, 500);
+                    strncpy(option.ip, optarg, 499);
                     break;
 
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg) * 999;
                     break;
 
                 case 'p':
@@ -303,7 +303,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 'a':
-                    strncpy(option.ip, optarg, 500);
+                    strncpy(option.ip, optarg, 499);
                     break;
 
                 case 'p':
@@ -393,7 +393,7 @@ void parse_options(int argc, char *argv[])
     if (option.command == SCPI)
     {
         if (optind != argc)
-            strncpy(option.scpi_command, argv[optind++], 500);
+            strncpy(option.scpi_command, argv[optind++], 499);
 
         if (strlen(option.ip) == 0)
         {
@@ -410,12 +410,12 @@ void parse_options(int argc, char *argv[])
 
     if ((option.command == SCREENSHOT) && (optind != argc))
     {
-        strncpy(option.screenshot_filename, argv[optind++], 1000);
+        strncpy(option.screenshot_filename, argv[optind++], 999);
     }
 
     if ((option.command == RUN) && (optind != argc))
     {
-        strncpy(option.lua_script_filename, argv[optind++], 1000);
+        strncpy(option.lua_script_filename, argv[optind++], 999);
     }
 
     /* Print any unknown arguments */

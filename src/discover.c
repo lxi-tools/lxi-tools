@@ -36,6 +36,7 @@
 #include <time.h>
 #include <ctype.h>
 #include "error.h"
+#include "misc.h"
 #include <lxi.h>
 
 static int device_count = 0;
@@ -43,6 +44,7 @@ static int service_count = 0;
 
 static void broadcast(const char *address, const char *interface)
 {
+    UNUSED(address);
     printf("Broadcasting on interface %s\n", interface);
 }
 

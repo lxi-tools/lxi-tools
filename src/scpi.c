@@ -39,6 +39,7 @@
 #include <readline/history.h>
 #include "options.h"
 #include "error.h"
+#include "misc.h"
 #include <lxi.h>
 
 #define RESPONSE_LENGTH_MAX 0x500000
@@ -242,6 +243,8 @@ int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *f
     ssize_t read;
     char response[RESPONSE_LENGTH_MAX] = "";
     int device, length, i;
+
+    UNUSED(protocol);
 
     // Open script file
     fp = fopen(filename, "r");
