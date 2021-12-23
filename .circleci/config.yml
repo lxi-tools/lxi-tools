@@ -1,0 +1,30 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  build-lxi-tools:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:edge
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run: sudo apt-get -qq update
+      - run: sudo apt-get install -y libreadline-dev liblua5.2-dev liblxi-dev bash-completion meson
+#      - run: sudo apt-get install -y libavahi-core-dev libavahi-common-dev libavahi-client-dev libxml2-dev liblua5.2-dev libtirpc-dev libreadline liblxi1 liblxi-dev meson
+#      - run: wget https://github.com/lxi-tools/liblxi/archive/master.tar.gz
+#      - run: tar -xvf master.tar.gz
+#      - run: pushd liblxi-master && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install && popd
+      - run: meson build --prefix=$HOME/test/lxi-tools && ninja -C build install
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  build-lxi-tools-workflow:
+    jobs:
+      - build-lxi-tools
