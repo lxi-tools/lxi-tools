@@ -1,6 +1,6 @@
 # lxi-tools
 
-[![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=svg)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
+[![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=shield)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 
 ## 1. Introduction
 
