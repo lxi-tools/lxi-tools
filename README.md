@@ -1,7 +1,6 @@
 # lxi-tools
 
-[![Build Status](https://travis-ci.org/lxi-tools/lxi-tools.svg?branch=master)](https://travis-ci.org/lxi-tools/lxi-tools)
-[![Snap Status](https://build.snapcraft.io/badge/lxi-tools/lxi-tools.snapcraft.svg)](https://build.snapcraft.io/user/lxi-tools/lxi-tools.snapcraft)
+[![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=svg)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 
 ## 1. Introduction
 
