@@ -49,7 +49,7 @@ extern struct screenshot_plugin keysight_dmm;
 extern struct screenshot_plugin keysight_ivx;
 extern struct screenshot_plugin rigol_1000z;
 extern struct screenshot_plugin rigol_2000;
-extern struct screenshot_plugin rigol_dg4000;
+extern struct screenshot_plugin rigol_dg;
 extern struct screenshot_plugin rigol_dl3000;
 extern struct screenshot_plugin rigol_dm3068;
 extern struct screenshot_plugin rigol_dp800;
@@ -236,7 +236,7 @@ void screenshot_list_plugins(void)
     printf("Name   Description\n");
     while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
     {
-        for (j=0; j<(length_max-strlen(plugin_list[i]->name)); j++)
+        for (j=0; j<(length_max-(int)strlen(plugin_list[i]->name)); j++)
             putchar(' ');
         printf("%s", plugin_list[i]->name);
         printf("   %s\n", plugin_list[i]->description);
@@ -251,7 +251,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&keysight_ivx);
     screenshot_plugin_register(&rigol_1000z);
     screenshot_plugin_register(&rigol_2000);
-    screenshot_plugin_register(&rigol_dg4000);
+    screenshot_plugin_register(&rigol_dg);
     screenshot_plugin_register(&rigol_dl3000);
     screenshot_plugin_register(&rigol_dm3068);
     screenshot_plugin_register(&rigol_dp800);

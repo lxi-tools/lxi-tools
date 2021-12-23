@@ -40,7 +40,7 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_dg4000_screenshot(char *address, int timeout)
+int rigol_dg_screenshot(char *address, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
@@ -84,10 +84,10 @@ int rigol_dg4000_screenshot(char *address, int timeout)
 }
 
 // Screenshot plugin configuration
-struct screenshot_plugin rigol_dg4000 =
+struct screenshot_plugin rigol_dg =
 {
-    .name = "rigol-dg4000",
+    .name = "rigol-dg",
     .description = "Rigol DG 4000 & 1000Z series function generator",
     .regex = "RIGOL TECHNOLOGIES Rigol Technologies DG4... DG1...Z",
-    .screenshot = rigol_dg4000_screenshot
+    .screenshot = rigol_dg_screenshot
 };
