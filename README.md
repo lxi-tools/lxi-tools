@@ -176,6 +176,7 @@ following dependencies:
  * libreadline
  * lua
  * bash-completion (optional)
+ * libgtk (optional)
 
 Install steps:
 ```
@@ -266,7 +267,7 @@ This code is released under BSD-3, commonly known as the 3-clause (or
 
 Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
-See the AUTHORS file for full list of authors.
+See the AUTHORS file for full list of contributors.
 
 ## 9. Sponsors
 

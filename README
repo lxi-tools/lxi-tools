@@ -161,6 +161,7 @@
      * libreadline
      * lua
      * bash-completion (optional)
+     * libgtk (optional)
 
     Install steps:
 
