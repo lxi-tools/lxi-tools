@@ -34,7 +34,7 @@ lxi_gui_sources = [
   ]
 
 lxi_gui_deps = [
-  dependency('gtk4'),
+  dependency('gtk4', version: '>= 4.4'),
   meson.get_compiler('c').find_library('lxi', required : false),
 ]
 
