@@ -39,4 +39,9 @@
   <releases>
     <release version="1.22" date="2021-12-23" type="stable"></release>
   </releases>
+  <categories>
+    <category>Utility</category>
+    <category>Network</category>
+    <category>Science</category>
+  </categories>
 </component>

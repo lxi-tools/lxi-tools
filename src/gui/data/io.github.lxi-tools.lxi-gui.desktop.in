@@ -4,5 +4,5 @@ Exec=lxi-gui
 Icon=io.github.lxi-tools.lxi-gui
 Terminal=false
 Type=Application
-Categories=GTK;
+Categories=Utility;Network;Science;
 StartupNotify=true
