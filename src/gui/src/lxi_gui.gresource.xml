@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/lxi-tools/lxi-gui">
+    <file preprocess="xml-stripblanks">lxi_gui-window.ui</file>
+    <file preprocess="xml-stripblanks">lxi_gui-prefs.ui</file>
+    <file preprocess="xml-stripblanks">lxi_gui-window_list_widget_menu_model.ui</file>
+    <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file>icons/lxi-tools-icon-128px.png</file>
+    <file>icons/lxi-instrument.svg</file>
+    <file>images/photo-camera.png</file>
+    <file>lxi_gui.css</file>
+  </gresource>
+</gresources>

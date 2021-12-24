@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="list-widget-menu-model">
+    <item>
+      <attribute name="label">Copy IP</attribute>
+      <attribute name="action">action.copy_ip</attribute>
+    </item>
+    <item>
+      <attribute name="label">Copy ID</attribute>
+      <attribute name="action">action.copy_id</attribute>
+    </item>
+    <item>
+      <attribute name="label">Open in browser</attribute>
+      <attribute name="action">action.open_browser</attribute>
+    </item>
+  </menu>
+</interface>

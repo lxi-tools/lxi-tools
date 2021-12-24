@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017  Martin Lund
+ * Copyright (c) 2016-2021  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,15 +35,12 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "options.h"
 #include "error.h"
 #include <lxi.h>
 
 #define ID_LENGTH_MAX 65536
 
-int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(void))
+int benchmark(const char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(unsigned int count))
 {
     struct timespec start, stop;
     double elapsed_time;
@@ -97,7 +94,7 @@ int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int coun
             printf("\r%d", i+1);
             fflush(stdout);
         } else if (progress != NULL)
-            progress();
+            progress(i);
     }
 
     // Stop time

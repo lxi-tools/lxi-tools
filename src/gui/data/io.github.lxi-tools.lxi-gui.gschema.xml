@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="lxi-gui">
+  <schema path="/io/github/lxi-tools/lxi-gui/" id="io.github.lxi-tools.lxi-gui">
+    <key name="timeout-discover" type="u">
+      <default>1500</default>
+      <summary>Discover timeout</summary>
+      <description>Timeout in milliseconds for discovery of LXI devices.</description>
+    </key>
+    <key name="timeout-scpi" type="u">
+      <default>3000</default>
+      <summary>SCPI timeout</summary>
+      <description>Timeout in milliseconds for communicating with LXI devices.</description>
+    </key>
+    <key name="timeout-screenshot" type="u">
+      <default>20000</default>
+      <summary>Screenshot timeout</summary>
+      <description>Timeout in milliseconds for communicating screenshot with LXI devices.</description>
+    </key>
+    <key name="show-sent-scpi" type="b">
+      <default>true</default>
+      <summary>Show sent SCPI commands</summary>
+      <description>Show sent SCPI commands</description>
+    </key>
+  </schema>
+</schemalist>

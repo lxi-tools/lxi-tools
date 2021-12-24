@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2021  Martin Lund
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holders nor contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include <gtk/gtk.h>
+
+#include "lxi_gui-application.h"
+#include "lxi_gui-window.h"
+#include "lxi_gui-prefs.h"
+
+struct _LxiGuiPrefs
+{
+  GtkDialog parent;
+
+  GSettings *settings;
+  GtkWidget *spin_button_timeout_discover;
+  GtkWidget *spin_button_timeout_scpi;
+  GtkWidget *spin_button_timeout_screenshot;
+  GtkWidget *switch_show_sent_scpi;
+};
+
+G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, GTK_TYPE_DIALOG)
+
+static void
+lxi_gui_prefs_init (LxiGuiPrefs *prefs)
+{
+  gtk_widget_init_template (GTK_WIDGET (prefs));
+  prefs->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
+  g_settings_bind (prefs->settings, "timeout-discover",
+                   prefs->spin_button_timeout_discover, "value",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "timeout-scpi",
+                   prefs->spin_button_timeout_scpi, "value",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "timeout-screenshot",
+                   prefs->spin_button_timeout_screenshot, "value",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "show-sent-scpi",
+                   prefs->switch_show_sent_scpi, "active",
+                   G_SETTINGS_BIND_DEFAULT);
+}
+
+static void
+lxi_gui_prefs_dispose (GObject *object)
+{
+  LxiGuiPrefs *prefs;
+
+  prefs = LXI_GUI_PREFS (object);
+
+  g_clear_object (&prefs->settings);
+
+  G_OBJECT_CLASS (lxi_gui_prefs_parent_class)->dispose (object);
+}
+
+static void
+lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
+{
+  G_OBJECT_CLASS (class)->dispose = lxi_gui_prefs_dispose;
+
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class),
+                                               "/io/github/lxi-tools/lxi-gui/lxi_gui-prefs.ui");
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_discover);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_scpi);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_screenshot);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_show_sent_scpi);
+}
+
+LxiGuiPrefs *
+lxi_gui_prefs_new (LxiGuiWindow *win)
+{
+  return g_object_new (LXI_GUI_PREFS_TYPE, "transient-for", win, "use-header-bar", TRUE, NULL);
+}

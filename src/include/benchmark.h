@@ -41,13 +41,10 @@ extern "C" {
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "options.h"
 #include "error.h"
 #include <lxi.h>
 
-int benchmark(char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(void));
+int benchmark(const char *ip, int port, int timeout, lxi_protocol_t protocol, int count, bool no_gui, double *result, void (*progress)(unsigned int count));
 
 #ifdef __cplusplus
 }

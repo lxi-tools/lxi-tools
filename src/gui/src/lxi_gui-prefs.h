@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017  Martin Lund
+ * Copyright (c) 2021  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,12 +28,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ERROR_H
-#define ERROR_H
+#ifndef __LXI_GUI_PREFS_H
+#define __LXI_GUI_PREFS_H
 
-#include <stdio.h>
+#include <gtk/gtk.h>
+#include "lxi_gui-window.h"
 
-#define error_printf(format, args...) \
-    fprintf(stderr, "Error: " format, ## args)
 
-#endif
+#define LXI_GUI_PREFS_TYPE (lxi_gui_prefs_get_type ())
+G_DECLARE_FINAL_TYPE (LxiGuiPrefs, lxi_gui_prefs, LXI_GUI, PREFS, GtkDialog)
+
+
+LxiGuiPrefs        *lxi_gui_prefs_new          (LxiGuiWindow *win);
+
+
+#endif /* __LXI_GUI_PREFS_H */
+

@@ -6,8 +6,6 @@ if bashcompletiondir == ''
   endif
 endif
 
-message(bashcompletiondir)
-
 if (bashcompletiondir != 'no') and (bashcompletiondir != '')
   install_data('lxi', 'lxi.snap', install_dir: bashcompletiondir)
 endif

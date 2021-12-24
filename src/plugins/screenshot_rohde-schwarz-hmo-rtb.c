@@ -38,14 +38,21 @@
 #include "error.h"
 #include "screenshot.h"
 
-#define IMAGE_SIZE_MAX 0x400000 // 4 MB
+#define IMAGE_SIZE_MAX 0x100000 * 20 // 20 MB
 
 int rs_hmo_rtb_screenshot(char *address, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
-    char *command, *image;
+    char *response, *command, *image;
     int device, length, n;
     char c;
+
+    // Prepare response buffer
+    response = malloc(IMAGE_SIZE_MAX);
+    if (response == NULL)
+    {
+        error_printf("Failed to allocate response buffer\n");
+        return 1;
+    }
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);

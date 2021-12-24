@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>io.github.lxi-tools.lxi-gui.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>BSD-3-Clause</project_license>
+  <name>LXI-Tools</name>
+  <summary>
+    LXI-Tools is a collection of open source tools for managing LXI compatible
+    test instruments.
+  </summary>
+  <description>
+    <p>
+      The lxi tool is a commandline program that supports various operations to
+      manage your LXI compatible test instrument on your network, including:
+      discovery, sending SCPI commands, downloading screenshots, benchmarking,
+      scripting.
+    </p>
+    <p>
+      The lxi-gui tool is a GUI application which supports operations similar to
+      that of the lxi commandline tool.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot>
+      <image>file://lxi-gui-2.0.png</image>
+      <caption>The lxi-gui application showing various features</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://lxi-tools.github.io</url>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="1.0" date="2021-12-23" type="stable"></release>
+  </releases>
+</component>

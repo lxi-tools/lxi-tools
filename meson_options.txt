@@ -1,3 +1,7 @@
 option('bashcompletiondir',
        type : 'string',
        description : 'Directory for bash completion scripts ["no" disables]')
+
+option('gui',
+       type : 'boolean', value: false,
+       description : 'Install lxi-gui')
