@@ -20,14 +20,22 @@ lxi-tools rely on liblxi for all communication.
 
 ## 2. Usage
 
-### 2.1 lxi-gui (BETA)
+### 2.1 lxi-gui
 
 <p align="center">
-<img src="images/lxi-gui-beta.png">
+<img src="images/lxi-gui-scpi.png">
+</p>
+
+<p align="center">
+<img src="images/lxi-gui-screenshot.png">
+</p>
+
+<p align="center">
+<img src="images/lxi-gui-benchmark.png">
 </p>
 
 The lxi-gui application provides some of the same features as the commandline
-tool but presents them in a GUI frontend.
+tool but presents them in a modern GUI frontend.
 
 ### 2.2 lxi
 

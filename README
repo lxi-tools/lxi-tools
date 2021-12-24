@@ -20,12 +20,14 @@
 
 2. Usage
 
-2.1 lxi-gui (BETA)
+2.1 lxi-gui
 
-               (See screenshot images/lxi-gui-beta.png)
+               (See screenshot images/lxi-gui-scpi.png)
+               (See screenshot images/lxi-gui-screenshot.png)
+               (See screenshot images/lxi-gui-benchmark.png)
 
     The lxi-gui application provides some of the same features as the
-    commandline tool but presents them in a GUI frontend.
+    commandline tool but presents them in a modern GUI frontend.
 
 
 2.2 lxi
