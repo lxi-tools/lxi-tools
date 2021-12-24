@@ -31,6 +31,7 @@
 #include "lxi_gui-application.h"
 #include "lxi_gui-window.h"
 #include "lxi_gui-prefs.h"
+#include "lxi_gui-config.h"
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
@@ -119,11 +120,11 @@ lxi_gui_application_show_about (GSimpleAction *action,
   gtk_show_about_dialog (window,
                          "program-name", "lxi-gui",
                          "authors", authors,
-                         "version", "1.22",
+                         "version", PACKAGE_VERSION,
                          "copyright", "© 2021 Martin Lund",
                          "license-type", GTK_LICENSE_BSD_3,
                          "website", "http://lxi-tools.github.io",
-                         "comments", "Program to manage LXI compatible instruments.",
+                         "comments", "Program for managing LXI compatible instruments.",
                          "authors", authors,
                          "logo", logo,
                          "title", "About lxi-gui",
