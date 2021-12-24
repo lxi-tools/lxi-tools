@@ -22,13 +22,21 @@
   </description>
   <screenshots>
     <screenshot>
-      <image>file://lxi-gui-2.0.png</image>
-      <caption>The lxi-gui application showing various features</caption>
+      <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-scpi.png</image>
+      <caption>The lxi-gui application in SCPI mode</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-screenshot.png</image>
+      <caption>The lxi-gui application in screenshot mode</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-benchmark.png</image>
+      <caption>The lxi-gui application in benchmark mode</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://lxi-tools.github.io</url>
   <content_rating type="oars-1.1" />
   <releases>
-    <release version="1.0" date="2021-12-23" type="stable"></release>
+    <release version="1.22" date="2021-12-23" type="stable"></release>
   </releases>
 </component>
