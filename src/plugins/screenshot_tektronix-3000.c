@@ -56,7 +56,6 @@ int tektronix_screenshot_3000(char *address, int timeout)
     restore param;
     char response[IMAGE_SIZE_MAX];
     int length, device;
-    int sock = 0, valread;
     char *command, command_str[100];
 
     // Connect to LXI instrument
