@@ -230,6 +230,7 @@ compatible instruments:
 | Siglent Technologies SDM3065X     | (discover+scpi+screenshot) |
 | Siglent Technologies SPD3303X-E   | (scpi)                     |
 | Siglent Technologies SSA3032X     | (discover+scpi+screenshot) |
+| Tektronix TDS3034B                | (discover+scpi+screenshot) |
 
 Note: Feel free to add your instrument(s) to the list via GitHub pull request
 or simply create a GitHub issue reporting your instrument(s) and which features
