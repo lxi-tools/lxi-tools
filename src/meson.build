@@ -24,6 +24,7 @@ lxi_sources = [
   'plugins/screenshot_rigol-dg.c',
   'plugins/screenshot_rohde-schwarz-hmo-rtb.c',
   'plugins/screenshot_tektronix.c',
+  'plugins/screenshot_tektronix_3000.c',
   ]
 
 lxi_deps = [
