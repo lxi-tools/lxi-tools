@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 12019  Sam harry Tzavaras
+ * Copyright (c) 2019  Sam harry Tzavaras
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,8 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -39,27 +37,28 @@
 #include <lxi.h>
 #include "error.h"
 #include "screenshot.h"
-#define param_str_size 10 
 
 #define IMAGE_SIZE_MAX 308278 // 302KB
-typedef struct{
-	char Header[param_str_size];
-	char Format[param_str_size];
-	char Compression[param_str_size];
-	char Layout[param_str_size];
-	char Port[param_str_size];
-	}restore;
+#define PARAM_STR_SIZE 10
 
+typedef struct{
+    char Header[PARAM_STR_SIZE];
+    char Format[PARAM_STR_SIZE];
+    char Compression[PARAM_STR_SIZE];
+    char Layout[PARAM_STR_SIZE];
+    char Port[PARAM_STR_SIZE];
+}restore;
 
 void length_check(int length);
 
 int tektronix_screenshot_3000(char *address, int timeout)
 {
     restore param;
-	char response[IMAGE_SIZE_MAX];
-    int length,device;
-	int sock = 0, valread; 
-    char *command,command_str[100];
+    char response[IMAGE_SIZE_MAX];
+    int length, device;
+    int sock = 0, valread;
+    char *command, command_str[100];
+
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
     if (device == LXI_ERROR)
@@ -67,69 +66,71 @@ int tektronix_screenshot_3000(char *address, int timeout)
         error_printf("Failed to connect\n");
         return 1;
     }
-	//check the device 
+
+    // Check the device
     command = "*IDN?";
     lxi_send(device, command, strlen(command), timeout);	
     length_check(lxi_receive(device, response, IMAGE_SIZE_MAX, timeout));
-	if(strstr(response,"TDS 3")!=NULL)
-	{
-		// Send SCPI commands to grab current image parameters and config for grab image
-		command = "hardcopy:Format?";
-		lxi_send(device, command, strlen(command), timeout);	
-		length_check(lxi_receive(device, param.Format, IMAGE_SIZE_MAX, timeout));
-		command = "hardcopy:Format bmpc";
-		lxi_send(device, command, strlen(command), timeout);
-		
-		command = "hardcopy:compression?";
-		lxi_send(device, command, strlen(command), timeout);	
-		length_check(lxi_receive(device, param.Compression, IMAGE_SIZE_MAX, timeout));
-		command = "hardcopy:compression off";
-		lxi_send(device, command, strlen(command), timeout);
-		
-		command = "hardcopy:layout?";
-		lxi_send(device, command, strlen(command), timeout);	
-		length_check(lxi_receive(device, param.Layout, IMAGE_SIZE_MAX, timeout));
-		command = "hardcopy:layout Portrait";
-		lxi_send(device, command, strlen(command), timeout);
-		
-		command = "hardcopy:Port?";
-		lxi_send(device, command, strlen(command), timeout);	
-		length_check(lxi_receive(device, param.Port, IMAGE_SIZE_MAX, timeout));
-		command = "hardcopy:Port gpib";
-		lxi_send(device, command, strlen(command), timeout);
-		
-		// Send SCPI commands to grab image
-		command = "hardcopy start";
-		lxi_send(device, command, strlen(command), timeout);
-		length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
-		length_check(length);
-		// Dump PNG image data to file
-		screenshot_file_dump(response, length, "bmp");
-		
-		//restore old configuration 
-		sprintf(command_str,"hardcopy:Format %s",param.Format);
-		lxi_send(device, command_str, strlen(command_str), timeout);
+    if (strstr(response,"TDS 3") != NULL)
+    {
+        // Send SCPI commands to grab current image parameters and config for grab image
+        command = "hardcopy:Format?";
+        lxi_send(device, command, strlen(command), timeout);
+        length_check(lxi_receive(device, param.Format, IMAGE_SIZE_MAX, timeout));
+        command = "hardcopy:Format bmpc";
+        lxi_send(device, command, strlen(command), timeout);
 
-		sprintf(command_str,"hardcopy:compression %s",param.Compression);
-		lxi_send(device, command_str, strlen(command_str), timeout);
-		
-		sprintf(command_str,"hardcopy:layout %s",param.Layout);
-		lxi_send(device, command_str, strlen(command_str), timeout);
-		
-		sprintf(command_str,"hardcopy:Port %s",param.Port);
-		lxi_send(device, command_str, strlen(command_str), timeout);		
-	}
-	else 
-		printf("Device doesn't match\n");
+        command = "hardcopy:compression?";
+        lxi_send(device, command, strlen(command), timeout);
+        length_check(lxi_receive(device, param.Compression, IMAGE_SIZE_MAX, timeout));
+        command = "hardcopy:compression off";
+        lxi_send(device, command, strlen(command), timeout);
+
+        command = "hardcopy:layout?";
+        lxi_send(device, command, strlen(command), timeout);
+        length_check(lxi_receive(device, param.Layout, IMAGE_SIZE_MAX, timeout));
+        command = "hardcopy:layout Portrait";
+        lxi_send(device, command, strlen(command), timeout);
+
+        command = "hardcopy:Port?";
+        lxi_send(device, command, strlen(command), timeout);
+        length_check(lxi_receive(device, param.Port, IMAGE_SIZE_MAX, timeout));
+        command = "hardcopy:Port gpib";
+        lxi_send(device, command, strlen(command), timeout);
+
+        // Send SCPI commands to grab image
+        command = "hardcopy start";
+        lxi_send(device, command, strlen(command), timeout);
+        length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
+        length_check(length);
+        // Dump PNG image data to file
+        screenshot_file_dump(response, length, "bmp");
+
+        // Restore old configuration
+        sprintf(command_str,"hardcopy:Format %s", param.Format);
+        lxi_send(device, command_str, strlen(command_str), timeout);
+
+        sprintf(command_str,"hardcopy:compression %s", param.Compression);
+        lxi_send(device, command_str, strlen(command_str), timeout);
+
+        sprintf(command_str,"hardcopy:layout %s", param.Layout);
+        lxi_send(device, command_str, strlen(command_str), timeout);
+
+        sprintf(command_str,"hardcopy:Port %s", param.Port);
+        lxi_send(device, command_str, strlen(command_str), timeout);
+    }
+    else
+        printf("Device doesn't match\n");
+
     // Disconnect
     lxi_disconnect(device);
-	return 0;
+    return 0;
 }
 
 void length_check(int length)
 {
-	if (length <= 0)
-		error_printf("Failed to receive message\n");
+    if (length <= 0)
+        error_printf("Failed to receive message\n");
 }
 
 // Screenshot plugin configuration
