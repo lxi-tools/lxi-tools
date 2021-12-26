@@ -667,7 +667,8 @@
                                         <property name="focus-on-click">0</property>
                                         <signal name="clicked" handler="button_clicked_scpi_send" swapped="yes"/>
                                         <style>
-                                          <class name="button-send"/>
+                                          <class name="text-button"/>
+                                          <class name="suggested-action"/>
                                         </style>
                                         <layout>
                                           <property name="column">6</property>
@@ -1004,6 +1005,10 @@
                                     <property name="label" translatable="yes">Live View</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_screenshot_live_view" swapped="yes"/>
+                                    <style>
+                                      <class name="text-button"/>
+                                      <class name="suggested-action"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <child>
@@ -1012,6 +1017,10 @@
                                     <property name="label" translatable="yes">Grab Screenshot</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_screenshot_grab" swapped="yes"/>
+                                    <style>
+                                      <class name="text-button"/>
+                                      <class name="suggested-action"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <child>
@@ -1131,6 +1140,10 @@
                                     <property name="label" translatable="yes">Start</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_benchmark_start" swapped="yes"/>
+                                    <style>
+                                      <class name="text-button"/>
+                                      <class name="suggested-action"/>
+                                    </style>
                                   </object>
                                 </child>
                               </object>
