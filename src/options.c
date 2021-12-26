@@ -266,7 +266,7 @@ void parse_options(int argc, char *argv[])
                     break;
 
                 case 't':
-                    option.timeout = atoi(optarg) * 999;
+                    option.timeout = atoi(optarg) * 1000;
                     break;
 
                 case 'p':
