@@ -55,9 +55,10 @@ struct _LxiGuiWindow
   GtkTextView         *text_view_scpi_status;
   GtkImage            *image_screenshot;
   GtkToggleButton     *toggle_button_screenshot_live_view;
-  GtkButton           *button_screenshot_grab;
+  GtkButton           *toggle_button_screenshot_grab;
   GtkButton           *button_screenshot_save;
   GThread             *screenshot_worker_thread;
+  GThread             *screenshot_grab_worker_thread;
   GThread             *search_worker_thread;
   GtkTextView         *text_view_screenshot_status;
   GtkTextView         *text_view_benchmark_status;
@@ -77,7 +78,8 @@ G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static LxiGuiWindow *self_global;
 
-GtkWidget* find_child_by_name(GtkWidget* parent, const gchar* name)
+static GtkWidget*
+find_child_by_name(GtkWidget* parent, const gchar* name)
 {
   GtkWidget *child;
   GList *children = NULL;
@@ -230,7 +232,8 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   gtk_list_box_append(self->list_instruments, list_box);
 }
 
-gpointer search_worker_function(gpointer data)
+static gpointer
+search_worker_function(gpointer data)
 {
   LxiGuiWindow *self = data;
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-discover");
@@ -269,7 +272,8 @@ button_clicked_search (LxiGuiWindow *self, GtkToggleButton *button)
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
 }
 
-static void scroll_to_end(GtkTextView *text_view)
+static void
+scroll_to_end(GtkTextView *text_view)
 {
   GtkTextBuffer *buffer = gtk_text_view_get_buffer(text_view);
   GtkTextIter iter;
@@ -279,7 +283,8 @@ static void scroll_to_end(GtkTextView *text_view)
   gtk_text_buffer_delete_mark(buffer, mark);
 }
 
-static void text_view_add_buffer(GtkTextView *view, const char *buffer)
+static void
+text_view_add_buffer(GtkTextView *view, const char *buffer)
 {
   GtkTextIter iter;
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
@@ -287,7 +292,8 @@ static void text_view_add_buffer(GtkTextView *view, const char *buffer)
   gtk_text_buffer_insert (text_buffer, &iter, buffer, strlen(buffer));
 }
 
-static void text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
+static void
+text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
 {
   GtkTextIter iter;
   char markup_buffer[65536];
@@ -299,7 +305,8 @@ static void text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffe
 }
 
 
-static void text_view_clear_buffer(GtkTextView *view)
+static void
+text_view_clear_buffer(GtkTextView *view)
 {
   GtkTextIter start, end;
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
@@ -307,26 +314,30 @@ static void text_view_clear_buffer(GtkTextView *view)
   gtk_text_buffer_delete(text_buffer, &start, &end);
 }
 
-static void print_error(const char *buffer)
+static void
+print_error(const char *buffer)
 {
   text_view_clear_buffer(self_global->text_view_scpi_status);
   text_view_add_buffer(self_global->text_view_scpi_status, buffer);
 }
 
-static void print_error_screenshot(const char *buffer)
+static void
+print_error_screenshot(const char *buffer)
 {
   text_view_clear_buffer(self_global->text_view_screenshot_status);
   text_view_add_buffer(self_global->text_view_screenshot_status, buffer);
 }
 
-static void print_error_benchmark(const char *buffer)
+static void
+print_error_benchmark(const char *buffer)
 {
   text_view_clear_buffer(self_global->text_view_benchmark_status);
   text_view_add_buffer(self_global->text_view_benchmark_status, buffer);
 }
 
 
-static void strip_trailing_space(char *line)
+static void
+strip_trailing_space(char *line)
 {
     int i = strlen(line) - 1;
 
@@ -340,7 +351,8 @@ static void strip_trailing_space(char *line)
     }
 }
 
-static int question(const char *string)
+static int
+question(const char *string)
 {
     int i;
 
@@ -445,7 +457,24 @@ button_clicked_scpi (LxiGuiWindow *self, GtkButton *button)
   gtk_editable_set_position(GTK_EDITABLE(self->entry_scpi), cursor_position);
 }
 
-static bool grab_screenshot(LxiGuiWindow *self)
+static void
+button_clicked_scpi_send (LxiGuiWindow *self, GtkButton *button)
+{
+  UNUSED(button);
+  entry_scpi_enter_pressed(self, self->entry_scpi);
+}
+
+static void
+button_clicked_scpi_clear (LxiGuiWindow *self, GtkButton *button)
+{
+  UNUSED(button);
+  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(self->entry_scpi);
+  gtk_entry_buffer_delete_text(entry_buffer, 0, -1);
+  gtk_entry_set_buffer(self->entry_scpi, entry_buffer);
+}
+
+static bool
+grab_screenshot(LxiGuiWindow *self)
 {
   char *plugin_name = (char *) "";
   char *filename = (char *) "";
@@ -495,23 +524,48 @@ static bool grab_screenshot(LxiGuiWindow *self)
   return 0;
 }
 
-static void
-button_clicked_scpi_send (LxiGuiWindow *self, GtkButton *button)
+static gpointer
+screenshot_grab_worker_function(gpointer data)
 {
-  UNUSED(button);
-  entry_scpi_enter_pressed(self, self->entry_scpi);
+  LxiGuiWindow *self = data;
+
+  grab_screenshot(self);
+
+  // Reenable screenshot buttons
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), true);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_live_view), true);
+
+  // Activate screenshot "Save" button if image data is available
+  if (gtk_image_get_storage_type(self->image_screenshot) != GTK_IMAGE_EMPTY)
+    gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), true);
+
+  return NULL;
 }
 
 static void
-button_clicked_scpi_clear (LxiGuiWindow *self, GtkButton *button)
+button_clicked_screenshot_grab (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
-  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(self->entry_scpi);
-  gtk_entry_buffer_delete_text(entry_buffer, 0, -1);
-  gtk_entry_set_buffer(self->entry_scpi, entry_buffer);
+
+  text_view_clear_buffer(self->text_view_screenshot_status);
+
+  if (self->ip == NULL)
+  {
+    print_error_screenshot("No instrument selected");
+    return;
+  }
+
+  // Disable buttons while grabbing the screenshot
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_live_view), false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
+
+  // Start worker thread that will perform the grab screenshot work
+  self->screenshot_grab_worker_thread = g_thread_new("screenshot_grab_worker", screenshot_grab_worker_function, (gpointer) self);
 }
 
-gpointer screenshot_worker_function(gpointer data)
+static gpointer
+screenshot_worker_function(gpointer data)
 {
   LxiGuiWindow *self = data;
 
@@ -538,32 +592,19 @@ button_clicked_screenshot_live_view (LxiGuiWindow *self, GtkToggleButton *button
 
   if (gtk_toggle_button_get_active(button) == true)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_grab), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
     gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
     self->screenshot_worker_thread = g_thread_new("screenshot_worker", screenshot_worker_function, (gpointer) self);
   }
   else
   {
     g_thread_join(self->screenshot_worker_thread);
-    gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_grab), true);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), true);
 
     // Activate screenshot "Save" button if image data is available
     if (gtk_image_get_storage_type(self->image_screenshot) != GTK_IMAGE_EMPTY)
       gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), true);
   }
-}
-
-static void
-button_clicked_screenshot_grab (LxiGuiWindow *self, GtkButton *button)
-{
-  UNUSED(button);
-
-  text_view_clear_buffer(self->text_view_screenshot_status);
-  grab_screenshot(self);
-
-  // Activate screenshot "Save" button if image data is available
-  if (gtk_image_get_storage_type(self->image_screenshot) != GTK_IMAGE_EMPTY)
-    gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), true);
 }
 
 static void
@@ -611,7 +652,8 @@ button_clicked_screenshot_save (LxiGuiWindow *self, GtkButton *button)
                     NULL);
 }
 
-void benchmark_progress_cb(unsigned int count)
+static void
+benchmark_progress_cb(unsigned int count)
 {
   double ten_percent_count;
   double total_count = self_global->benchmark_requests_count;
@@ -628,7 +670,8 @@ void benchmark_progress_cb(unsigned int count)
   }
 }
 
-gpointer benchmark_worker_function(gpointer data)
+static gpointer
+benchmark_worker_function(gpointer data)
 {
   double result;
   char result_text[20];
@@ -715,7 +758,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_scpi_status);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, image_screenshot);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_live_view);
-  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, button_screenshot_grab);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_grab);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, button_screenshot_save);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_screenshot_status);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_benchmark_status);
