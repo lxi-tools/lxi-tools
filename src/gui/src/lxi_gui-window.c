@@ -635,6 +635,7 @@ button_clicked_screenshot_save (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
   GtkWidget *dialog;
+  GtkFileChooser *chooser;
 
   // Show file save as dialog
   dialog = gtk_file_chooser_dialog_new ("Select file",
@@ -643,6 +644,9 @@ button_clicked_screenshot_save (LxiGuiWindow *self, GtkButton *button)
                                         "_Cancel", GTK_RESPONSE_CANCEL,
                                         "_Save", GTK_RESPONSE_ACCEPT,
                                         NULL);
+  chooser = GTK_FILE_CHOOSER(dialog);
+  gtk_file_chooser_set_current_name (chooser, "Untitled screenshot.png");
+
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_widget_show (dialog);
