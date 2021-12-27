@@ -35,6 +35,7 @@
 #include "screenshot.h"
 #include "benchmark.h"
 
+static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
 static lxi_info_t info;
@@ -191,6 +192,8 @@ action_cb (GtkWidget  *widget,
 static void
 list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
 {
+  pthread_mutex_lock(&session_mutex);
+
   GtkWidget *list_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   GtkWidget *list_text_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
   GtkWidget *list_title = gtk_label_new(ip);
@@ -230,6 +233,8 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
 
   // Add list box to list (GtkListBoxRow automatically inserted inbetween)
   gtk_list_box_append(self->list_instruments, list_box);
+
+  pthread_mutex_unlock(&session_mutex);
 }
 
 static gpointer
@@ -237,9 +242,13 @@ search_worker_function(gpointer data)
 {
   LxiGuiWindow *self = data;
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-discover");
+  bool use_mdns_discovery = g_settings_get_boolean(self->settings, "use-mdns-discovery");
 
   // Search for LXI devices
-  lxi_discover(&info, timeout, DISCOVER_VXI11);
+  if (use_mdns_discovery)
+    lxi_discover(&info, timeout, DISCOVER_MDNS);
+  else
+    lxi_discover(&info, timeout, DISCOVER_VXI11);
 
   gtk_toggle_button_set_active(self->toggle_button_search, false);
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
@@ -723,13 +732,40 @@ button_clicked_add_instrument (LxiGuiWindow *self, GtkButton *button)
   list_add_instrument(self, "192.168.100.201", "Samsung Evo 970 Pro");
 }
 
-void broadcast(const char *address, const char *interface)
+static void vxi11_broadcast(const char *address, const char *interface)
 {
   g_print ("Broadcasting on interface %s using address %s\n", interface, address);
 }
 
-void device(const char *address, const char *id)
+static void vxi11_device(const char *address, const char *id)
 {
+  list_add_instrument(self_global, address, id);
+}
+
+static void mdns_service(const char *address, const char *id, const char *service, int port)
+{
+  UNUSED(service);
+  UNUSED(port);
+
+  GtkWidget *child, *subtitle_child;
+
+  // Traverse list of instruments
+  for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
+      child != NULL;
+      child = gtk_widget_get_next_sibling(child))
+  {
+    subtitle_child = find_child_by_name(GTK_WIDGET(child), "list-subtitle");
+    if (subtitle_child != NULL)
+    {
+      if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
+      {
+        // Instruments already exists, do not add
+        return;
+      }
+    }
+  }
+
+  // No match found, add instrument to list box
   list_add_instrument(self_global, address, id);
 }
 
@@ -793,8 +829,9 @@ lxi_gui_window_class_init (LxiGuiWindowClass *klass)
   lxi_init();
 
   // Set up search information callbacks
-  info.broadcast = &broadcast;
-  info.device = &device;
+  info.broadcast = &vxi11_broadcast;
+  info.device = &vxi11_device;
+  info.service = &mdns_service; // For mDNS
 }
 
 static void

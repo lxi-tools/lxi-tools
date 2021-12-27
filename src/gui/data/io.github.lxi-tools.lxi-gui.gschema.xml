@@ -21,5 +21,10 @@
       <summary>Show sent SCPI commands</summary>
       <description>Show sent SCPI commands</description>
     </key>
+    <key name="use-mdns-discovery" type="b">
+      <default>false</default>
+      <summary>Use mDNS discovery</summary>
+      <description>Use mDNS for discovery of LXI devices.</description>
+    </key>
   </schema>
 </schemalist>

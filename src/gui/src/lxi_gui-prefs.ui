@@ -30,7 +30,7 @@
               <object class="GtkSpinButton" id="spin_button_timeout_discover">
                 <property name="adjustment">adjustment_timeout_discover</property>
                 <property name="has-tooltip">1</property>
-                <property name="tooltip-text">LXI instrument discovery timeout in milliseconds</property>
+                <property name="tooltip-text">Instrument discovery timeout in milliseconds</property>
                 <layout>
                   <property name="column">1</property>
                   <property name="row">0</property>
@@ -103,6 +103,29 @@
                 <layout>
                   <property name="column">1</property>
                   <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">_Use mDNS discovery:</property>
+                <property name="use-underline">1</property>
+                <property name="xalign">1</property>
+                <property name="mnemonic-widget">switch_use_mdns_discovery</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="switch_use_mdns_discovery">
+                <property name="halign">GTK_ALIGN_START</property>
+                <property name="has-tooltip">1</property>
+                <property name="tooltip-text">Use mDNS for instrument discovery</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">4</property>
                 </layout>
               </object>
             </child>
