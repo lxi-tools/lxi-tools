@@ -30,7 +30,7 @@ lxi_sources = [
 lxi_deps = [
   dependency('readline', required: true),
   dependency('lua-5.2', required: true),
-  meson.get_compiler('c').find_library('lxi', required: true),
+  dependency('liblxi', required: true),
 ]
 
 executable('lxi',

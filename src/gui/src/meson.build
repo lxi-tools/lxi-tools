@@ -36,14 +36,15 @@ lxi_gui_sources = [
 
 lxi_gui_deps = [
   dependency('gtk4', version: '>= 4.4'),
-  meson.get_compiler('c').find_library('lxi', required : false),
+  dependency('liblxi', required: true),
 ]
 
 gnome = import('gnome')
 
-lxi_gui_sources += gnome.compile_resources('lxi_gui-resources',
+lxi_gui_sources += gnome.compile_resources(
+  'lxi_gui-resources',
   'lxi_gui.gresource.xml',
-  c_name: 'lxi_gui'
+  c_name: 'lxi_gui',
 )
 
 executable('lxi-gui', lxi_gui_sources,
