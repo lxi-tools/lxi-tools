@@ -40,3 +40,5 @@ executable('lxi',
   dependencies: lxi_deps,
   install: true,
 )
+
+subdir('bash-completion')
