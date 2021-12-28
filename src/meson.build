@@ -30,7 +30,7 @@ lxi_sources = [
 lxi_deps = [
   dependency('readline', required: true),
   dependency('lua-5.2', required: true),
-  dependency('liblxi', required: true),
+  dependency('liblxi', version: '>=1.13', required: true),
 ]
 
 executable('lxi',
