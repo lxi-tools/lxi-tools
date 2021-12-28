@@ -9,7 +9,6 @@ project('lxi-tools', 'c',
 version_date='2021-12-23'
 
 subdir('src')
-subdir('src/include')
 subdir('src/bash-completion')
 subdir('man')
 

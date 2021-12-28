@@ -7,7 +7,7 @@ configure_file(
   configuration: config_h,
 )
 
-lxi_gui_includedir = [include_directories('../../include')]
+lxi_gui_includedir = [include_directories('../..')]
 
 lxi_gui_sources = [
   'main.c',

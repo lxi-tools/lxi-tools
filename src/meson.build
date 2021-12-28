@@ -1,4 +1,6 @@
-lxi_includedir = [include_directories('include')]
+config_h = configuration_data()
+config_h.set_quoted('VERSION', meson.project_version())
+configure_file(output: 'config.h', configuration: config_h)
 
 lxi_sources = [
   'benchmark.c',
@@ -36,6 +38,5 @@ lxi_deps = [
 executable('lxi',
   lxi_sources,
   dependencies: lxi_deps,
-  include_directories: lxi_includedir,
   install: true,
 )
