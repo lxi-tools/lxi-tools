@@ -129,6 +129,58 @@
                 </layout>
               </object>
             </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">_Communications protocol:</property>
+                <property name="use-underline">1</property>
+                <property name="xalign">1</property>
+                <property name="mnemonic-widget">dropdown_com_protocol</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkDropDown" id="dropdown_com_protocol">
+                <property name="valign">center</property>
+                <property name="tooltip-text">Communications protocol used for SCPI and benchmark</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item>VXI11/TCP </item>
+                      <item>RAW/TCP </item>
+                    </items>
+                  </object>
+                </property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">_RAW/TCP port:</property>
+                <property name="use-underline">1</property>
+                <property name="xalign">1</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">6</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="spin_button_raw_port">
+                <property name="adjustment">adjustment_raw_port</property>
+                <property name="has-tooltip">1</property>
+                <property name="tooltip-text">RAW/TCP network port</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">6</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -151,5 +203,11 @@
     <property name="lower">1000</property>
     <property name="step-increment">100</property>
     <property name="page-increment">1000</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_raw_port">
+    <property name="upper">65535</property>
+    <property name="lower">0</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">100</property>
   </object>
 </interface>

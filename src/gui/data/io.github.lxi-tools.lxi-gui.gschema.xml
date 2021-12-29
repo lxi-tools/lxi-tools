@@ -26,5 +26,15 @@
       <summary>Use mDNS discovery</summary>
       <description>Use mDNS for discovery of LXI devices.</description>
     </key>
+    <key name="com-protocol" type="u">
+      <default>0</default>
+      <summary>Communications protocol</summary>
+      <description>Communications protocol.</description>
+    </key>
+    <key name="raw-port" type="u">
+      <default>9221</default>
+      <summary>RAW/TCP network port</summary>
+      <description>RAW/TCP network port</description>
+    </key>
   </schema>
 </schemalist>

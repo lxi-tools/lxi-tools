@@ -44,6 +44,8 @@ struct _LxiGuiPrefs
   GtkWidget *spin_button_timeout_screenshot;
   GtkWidget *switch_show_sent_scpi;
   GtkWidget *switch_use_mdns_discovery;
+  GtkWidget *dropdown_com_protocol;
+  GtkWidget *spin_button_raw_port;
 };
 
 G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, GTK_TYPE_DIALOG)
@@ -67,6 +69,12 @@ lxi_gui_prefs_init (LxiGuiPrefs *prefs)
                    G_SETTINGS_BIND_DEFAULT);
   g_settings_bind (prefs->settings, "use-mdns-discovery",
                    prefs->switch_use_mdns_discovery, "active",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "com-protocol",
+                   prefs->dropdown_com_protocol, "selected",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "raw-port",
+                   prefs->spin_button_raw_port, "value",
                    G_SETTINGS_BIND_DEFAULT);
 }
 
@@ -94,6 +102,8 @@ lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_screenshot);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_show_sent_scpi);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_use_mdns_discovery);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, dropdown_com_protocol);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_raw_port);
 }
 
 LxiGuiPrefs *

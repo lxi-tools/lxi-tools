@@ -377,13 +377,15 @@ question(const char *string)
 static void
 entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 {
-  int device = 0, protocol = VXI11;
+  int device = 0;
   const char *input_buffer;
-  char *tx_buffer;
+  GString *tx_buffer;
   char rx_buffer[65536];
   int rx_bytes;
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-scpi");
   bool show_sent_scpi = g_settings_get_boolean(self->settings, "show-sent-scpi");
+  unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
+  unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
 
   // Clear text in status text view
   text_view_clear_buffer(self->text_view_scpi_status);
@@ -399,23 +401,31 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
   input_buffer = gtk_entry_buffer_get_text(entry_buffer);
   if (strlen(input_buffer) == 0)
     return;
-  tx_buffer = strdup(input_buffer);
-  strip_trailing_space(tx_buffer);
+  tx_buffer = g_string_new_len(input_buffer, strlen(input_buffer));
+  strip_trailing_space(tx_buffer->str);
 
-  device = lxi_connect(self->ip, 0, NULL, timeout, protocol);
+  if (com_protocol == VXI11)
+  {
+    device = lxi_connect(self->ip, 0, NULL, timeout, VXI11);
+  }
+  if (com_protocol == RAW)
+  {
+    tx_buffer = g_string_append(tx_buffer, "\n");
+    device = lxi_connect(self->ip, raw_port, NULL, timeout, RAW);
+  }
   if (device == LXI_ERROR)
   {
     print_error("Error connecting");
     goto error_connect;
   }
 
-  if (lxi_send(device, tx_buffer, strlen(tx_buffer), timeout) == LXI_ERROR)
+  if (lxi_send(device, tx_buffer->str, tx_buffer->len, timeout) == LXI_ERROR)
   {
     print_error("Error sending");
     goto error_send;
   }
 
-  if (question(tx_buffer))
+  if (question(tx_buffer->str))
   {
     rx_bytes = lxi_receive(device, rx_buffer, sizeof(rx_buffer), timeout);
     if (rx_bytes == LXI_ERROR)
@@ -430,7 +440,8 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
     if (show_sent_scpi)
     {
       // Add sent command to output view
-      text_view_add_buffer_in_dimgray(self->text_view_scpi, tx_buffer);
+      g_string_erase(tx_buffer, tx_buffer->len-1, 1); // Remove added newline
+      text_view_add_buffer_in_dimgray(self->text_view_scpi, tx_buffer->str);
       text_view_add_buffer(self->text_view_scpi, "\n");
     }
 
@@ -446,7 +457,7 @@ error_send:
 error_receive:
   lxi_disconnect(device);
 error_connect:
-  free(tx_buffer);
+  g_string_free(tx_buffer, true);
 }
 
 static void
@@ -689,8 +700,17 @@ benchmark_worker_function(gpointer data)
   double result;
   char result_text[20];
   LxiGuiWindow *self = data;
+  unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
+  unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
 
-  benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+  if (com_protocol == VXI11)
+  {
+    benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+  }
+  if (com_protocol == RAW)
+  {
+    benchmark(self->ip, raw_port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+  }
 
   sprintf(result_text, "%.1f request/s", result);
   gtk_label_set_text(self->label_benchmark_result, result_text);
