@@ -203,7 +203,7 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   gtk_widget_set_size_request(list_box, -1, 60);
 
   // Add image to list box
-  GtkWidget *image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument.svg");
+  GtkWidget *image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument.png");
   gtk_widget_set_margin_start(image, 2);
   gtk_widget_set_margin_end(image, 2);
   gtk_image_set_pixel_size(GTK_IMAGE(image), 50);

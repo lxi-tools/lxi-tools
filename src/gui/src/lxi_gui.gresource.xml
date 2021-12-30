@@ -6,7 +6,7 @@
     <file preprocess="xml-stripblanks">lxi_gui-window_list_widget_menu_model.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
     <file>icons/lxi-tools-icon-128px.png</file>
-    <file>icons/lxi-instrument.svg</file>
+    <file>icons/lxi-instrument.png</file>
     <file>images/photo-camera.png</file>
     <file>lxi_gui.css</file>
   </gresource>
