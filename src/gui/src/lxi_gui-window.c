@@ -861,6 +861,14 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
+  // Set up clipboard
+  GdkDisplay* gdk_display = gdk_display_get_default();
+  self->clipboard = gdk_display_get_clipboard(gdk_display);
+
+  // Prefer dark theme
+  GtkSettings* gtk_settings = gtk_settings_get_for_display(gdk_display);
+  g_object_set(gtk_settings, "gtk-application-prefer-dark-theme", true, NULL);
+
   // Load settings
   self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
 
@@ -886,10 +894,6 @@ lxi_gui_window_init (LxiGuiWindow *self)
   gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (list_widget_gesture), 0);
   g_signal_connect (list_widget_gesture, "pressed", G_CALLBACK (pressed_cb), self);
   gtk_widget_add_controller (GTK_WIDGET(self->list_viewport), GTK_EVENT_CONTROLLER (list_widget_gesture));
-
-  // Set up clipboard
-  GdkDisplay* gdk_display = gdk_display_get_default();
-  self->clipboard = gdk_display_get_clipboard(gdk_display);
 
   // Set up SCPI command entry
   gtk_editable_set_enable_undo (GTK_EDITABLE (self->entry_scpi), TRUE);
