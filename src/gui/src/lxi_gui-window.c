@@ -34,9 +34,9 @@
 #include "lxi_gui-window.h"
 #include "screenshot.h"
 #include "benchmark.h"
+#include "misc.h"
 
 static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
-#define UNUSED(expr) do { (void)(expr); } while (0)
 
 static lxi_info_t info;
 

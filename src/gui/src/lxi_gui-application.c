@@ -32,8 +32,7 @@
 #include "lxi_gui-window.h"
 #include "lxi_gui-prefs.h"
 #include "lxi_gui-config.h"
-
-#define UNUSED(expr) do { (void)(expr); } while (0)
+#include "misc.h"
 
 struct _LxiGuiApplication
 {
