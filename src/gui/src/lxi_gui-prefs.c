@@ -33,6 +33,7 @@
 #include "lxi_gui-application.h"
 #include "lxi_gui-window.h"
 #include "lxi_gui-prefs.h"
+#include "misc.h"
 
 struct _LxiGuiPrefs
 {
@@ -49,17 +50,6 @@ struct _LxiGuiPrefs
 };
 
 G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, GTK_TYPE_DIALOG)
-
-static void
-combo_box_text_changed_com_protocol (LxiGuiPrefs *self, GtkComboBoxText *combo_box_text)
-{
-  int active = gtk_combo_box_get_active(GTK_COMBO_BOX(self->combo_box_text_com_protocol));
-
-  if (active == 0)
-    gtk_widget_set_sensitive(self->spin_button_raw_port, false);
-  if (active == 1)
-    gtk_widget_set_sensitive(self->spin_button_raw_port, true);
-}
 
 static void
 lxi_gui_prefs_init (LxiGuiPrefs *prefs)
@@ -87,11 +77,6 @@ lxi_gui_prefs_init (LxiGuiPrefs *prefs)
   g_settings_bind (prefs->settings, "raw-port",
                    prefs->spin_button_raw_port, "value",
                    G_SETTINGS_BIND_DEFAULT);
-
-  int active = gtk_combo_box_get_active(GTK_COMBO_BOX(prefs->combo_box_text_com_protocol));
-
-  if (active == 0)
-    gtk_widget_set_sensitive(prefs->spin_button_raw_port, false);
 }
 
 static void
@@ -122,9 +107,6 @@ lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_use_mdns_discovery);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, combo_box_text_com_protocol);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_raw_port);
-
-  // Bind signal callbacks
-  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS(class), combo_box_text_changed_com_protocol);
 }
 
 LxiGuiPrefs *
