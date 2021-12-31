@@ -810,6 +810,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *klass)
 
   object_class->dispose = lxi_gui_window_dispose;
 
+  // Bind widgets
   gtk_widget_class_set_template_from_resource (widget_class, "/io/github/lxi-tools/lxi-gui/lxi_gui-window.ui");
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_instruments);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_viewport);
