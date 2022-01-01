@@ -36,5 +36,10 @@
       <summary>RAW/TCP network port</summary>
       <description>RAW/TCP network port</description>
     </key>
+    <key name="prefer-dark-theme" type="b">
+      <default>true</default>
+      <summary>Prefer dark theme</summary>
+      <description>Prefer dark theme.</description>
+    </key>
   </schema>
 </schemalist>

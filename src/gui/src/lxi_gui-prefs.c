@@ -47,9 +47,21 @@ struct _LxiGuiPrefs
   GtkWidget *switch_use_mdns_discovery;
   GtkComboBoxText *combo_box_text_com_protocol;
   GtkWidget *spin_button_raw_port;
+  GtkSwitch *switch_prefer_dark_theme;
 };
 
 G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, GTK_TYPE_DIALOG)
+
+static void
+switch_activate_prefer_dark_theme (LxiGuiPrefs *self, GtkSwitch *Switch)
+{
+  UNUSED(Switch);
+
+  // Manage dark theme setting
+  bool prefer_dark_theme = gtk_switch_get_active(self->switch_prefer_dark_theme);
+  GtkSettings *gtk_settings = gtk_settings_get_default ();
+  g_object_set(gtk_settings, "gtk-application-prefer-dark-theme", prefer_dark_theme, NULL);
+}
 
 static void
 lxi_gui_prefs_init (LxiGuiPrefs *prefs)
@@ -77,6 +89,9 @@ lxi_gui_prefs_init (LxiGuiPrefs *prefs)
   g_settings_bind (prefs->settings, "raw-port",
                    prefs->spin_button_raw_port, "value",
                    G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "prefer-dark-theme",
+                   prefs->switch_prefer_dark_theme, "active",
+                   G_SETTINGS_BIND_DEFAULT);
 }
 
 static void
@@ -95,18 +110,23 @@ static void
 lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
 {
   G_OBJECT_CLASS (class)->dispose = lxi_gui_prefs_dispose;
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class),
                                                "/io/github/lxi-tools/lxi-gui/lxi_gui-prefs.ui");
 
   // Bind widgets
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_discover);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_scpi);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_timeout_screenshot);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_show_sent_scpi);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, switch_use_mdns_discovery);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, combo_box_text_com_protocol);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), LxiGuiPrefs, spin_button_raw_port);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, spin_button_timeout_discover);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, spin_button_timeout_scpi);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, spin_button_timeout_screenshot);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_show_sent_scpi);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_use_mdns_discovery);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, combo_box_text_com_protocol);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, spin_button_raw_port);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_prefer_dark_theme);
+
+  // Bind signals
+  gtk_widget_class_bind_template_callback (widget_class, switch_activate_prefer_dark_theme);
 }
 
 LxiGuiPrefs *

@@ -913,6 +913,7 @@
                                     <child>
                                       <object class="GtkEntry" id="entry_scpi">
                                         <property name="hexpand">1</property>
+                                        <property name="height-request">50</property>
                                         <property name="input-hints">GTK_INPUT_HINT_NO_EMOJI</property>
                                         <signal name="activate" handler="entry_scpi_enter_pressed" swapped="yes"/>
                                         <style>
@@ -1143,6 +1144,123 @@
                                     <style>
                                       <class name="text-button"/>
                                       <class name="suggested-action"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">page_script</property>
+                    <property name="visible">1</property>
+                    <property name="title" translatable="1">Script</property>
+                    <property name="use-underline">1</property>
+                    <property name="child">
+                      <object class="GtkBox" id="page_script">
+                        <property name="orientation">1</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkGrid">
+                            <child>
+                              <object class="GtkBox" id="box_script_toolbar">
+                                <property name="orientation">0</property>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="vexpand">0</property>
+                                <property name="valign">GTK_ALIGN_END</property>
+                                <style>
+                                  <class name="box-script-toolbar"/>
+                                </style>
+                                <layout>
+                                  <property name="column">0</property>
+                                  <property name="row">0</property>
+                                </layout>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="1">Open</property>
+                                    <property name="icon-name">document-open</property>
+                                    <property name="tooltip-text" translatable="1">Open a script</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="1">Save</property>
+                                    <property name="icon-name">document-save</property>
+                                    <property name="tooltip-text" translatable="1">Save the current script</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="1">Save As..</property>
+                                    <property name="icon-name">document-save-as</property>
+                                    <property name="tooltip-text" translatable="1">Save the current script as..</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator"/>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="1">Run</property>
+                                    <property name="icon-name">media-playback-start</property>
+                                    <property name="tooltip-text" translatable="1">Run script</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="1">Stop</property>
+                                    <property name="icon-name">media-playback-stop</property>
+                                    <property name="tooltip-text" translatable="1">Stop running script</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow" id="scrolled_window_script">
+                                <property name="vexpand">1</property>
+                                <property name="can-focus">0</property>
+                                <property name="focus-on-click">0</property>
+                                <layout>
+                                  <property name="column">0</property>
+                                  <property name="row">1</property>
+                                </layout>
+                                <child>
+                                  <object class="GtkTextView" id="text_view_script">
+                                    <property name="can-focus">0</property>
+                                    <property name="focus-on-click">1</property>
+                                    <property name="editable">1</property>
+                                    <property name="cursor-visible">1</property>
+                                    <style>
+                                      <class name="text-view-script"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="vexpand">0</property>
+                                <property name="height-request">110</property>
+                                <property name="can-focus">0</property>
+                                <property name="focus-on-click">0</property>
+                                <layout>
+                                  <property name="column">0</property>
+                                  <property name="row">2</property>
+                                </layout>
+                                <child>
+                                  <object class="GtkTextView" id="text_view_script_status">
+                                    <property name="can-focus">0</property>
+                                    <property name="focus-on-click">0</property>
+                                    <property name="editable">0</property>
+                                    <property name="cursor-visible">0</property>
+                                    <style>
+                                      <class name="text-view-script-status"/>
                                     </style>
                                   </object>
                                 </child>

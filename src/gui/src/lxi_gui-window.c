@@ -803,10 +803,10 @@ lxi_gui_window_dispose (GObject *object)
 }
 
 static void
-lxi_gui_window_class_init (LxiGuiWindowClass *klass)
+lxi_gui_window_class_init (LxiGuiWindowClass *class)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
   object_class->dispose = lxi_gui_window_dispose;
 
@@ -862,16 +862,17 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
+  // Load settings
+  self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
+
   // Set up clipboard
   GdkDisplay* gdk_display = gdk_display_get_default();
   self->clipboard = gdk_display_get_clipboard(gdk_display);
 
-  // Prefer dark theme
-  GtkSettings* gtk_settings = gtk_settings_get_for_display(gdk_display);
-  g_object_set(gtk_settings, "gtk-application-prefer-dark-theme", true, NULL);
-
-  // Load settings
-  self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
+  // Manage dark theme setting
+  bool prefer_dark_theme = g_settings_get_boolean(self->settings, "prefer-dark-theme");
+  GtkSettings *gtk_settings = gtk_settings_get_for_display(gdk_display);
+  g_object_set(gtk_settings, "gtk-application-prefer-dark-theme", prefer_dark_theme, NULL);
 
   // Load and apply CSS
   GtkCssProvider *provider = gtk_css_provider_new ();

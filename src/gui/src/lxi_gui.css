@@ -16,7 +16,7 @@
 }
 
 .entry-scpi {
-  background-color: shade(@theme_base_color, .90);
+  background-color: shade(@theme_base_color, .80);
   border: solid @borders 0px;
   border-top-width: 1px;
   border-color: @theme_bg_color;
@@ -25,6 +25,7 @@
   border-top-right-radius: 0px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 0px;
+  outline-width: 0px;
 }
 
 .text-view-scpi {
@@ -91,4 +92,42 @@ progress, trough {
   border-radius: 0px;
   border-bottom-right-radius: 4px;
   border-color: alpha(black, 0.8);
+}
+
+.text-view-script {
+  background-color: shade(@theme_base_color, .95);
+  border-color: alpha(black, 0.8);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 4px;
+}
+
+.text-view-script text {
+  background-color: rgba(0,0,0,0);
+}
+
+.text-view-script-status {
+  background-color: shade(@theme_base_color, .80);
+  border: solid @borders 0px;
+  border-top-width: 1px;
+  border-color: alpha(black, 0.8);
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding: 4px;
+}
+
+.text-view-script-status text {
+  background-color: rgba(0,0,0,0);
+}
+
+.box-script-toolbar {
+/*  background-color: shade(@theme_base_color, .95);*/
+  margin-bottom: 5px;
+}
+
+.box-script-toolbar button {
+  background-color: rgba(0,0,0,0);
+  padding: 5px;
+  -gtk-icon-size: 22px;
+  -gtk-icon-style: symbolic;
 }

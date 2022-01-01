@@ -177,6 +177,30 @@
                 </layout>
               </object>
             </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">_Prefer dark theme:</property>
+                <property name="use-underline">1</property>
+                <property name="xalign">1</property>
+                <property name="mnemonic-widget">switch_prefer_dark_theme</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">7</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="switch_prefer_dark_theme">
+                <property name="halign">GTK_ALIGN_START</property>
+                <property name="has-tooltip">1</property>
+                <property name="tooltip-text">Prefer dark theme</property>
+                <signal name="state-set" handler="switch_activate_prefer_dark_theme" swapped="yes"/>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">7</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
       </object>
