@@ -180,7 +180,7 @@ static int msleep(lua_State *L)
     return 0;
 }
 
-int luaopen_lxilua(lua_State *L)
+int lua_register_lxi(lua_State *L)
 {
     lua_register(L, "connect", connect);
     lua_register(L, "disconnect", disconnect);

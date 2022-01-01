@@ -59,7 +59,7 @@ int run(char *filename, int timeout)
     luaL_openlibs(L);
 
     // Add lxi functions
-    luaopen_lxilua(L);
+    lua_register_lxi(L);
 
     if (luaL_dofile(L, filename))
     {

@@ -2,4 +2,4 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
-int luaopen_lxilua(lua_State *L);
+int lua_register_lxi(lua_State *L);
