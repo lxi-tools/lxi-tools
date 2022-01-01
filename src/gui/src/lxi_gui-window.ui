@@ -15,7 +15,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="lockbox">
+          <object class="GtkBox">
             <property name="hexpand">1</property>
             <property name="spacing">6</property>
             <child>
@@ -61,7 +61,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkPaned" id="pane">
+      <object class="GtkPaned">
         <property name="position">250</property>
         <property name="position-set">1</property>
         <child>
