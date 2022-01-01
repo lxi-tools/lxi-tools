@@ -25,6 +25,7 @@ lxi_sources = [
   'plugins/screenshot_siglent-ssa3000x.c',
   'plugins/screenshot_rigol-dg.c',
   'plugins/screenshot_rohde-schwarz-hmo-rtb.c',
+  'plugins/screenshot_rohde-schwarz-ng.c',
   'plugins/screenshot_tektronix.c',
   'plugins/screenshot_tektronix-3000.c',
   ]

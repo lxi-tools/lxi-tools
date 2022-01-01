@@ -55,6 +55,7 @@ extern struct screenshot_plugin rigol_dm3068;
 extern struct screenshot_plugin rigol_dp800;
 extern struct screenshot_plugin rigol_dsa;
 extern struct screenshot_plugin rs_hmo_rtb;
+extern struct screenshot_plugin rs_ng;
 extern struct screenshot_plugin siglent_sdm3000;
 extern struct screenshot_plugin siglent_sdg;
 extern struct screenshot_plugin siglent_sds;
@@ -258,6 +259,7 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&rigol_dp800);
     screenshot_plugin_register(&rigol_dsa);
     screenshot_plugin_register(&rs_hmo_rtb);
+    screenshot_plugin_register(&rs_ng);
     screenshot_plugin_register(&siglent_sdm3000);
     screenshot_plugin_register(&siglent_sdg);
     screenshot_plugin_register(&siglent_sds);
