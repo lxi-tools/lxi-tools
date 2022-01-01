@@ -118,10 +118,18 @@ pressed_cb (GtkGestureClick *gesture,
             LxiGuiWindow     *self)
 {
   GtkWidget *child;
-  GtkListBoxRow *row = gtk_list_box_get_row_at_y(self->list_instruments, y);
+  GtkListBoxRow *row;
+  GtkAdjustment* adjustment;
+  double y_adjustment, y_adjusted;
 
   UNUSED(gesture);
   UNUSED(n_press);
+
+  // Adjust y value to account for scrolling offset so we can pick the right row
+  adjustment = gtk_list_box_get_adjustment(self->list_instruments);
+  y_adjustment = gtk_adjustment_get_value(adjustment);
+  y_adjusted = y + y_adjustment;
+  row = gtk_list_box_get_row_at_y(self->list_instruments, y_adjusted);
 
   if (row != NULL)
   {
@@ -150,13 +158,6 @@ pressed_cb (GtkGestureClick *gesture,
       /* We are placing our menu at the point where
        * the click happened, before popping it up.
        */
-
-      // Adjust y value to account for scrolling offset
-      GtkAdjustment* adjustment = gtk_list_box_get_adjustment(self->list_instruments);
-      double adjustment_y = gtk_adjustment_get_value(adjustment);
-
-      y = y + adjustment_y;
-
       gtk_popover_set_pointing_to (GTK_POPOVER (self->list_widget_popover_menu),
           &(const GdkRectangle){ x, y, 1, 1 });
       gtk_popover_popup (GTK_POPOVER (self->list_widget_popover_menu));
