@@ -530,16 +530,22 @@ grab_screenshot(LxiGuiWindow *self)
     return 1;
   }
 
+  g_print("image_size = %d\n", image_size);
+
   // Show screenshot
   loader = gdk_pixbuf_loader_new ();
   gdk_pixbuf_loader_write (loader, (const guchar *)image_buffer, image_size, NULL);
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
+  if (self->pixbuf_screenshot == NULL)
+    g_print("Broken pixbuf!\n");
   gtk_widget_set_valign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
   gtk_widget_set_halign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
   gtk_image_set_pixel_size(self->image_screenshot, -1);
   gtk_image_set_from_pixbuf(self->image_screenshot, self->pixbuf_screenshot);
 
   g_free(image_buffer);
+
+  gtk_widget_show(GTK_WIDGET(self->image_screenshot));
 
   return 0;
 }
