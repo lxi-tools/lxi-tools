@@ -904,7 +904,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="orientation">0</property>
                                     <property name="hexpand">1</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -990,9 +989,8 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="can-focus">1</property>
                                 <property name="homogeneous">1</property>
-                                <property name="spacing">10</property>
+                                <property name="spacing">6</property>
                                 <style>
                                   <class name="gui-buttons"/>
                                 </style>
@@ -1002,7 +1000,6 @@
                                 </layout>
                                 <child>
                                   <object class="GtkToggleButton" id="toggle_button_screenshot_live_view">
-                                    <property name="can-focus">1</property>
                                     <property name="label" translatable="yes">Live View</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_screenshot_live_view" swapped="yes"/>
@@ -1014,7 +1011,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkToggleButton" id="toggle_button_screenshot_grab">
-                                    <property name="can-focus">1</property>
                                     <property name="label" translatable="yes">Grab Screenshot</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_screenshot_grab" swapped="yes"/>
@@ -1026,7 +1022,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="button_screenshot_save">
-                                    <property name="can-focus">1</property>
                                     <property name="label" translatable="yes">Save</property>
                                     <property name="receives-default">1</property>
                                     <signal name="clicked" handler="button_clicked_screenshot_save" swapped="yes"/>
@@ -1054,7 +1049,6 @@
                             <child>
                               <object class="GtkBox">
                                 <property name="orientation">vertical</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="vexpand">1</property>
                                 <property name="valign">GTK_ALIGN_END</property>
@@ -1072,9 +1066,8 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="can-focus">1</property>
                                     <property name="halign">GTK_ALIGN_CENTER</property>
-                                    <property name="spacing">10</property>
+                                    <property name="spacing">6</property>
                                     <property name="margin-top">40</property>
                                     <child>
                                       <object class="GtkLabel">
@@ -1084,7 +1077,6 @@
                                     </child>
                                     <child>
                                       <object class="GtkSpinButton" id="spin_button_benchmark_requests">
-                                        <property name="can-focus">1</property>
                                         <property name="has-tooltip">1</property>
                                         <property name="tooltip-text">Requests to send</property>
                                         <property name="adjustment">adjustment_benchmark_requests</property>
@@ -1128,7 +1120,7 @@
                             <child>
                               <object class="GtkBox">
                                 <property name="homogeneous">1</property>
-                                <property name="spacing">10</property>
+                                <property name="spacing">6</property>
                                 <style>
                                   <class name="gui-buttons"/>
                                 </style>
@@ -1158,7 +1150,6 @@
                 <child>
                   <object class="GtkStackPage">
                     <property name="name">page_script</property>
-                    <property name="visible">1</property>
                     <property name="title" translatable="1">Script</property>
                     <property name="use-underline">1</property>
                     <property name="child">
@@ -1169,11 +1160,9 @@
                           <object class="GtkGrid">
                             <child>
                               <object class="GtkBox" id="box_script_toolbar">
-                                <property name="orientation">0</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="vexpand">0</property>
-                                <property name="valign">GTK_ALIGN_END</property>
+                                <property name="halign">GTK_ALIGN_CENTER</property>
                                 <style>
                                   <class name="box-script-toolbar"/>
                                 </style>
@@ -1182,41 +1171,47 @@
                                   <property name="row">0</property>
                                 </layout>
                                 <child>
-                                  <object class="GtkButton">
-                                    <property name="label" translatable="1">Open</property>
-                                    <property name="icon-name">document-open</property>
-                                    <property name="tooltip-text" translatable="1">Open a script</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton">
-                                    <property name="label" translatable="1">Save</property>
-                                    <property name="icon-name">document-save</property>
-                                    <property name="tooltip-text" translatable="1">Save the current script</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton">
-                                    <property name="label" translatable="1">Save As..</property>
-                                    <property name="icon-name">document-save-as</property>
-                                    <property name="tooltip-text" translatable="1">Save the current script as..</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSeparator"/>
-                                </child>
-                                <child>
-                                  <object class="GtkButton">
-                                    <property name="label" translatable="1">Run</property>
-                                    <property name="icon-name">media-playback-start</property>
-                                    <property name="tooltip-text" translatable="1">Run script</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton">
-                                    <property name="label" translatable="1">Stop</property>
-                                    <property name="icon-name">media-playback-stop</property>
-                                    <property name="tooltip-text" translatable="1">Stop running script</property>
+                                  <object class="GtkBox">
+                                    <property name="homogeneous">1</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="1">Open</property>
+                                        <property name="tooltip-text" translatable="1">Open a script</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="1">Save</property>
+                                        <property name="tooltip-text" translatable="1">Save the current script</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="1">Save As..</property>
+                                        <property name="tooltip-text" translatable="1">Save the current script as..</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="1">Run</property>
+                                        <property name="tooltip-text" translatable="1">Run script</property>
+                                        <style>
+                                          <class name="text-button"/>
+                                          <class name="suggested-action"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="1">Stop</property>
+                                        <property name="tooltip-text" translatable="1">Stop running script</property>
+                                        <style>
+                                          <class name="text-button"/>
+                                          <class name="destructive-action"/>
+                                        </style>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -1224,18 +1219,12 @@
                             <child>
                               <object class="GtkScrolledWindow" id="scrolled_window_script">
                                 <property name="vexpand">1</property>
-                                <property name="can-focus">1</property>
-                                <property name="focus-on-click">1</property>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">1</property>
                                 </layout>
                                 <child>
                                   <object class="GtkTextView" id="text_view_script">
-                                    <property name="can-focus">1</property>
-                                    <property name="focus-on-click">1</property>
-                                    <property name="editable">1</property>
-                                    <property name="cursor-visible">1</property>
                                     <style>
                                       <class name="text-view-script"/>
                                     </style>
