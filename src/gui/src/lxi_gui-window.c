@@ -70,6 +70,8 @@ struct _LxiGuiWindow
   GtkSpinButton       *spin_button_benchmark_requests;
   GtkLabel            *label_benchmark_result;
   GdkPixbuf           *pixbuf_screenshot;
+  GtkTextView         *text_view_script;
+  GtkTextBuffer       *text_buffer_script;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -835,6 +837,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, spin_button_benchmark_requests);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_benchmark_result);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_search);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);
@@ -928,6 +931,8 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Disable screenshot "Save" button until image is present
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
+
+  self->text_buffer_script = gtk_text_view_get_buffer (self->text_view_script);
 
   self_global = self;
 }

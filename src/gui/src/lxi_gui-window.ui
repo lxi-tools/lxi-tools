@@ -1224,15 +1224,15 @@
                             <child>
                               <object class="GtkScrolledWindow" id="scrolled_window_script">
                                 <property name="vexpand">1</property>
-                                <property name="can-focus">0</property>
-                                <property name="focus-on-click">0</property>
+                                <property name="can-focus">1</property>
+                                <property name="focus-on-click">1</property>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">1</property>
                                 </layout>
                                 <child>
                                   <object class="GtkTextView" id="text_view_script">
-                                    <property name="can-focus">0</property>
+                                    <property name="can-focus">1</property>
                                     <property name="focus-on-click">1</property>
                                     <property name="editable">1</property>
                                     <property name="cursor-visible">1</property>
