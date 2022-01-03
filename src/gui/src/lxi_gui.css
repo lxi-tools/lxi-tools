@@ -1,18 +1,15 @@
-.gui-buttons .text-button {
-  border: solid @borders 1px;
-  border-color: alpha(black, 0.5);
-  font-weight: normal;
-  font-size: 1.0em;
-  padding: 0;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  transition: 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* SCPI page */
+
+.text-view-scpi {
+  background-color: shade(@theme_base_color, .85);
+  border-color: alpha(black, 0.8);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 5px;
 }
 
-.scpi-label {
-  font-weight: bolder;
-  font-size: 0.7em;
-  color: darker(darker(darker(@theme_text_color)));
+.text-view-scpi text {
+  background-color: rgba(0,0,0,0);
 }
 
 .entry-scpi {
@@ -20,29 +17,16 @@
   border: solid @borders 0px;
   border-top-width: 1px;
   border-color: @theme_bg_color;
-  border-top-color: alpha(black, 0.8);
+  border-top-color: alpha(black, 0.2);
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   outline-width: 0px;
 }
 
-.text-view-scpi {
-  background-color: shade(@theme_base_color, .95);
-  border-color: alpha(black, 0.8);
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  padding: 4px;
-}
-
-.text-view-scpi text {
-  background-color: rgba(0,0,0,0);
-}
-
 .text-view-scpi-status {
-  background-color: shade(@theme_base_color, .95);
-  border-color: alpha(black, 0.8);
+  background-color: shade(@theme_base_color, .85);
   font-size: 0.8em;
   color: lighter(red);
   padding-top: 4px;
@@ -52,6 +36,16 @@
 .text-view-scpi-status text {
   background-color: rgba(0,0,0,0);
 }
+
+.scpi-label {
+  font-weight: bolder;
+  font-size: 0.7em;
+  color: alpha(@theme_text_color, 0.3);
+}
+
+
+
+/* Screenshot page */
 
 .text-view-screenshot-status {
   background-color: rgba(0,0,0,0);
@@ -63,6 +57,19 @@
 
 .text-view-screenshot-status text {
   background-color: rgba(0,0,0,0);
+}
+
+
+
+/* Benchmark page */
+
+progress, trough {
+  min-height: 60px;
+}
+
+.label-benchmark-result {
+  font-weight: bold;
+  font-size: 1.8em;
 }
 
 .text-view-benchmark-status {
@@ -77,29 +84,19 @@
   background-color: rgba(0,0,0,0);
 }
 
-progress, trough {
-  min-height: 60px;
-}
 
-.label-benchmark-result {
-  font-weight: bold;
-  font-size: 1.8em;
-}
 
-.button-scpi-clear {
-  border-style: solid;
-  border-top-width: 1px;
-  border-radius: 0px;
-  border-bottom-right-radius: 4px;
-  border-color: alpha(black, 0.8);
+/* Script page */
+
+.box-script-toolbar {
+  margin-bottom: 10px;
 }
 
 .text-view-script {
   background-color: shade(@theme_base_color, .95);
-  border-color: alpha(black, 0.8);
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  padding: 4px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 10px;
 }
 
 .text-view-script text {
@@ -107,27 +104,14 @@ progress, trough {
 }
 
 .text-view-script-status {
-  background-color: shade(@theme_base_color, .80);
-  border: solid @borders 0px;
+  background-color: shade(@theme_base_color, .85);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 10px;
   border-top-width: 1px;
-  border-color: alpha(black, 0.8);
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  padding: 4px;
+  border-top-color: alpha(black, 0.2);
 }
 
 .text-view-script-status text {
   background-color: rgba(0,0,0,0);
-}
-
-.box-script-toolbar {
-/*  background-color: shade(@theme_base_color, .95);*/
-  margin-bottom: 5px;
-}
-
-.box-script-toolbar button {
-  background-color: rgba(0,0,0,0);
-  padding: 5px;
-  -gtk-icon-size: 22px;
-  -gtk-icon-style: symbolic;
 }

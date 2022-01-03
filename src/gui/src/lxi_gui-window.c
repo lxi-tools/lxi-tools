@@ -71,6 +71,7 @@ struct _LxiGuiWindow
   GtkLabel            *label_benchmark_result;
   GdkPixbuf           *pixbuf_screenshot;
   GtkTextView         *text_view_script;
+  GtkTextView         *text_view_script_status;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -488,15 +489,6 @@ button_clicked_scpi_send (LxiGuiWindow *self, GtkButton *button)
   entry_scpi_enter_pressed(self, self->entry_scpi);
 }
 
-static void
-button_clicked_scpi_clear (LxiGuiWindow *self, GtkButton *button)
-{
-  UNUSED(button);
-  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(self->entry_scpi);
-  gtk_entry_buffer_delete_text(entry_buffer, 0, -1);
-  gtk_entry_set_buffer(self->entry_scpi, entry_buffer);
-}
-
 static bool
 grab_screenshot(LxiGuiWindow *self)
 {
@@ -841,6 +833,8 @@ on_script_file_open_response (GtkDialog *dialog,
     g_object_unref(input_stream);
   }
 
+  // TODO: Report errors to GUI
+
   gtk_window_destroy (GTK_WINDOW (dialog));
 }
 
@@ -871,25 +865,27 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
 
 static void save_text_buffer_script_to_file(LxiGuiWindow *self, GFile *file)
 {
-    GtkTextBuffer *text_buffer_script;
-    GtkTextIter start, end;
-    gboolean status = true;
-    GError *error = NULL;
-    char *buffer;
+  GtkTextBuffer *text_buffer_script;
+  GtkTextIter start, end;
+  gboolean status = true;
+  GError *error = NULL;
+  char *buffer;
 
-    // Get buffer of script text view
-    text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
-    gtk_text_buffer_get_bounds(text_buffer_script, &start, &end);
-    buffer = gtk_text_buffer_get_text(text_buffer_script, &start, &end, true);
+  // Get buffer of script text view
+  text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
+  gtk_text_buffer_get_bounds(text_buffer_script, &start, &end);
+  buffer = gtk_text_buffer_get_text(text_buffer_script, &start, &end, true);
 
-    // Write output stream to file
-    status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
-    if (status != true)
-    {
-      g_print("Could not write output stream: %s\n", error->message);
-      g_error_free(error);
-      return;
-    }
+  // Write output stream to file
+  status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
+  if (status != true)
+  {
+    g_print("Could not write output stream: %s\n", error->message);
+    g_error_free(error);
+    return;
+  }
+
+  // TODO: Report errors to GUI
 }
 
 static void
@@ -1065,6 +1061,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_benchmark_result);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_search);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script_status);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);
@@ -1072,7 +1069,6 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_callback (widget_class, entry_scpi_enter_pressed);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_send);
-  gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_clear);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_live_view);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_grab);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_save);
@@ -1159,7 +1155,7 @@ lxi_gui_window_init (LxiGuiWindow *self)
   gtk_widget_grab_focus(GTK_WIDGET(self->entry_scpi));
 
   // Set application window minimum width and height
-  gtk_widget_set_size_request(GTK_WIDGET(self), 900, 700);
+  gtk_widget_set_size_request(GTK_WIDGET(self), 950, 700);
 
   // Disable screenshot "Save" button until image is present
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);

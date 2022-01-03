@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="LxiGuiWindow" parent="GtkApplicationWindow">
-    <property name="default-width">900</property>
+    <property name="default-width">950</property>
     <property name="default-height">700</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="header_bar">
@@ -108,9 +108,6 @@
                                     <property name="column-spacing">6</property>
                                     <property name="row-spacing">6</property>
                                     <property name="column-homogeneous">1</property>
-                                    <style>
-                                      <class name="gui-buttons"/>
-                                    </style>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="label" translatable="yes">IEEE 488.2 Common Commands</property>
@@ -920,17 +917,6 @@
                                         </style>
                                       </object>
                                     </child>
-                                    <child>
-                                      <object class="GtkButton" id="button_scpi_clear">
-                                        <property name="icon-name">window-close-symbolic</property>
-                                        <property name="focus-on-click">0</property>
-                                        <property name="tooltip-text">Clear</property>
-                                        <signal name="clicked" handler="button_clicked_scpi_clear" swapped="yes"/>
-                                        <style>
-                                          <class name="button-scpi-clear"/>
-                                        </style>
-                                      </object>
-                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -991,9 +977,6 @@
                               <object class="GtkBox">
                                 <property name="homogeneous">1</property>
                                 <property name="spacing">6</property>
-                                <style>
-                                  <class name="gui-buttons"/>
-                                </style>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">2</property>
@@ -1121,9 +1104,6 @@
                               <object class="GtkBox">
                                 <property name="homogeneous">1</property>
                                 <property name="spacing">6</property>
-                                <style>
-                                  <class name="gui-buttons"/>
-                                </style>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">3</property>
@@ -1222,7 +1202,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkScrolledWindow" id="scrolled_window_script">
+                              <object class="GtkScrolledWindow">
                                 <property name="vexpand">1</property>
                                 <layout>
                                   <property name="column">0</property>
