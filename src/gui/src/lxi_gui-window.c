@@ -74,6 +74,8 @@ struct _LxiGuiWindow
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
+  char                *script_filename;
+  GFile               *script_file;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -778,7 +780,7 @@ on_script_file_open_response (GtkDialog *dialog,
     gsize bytes_read = 0;
     GError *error = NULL;
 
-    g_autoptr(GFile) file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
+    GFile *file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
 
     file_input_stream = g_file_read(file, NULL, &error);
     if (file_input_stream == NULL)
@@ -795,14 +797,14 @@ on_script_file_open_response (GtkDialog *dialog,
     gchar *buffer = g_malloc(len_buffer);
     if (buffer == NULL)
     {
-      g_print("Failure allocating memory for image data");
+      g_print("Failure allocating memory for reading file");
       g_object_unref(file_input_stream);
       return;
     }
 
     input_stream = g_buffered_input_stream_new (G_INPUT_STREAM (file_input_stream));
 
-    status = g_input_stream_read_all(input_stream, buffer, len_buffer, &bytes_read, NULL, NULL);
+    status = g_input_stream_read_all(input_stream, buffer, len_buffer, &bytes_read, NULL, &error);
     if (status != TRUE)
     {
       g_print ("Could not read file input stream: %s\n", error->message);
@@ -826,6 +828,13 @@ on_script_file_open_response (GtkDialog *dialog,
     gtk_text_buffer_get_end_iter(text_buffer_script, &iter);
     gtk_text_buffer_insert(text_buffer_script, &iter, buffer, bytes_read);
 
+    // Free old script file if any
+    if (self->script_file != NULL)
+      g_object_unref(self->script_file);
+
+    // Update script file reference
+    self->script_file = file;
+
     // Cleanup
     g_free(buffer);
     g_object_unref(file_input_stream);
@@ -840,7 +849,6 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
   GtkWidget *dialog;
-  GtkFileChooser *chooser;
   gpointer data = self;
 
   // Show file open dialog
@@ -850,7 +858,6 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
                                         "_Cancel", GTK_RESPONSE_CANCEL,
                                         "_Open", GTK_RESPONSE_ACCEPT,
                                         NULL);
-  chooser = GTK_FILE_CHOOSER(dialog);
 
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
@@ -861,27 +868,50 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
                     data);
 }
 
+
+static void save_text_buffer_script_to_file(LxiGuiWindow *self, GFile *file)
+{
+    GtkTextBuffer *text_buffer_script;
+    GtkTextIter start, end;
+    gboolean status = true;
+    GError *error = NULL;
+    char *buffer;
+
+    // Get buffer of script text view
+    text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
+    gtk_text_buffer_get_bounds(text_buffer_script, &start, &end);
+    buffer = gtk_text_buffer_get_text(text_buffer_script, &start, &end, true);
+
+    // Write output stream to file
+    status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
+    if (status != true)
+    {
+      g_print("Could not write output stream: %s\n", error->message);
+      g_error_free(error);
+      return;
+    }
+}
+
 static void
 on_script_file_save_response (GtkDialog *dialog,
-                              int        response)
+                              int        response,
+                              gpointer   user_data)
 {
-  GError *error = NULL;
-  gboolean status = true;
-
-  // if (script_file != NULL) do ...
+  LxiGuiWindow *self = user_data;
 
   if (response == GTK_RESPONSE_ACCEPT)
   {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+    GFile *file = gtk_file_chooser_get_file (chooser);
 
-    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
-/*
-    status = gdk_pixbuf_save(self_global->pixbuf_screenshot, g_file_get_path(file), "png", &error, NULL);
-    if (status == false)
-    {
-      g_error ("Error: %s\n", error->message);
-    }
-*/
+    save_text_buffer_script_to_file(self, file);
+
+    // Free old script file if any
+    if (self->script_file != NULL)
+      g_object_unref(self->script_file);
+
+    // Update script file reference
+    self->script_file = file;
   }
 
   gtk_window_destroy (GTK_WINDOW (dialog));
@@ -891,25 +921,33 @@ static void
 button_clicked_script_save (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
-  GtkWidget *dialog;
-  GtkFileChooser *chooser;
 
-  // Show file save dialog
-  dialog = gtk_file_chooser_dialog_new ("Select file",
-                                        GTK_WINDOW (self),
-                                        GTK_FILE_CHOOSER_ACTION_SAVE,
-                                        "_Cancel", GTK_RESPONSE_CANCEL,
-                                        "_Save", GTK_RESPONSE_ACCEPT,
-                                        NULL);
-  chooser = GTK_FILE_CHOOSER(dialog);
+  if (self->script_file != NULL)
+  {
+    // Save file
+    save_text_buffer_script_to_file(self, self->script_file);
+  }
+  else
+  {
+    GtkWidget *dialog;
+    gpointer data = self;
 
-  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_widget_show (dialog);
+    // Show file save dialog
+    dialog = gtk_file_chooser_dialog_new ("Select file",
+        GTK_WINDOW (self),
+        GTK_FILE_CHOOSER_ACTION_SAVE,
+        "_Cancel", GTK_RESPONSE_CANCEL,
+        "_Save", GTK_RESPONSE_ACCEPT,
+        NULL);
 
-  g_signal_connect (dialog, "response",
-                    G_CALLBACK (on_script_file_save_response),
-                    NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+    gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+    gtk_widget_show (dialog);
+
+    g_signal_connect (dialog, "response",
+        G_CALLBACK (on_script_file_save_response),
+        data);
+  }
 }
 
 static void
@@ -917,7 +955,7 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
   GtkWidget *dialog;
-  GtkFileChooser *chooser;
+  gpointer data = self;
 
   // Show file save dialog
   dialog = gtk_file_chooser_dialog_new ("Select file",
@@ -926,7 +964,6 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
                                         "_Cancel", GTK_RESPONSE_CANCEL,
                                         "_Save", GTK_RESPONSE_ACCEPT,
                                         NULL);
-  chooser = GTK_FILE_CHOOSER(dialog);
 
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
@@ -934,7 +971,7 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
 
   g_signal_connect (dialog, "response",
                     G_CALLBACK (on_script_file_save_response),
-                    NULL);
+                    data);
 }
 
 static void
@@ -1126,6 +1163,9 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Disable screenshot "Save" button until image is present
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
+
+  // Initialize script file
+  self->script_file = NULL;
 
   self_global = self;
 }
