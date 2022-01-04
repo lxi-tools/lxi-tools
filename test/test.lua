@@ -1,3 +1,11 @@
+-------------------------------
+-- Test script for lxi-tools --
+--                           --
+-- To run it simply do:      --
+--                           --
+-- $ lxi run test.lua        --
+-------------------------------
+
 -- Connect to instruments
 dso = connect("192.168.0.157", 5025, nil, 6000, "VXI11")
 psu = connect("192.168.0.107", 5025, nil, 2000, "RAW")
