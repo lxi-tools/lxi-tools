@@ -35,6 +35,10 @@
 #include "screenshot.h"
 #include "benchmark.h"
 #include "misc.h"
+#include "lxilua.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 
 static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -72,11 +76,13 @@ struct _LxiGuiWindow
   GdkPixbuf           *pixbuf_screenshot;
   GtkTextView         *text_view_script;
   GtkTextView         *text_view_script_status;
+  GThread             *script_run_worker_thread;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
   char                *script_filename;
   GFile               *script_file;
+  lua_State           *L;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -349,36 +355,6 @@ print_error_benchmark(const char *buffer)
   text_view_add_buffer(self_global->text_view_benchmark_status, buffer);
 }
 
-
-static void
-strip_trailing_space(char *line)
-{
-    int i = strlen(line) - 1;
-
-    while (i >= 0)
-    {
-        if ( isspace(line[i]) )
-            line[i] = '\0';
-        else
-            break;
-        i--;
-    }
-}
-
-static int
-question(const char *string)
-{
-    int i;
-
-    for (i = 0; string[i] != '\0'; i++)
-    {
-        if (string[i] == '?')
-            return true;
-    }
-
-    return false;
-}
-
 static void
 entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 {
@@ -430,6 +406,13 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
     goto error_send;
   }
 
+  if (show_sent_scpi)
+  {
+    // Print sent command to output view
+    text_view_add_buffer_in_dimgray(self->text_view_scpi, tx_buffer->str);
+    text_view_add_buffer(self->text_view_scpi, "\n");
+  }
+
   if (question(tx_buffer->str))
   {
     rx_bytes = lxi_receive(device, rx_buffer, sizeof(rx_buffer), timeout);
@@ -441,14 +424,6 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 
     // Terminate received string/data
     rx_buffer[rx_bytes] = 0;
-
-    if (show_sent_scpi)
-    {
-      // Add sent command to output view
-      g_string_erase(tx_buffer, tx_buffer->len-1, 1); // Remove added newline
-      text_view_add_buffer_in_dimgray(self->text_view_scpi, tx_buffer->str);
-      text_view_add_buffer(self->text_view_scpi, "\n");
-    }
 
     // Add received response to text view
     text_view_add_buffer(self->text_view_scpi, rx_buffer);
@@ -970,11 +945,54 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
                     data);
 }
 
+
+void initialize_script_engine(LxiGuiWindow *self)
+{
+  lua_State *L = self->L;
+
+  // Initialize Lua engine
+  L = luaL_newstate();
+
+  // Open all standard Lua libraries
+  luaL_openlibs(L);
+
+  // Bind lxi functions
+  lua_register_lxi(L);
+
+  // Print lua engine status
+  char *text = g_strdup_printf ("%s engine ready.\n", LUA_VERSION);
+  text_view_add_buffer(self->text_view_script_status, text);
+  text_view_add_buffer(self->text_view_script_status, "Loaded lxi extensions.\n");
+  g_free(text);
+}
+
+static gpointer
+script_run_worker_function(gpointer data)
+{
+  LxiGuiWindow *self = data;
+  lua_State *L = self->L;
+
+  /*
+  if (luaL_dofile(L, filename))
+  {
+    error_printf("%s\n", lua_tostring(L, -1));
+    lua_close(L);
+    return 0;
+  }
+*/
+
+  return NULL;
+}
+
 static void
-button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
+toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
   g_print("run\n");
+
+  // Start thread which starts interpreting the Lua script
+  self->script_run_worker_thread = g_thread_new("script_worker", script_run_worker_function, (gpointer) self);
+
 }
 
 static void
@@ -1076,7 +1094,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_open);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_save);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_save_as);
-  gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_run);
+  gtk_widget_class_bind_template_callback (widget_class, toggle_button_clicked_script_run);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_stop);
 
   /* These are the actions that we are using in the menu */
@@ -1099,6 +1117,8 @@ lxi_gui_window_init (LxiGuiWindow *self)
   GtkGesture *list_widget_gesture = gtk_gesture_click_new();
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  self_global = self;
 
   // Load settings
   self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
@@ -1163,5 +1183,6 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Initialize script file
   self->script_file = NULL;
 
-  self_global = self;
+  // Initialize lua script engine
+  initialize_script_engine(self);
 }

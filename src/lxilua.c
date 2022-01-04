@@ -34,23 +34,61 @@
 #include <lualib.h>
 #include <string.h>
 #include <lxi.h>
-#include "options.h"
 #include "error.h"
+#include "misc.h"
 
 #define RESPONSE_LENGTH_MAX 0x400000
+#define SESSIONS_MAX 1024
 
-extern int question(const char *string);
+struct session_t {
+    int timeout;
+    int protocol;
+};
 
-// lua: device = lxi_connect(address)
+static struct session_t session[SESSIONS_MAX];
+
+// lua: device = lxi_connect(address, port, name, timeout, protocol)
 static int connect(lua_State *L)
 {
     int device;
     const char *address = lua_tostring(L, 1);
+    int port = lua_tointeger(L, 2);
+    const char *name = lua_tostring(L, 3);
+    int timeout = lua_tointeger(L, 4);
+    const char *protocol = lua_tostring(L, 5);
+
+    // Default connect arguments
+    int arg_port = 5025;
+    const char *arg_name = "inst0";
+    int arg_timeout = 2000;
+    int arg_protocol = VXI11;
+
+    // Handle port
+    if (port != 0)
+       arg_port = port;
+
+    // Handle name
+    if (name != NULL)
+        arg_name = name;
+
+    // Handle timeout
+    if (timeout != 0)
+       arg_timeout = timeout;
+
+    // Handle protocol
+    if (strcmp(protocol, "VXI11") == 0)
+        arg_protocol = VXI11;
+    if (strcmp(protocol, "RAW") == 0)
+        arg_protocol = RAW;
 
     // Connect to LXI instrument using VXI11
-    device = lxi_connect(address, 0, NULL, option.timeout, VXI11);
+    device = lxi_connect(address, arg_port, arg_name, arg_timeout, arg_protocol);
     if (device == LXI_ERROR)
         error_printf("Failed to connect\n");
+
+    // Save session data for later reuse
+    session[device].timeout = arg_timeout;
+    session[device].protocol = arg_protocol;
 
     // Return status
     lua_pushinteger(L, device);
@@ -71,16 +109,33 @@ static int disconnect(lua_State *L)
     return 1;
 }
 
-// lua: scpi(device, command)
+// lua: scpi(device, command, timeout)
 static int scpi(lua_State *L)
 {
     char response[RESPONSE_LENGTH_MAX];
     int status = 0, length;
     int device = lua_tointeger(L, 1);
     const char *command = lua_tostring(L, 2);
+    int timeout = lua_tointeger(L, 3);
+    char command_buffer[1000];
+
+    // Use session timeout if no timeout provided
+    if (timeout == 0)
+        timeout = session[device].timeout;
+
+    strip_trailing_space((char *) command);
+
+    if (session[device].protocol == RAW)
+    {
+        // Add newline to command string
+        strcpy(command_buffer, command);
+        command_buffer[strlen(command)] = '\n';
+        command_buffer[strlen(command)+1] = 0;
+        command = command_buffer;
+    }
 
     // Send SCPI command
-    length = lxi_send(device, command, strlen(command), option.timeout);
+    length = lxi_send(device, command, strlen(command), timeout);
     if (length < 0)
     {
         error_printf("Failed to send message\n");
@@ -91,7 +146,7 @@ static int scpi(lua_State *L)
     // Only expect response in case we are firing a question command
     if (question(command))
     {
-        length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, option.timeout);
+        length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
         if (length < 0)
         {
             error_printf("Failed to receive message\n");
@@ -120,16 +175,21 @@ error:
     return 1;
 }
 
-// lua: scpi_raw(device, command)
+// lua: scpi_raw(device, command, timeout)
 static int scpi_raw(lua_State *L)
 {
     char response[RESPONSE_LENGTH_MAX];
     int status = 0, length;
     int device = lua_tointeger(L, 1);
     const char *command = lua_tostring(L, 2);
+    int timeout = lua_tointeger(L, 3);
+
+    // Use session timeout if no timeout provided
+    if (timeout == 0)
+        timeout = session[device].timeout;
 
     // Send SCPI command
-    length = lxi_send(device, command, strlen(command), option.timeout);
+    length = lxi_send(device, command, strlen(command), timeout);
     if (length < 0)
     {
         error_printf("Failed to send message\n");
@@ -140,7 +200,7 @@ static int scpi_raw(lua_State *L)
     // Only expect response in case we are firing a question command
     if (question(command))
     {
-        length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, option.timeout);
+        length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
         if (length < 0)
         {
             error_printf("Failed to receive message\n");

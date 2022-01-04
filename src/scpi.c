@@ -45,55 +45,6 @@
 #define RESPONSE_LENGTH_MAX 0x500000
 #define ID_LENGTH_MAX 65536
 
-static void hex_print(void *data, int length)
-{
-    char *bufferp;
-    int i;
-
-    bufferp = data;
-    (void)bufferp;
-
-    for (i=0; i<length; i++)
-    {
-        if ((i%10 == 0) && (i !=0 ))
-        {
-            printf("\n");
-        }
-        printf("0x%02x ", (unsigned char) bufferp[i]);
-    }
-
-    // Append newline if printing to tty terminal (not file)
-    if (isatty(fileno(stdout)))
-        printf("\n");
-}
-
-void strip_trailing_space(char *line)
-{
-    int i = strlen(line) - 1;
-
-    while (i >= 0)
-    {
-        if ( isspace(line[i]) )
-            line[i] = '\0';
-        else
-            break;
-        i--;
-    }
-}
-
-int question(const char *string)
-{
-    int i;
-
-    for (i = 0; string[i] != '\0'; i++)
-    {
-        if (string[i] == '?')
-            return true;
-    }
-
-    return false;
-}
-
 int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
 {
     char response[RESPONSE_LENGTH_MAX] = "";

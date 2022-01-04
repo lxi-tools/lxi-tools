@@ -59,7 +59,7 @@ struct option_t option =
     false,      // Default no hexadecimal print
     false,      // Default no interactive mode
     false,      // Default no run script
-    "",         // Default script filename
+    "",         // Default SCPI filename
     "",         // Default lua script filename
     "",         // Default screenshot plugin name
     false,      // Default no list
@@ -82,7 +82,7 @@ void print_help(char *argv[])
     printf("  scpi [<options>] <scpi-command>      Send SCPI command\n");
     printf("  screenshot [<options>] [<filename>]  Capture screenshot\n");
     printf("  benchmark [<options>]                Benchmark\n");
-    printf("  run [<options>] <filename>           Run Lua script\n");
+    printf("  run <filename>                       Run Lua script\n");
     printf("\n");
     printf("Discover options:\n");
     printf("  -t, --timeout <seconds>              Timeout (default: Normal: %d, mDNS: %d)\n", TIMEOUT_DISCOVER, TIMEOUT_DISCOVER_MDNS);
@@ -94,7 +94,7 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -x, --hex                            Print response in hexadecimal\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
-    printf("  -s, --script <filename>              Run script file\n");
+    printf("  -f, --file <filename>                Run SCPI commands from file\n");
     printf("  -r, --raw                            Use raw/TCP\n");
     printf("\n");
     printf("Screenshot options:\n");
@@ -109,9 +109,6 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -c, --count <count>                  Number of requests (default: %d)\n", option.count);
     printf("  -r, --raw                            Use raw/TCP\n");
-    printf("\n");
-    printf("Run options:\n");
-    printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("\n");
 }
 
@@ -193,7 +190,7 @@ void parse_options(int argc, char *argv[])
             {"timeout",        required_argument, 0, 't'},
             {"hex",            no_argument,       0, 'x'},
             {"interactive",    no_argument,       0, 'i'},
-            {"script",         required_argument, 0, 's'},
+            {"file",           required_argument, 0, 'f'},
             {"raw",            no_argument,       0, 'r'},
             {0,                0,                 0,  0 }
         };
@@ -201,7 +198,7 @@ void parse_options(int argc, char *argv[])
         do
         {
             /* Parse scpi options */
-            c = getopt_long(argc, argv, "a:p:t:xis:r", long_options, &option_index);
+            c = getopt_long(argc, argv, "a:p:t:xif:r", long_options, &option_index);
 
             switch (c)
             {
@@ -225,9 +222,9 @@ void parse_options(int argc, char *argv[])
                     option.interactive = true;
                     break;
 
-                case 's':
+                case 'f':
                     option.run_script = true;
-                    option.script_filename = optarg;
+                    option.scpi_filename = optarg;
                     break;
 
                 case 'r':

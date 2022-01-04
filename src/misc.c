@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016  Martin Lund
+ * Copyright (c) 2016-2022  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,46 +28,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
-
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <sys/param.h>
-#include <lxi.h>
+#include <string.h>
 
-/* Options */
-struct option_t
+void hex_print(void *data, int length)
 {
-    int command;
-    int timeout;
-    char ip[500];
-    char scpi_command[500];
-    bool hex;
-    bool interactive;
-    bool run_script;
-    char *scpi_filename;
-    char lua_script_filename[1000];
-    char *plugin_name;
-    bool list;
-    char screenshot_filename[1000];
-    lxi_protocol_t protocol;
-    int port;
-    bool mdns;
-    int count;
-};
+    char *bufferp;
+    int i;
 
-enum command_t
+    bufferp = data;
+    (void)bufferp;
+
+    for (i=0; i<length; i++)
+    {
+        if ((i%10 == 0) && (i !=0 ))
+        {
+            printf("\n");
+        }
+        printf("0x%02x ", (unsigned char) bufferp[i]);
+    }
+
+    // Append newline if printing to tty terminal (not file)
+    if (isatty(fileno(stdout)))
+        printf("\n");
+}
+
+void strip_trailing_space(char *line)
 {
-    DISCOVER,
-    SCPI,
-    SCREENSHOT,
-    BENCHMARK,
-    RUN,
-    NO_COMMAND
-};
+    int i = strlen(line) - 1;
 
-extern struct option_t option;
+    while (i >= 0)
+    {
+        if ( isspace(line[i]) )
+            line[i] = '\0';
+        else
+            break;
+        i--;
+    }
+}
 
-void parse_options(int argc, char *argv[]);
+int question(const char *string)
+{
+    int i;
 
-#endif
+    for (i = 0; string[i] != '\0'; i++)
+    {
+        if (string[i] == '?')
+            return true;
+    }
+
+    return false;
+}
+

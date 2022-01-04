@@ -11,6 +11,7 @@ lxi_sources = [
   'run.c',
   'scpi.c',
   'screenshot.c',
+  'misc.c',
   'plugins/screenshot_keysight-dmm.c',
   'plugins/screenshot_rigol-dl3000.c',
   'plugins/screenshot_siglent-sdg.c',

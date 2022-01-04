@@ -14,8 +14,10 @@ lxi_gui_sources = [
   'lxi_gui-window.c',
   'lxi_gui-application.c',
   'lxi_gui-prefs.c',
+  '../../lxilua.c',
   '../../screenshot.c',
   '../../benchmark.c',
+  '../../misc.c',
   '../../plugins/screenshot_keysight-dmm.c',
   '../../plugins/screenshot_rigol-dl3000.c',
   '../../plugins/screenshot_siglent-sdg.c',
@@ -38,6 +40,7 @@ lxi_gui_sources = [
 lxi_gui_deps = [
   dependency('gtk4', version: '>= 4.4'),
   dependency('liblxi', required: true),
+  dependency('lua-5.2', required: true),
 ]
 
 gnome = import('gnome')

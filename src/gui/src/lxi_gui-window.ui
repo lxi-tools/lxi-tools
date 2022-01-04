@@ -878,6 +878,7 @@
                                         <property name="editable">0</property>
                                         <property name="cursor-visible">0</property>
                                         <property name="wrap-mode">GTK_WRAP_CHAR</property>
+                                        <property name="monospace">1</property>
                                         <style>
                                           <class name="text-view-scpi"/>
                                         </style>
@@ -1177,10 +1178,10 @@
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton">
+                                      <object class="GtkToggleButton">
                                         <property name="label" translatable="1">Run</property>
                                         <property name="tooltip-text" translatable="1">Run script</property>
-                                        <signal name="clicked" handler="button_clicked_script_run" swapped="yes"/>
+                                        <signal name="clicked" handler="toggle_button_clicked_script_run" swapped="yes"/>
                                         <style>
                                           <class name="text-button"/>
                                           <class name="suggested-action"/>
@@ -1203,40 +1204,42 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="vexpand">1</property>
+                              <object class="GtkPaned">
+                                <property name="orientation">1</property>
+                                <property name="position">480</property>
+                                <property name="resize-end-child">0</property>
+                                <property name="shrink-end-child">0</property>
+                                <property name="wide-handle">0</property>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">1</property>
                                 </layout>
                                 <child>
-                                  <object class="GtkTextView" id="text_view_script">
-                                    <style>
-                                      <class name="text-view-script"/>
-                                    </style>
+                                  <object class="GtkScrolledWindow">
+                                    <child>
+                                      <object class="GtkTextView" id="text_view_script">
+                                        <property name="vexpand">1</property>
+                                        <property name="monospace">1</property>
+                                        <style>
+                                          <class name="text-view-script"/>
+                                        </style>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="vexpand">0</property>
-                                <property name="height-request">110</property>
-                                <property name="can-focus">0</property>
-                                <property name="focus-on-click">0</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">2</property>
-                                </layout>
                                 <child>
-                                  <object class="GtkTextView" id="text_view_script_status">
-                                    <property name="can-focus">0</property>
-                                    <property name="focus-on-click">0</property>
-                                    <property name="editable">0</property>
-                                    <property name="cursor-visible">0</property>
-                                    <style>
-                                      <class name="text-view-script-status"/>
-                                    </style>
+                                  <object class="GtkScrolledWindow">
+                                    <child>
+                                      <object class="GtkTextView" id="text_view_script_status">
+                                        <property name="vexpand">1</property>
+                                        <property name="monospace">1</property>
+                                        <property name="editable">0</property>
+                                        <property name="cursor-visible">0</property>
+                                        <style>
+                                          <class name="text-view-script-status"/>
+                                        </style>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
