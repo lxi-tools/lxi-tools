@@ -70,6 +70,7 @@ struct _LxiGuiWindow
   GtkToggleButton     *toggle_button_search;
   GtkSpinButton       *spin_button_benchmark_requests;
   GtkLabel            *label_benchmark_result;
+  GtkImage            *image_benchmark;
   GdkPixbuf           *pixbuf_screenshot;
   GtkTextView         *text_view_script;
   GtkTextView         *text_view_script_status;
@@ -687,6 +688,7 @@ benchmark_worker_function(gpointer data)
     benchmark(self->ip, raw_port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
   }
 
+  // Show benchmark result
   sprintf(result_text, "%.1f requests/s", result);
   gtk_label_set_text(self->label_benchmark_result, result_text);
 
@@ -1079,6 +1081,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_benchmark_start);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, spin_button_benchmark_requests);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_benchmark_result);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, image_benchmark);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_search);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script_status);
@@ -1175,6 +1178,10 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Set greeting image on screenshot page
   gtk_image_set_pixel_size(self->image_screenshot, 200);
   gtk_image_set_from_resource(self->image_screenshot, "/io/github/lxi-tools/lxi-gui/images/photo-camera.png");
+
+  // Set greeting image on benchmark page
+  gtk_image_set_pixel_size(self->image_benchmark, 160);
+  gtk_image_set_from_resource(self->image_benchmark, "/io/github/lxi-tools/lxi-gui/images/runner.png");
 
   // Grab focus to SCPI input entry
   gtk_widget_grab_focus(GTK_WIDGET(self->entry_scpi));

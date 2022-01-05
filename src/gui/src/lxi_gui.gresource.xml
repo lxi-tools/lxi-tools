@@ -8,6 +8,7 @@
     <file>icons/lxi-tools-icon-128px.png</file>
     <file>icons/lxi-instrument.png</file>
     <file>images/photo-camera.png</file>
+    <file>images/runner.png</file>
     <file>lxi_gui.css</file>
   </gresource>
 </gresources>
