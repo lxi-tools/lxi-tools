@@ -1115,69 +1115,6 @@
                                 <child>
                                   <object class="GtkGrid">
                                     <child>
-                                      <object class="GtkBox" id="box_script_toolbar">
-                                        <property name="hexpand">1</property>
-                                        <property name="vexpand">0</property>
-                                        <property name="halign">GTK_ALIGN_CENTER</property>
-                                        <style>
-                                          <class name="box-script-toolbar"/>
-                                        </style>
-                                        <layout>
-                                          <property name="column">0</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                        <child>
-                                          <object class="GtkBox">
-                                            <property name="homogeneous">1</property>
-                                            <property name="spacing">6</property>
-                                            <child>
-                                              <object class="GtkButton">
-                                                <property name="label" translatable="1">Open</property>
-                                                <property name="tooltip-text" translatable="1">Open a script</property>
-                                                <signal name="clicked" handler="button_clicked_script_open" swapped="yes"/>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkButton">
-                                                <property name="label" translatable="1">Save</property>
-                                                <property name="tooltip-text" translatable="1">Save the current script</property>
-                                                <signal name="clicked" handler="button_clicked_script_save" swapped="yes"/>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkButton">
-                                                <property name="label" translatable="1">Save As..</property>
-                                                <property name="tooltip-text" translatable="1">Save the current script as..</property>
-                                                <signal name="clicked" handler="button_clicked_script_save_as" swapped="yes"/>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkToggleButton">
-                                                <property name="label" translatable="1">Run</property>
-                                                <property name="tooltip-text" translatable="1">Run script</property>
-                                                <signal name="clicked" handler="toggle_button_clicked_script_run" swapped="yes"/>
-                                                <style>
-                                                  <class name="text-button"/>
-                                                  <class name="suggested-action"/>
-                                                </style>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkButton">
-                                                <property name="label" translatable="1">Stop</property>
-                                                <property name="tooltip-text" translatable="1">Stop running script</property>
-                                                <signal name="clicked" handler="button_clicked_script_stop" swapped="yes"/>
-                                                <style>
-                                                  <class name="text-button"/>
-                                                  <class name="destructive-action"/>
-                                                </style>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                    <child>
                                       <object class="GtkPaned">
                                         <property name="orientation">1</property>
                                         <property name="position">480</property>
@@ -1186,7 +1123,7 @@
                                         <property name="wide-handle">0</property>
                                         <layout>
                                           <property name="column">0</property>
-                                          <property name="row">1</property>
+                                          <property name="row">0</property>
                                         </layout>
                                         <child>
                                           <object class="GtkScrolledWindow">
@@ -1214,6 +1151,65 @@
                                                 </style>
                                               </object>
                                             </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="box_script_toolbar">
+                                        <property name="hexpand">1</property>
+                                        <property name="vexpand">0</property>
+                                        <property name="halign">GTK_ALIGN_FILL</property>
+                                        <property name="homogeneous">1</property>
+                                        <property name="spacing">6</property>
+                                        <style>
+                                          <class name="box-script-toolbar"/>
+                                        </style>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="row">1</property>
+                                        </layout>
+                                        <child>
+                                          <object class="GtkButton">
+                                            <property name="label" translatable="1">Open</property>
+                                            <property name="tooltip-text" translatable="1">Open a script</property>
+                                            <signal name="clicked" handler="button_clicked_script_open" swapped="yes"/>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton">
+                                            <property name="label" translatable="1">Save</property>
+                                            <property name="tooltip-text" translatable="1">Save the current script</property>
+                                            <signal name="clicked" handler="button_clicked_script_save" swapped="yes"/>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton">
+                                            <property name="label" translatable="1">Save As..</property>
+                                            <property name="tooltip-text" translatable="1">Save the current script as..</property>
+                                            <signal name="clicked" handler="button_clicked_script_save_as" swapped="yes"/>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkToggleButton">
+                                            <property name="label" translatable="1">Run</property>
+                                            <property name="tooltip-text" translatable="1">Run script</property>
+                                            <signal name="clicked" handler="toggle_button_clicked_script_run" swapped="yes"/>
+                                            <style>
+                                              <class name="text-button"/>
+                                              <class name="suggested-action"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkButton">
+                                            <property name="label" translatable="1">Stop</property>
+                                            <property name="tooltip-text" translatable="1">Stop running script</property>
+                                            <signal name="clicked" handler="button_clicked_script_stop" swapped="yes"/>
+                                            <style>
+                                              <class name="text-button"/>
+                                              <class name="destructive-action"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
