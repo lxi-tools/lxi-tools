@@ -40,7 +40,7 @@ lxi_gui_sources = [
 lxi_gui_deps = [
   dependency('gtk4', version: '>= 4.4'),
   dependency('liblxi', required: true),
-  dependency('lua-5.2', required: true),
+  dependency('lua-5.3', required: true),
 ]
 
 gnome = import('gnome')
