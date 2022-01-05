@@ -687,7 +687,7 @@ benchmark_worker_function(gpointer data)
     benchmark(self->ip, raw_port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
   }
 
-  sprintf(result_text, "%.1f request/s", result);
+  sprintf(result_text, "%.1f requests/s", result);
   gtk_label_set_text(self->label_benchmark_result, result_text);
 
   gtk_toggle_button_set_active(self->toggle_button_benchmark_start, false);

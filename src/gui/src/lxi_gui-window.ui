@@ -1021,14 +1021,30 @@
                                 <child>
                                   <object class="GtkGrid">
                                     <child>
+                                      <object class="GtkLabel" id="label_benchmark_result">
+                                        <property name="single-line-mode">1</property>
+                                        <property name="halign">GTK_ALIGN_CENTER</property>
+                                        <property name="valign">GTK_ALIGN_CENTER</property>
+                                        <property name="vexpand">1</property>
+                                        <property name="selectable">1</property>
+                                        <style>
+                                          <class name="label-benchmark-result"/>
+                                        </style>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
                                       <object class="GtkBox">
                                         <property name="orientation">vertical</property>
                                         <property name="hexpand">1</property>
                                         <property name="vexpand">1</property>
-                                        <property name="valign">GTK_ALIGN_END</property>
+                                        <property name="valign">GTK_ALIGN_CENTER</property>
                                         <layout>
                                           <property name="column">0</property>
-                                          <property name="row">0</property>
+                                          <property name="row">1</property>
                                         </layout>
                                         <child>
                                           <object class="GtkProgressBar" id="progress_bar_benchmark">
@@ -1058,22 +1074,6 @@
                                             </child>
                                           </object>
                                         </child>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="label_benchmark_result">
-                                        <property name="single-line-mode">1</property>
-                                        <property name="halign">GTK_ALIGN_CENTER</property>
-                                        <property name="valign">GTK_ALIGN_CENTER</property>
-                                        <property name="vexpand">1</property>
-                                        <property name="selectable">1</property>
-                                        <style>
-                                          <class name="label-benchmark-result"/>
-                                        </style>
-                                        <layout>
-                                          <property name="column">0</property>
-                                          <property name="row">1</property>
-                                        </layout>
                                       </object>
                                     </child>
                                     <child>
