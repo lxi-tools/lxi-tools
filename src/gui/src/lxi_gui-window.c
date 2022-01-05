@@ -57,7 +57,6 @@ struct _LxiGuiWindow
   GdkClipboard        *clipboard;
   GtkEntry            *entry_scpi;
   GtkTextView         *text_view_scpi;
-  GtkTextView         *text_view_scpi_status;
   GtkImage            *image_screenshot;
   GtkToggleButton     *toggle_button_screenshot_live_view;
   GtkButton           *toggle_button_screenshot_grab;
@@ -104,7 +103,7 @@ show_info(LxiGuiWindow *self, const char *buffer)
 {
   // Show info message
   gtk_label_set_text (GTK_LABEL (self->label_info_bar), buffer);
-  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_OTHER);
+  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_INFO);
   gtk_info_bar_set_show_close_button(self->info_bar, false);
   gtk_widget_show (GTK_WIDGET(self->info_bar));
 }
@@ -373,9 +372,6 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
   bool show_sent_scpi = g_settings_get_boolean(self->settings, "show-sent-scpi");
   unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
   unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
-
-  // Clear text in status text view
-  text_view_clear_buffer(self->text_view_scpi_status);
 
   if (self->ip == NULL)
   {
@@ -1011,7 +1007,7 @@ info_bar_clicked (LxiGuiWindow *self, GtkInfoBar *infobar)
 
 static void vxi11_broadcast(const char *address, const char *interface)
 {
-  char *text = g_strdup_printf ("Broadcasting on interface %s using address %s", interface, address);
+  char *text = g_strdup_printf ("Broadcasting on interface %s", interface);
   show_info(self_global, text);
   g_free(text);
 }
@@ -1075,7 +1071,6 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_viewport);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, entry_scpi);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_scpi);
-  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_scpi_status);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, image_screenshot);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_live_view);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_grab);
