@@ -1041,7 +1041,7 @@
                                         <property name="orientation">vertical</property>
                                         <property name="hexpand">1</property>
                                         <property name="vexpand">1</property>
-                                        <property name="valign">GTK_ALIGN_CENTER</property>
+                                        <property name="valign">GTK_ALIGN_START</property>
                                         <layout>
                                           <property name="column">0</property>
                                           <property name="row">1</property>
