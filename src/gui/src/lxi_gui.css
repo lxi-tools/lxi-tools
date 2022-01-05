@@ -25,18 +25,6 @@
   outline-width: 0px;
 }
 
-.text-view-scpi-status {
-  background-color: shade(@theme_base_color, .85);
-  font-size: 0.8em;
-  color: lighter(red);
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.text-view-scpi-status text {
-  background-color: rgba(0,0,0,0);
-}
-
 .scpi-label {
   font-weight: bolder;
   font-size: 0.7em;
@@ -46,18 +34,6 @@
 
 
 /* Screenshot page */
-
-.text-view-screenshot-status {
-  background-color: rgba(0,0,0,0);
-  font-size: 0.8em;
-  color: lighter(red);
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.text-view-screenshot-status text {
-  background-color: rgba(0,0,0,0);
-}
 
 
 
@@ -70,18 +46,6 @@ progress, trough {
 .label-benchmark-result {
   font-weight: bold;
   font-size: 1.8em;
-}
-
-.text-view-benchmark-status {
-  background-color: rgba(0,0,0,0);
-  font-size: 0.8em;
-  color: lighter(red);
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.text-view-benchmark-status text {
-  background-color: rgba(0,0,0,0);
 }
 
 
