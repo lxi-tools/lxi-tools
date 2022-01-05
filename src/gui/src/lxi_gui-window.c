@@ -65,8 +65,6 @@ struct _LxiGuiWindow
   GThread             *screenshot_worker_thread;
   GThread             *screenshot_grab_worker_thread;
   GThread             *search_worker_thread;
-  GtkTextView         *text_view_screenshot_status;
-  GtkTextView         *text_view_benchmark_status;
   GtkProgressBar      *progress_bar_benchmark;
   GThread             *benchmark_worker_thread;
   GtkToggleButton     *toggle_button_benchmark_start;
@@ -77,6 +75,8 @@ struct _LxiGuiWindow
   GtkTextView         *text_view_script;
   GtkTextView         *text_view_script_status;
   GThread             *script_run_worker_thread;
+  GtkInfoBar          *info_bar;
+  GtkLabel            *label_info_bar;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -88,6 +88,32 @@ struct _LxiGuiWindow
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static LxiGuiWindow *self_global;
+
+static void
+show_error(LxiGuiWindow *self, const char *buffer)
+{
+  // Show error message
+  gtk_label_set_text (GTK_LABEL (self->label_info_bar), buffer);
+  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_ERROR);
+  gtk_info_bar_set_show_close_button(self->info_bar, true);
+  gtk_widget_show (GTK_WIDGET(self->info_bar));
+}
+
+static void
+show_info(LxiGuiWindow *self, const char *buffer)
+{
+  // Show info message
+  gtk_label_set_text (GTK_LABEL (self->label_info_bar), buffer);
+  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_OTHER);
+  gtk_info_bar_set_show_close_button(self->info_bar, false);
+  gtk_widget_show (GTK_WIDGET(self->info_bar));
+}
+
+static void
+hide_info_bar(LxiGuiWindow *self)
+{
+  gtk_widget_hide (GTK_WIDGET(self->info_bar));
+}
 
 static GtkWidget*
 find_child_by_name(GtkWidget* parent, const gchar* name)
@@ -264,6 +290,8 @@ search_worker_function(gpointer data)
   gtk_toggle_button_set_active(self->toggle_button_search, false);
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
 
+  hide_info_bar(self);
+
   return NULL;
 }
 
@@ -324,7 +352,6 @@ text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
   gtk_text_buffer_insert_markup (text_buffer, &iter, markup_buffer, strlen(markup_buffer));
 }
 
-
 static void
 text_view_clear_buffer(GtkTextView *view)
 {
@@ -332,27 +359,6 @@ text_view_clear_buffer(GtkTextView *view)
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
   gtk_text_buffer_get_bounds(text_buffer, &start, &end);
   gtk_text_buffer_delete(text_buffer, &start, &end);
-}
-
-static void
-print_error(const char *buffer)
-{
-  text_view_clear_buffer(self_global->text_view_scpi_status);
-  text_view_add_buffer(self_global->text_view_scpi_status, buffer);
-}
-
-static void
-print_error_screenshot(const char *buffer)
-{
-  text_view_clear_buffer(self_global->text_view_screenshot_status);
-  text_view_add_buffer(self_global->text_view_screenshot_status, buffer);
-}
-
-static void
-print_error_benchmark(const char *buffer)
-{
-  text_view_clear_buffer(self_global->text_view_benchmark_status);
-  text_view_add_buffer(self_global->text_view_benchmark_status, buffer);
 }
 
 static void
@@ -373,7 +379,7 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 
   if (self->ip == NULL)
   {
-    print_error("No instrument selected");
+    show_error(self, "No instrument selected");
     return;
   }
 
@@ -396,13 +402,13 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
   }
   if (device == LXI_ERROR)
   {
-    print_error("Error connecting");
+    show_error(self, "Error connecting");
     goto error_connect;
   }
 
   if (lxi_send(device, tx_buffer->str, tx_buffer->len, timeout) == LXI_ERROR)
   {
-    print_error("Error sending");
+    show_error(self, "Error sending");
     goto error_send;
   }
 
@@ -418,7 +424,7 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
     rx_bytes = lxi_receive(device, rx_buffer, sizeof(rx_buffer), timeout);
     if (rx_bytes == LXI_ERROR)
     {
-      print_error("Error receiving");
+      show_error(self, "Error receiving");
       goto error_receive;
     }
 
@@ -480,7 +486,7 @@ grab_screenshot(LxiGuiWindow *self)
   // Check for instrument
   if (self->ip == NULL)
   {
-    print_error_screenshot("No instrument selected");
+    show_error(self, "No instrument selected");
     return 1;
   }
 
@@ -488,7 +494,7 @@ grab_screenshot(LxiGuiWindow *self)
   image_buffer = g_malloc(0x100000*20);
   if (image_buffer == NULL)
   {
-    print_error_screenshot("Failure allocating memory for image data");
+    show_error(self, "Failure allocating memory for image data");
     return 1;
   }
 
@@ -496,7 +502,7 @@ grab_screenshot(LxiGuiWindow *self)
   status = screenshot((char *)self->ip, plugin_name, filename, timeout, false, image_buffer, &image_size, image_format, image_filename);
   if (status != 0)
   {
-    print_error_screenshot("Failure grabbing screenshot");
+    show_error(self, "Failure grabbing screenshot");
     g_free(image_buffer);
     return 1;
   }
@@ -507,7 +513,7 @@ grab_screenshot(LxiGuiWindow *self)
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
   if (self->pixbuf_screenshot == NULL)
   {
-    print_error_screenshot("Failure handling image format");
+    show_error(self, "Failure handling image format");
     g_free(image_buffer);
     return 1;
   }
@@ -544,11 +550,9 @@ button_clicked_screenshot_grab (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
 
-  text_view_clear_buffer(self->text_view_screenshot_status);
-
   if (self->ip == NULL)
   {
-    print_error_screenshot("No instrument selected");
+    show_error(self, "No instrument selected");
     return;
   }
 
@@ -578,11 +582,9 @@ screenshot_worker_function(gpointer data)
 static void
 button_clicked_screenshot_live_view (LxiGuiWindow *self, GtkToggleButton *button)
 {
-  text_view_clear_buffer(self->text_view_screenshot_status);
-
   if (self->ip == NULL)
   {
-    print_error_screenshot("No instrument selected");
+    show_error(self, "No instrument selected");
     gtk_toggle_button_set_active(button, false);
     return;
   }
@@ -705,13 +707,12 @@ button_clicked_benchmark_start (LxiGuiWindow *self, GtkToggleButton *button)
 
   // Reset
   self->benchmark_requests_count = gtk_spin_button_get_value(self_global->spin_button_benchmark_requests);
-  text_view_clear_buffer(self->text_view_benchmark_status);
   gtk_progress_bar_set_fraction(self->progress_bar_benchmark, 0);
   gtk_label_set_text(self->label_benchmark_result, " ");
 
   if (self->ip == NULL)
   {
-    print_error_benchmark("No instrument selected");
+    show_error(self, "No instrument selected");
     return;
   }
 
@@ -992,7 +993,6 @@ toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 
   // Start thread which starts interpreting the Lua script
   self->script_run_worker_thread = g_thread_new("script_worker", script_run_worker_function, (gpointer) self);
-
 }
 
 static void
@@ -1002,9 +1002,18 @@ button_clicked_script_stop (LxiGuiWindow *self, GtkButton *button)
   g_print("stop\n");
 }
 
+static void
+info_bar_clicked (LxiGuiWindow *self, GtkInfoBar *infobar)
+{
+  // TODO: Fix and use callback parameters
+  gtk_widget_hide(GTK_WIDGET(self_global->info_bar));
+}
+
 static void vxi11_broadcast(const char *address, const char *interface)
 {
-  g_print ("Broadcasting on interface %s using address %s\n", interface, address);
+  char *text = g_strdup_printf ("Broadcasting on interface %s using address %s", interface, address);
+  show_info(self_global, text);
+  g_free(text);
 }
 
 static void vxi11_device(const char *address, const char *id)
@@ -1071,8 +1080,6 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_live_view);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_grab);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, button_screenshot_save);
-  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_screenshot_status);
-  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_benchmark_status);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, progress_bar_benchmark);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_benchmark_start);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, spin_button_benchmark_requests);
@@ -1080,6 +1087,8 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_search);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script_status);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, info_bar);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_info_bar);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);
@@ -1096,6 +1105,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_save_as);
   gtk_widget_class_bind_template_callback (widget_class, toggle_button_clicked_script_run);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_stop);
+  gtk_widget_class_bind_template_callback (widget_class, info_bar_clicked);
 
   /* These are the actions that we are using in the menu */
   gtk_widget_class_install_action (widget_class, "action.copy_ip", NULL, action_cb);
