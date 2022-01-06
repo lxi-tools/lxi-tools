@@ -24,6 +24,8 @@ for modern instrumentation and data acquisition systems using Ethernet.
 
 Visit https://www.lxistandard.org for more details.
 
+Please notice that lxi-tools is not affiliated with the LXI consortium - it is
+an independent open source community effort.
 
 ## 2. Usage
 
@@ -168,7 +170,7 @@ screenshot image to JPG:
 
 The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
-### 3.1 Installation using source
+### 3.1 Installation from source
 
 To compile and install successfully from source you need to install the
 following dependencies:
@@ -287,11 +289,9 @@ See the AUTHORS file for full list of contributors.
 
 ## 9. Sponsors
 
-A thank you to the following sponsors that have donated test equipment to
+A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
 
  * Siglent Technologies
  * KIKUSUI Electronics Corp.
 
-Please notice that lxi-tools is not affiliated with the LXI consortium - it is
-a fully independent open source community effort.
