@@ -170,7 +170,23 @@ screenshot image to JPG:
 
 The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
-### 3.1 Installation from source
+### 3.1 Installation using package manager
+
+lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
+your package manager tool to find and install lxi-tools.
+
+### 3.2 Installation via snap
+
+Install latest stable version:
+```
+    $ snap install lxi-tools
+```
+Install bleeding edge:
+```
+    $ snap install lxi-tools --edge
+```
+
+### 3.3 Installation from source
 
 To compile and install successfully from source you need to install the
 following dependencies:
@@ -193,21 +209,6 @@ See meson\_options.txt for which features to enable/disable.
 Note: Please do no try to install from source if you are not familiar with
 using meson.
 
-### 3.2 Installation using package manager
-
-lxi-tools comes prepackaged for various GNU/Linux distributions. Use your
-package manager tool to find and install lxi-tools.
-
-### 3.2 Installation via snap
-
-Install latest stable version:
-```
-    $ snap install lxi-tools
-```
-Install bleeding edge:
-```
-    $ snap install lxi-tools --edge
-```
 
 ## 4. Tested instruments
 
