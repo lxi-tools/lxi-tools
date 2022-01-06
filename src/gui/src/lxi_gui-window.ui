@@ -1152,10 +1152,9 @@
                                                 <property name="hexpand">True</property>
                                                 <property name="vexpand">True</property>
                                                 <property name="monospace">True</property>
-                                                <property name="left-margin">12</property>
-                                                <property name="top-margin">12</property>
-                                                <property name="bottom-margin">12</property>
-                                                <property name="right-margin">12</property>
+                                                <style>
+                                                  <class name="source-view-script"/>
+                                                </style>
                                               </object>
                                             </child>
                                           </object>
