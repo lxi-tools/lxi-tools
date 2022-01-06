@@ -1142,12 +1142,20 @@
                                         <child>
                                           <object class="GtkScrolledWindow">
                                             <child>
-                                              <object class="GtkTextView" id="text_view_script">
-                                                <property name="vexpand">1</property>
-                                                <property name="monospace">1</property>
-                                                <style>
-                                                  <class name="text-view-script"/>
-                                                </style>
+                                              <object class="GtkSourceView" id="source_view_script">
+                                                <property name="buffer">
+                                                  <object class="GtkSourceBuffer">
+                                                  </object>
+                                                </property>
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">True</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="vexpand">True</property>
+                                                <property name="monospace">True</property>
+                                                <property name="left-margin">12</property>
+                                                <property name="top-margin">12</property>
+                                                <property name="bottom-margin">12</property>
+                                                <property name="right-margin">12</property>
                                               </object>
                                             </child>
                                           </object>

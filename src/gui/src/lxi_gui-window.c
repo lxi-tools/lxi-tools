@@ -40,6 +40,7 @@
 #include <lauxlib.h>
 #include <lualib.h>
 #include <locale.h>
+#include <gtksourceview/gtksource.h>
 
 static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -73,7 +74,7 @@ struct _LxiGuiWindow
   GtkLabel            *label_benchmark_result;
   GtkImage            *image_benchmark;
   GdkPixbuf           *pixbuf_screenshot;
-  GtkTextView         *text_view_script;
+  GtkSourceView       *source_view_script;
   GtkTextView         *text_view_script_status;
   GThread             *script_run_worker_thread;
   GtkInfoBar          *info_bar;
@@ -742,7 +743,7 @@ on_script_file_open_response (GtkDialog *dialog,
 
     GFileInputStream *file_input_stream;
     GInputStream *input_stream;
-    GtkTextBuffer *text_buffer_script;
+    GtkSourceBuffer *source_buffer_script;
     gboolean status = true;
     gsize bytes_read = 0, bytes_written = 0;
     GError *error = NULL;
@@ -793,18 +794,18 @@ on_script_file_open_response (GtkDialog *dialog,
       g_free(input_stream);
     }
 
-    // Get text buffer of script text view
-    text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
+    // Get source buffer of script source view
+    source_buffer_script = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
 
     // Clear existing text buffer
     GtkTextIter start, end;
-    gtk_text_buffer_get_bounds(text_buffer_script, &start, &end);
-    gtk_text_buffer_delete(text_buffer_script, &start, &end);
+    gtk_text_buffer_get_bounds(GTK_TEXT_BUFFER(source_buffer_script), &start, &end);
+    gtk_text_buffer_delete(GTK_TEXT_BUFFER(source_buffer_script), &start, &end);
 
     // Read data into text buffer
     GtkTextIter iter;
-    gtk_text_buffer_get_end_iter(text_buffer_script, &iter);
-    gtk_text_buffer_insert(text_buffer_script, &iter, utf8_buffer, bytes_written);
+    gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(source_buffer_script), &iter);
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(source_buffer_script), &iter, utf8_buffer, bytes_written);
 
     // Free old script file if any
     if (self->script_file != NULL)
@@ -812,6 +813,7 @@ on_script_file_open_response (GtkDialog *dialog,
 
     // Update script file reference
     self->script_file = file;
+
 
     // Cleanup
     g_free(buffer);
@@ -849,18 +851,16 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
 }
 
 
-static void save_text_buffer_script_to_file(LxiGuiWindow *self, GFile *file)
+static void save_text_buffer_to_file(GFile *file, GtkTextBuffer *text_buffer)
 {
-  GtkTextBuffer *text_buffer_script;
   GtkTextIter start, end;
   gboolean status = true;
   GError *error = NULL;
   char *buffer;
 
   // Get buffer of script text view
-  text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
-  gtk_text_buffer_get_bounds(text_buffer_script, &start, &end);
-  buffer = gtk_text_buffer_get_text(text_buffer_script, &start, &end, true);
+  gtk_text_buffer_get_bounds(text_buffer, &start, &end);
+  buffer = gtk_text_buffer_get_text(text_buffer, &start, &end, true);
 
   // Write output stream to file
   status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
@@ -886,7 +886,8 @@ on_script_file_save_response (GtkDialog *dialog,
     GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
     GFile *file = gtk_file_chooser_get_file (chooser);
 
-    save_text_buffer_script_to_file(self, file);
+    GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script));
+    save_text_buffer_to_file(file, text_buffer);
 
     // Free old script file if any
     if (self->script_file != NULL)
@@ -907,7 +908,8 @@ button_clicked_script_save (LxiGuiWindow *self, GtkButton *button)
   if (self->script_file != NULL)
   {
     // Save file
-    save_text_buffer_script_to_file(self, self->script_file);
+    GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script));
+    save_text_buffer_to_file(self->script_file, text_buffer);
   }
   else
   {
@@ -969,7 +971,7 @@ static gpointer
 script_run_worker_function(gpointer data)
 {
   LxiGuiWindow *self = data;
-  GtkTextBuffer *buffer_script = gtk_text_view_get_buffer(self->text_view_script);
+  GtkTextBuffer *buffer_script = gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script));
   GtkTextIter start, end;
   gchar *code_buffer;
   int error;
@@ -1109,7 +1111,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_benchmark_result);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, image_benchmark);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_search);
-  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, source_view_script);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script_status);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, info_bar);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_info_bar);
@@ -1153,6 +1155,9 @@ lxi_gui_window_init (LxiGuiWindow *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   self_global = self;
+
+  // Required for GtkSourceView to be recognized by builder
+  gtk_source_view_get_type();
 
   // Load settings
   self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");
@@ -1220,6 +1225,16 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Initialize script file
   self->script_file = NULL;
+
+  // Set language of source buffer
+  GtkSourceBuffer *source_buffer_script =
+    GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
+  GtkSourceLanguageManager *manager = gtk_source_language_manager_get_default();
+  GtkSourceLanguage *language = gtk_source_language_manager_get_language(manager, "lua");
+  gtk_source_buffer_set_language(source_buffer_script, language);
+
+  // Enable syntax highlighting according to language
+  gtk_source_buffer_set_highlight_syntax(source_buffer_script, true);
 
   // Initialize lua script engine
   initialize_script_engine(self);

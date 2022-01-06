@@ -1,0 +1,9 @@
+[submodule "subprojects/glib"]
+	path = subprojects/glib
+	url = https://github.com/GNOME/glib.git
+[submodule "subprojects/gobject-introspection"]
+	path = subprojects/gobject-introspection
+	url = https://github.com/GNOME/gobject-introspection.git
+[submodule "subprojects/gtksourceview"]
+	path = subprojects/gtksourceview
+	url = https://gitlab.gnome.org/GNOME/gtksourceview.git
