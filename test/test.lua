@@ -53,7 +53,7 @@ else
 end
 
 -- Turn off power supply
-scpi(psu, "output off");
+scpi(psu, "output off")
 
 -- Disconnect
 disconnect(psu)

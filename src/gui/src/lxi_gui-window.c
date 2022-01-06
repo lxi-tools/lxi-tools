@@ -39,6 +39,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
+#include <locale.h>
 
 static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -743,7 +744,7 @@ on_script_file_open_response (GtkDialog *dialog,
     GInputStream *input_stream;
     GtkTextBuffer *text_buffer_script;
     gboolean status = true;
-    gsize bytes_read = 0;
+    gsize bytes_read = 0, bytes_written = 0;
     GError *error = NULL;
 
     GFile *file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
@@ -781,6 +782,17 @@ on_script_file_open_response (GtkDialog *dialog,
       return;
     }
 
+    // Convert input file buffer to UTF-8
+    gchar *utf8_buffer = g_convert (buffer, bytes_read, "UTF-8", "ISO-8859-1", NULL, &bytes_written, &error);
+    if (error != NULL)
+    {
+      g_print ("Couldn't convert to UTF-8\n");
+      g_error_free (error);
+      g_object_unref(file_input_stream);
+      g_free(buffer);
+      g_free(input_stream);
+    }
+
     // Get text buffer of script text view
     text_buffer_script = gtk_text_view_get_buffer(self->text_view_script);
 
@@ -792,7 +804,7 @@ on_script_file_open_response (GtkDialog *dialog,
     // Read data into text buffer
     GtkTextIter iter;
     gtk_text_buffer_get_end_iter(text_buffer_script, &iter);
-    gtk_text_buffer_insert(text_buffer_script, &iter, buffer, bytes_read);
+    gtk_text_buffer_insert(text_buffer_script, &iter, utf8_buffer, bytes_written);
 
     // Free old script file if any
     if (self->script_file != NULL)
@@ -944,20 +956,8 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
                     data);
 }
 
-
 void initialize_script_engine(LxiGuiWindow *self)
 {
-  lua_State *L = self->L;
-
-  // Initialize Lua engine
-  L = luaL_newstate();
-
-  // Open all standard Lua libraries
-  luaL_openlibs(L);
-
-  // Bind lxi functions
-  lua_register_lxi(L);
-
   // Print lua engine status
   char *text = g_strdup_printf ("%s engine ready.\n", LUA_VERSION);
   text_view_add_buffer(self->text_view_script_status, text);
@@ -969,16 +969,37 @@ static gpointer
 script_run_worker_function(gpointer data)
 {
   LxiGuiWindow *self = data;
-  lua_State *L = self->L;
+  GtkTextBuffer *buffer_script = gtk_text_view_get_buffer(self->text_view_script);
+  GtkTextIter start, end;
+  gchar *code_buffer;
+  int error;
 
-  /*
-  if (luaL_dofile(L, filename))
+  // Initialize Lua session
+  lua_State *L = luaL_newstate();
+
+  // Open all standard Lua libraries
+  luaL_openlibs(L);
+
+  // Bind lxi functions
+  lua_register_lxi(L);
+
+  // Hardcode locale so script handles number conversion correct etc.
+  setlocale(LC_ALL, "C.UTF-8");
+
+  // Get buffer of script text view
+  gtk_text_buffer_get_bounds(buffer_script, &start, &end);
+  code_buffer = gtk_text_buffer_get_text(buffer_script, &start, &end, true);
+
+  // Let lua load buffer and do error checking before running
+  error = luaL_loadbuffer(L, code_buffer, strlen(code_buffer), "line") ||
+    lua_pcall(L, 0, 0, 0);
+  if (error)
   {
-    error_printf("%s\n", lua_tostring(L, -1));
-    lua_close(L);
-    return 0;
+    text_view_add_buffer(self->text_view_script_status, lua_tostring(L, -1));
+    lua_pop(L, 1);  /* pop error message from the stack */
   }
-*/
+
+  lua_close(L);
 
   return NULL;
 }
@@ -987,7 +1008,6 @@ static void
 toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
-  g_print("run\n");
 
   // Start thread which starts interpreting the Lua script
   self->script_run_worker_thread = g_thread_new("script_worker", script_run_worker_function, (gpointer) self);
@@ -996,6 +1016,7 @@ toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 static void
 button_clicked_script_stop (LxiGuiWindow *self, GtkButton *button)
 {
+  UNUSED(self);
   UNUSED(button);
   g_print("stop\n");
 }
@@ -1003,12 +1024,17 @@ button_clicked_script_stop (LxiGuiWindow *self, GtkButton *button)
 static void
 info_bar_clicked (LxiGuiWindow *self, GtkInfoBar *infobar)
 {
+  UNUSED(self);
+  UNUSED(infobar);
+
   // TODO: Fix and use callback parameters
   gtk_widget_hide(GTK_WIDGET(self_global->info_bar));
 }
 
 static void vxi11_broadcast(const char *address, const char *interface)
 {
+  UNUSED(address);
+
   char *text = g_strdup_printf ("Broadcasting on interface %s", interface);
   show_info(self_global, text);
   g_free(text);
