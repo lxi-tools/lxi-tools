@@ -10,10 +10,20 @@ spectrum analyzers etc.
 
 Features include automatic discovery of network attached test instruments,
 sending SCPI commands, grabbing screenshots from supported instruments,
-benchmarking SCPI message performance, scripting for automation.  Both a
-commandline tool and a GUI application are available.
+benchmarking SCPI message performance, scripting for automation.
+
+Both a commandline tool and a GUI tool are available.
 
 lxi-tools rely on liblxi for all communication.
+
+### 1.1 What is LXI?
+
+LAN eXtensions for Instrumentation (LXI) is a standard developed by the LXI
+Consortium, an industry consortium that maintains the LXI specification and
+promotes the LXI Standard. The LXI standard defines the communication protocols
+for modern instrumentation and data acquisition systems using Ethernet.
+
+Visit https://www.lxistandard.org for more details.
 
 
 ## 2. Usage
@@ -28,7 +38,6 @@ tool but presents them in a modern GUI frontend.
 <img src="images/lxi-gui-screenshot.png" align="center">
 
 <img src="images/lxi-gui-benchmark.png" align="center">
-
 
 ### 2.2 lxi
 
@@ -158,7 +167,7 @@ image to JPG:
 
 ## 3. Installation
 
-The latest release version can be downloaded from https://lxi-tools.github.io
+The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases/latest).
 
 ### 3.1 Installation using source
 
@@ -178,13 +187,26 @@ Install steps:
     $ meson install -C build
 ```
 
+See meson\_options.txt for which features to enable/disable.
+
 Note: Please do no try to install from source if you are not familiar with
 using meson.
 
-### 3.2 Installation using package
+### 3.2 Installation using package manager
 
-lxi-tools comes prepackaged for various GNU/Linux distributions. Visit
-https://lxi-tools.github.io to see list of supported distributions.
+lxi-tools comes prepackaged for various GNU/Linux distributions. Use your
+package manager tool to find and install lxi-tools.
+
+### 3.2 Installation via snap
+
+Install latest stable version:
+```
+    $ snap install lxi-tools
+```
+Install bleeding edge:
+```
+    $ snap install lxi-tools --edge
+```
 
 ## 4. Tested instruments
 
@@ -272,3 +294,5 @@ support the lxi-tools open source effort:
  * Siglent Technologies
  * KIKUSUI Electronics Corp.
 
+Please notice that lxi-tools is not affiliated with the LXI consortium - it is
+a fully independent open source community effort.
