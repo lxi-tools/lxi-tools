@@ -168,7 +168,7 @@ screenshot image to JPG:
 
 ## 3. Installation
 
-The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
+lxi-tools can be installed in various ways.
 
 ### 3.1 Installation using package manager
 
@@ -188,7 +188,9 @@ Install bleeding edge:
 
 ### 3.3 Installation from source
 
-To compile and install successfully from source you need to install the
+The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
+
+To compile and install successfully from source you need to first install the
 following dependencies:
 
  * liblxi
@@ -212,48 +214,48 @@ using meson.
 
 ## 4. Tested instruments
 
-The commandline lxi tool is tested to work successfully with the following LXI
-compatible instruments:
+The lxi tools are tested to work successfully with the following LXI compatible
+instruments:
 
 | Instrument                        | Working features           |
 |-----------------------------------|----------------------------|
-| Keysight Technologies AWG 33612A  | (discover+scpi+screenshot) |
-| Keysight Technologies DMM 34461A  | (discover+scpi+screenshot) |
-| Keysight Technologies MSO-X 3024T | (discover+scpi+screenshot) |
-| Kikusui Electronics PMX35-3A      | (discover+scpi)            |
-| Rigol Technologies DG4062         | (discover+scpi+screenshot) |
-| Rigol Technologies DG4102         | (discover+scpi+screenshot) |
-| Rigol Technologies DG4162         | (discover+scpi+screenshot) |
-| Rigol Technologies DL3021         | (discover+scpi)            |
-| Rigol Technologies DP831          | (discover+scpi+screenshot) |
-| Rigol Technologies DP832          | (discover+scpi+screenshot) |
-| Rigol Technologies DM3058         | (discover+scpi)            |
-| Rigol Technologies DM3068         | (discover+scpi+screenshot) |
-| Rigol Technologies DS1104Z        | (discover+scpi+screenshot) |
-| Rigol Technologies DS2302         | (discover+scpi+screenshot) |
-| Rigol Technologies DSA815         | (discover+scpi+screenshot) |
-| Rigol Technologies MSO1104Z       | (discover+scpi+screenshot) |
-| Rigol Technologies MSO2302A       | (discover+scpi+screenshot) |
-| Rigol Technologies MSO5074        | (discover+scpi+screenshot) |
-| Rohde & Schwarz HMC 8012          | (discover+scpi+screenshot) |
-| Rohde & Schwarz HMC 8043          | (discover+scpi+screenshot) |
-| Rohde & Schwarz HMO 1202          | (discover+scpi+screenshot) |
-| Rohde & Schwarz HMO 3054          | (scpi+screenshot)          |
-| Rohde & Schwarz RTB 2004          | (discover+scpi+screenshot) |
-| Rohde & Schwarz NGE 100           | (discover+scpi+screenshot) |
-| Rohde & Schwarz NGM 202           | (discover+scpi+screenshot) |
-| Siglent Technologies SDG1032X     | (discover+scpi+screenshot) |
-| Siglent Technologies SDG2122X     | (discover+scpi+screenshot) |
-| Siglent Technologies SDG6052      | (discover+scpi+screenshot) |
-| Siglent Technologies SDS1202X-E   | (discover+scpi+screenshot) |
-| Siglent Technologies SDS1204X-E   | (discover+scpi+screenshot) |
-| Siglent Technologies SDS2304X     | (discover+scpi+screenshot) |
-| Siglent Technologies SDM3045X     | (discover+scpi+screenshot) |
-| Siglent Technologies SDM3055      | (discover+scpi+screenshot) |
-| Siglent Technologies SDM3065X     | (discover+scpi+screenshot) |
-| Siglent Technologies SPD3303X-E   | (scpi)                     |
-| Siglent Technologies SSA3032X     | (discover+scpi+screenshot) |
-| Tektronix TDS3034B                | (discover+scpi+screenshot) |
+| Keysight Technologies AWG 33612A  | [discover+scpi+screenshot] |
+| Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |
+| Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |
+| Kikusui Electronics PMX35-3A      | [discover+scpi]            |
+| Rigol Technologies DG4062         | [discover+scpi+screenshot] |
+| Rigol Technologies DG4102         | [discover+scpi+screenshot] |
+| Rigol Technologies DG4162         | [discover+scpi+screenshot] |
+| Rigol Technologies DL3021         | [discover+scpi]            |
+| Rigol Technologies DP831          | [discover+scpi+screenshot] |
+| Rigol Technologies DP832          | [discover+scpi+screenshot] |
+| Rigol Technologies DM3058         | [discover+scpi]            |
+| Rigol Technologies DM3068         | [discover+scpi+screenshot] |
+| Rigol Technologies DS1104Z        | [discover+scpi+screenshot] |
+| Rigol Technologies DS2302         | [discover+scpi+screenshot] |
+| Rigol Technologies DSA815         | [discover+scpi+screenshot] |
+| Rigol Technologies MSO1104Z       | [discover+scpi+screenshot] |
+| Rigol Technologies MSO2302A       | [discover+scpi+screenshot] |
+| Rigol Technologies MSO5074        | [discover+scpi+screenshot] |
+| Rohde & Schwarz HMC 8012          | [discover+scpi+screenshot] |
+| Rohde & Schwarz HMC 8043          | [discover+scpi+screenshot] |
+| Rohde & Schwarz HMO 1202          | [discover+scpi+screenshot] |
+| Rohde & Schwarz HMO 3054          | [scpi+screenshot]          |
+| Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |
+| Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |
+| Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |
+| Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |
+| Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |
+| Siglent Technologies SDG6052      | [discover+scpi+screenshot] |
+| Siglent Technologies SDS1202X-E   | [discover+scpi+screenshot] |
+| Siglent Technologies SDS1204X-E   | [discover+scpi+screenshot] |
+| Siglent Technologies SDS2304X     | [discover+scpi+screenshot] |
+| Siglent Technologies SDM3045X     | [discover+scpi+screenshot] |
+| Siglent Technologies SDM3055      | [discover+scpi+screenshot] |
+| Siglent Technologies SDM3065X     | [discover+scpi+screenshot] |
+| Siglent Technologies SPD3303X-E   | [scpi]                     |
+| Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |
+| Tektronix TDS3034B                | [discover+scpi+screenshot] |
 
 Note: Feel free to add your instrument(s) to the list via GitHub pull request
 or simply create a GitHub issue reporting your instrument(s) and which features
