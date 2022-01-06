@@ -10,9 +10,8 @@ spectrum analyzers etc.
 
 Features include automatic discovery of network attached test instruments,
 sending SCPI commands, grabbing screenshots from supported instruments,
-benchmarking SCPI message performance, scripting for automation.
-
-Both a commandline tool and a GUI tool are available.
+benchmarking SCPI message performance, scripting for automation. Both a
+commandline tool and a GUI tool are available.
 
 lxi-tools rely on liblxi for all communication.
 
@@ -130,8 +129,8 @@ screenshot plugin and instrument are in play. However, it is possible to write
 the screenshot image to stdout and pipe it directly to other tools for image
 processing.
 
-For example, use ImageMagicks convert tool to automatically convert screenshot
-image to JPG:
+For example, use ImageMagicks convert tool to automatically convert any
+screenshot image to JPG:
 
 ```
     $ lxi screenshot --address 10.42.1.20 - | convert - screenshot.jpg
@@ -167,7 +166,7 @@ image to JPG:
 
 ## 3. Installation
 
-The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases/latest).
+The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
 ### 3.1 Installation using source
 
