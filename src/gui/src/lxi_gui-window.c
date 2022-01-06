@@ -991,7 +991,7 @@ script_run_worker_function(gpointer data)
   code_buffer = gtk_text_buffer_get_text(buffer_script, &start, &end, true);
 
   // Let lua load buffer and do error checking before running
-  error = luaL_loadbuffer(L, code_buffer, strlen(code_buffer), "line") ||
+  error = luaL_loadbuffer(L, code_buffer, strlen(code_buffer), "debug") ||
     lua_pcall(L, 0, 0, 0);
   if (error)
   {
