@@ -1,9 +1,5 @@
 -------------------------------
--- Test script for lxi-tools --
---                           --
--- To run it simply do:      --
---                           --
--- $ lxi run test.lua        --
+-- lxi-tools example script  --
 -------------------------------
 
 -- Connect to instruments
@@ -11,10 +7,8 @@ dso = connect("192.168.0.157", 5025, nil, 6000, "VXI11")
 psu = connect("192.168.0.107", 5025, nil, 2000, "RAW")
 
 -- Print instrument IDs
-dso_id = scpi(dso, "*IDN?")
-psu_id = scpi(psu, "*IDN?")
-print("Digital Storage Oscilloscope ID = " .. dso_id)
-print("Power Supply ID = " .. psu_id)
+print("Digital Storage Oscilloscope ID = " .. scpi(dso,"*IDN?"))
+print("Power Supply ID = " .. scpi(psu,"*IDN?"))
 
 -- Set power supply voltage on channel 1 to 1.2V
 scpi(psu, "voltage 1.2, (@1)")
