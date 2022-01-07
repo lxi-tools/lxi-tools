@@ -41,7 +41,6 @@ lxi_gui_deps = [
   dependency('gtk4', version: '>= 4.4'),
   dependency('liblxi', required: true),
   dependency('lua-5.3', required: true),
-  libglib_dep,
   libgtksourceview_dep,
 ]
 

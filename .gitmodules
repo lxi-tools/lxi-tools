@@ -1,6 +1,3 @@
-[submodule "subprojects/glib"]
-	path = subprojects/glib
-	url = https://github.com/GNOME/glib.git
 [submodule "subprojects/gtksourceview"]
 	path = subprojects/gtksourceview
 	url = https://gitlab.gnome.org/GNOME/gtksourceview.git

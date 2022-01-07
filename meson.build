@@ -14,12 +14,9 @@ subdir('man')
 enable_gui = get_option('gui')
 if enable_gui
 
-  libglib_dep = dependency('glib-2.0', version: '>=2.71.0',
-    fallback : ['glib','libglib_dep'])
-
   libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3',
-    fallback : ['gtksourceview', 'gtksource_dep'],
-    default_options: ['introspection=disabled'])
+                                    fallback : ['gtksourceview', 'gtksource_dep'],
+                                    default_options: ['introspection=disabled'])
 
   subdir('src/gui')
 
