@@ -1131,15 +1131,17 @@
                                     <child>
                                       <object class="GtkPaned">
                                         <property name="orientation">1</property>
-                                        <property name="position">480</property>
-                                        <property name="resize-end-child">0</property>
-                                        <property name="shrink-end-child">0</property>
-                                        <property name="wide-handle">0</property>
+                                        <property name="resize-start-child">true</property>
+                                        <property name="resize-end-child">true</property>
+                                        <property name="shrink-start-child">false</property>
+                                        <property name="shrink-end-child">false</property>
+                                        <property name="position">481</property>
+                                        <property name="wide-handle">1</property>
                                         <layout>
                                           <property name="column">0</property>
                                           <property name="row">0</property>
                                         </layout>
-                                        <child>
+                                        <property name="start-child">
                                           <object class="GtkScrolledWindow">
                                             <child>
                                               <object class="GtkSourceView" id="source_view_script">
@@ -1158,8 +1160,8 @@
                                               </object>
                                             </child>
                                           </object>
-                                        </child>
-                                        <child>
+                                        </property>
+                                        <property name="end-child">
                                           <object class="GtkScrolledWindow">
                                             <child>
                                               <object class="GtkTextView" id="text_view_script_status">
@@ -1173,7 +1175,7 @@
                                               </object>
                                             </child>
                                           </object>
-                                        </child>
+                                        </property>
                                       </object>
                                     </child>
                                     <child>
