@@ -14,7 +14,7 @@ subdir('man')
 enable_gui = get_option('gui')
 if enable_gui
 
-  libglib_dep = dependency('glib-2.0', version: '>=2.70.0',
+  libglib_dep = dependency('glib-2.0', version: '>=2.71.0',
     fallback : ['glib','libglib_dep'])
 
   libgir_dep = dependency('gobject-introspection-1.0', version: '>= 1.70',
