@@ -14,18 +14,12 @@ subdir('man')
 enable_gui = get_option('gui')
 if enable_gui
 
-  g_ir_scanner_ = find_program('g-ir-scanner_', '/usr/bin/g-ir-scanner', native: true, required : true)
-  meson.override_find_program('g-ir-scanner', g_ir_scanner_)
-
   libglib_dep = dependency('glib-2.0', version: '>=2.71.0',
     fallback : ['glib','libglib_dep'])
 
-  libgir_dep = dependency('gobject-introspection-1.0', version: '>= 1.70',
-    fallback : ['gobject-introspection','girepo_dep'],
-    default_options: ['gi_cross_use_prebuilt_gi=true'])
-
   libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3',
-    fallback : ['gtksourceview', 'gtksource_dep'])
+    fallback : ['gtksourceview', 'gtksource_dep'],
+    default_options: ['introspection=disabled'])
 
   subdir('src/gui')
 
