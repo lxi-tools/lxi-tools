@@ -18,7 +18,8 @@ if enable_gui
     fallback : ['glib','libglib_dep'])
 
   libgir_dep = dependency('gobject-introspection-1.0', version: '>= 1.70',
-    fallback : ['gobject-introspection','girepo_dep'])
+    fallback : ['gobject-introspection','girepo_dep'],
+    default_options: ['gi_cross_use_prebuilt_gi=true'])
 
   libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3',
     fallback : ['gtksourceview', 'gtksource_dep'])
