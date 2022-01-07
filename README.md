@@ -295,6 +295,6 @@ See the AUTHORS file for full list of contributors.
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
 
- * Siglent Technologies
- * KIKUSUI Electronics Corp.
+ * Siglent Technologies - https://www.siglent.com
+ * KIKUSUI Electronics Corp. - https://www.kikusui.co.jp
 
