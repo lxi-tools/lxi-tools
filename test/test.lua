@@ -1,6 +1,7 @@
--------------------------------
--- lxi-tools example script  --
--------------------------------
+------------------------------------
+--  lxi-tools example script      --
+--   https://lxi-tools.github.io  --
+------------------------------------
 
 -- Connect to instruments
 dso = connect("192.168.0.157", 5025, nil, 6000, "VXI11")
@@ -31,7 +32,7 @@ scpi(dso, "autoscale")
 scpi(dso, ":measurement1 on")
 scpi(dso, ":measurement1:main rms")
 
--- Measure for a bit
+-- Measure for 4 seconds
 msleep(4000)
 
 -- Read out DSO voltage of channel 1
