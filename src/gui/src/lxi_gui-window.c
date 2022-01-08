@@ -82,7 +82,6 @@ struct _LxiGuiWindow
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
-  char                *script_filename;
   GFile               *script_file;
   lua_State           *L;
 };
@@ -1023,6 +1022,8 @@ script_run_worker_function(gpointer data)
   GtkTextIter start, end;
   gchar *code_buffer;
   int error;
+  char *chunkname = NULL;
+  char *filename;
 
   // Initialize Lua session
   lua_State *L = luaL_newstate();
@@ -1043,8 +1044,20 @@ script_run_worker_function(gpointer data)
   gtk_text_buffer_get_bounds(buffer_script, &start, &end);
   code_buffer = gtk_text_buffer_get_text(buffer_script, &start, &end, true);
 
+  // Use filename as chunk name if working with a file
+  if (self->script_file != NULL)
+  {
+    filename = g_file_get_path(self->script_file);
+    chunkname = g_path_get_basename(filename);
+    g_free(filename);
+  }
+  else
+  {
+    chunkname = strdup("buffer");
+  }
+
   // Let lua load buffer and do error checking before running
-  error = luaL_loadbuffer(L, code_buffer, strlen(code_buffer), "debug") ||
+  error = luaL_loadbuffer(L, code_buffer, strlen(code_buffer), chunkname) ||
     lua_pcall(L, 0, 0, 0);
   if (error)
   {
@@ -1052,6 +1065,8 @@ script_run_worker_function(gpointer data)
     lua_pop(L, 1);  /* pop error message from the stack */
   }
 
+  // Cleanup
+  g_free(chunkname);
   lua_close(L);
 
   return NULL;
