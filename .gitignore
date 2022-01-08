@@ -1,4 +1,6 @@
 /subprojects/*/
+/subprojects/gi-docgen.wrap
+/subprojects/pango.wrap
 build
 *.swp
 *.tar.xz
