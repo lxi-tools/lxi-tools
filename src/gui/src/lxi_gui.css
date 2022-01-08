@@ -39,9 +39,14 @@
 
 /* Benchmark page */
 
-progress, trough {
+.page-benchmark trough {
   min-height: 60px;
 }
+
+.page-benchmark progress {
+  min-height: 60px;
+}
+
 
 .label-benchmark-result {
   font-weight: bold;
