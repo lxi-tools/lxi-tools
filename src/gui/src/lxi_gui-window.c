@@ -325,10 +325,10 @@ button_clicked_search (LxiGuiWindow *self, GtkToggleButton *button)
 static void
 scroll_to_end(GtkTextView *text_view)
 {
-  GtkTextBuffer *buffer = gtk_text_view_get_buffer(text_view);
   GtkTextIter iter;
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer(text_view);
   gtk_text_buffer_get_end_iter(buffer,&iter);
-  GtkTextMark *mark = gtk_text_buffer_create_mark(buffer,NULL,&iter,FALSE);
+  GtkTextMark *mark = gtk_text_buffer_create_mark(buffer, NULL, &iter, FALSE);
   gtk_text_view_scroll_mark_onscreen(text_view, mark);
   gtk_text_buffer_delete_mark(buffer, mark);
 }
@@ -339,7 +339,7 @@ text_view_add_buffer(GtkTextView *view, const char *buffer)
   GtkTextIter iter;
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
   gtk_text_buffer_get_end_iter(text_buffer, &iter);
-  gtk_text_buffer_insert (text_buffer, &iter, buffer, strlen(buffer));
+  gtk_text_buffer_insert (text_buffer, &iter, buffer, -1);
 }
 
 static void
@@ -351,7 +351,7 @@ text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
   snprintf(markup_buffer, sizeof(markup_buffer), "<span foreground=\"dimgray\">%s</span>", buffer);
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
   gtk_text_buffer_get_end_iter(text_buffer, &iter);
-  gtk_text_buffer_insert_markup (text_buffer, &iter, markup_buffer, strlen(markup_buffer));
+  gtk_text_buffer_insert_markup (text_buffer, &iter, markup_buffer, -1);
 }
 
 static void
@@ -967,6 +967,54 @@ void initialize_script_engine(LxiGuiWindow *self)
   g_free(text);
 }
 
+static void lua_print_error(LxiGuiWindow *self, const char *string)
+{
+  text_view_add_buffer(self->text_view_script_status, string);
+  text_view_add_buffer(self->text_view_script_status, "\n");
+  scroll_to_end(self->text_view_script_status);
+}
+
+static void lua_print_string(const char *string)
+{
+  text_view_add_buffer(self_global->text_view_script_status, string);
+  text_view_add_buffer(self_global->text_view_script_status, "\n");
+  scroll_to_end(self_global->text_view_script_status);
+}
+
+static int lua_print(lua_State* L)
+{
+  int nargs = lua_gettop(L);
+
+  for (int i=1; i <= nargs; i++)
+  {
+    if (lua_isstring(L, i))
+    {
+      lua_print_string(lua_tostring(L,i));
+    }
+    else
+    {
+      /* non-strings */
+    }
+  }
+
+  return 0;
+}
+
+static const struct luaL_Reg printlib [] =
+{
+  {"print", lua_print},
+  {NULL, NULL}
+};
+
+extern int lua_register_print(lua_State *L)
+{
+  lua_getglobal(L, "_G");
+  luaL_setfuncs(L, printlib, 0);
+  lua_pop(L, 1);
+
+  return 0;
+}
+
 static gpointer
 script_run_worker_function(gpointer data)
 {
@@ -981,6 +1029,9 @@ script_run_worker_function(gpointer data)
 
   // Open all standard Lua libraries
   luaL_openlibs(L);
+
+  // Bind print function (override)
+  lua_register_print(L);
 
   // Bind lxi functions
   lua_register_lxi(L);
@@ -997,7 +1048,7 @@ script_run_worker_function(gpointer data)
     lua_pcall(L, 0, 0, 0);
   if (error)
   {
-    text_view_add_buffer(self->text_view_script_status, lua_tostring(L, -1));
+    lua_print_error(self, lua_tostring(L, -1));
     lua_pop(L, 1);  /* pop error message from the stack */
   }
 
