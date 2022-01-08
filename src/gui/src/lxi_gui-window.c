@@ -1305,6 +1305,9 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Enable syntax highlighting according to language
   gtk_source_buffer_set_highlight_syntax(source_buffer_script, true);
 
+  // Highlight current line
+  gtk_source_view_set_highlight_current_line(self->source_view_script, true);
+
   // Set script view theme to "classic"
   GtkSourceStyleSchemeManager* style_manager = gtk_source_style_scheme_manager_new();
   GtkSourceStyleScheme *style = gtk_source_style_scheme_manager_get_scheme(style_manager, "classic-dark");
