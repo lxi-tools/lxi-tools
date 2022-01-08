@@ -1,0 +1,5 @@
+[wrap-file]
+directory = gtk-4.6.0
+source_url = https://download-fallback.gnome.org/sources/gtk/4.6/gtk-4.6.0.tar.xz
+source_filename = gtk-4.6.0.tar.xz
+source_hash = 782d5951fbfd585fc9ec76c09d07e28e6014c72db001fb567fff217fb96e4d8c
