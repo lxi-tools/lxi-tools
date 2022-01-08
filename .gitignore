@@ -1,4 +1,5 @@
 /subprojects/*/
+/subprojects/glib.wrap
 build
 *.swp
 *.tar.xz
