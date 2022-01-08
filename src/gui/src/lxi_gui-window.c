@@ -1295,8 +1295,8 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Set language of source buffer to "lua"
   GtkSourceBuffer *source_buffer_script =
     GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
-  GtkSourceLanguageManager *manager = gtk_source_language_manager_get_default();
-  GtkSourceLanguage *language = gtk_source_language_manager_get_language(manager, "lua");
+  GtkSourceLanguageManager *language_manager = gtk_source_language_manager_get_default();
+  GtkSourceLanguage *language = gtk_source_language_manager_get_language(language_manager, "lua");
   gtk_source_buffer_set_language(source_buffer_script, language);
 
   // Enable line numbers
@@ -1304,6 +1304,11 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Enable syntax highlighting according to language
   gtk_source_buffer_set_highlight_syntax(source_buffer_script, true);
+
+  // Set script view theme to "classic"
+  GtkSourceStyleSchemeManager* style_manager = gtk_source_style_scheme_manager_new();
+  GtkSourceStyleScheme *style = gtk_source_style_scheme_manager_get_scheme(style_manager, "classic-dark");
+  gtk_source_buffer_set_style_scheme(source_buffer_script, style);
 
   // Initialize lua script engine
   initialize_script_engine(self);
