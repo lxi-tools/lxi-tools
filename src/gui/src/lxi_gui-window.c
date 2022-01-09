@@ -59,6 +59,7 @@ struct _LxiGuiWindow
   GdkClipboard        *clipboard;
   GtkEntry            *entry_scpi;
   GtkTextView         *text_view_scpi;
+  GtkToggleButton     *toggle_button_scpi_send;
   GtkImage            *image_screenshot;
   GtkToggleButton     *toggle_button_screenshot_live_view;
   GtkButton           *toggle_button_screenshot_grab;
@@ -473,7 +474,7 @@ send_worker_thread(gpointer data)
   if (self->ip == NULL)
   {
     show_error(self, "No instrument selected");
-    return NULL;
+    goto error_no_instrument;
   }
 
   // Prepare buffer to send
@@ -481,7 +482,7 @@ send_worker_thread(gpointer data)
   input_buffer = gtk_entry_buffer_get_text(entry_buffer);
 
   if (strlen(input_buffer) == 0)
-    return NULL;
+    goto error_no_input;
 
   tx_buffer = g_string_new_len(input_buffer, strlen(input_buffer));
   strip_trailing_space(tx_buffer->str);
@@ -538,6 +539,12 @@ error_receive:
   lxi_disconnect(device);
 error_connect:
   g_string_free(tx_buffer, true);
+error_no_instrument:
+error_no_input:
+  // Restore send button state
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), true);
+  gtk_toggle_button_set_active(self->toggle_button_scpi_send, false);
+
   return NULL;
 }
 
@@ -548,6 +555,10 @@ button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
 
   // Start thread which sends the SCPI message
   self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
+
+  // Update send button state
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), false);
+  gtk_toggle_button_set_active(self->toggle_button_scpi_send, true);
 }
 
 static void
@@ -557,6 +568,10 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 
   // Start thread which sends the SCPI message
   self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
+
+  // Update send button state
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), false);
+  gtk_toggle_button_set_active(self->toggle_button_scpi_send, true);
 }
 
 static void
@@ -1272,6 +1287,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_viewport);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, entry_scpi);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_scpi);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_scpi_send);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, image_screenshot);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_live_view);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_grab);
