@@ -62,7 +62,7 @@ struct _LxiGuiWindow
   GtkToggleButton     *toggle_button_scpi_send;
   GtkImage            *image_screenshot;
   GtkToggleButton     *toggle_button_screenshot_live_view;
-  GtkButton           *toggle_button_screenshot_grab;
+  GtkToggleButton     *toggle_button_screenshot_grab;
   GtkButton           *button_screenshot_save;
   GThread             *screenshot_worker_thread;
   GThread             *screenshot_grab_worker_thread;
@@ -84,6 +84,10 @@ struct _LxiGuiWindow
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
+  char                *image_buffer;
+  int                 image_size;
+  char                image_format[10];
+  char                image_filename[1000];
   GFile               *script_file;
   lua_State           *L;
 };
@@ -91,7 +95,6 @@ struct _LxiGuiWindow
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static LxiGuiWindow *self_global;
-
 
 struct show_data_t
 {
@@ -594,12 +597,7 @@ grab_screenshot(LxiGuiWindow *self)
 {
   char *plugin_name = (char *) "";
   char *filename = (char *) "";
-  char *image_buffer;
-  int image_size = 0;
-  char image_format[10];
-  char image_filename[1000];
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-screenshot");
-  GdkPixbufLoader *loader;
   int status;
 
   // Check for instrument
@@ -610,50 +608,50 @@ grab_screenshot(LxiGuiWindow *self)
   }
 
   // Allocate 20 MB for image data
-  image_buffer = g_malloc(0x100000*20);
-  if (image_buffer == NULL)
+  self->image_buffer = g_malloc(0x100000*20);
+  if (self->image_buffer == NULL)
   {
     show_error(self, "Failure allocating memory for image data");
     return 1;
   }
 
   // Capture screenshot
-  status = screenshot((char *)self->ip, plugin_name, filename, timeout, false, image_buffer, &image_size, image_format, image_filename);
+  status = screenshot((char *)self->ip, plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
   if (status != 0)
   {
     show_error(self, "Failure grabbing screenshot");
-    g_free(image_buffer);
+    g_free(self->image_buffer);
     return 1;
   }
 
+  return 0;
+}
+
+static gboolean
+gui_update_grab_screenshot_finished_thread(gpointer user_data)
+{
+  LxiGuiWindow *self = user_data;
+  GdkPixbufLoader *loader;
+
   // Show screenshot
-  loader = gdk_pixbuf_loader_new_with_type(image_format, NULL);
-  gdk_pixbuf_loader_write (loader, (const guchar *)image_buffer, image_size, NULL);
+  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+  gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
   if (self->pixbuf_screenshot == NULL)
   {
     show_error(self, "Failure handling image format");
-    g_free(image_buffer);
-    return 1;
+    goto error_image_format;
   }
   gtk_widget_set_valign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
   gtk_widget_set_halign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
   gtk_image_set_pixel_size(self->image_screenshot, -1);
   gtk_image_set_from_pixbuf(self->image_screenshot, self->pixbuf_screenshot);
 
-  g_free(image_buffer);
+error_image_format:
+  g_free(self->image_buffer);
 
-  return 0;
-}
-
-static gpointer
-screenshot_grab_worker_function(gpointer data)
-{
-  LxiGuiWindow *self = data;
-
-  grab_screenshot(self);
-
-  // Reenable screenshot buttons
+  // Restore screenshot buttons
+  gtk_toggle_button_set_active(self->toggle_button_screenshot_grab, false);
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), true);
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_live_view), true);
 
@@ -661,11 +659,29 @@ screenshot_grab_worker_function(gpointer data)
   if (gtk_image_get_storage_type(self->image_screenshot) != GTK_IMAGE_EMPTY)
     gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), true);
 
+  return G_SOURCE_REMOVE;
+}
+
+static void
+gui_update_grab_screenshot_finished(LxiGuiWindow *self)
+{
+  g_idle_add(gui_update_grab_screenshot_finished_thread, self);
+}
+
+static gpointer
+screenshot_grab_worker_thread(gpointer data)
+{
+  LxiGuiWindow *self = data;
+
+  grab_screenshot(self);
+
+  gui_update_grab_screenshot_finished(self);
+
   return NULL;
 }
 
 static void
-button_clicked_screenshot_grab (LxiGuiWindow *self, GtkButton *button)
+button_clicked_screenshot_grab(LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
 
@@ -681,7 +697,7 @@ button_clicked_screenshot_grab (LxiGuiWindow *self, GtkButton *button)
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
 
   // Start worker thread that will perform the grab screenshot work
-  self->screenshot_grab_worker_thread = g_thread_new("screenshot_grab_worker", screenshot_grab_worker_function, (gpointer) self);
+  self->screenshot_grab_worker_thread = g_thread_new("screenshot_grab_worker", screenshot_grab_worker_thread, (gpointer) self);
 }
 
 static gpointer
