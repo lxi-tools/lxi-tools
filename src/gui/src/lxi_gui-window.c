@@ -558,7 +558,6 @@ button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
 
   // Update send button state
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), false);
-  gtk_toggle_button_set_active(self->toggle_button_scpi_send, true);
 }
 
 static void
