@@ -632,10 +632,13 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
 {
   LxiGuiWindow *self = user_data;
   GdkPixbufLoader *loader;
+  gboolean status;
 
   // Show screenshot
-  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
-  gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+  loader = gdk_pixbuf_loader_new ();
+  //  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+  status = gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+  g_print("status = %d\n", status);
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
   if (self->pixbuf_screenshot == NULL)
   {
