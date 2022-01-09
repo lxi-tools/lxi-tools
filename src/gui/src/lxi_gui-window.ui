@@ -976,6 +976,7 @@
                                           <object class="GtkToggleButton" id="toggle_button_screenshot_live_view">
                                             <property name="label" translatable="yes">Live View</property>
                                             <property name="receives-default">1</property>
+                                            <property name="visible">0</property>
                                             <signal name="clicked" handler="button_clicked_screenshot_live_view" swapped="yes"/>
                                             <style>
                                               <class name="text-button"/>
