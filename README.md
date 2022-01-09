@@ -57,6 +57,7 @@ from 'lxi --help':
        scpi [<options>] <scpi-command>      Send SCPI command
        screenshot [<options>] [<filename>]  Capture screenshot
        benchmark [<options>]                Benchmark
+       run <filename>                       Run Lua script
 
      Discover options:
        -t, --timeout <seconds>              Timeout (default: 3)
@@ -68,7 +69,7 @@ from 'lxi --help':
        -t, --timeout <seconds>              Timeout (default: 3)
        -x, --hex                            Print response in hexadecimal
        -i, --interactive                    Enter interactive mode
-       -s, --script <filename>              Run script file
+       -f, --file <filename>                Run SCPI commands from file
        -r, --raw                            Use raw/TCP
 
      Screenshot options:
