@@ -131,7 +131,7 @@ show_info_thread(gpointer user_data)
   // Show info message
   gtk_label_set_text (GTK_LABEL(data->self->label_info_bar), data->buffer);
   gtk_info_bar_set_message_type(data->self->info_bar, GTK_MESSAGE_INFO);
-  gtk_info_bar_set_show_close_button(data->self->info_bar, true);
+  gtk_info_bar_set_show_close_button(data->self->info_bar, false);
   gtk_widget_show (GTK_WIDGET(data->self->info_bar));
 
   g_free(data->buffer);
