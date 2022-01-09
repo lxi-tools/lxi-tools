@@ -52,7 +52,6 @@ int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t proto
 int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *filename);
 
 void strip_trailing_space(char *line);
-int question(char *string);
 
 #ifdef __cplusplus
 }

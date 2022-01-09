@@ -51,12 +51,14 @@ typedef struct{
 
 void length_check(int length);
 
-int tektronix_screenshot_3000(char *address, int timeout)
+int tektronix_screenshot_3000(char *address, char *id, int timeout)
 {
     restore param;
     char response[IMAGE_SIZE_MAX];
     int length, device;
     char *command, command_str[100];
+
+    UNUSED(id);
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);

@@ -40,12 +40,14 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_1000z_screenshot(char *address, int timeout)
+int rigol_1000z_screenshot(char *address, char *id, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
     int device, length, n;
     char c;
+
+    UNUSED(id);
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);

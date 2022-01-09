@@ -272,8 +272,8 @@ int screenshot(char *address, char *plugin_name, char *filename,
                int timeout, bool no_gui, void *image_buffer,
                int *image_size, char *image_format, char *image_filename)
 {
+    static char id[ID_LENGTH_MAX];
     bool no_match = true;
-    char id[ID_LENGTH_MAX];
     bool token_found = true;
     char *token = NULL;
     int plugin_winner = -1;
@@ -383,5 +383,5 @@ int screenshot(char *address, char *plugin_name, char *filename,
     }
 
     // Call capture screenshot function
-    return plugin_list[i]->screenshot(address, timeout);
+    return plugin_list[i]->screenshot(address, id, timeout);
 }

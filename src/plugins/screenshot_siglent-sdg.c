@@ -40,11 +40,13 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int siglent_sdg_screenshot(char *address, int timeout)
+int siglent_sdg_screenshot(char *address, char *id, int timeout)
 {
     char response[IMAGE_SIZE_MAX] = {};
     char *command;
     int device, length;
+
+    UNUSED(id);
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);

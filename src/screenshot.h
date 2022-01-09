@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include "misc.h"
 
 void screenshot_register_plugins(void);
 void screenshot_list_plugins(void);
@@ -50,7 +51,7 @@ struct screenshot_plugin
    const char *name;
    const char *description;
    const char *regex;
-   int (*screenshot)(char *address, int timeout);
+   int (*screenshot)(char *address, char *id, int timeout);
 };
 
 #ifdef __cplusplus

@@ -40,11 +40,13 @@
 
 #define IMAGE_SIZE_MAX 0x100000 * 20 // 20 MB
 
-int rs_ng_screenshot(char *address, int timeout)
+int rs_ng_screenshot(char *address, char *id, int timeout)
 {
     char *response, *command, *image;
     int device, length, n;
     char c;
+
+    UNUSED(id);
 
     // Prepare response buffer
     response = malloc(IMAGE_SIZE_MAX);

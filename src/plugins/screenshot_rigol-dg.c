@@ -40,12 +40,14 @@
 
 #define IMAGE_SIZE_MAX 0x400000 // 4 MB
 
-int rigol_dg_screenshot(char *address, int timeout)
+int rigol_dg_screenshot(char *address, char *id, int timeout)
 {
     char response[IMAGE_SIZE_MAX];
     char *command, *image;
     int device, length, n;
     char c;
+
+    UNUSED(id);
 
     // Connect to LXI instrument
     device = lxi_connect(address, 0, NULL, timeout, VXI11);
@@ -56,7 +58,7 @@ int rigol_dg_screenshot(char *address, int timeout)
     }
 
     // Send SCPI command to grab BMP image
-    command = "HCOPy:SDUMp:DATA:FORMat BMP";
+    command = ":HCOPy:SDUMp:DATA:FORMat BMP";
     lxi_send(device, command, strlen(command), timeout);
     command = ":HCOPy:SDUMp:DATA?";
     lxi_send(device, command, strlen(command), timeout);
