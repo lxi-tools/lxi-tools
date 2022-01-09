@@ -78,7 +78,7 @@ void print_help(char *argv[])
     printf("  -h, --help                           Display help\n");
     printf("\n");
     printf("Commands:\n");
-    printf("  discover [<options>]                 Search for LXI devices\n");
+    printf("  discover [<options>]                 Search for devices\n");
     printf("  scpi [<options>] <scpi-command>      Send SCPI command\n");
     printf("  screenshot [<options>] [<filename>]  Capture screenshot\n");
     printf("  benchmark [<options>]                Benchmark\n");

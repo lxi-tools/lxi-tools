@@ -53,7 +53,7 @@ from 'lxi --help':
        -h, --help                           Display help
 
      Commands:
-       discover [<options>]                 Search for LXI devices
+       discover [<options>]                 Search for devices
        scpi [<options>] <scpi-command>      Send SCPI command
        screenshot [<options>] [<filename>]  Capture screenshot
        benchmark [<options>]                Benchmark
