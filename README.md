@@ -226,6 +226,7 @@ instruments:
 | Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |
 | Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |
 | Kikusui Electronics PMX35-3A      | [discover+scpi]            |
+| Rigol Technologies DG1062Z        | [discover+scpi+screenshot] |
 | Rigol Technologies DG4062         | [discover+scpi+screenshot] |
 | Rigol Technologies DG4102         | [discover+scpi+screenshot] |
 | Rigol Technologies DG4162         | [discover+scpi+screenshot] |
