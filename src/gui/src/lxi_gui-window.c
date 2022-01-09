@@ -66,6 +66,7 @@ struct _LxiGuiWindow
   GThread             *screenshot_worker_thread;
   GThread             *screenshot_grab_worker_thread;
   GThread             *search_worker_thread;
+  GThread             *send_worker_thread;
   GtkProgressBar      *progress_bar_benchmark;
   GThread             *benchmark_worker_thread;
   GtkToggleButton     *toggle_button_benchmark_start;
@@ -90,30 +91,65 @@ G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static LxiGuiWindow *self_global;
 
+
+struct show_data_t
+{
+  LxiGuiWindow *self;
+  gchar *buffer;
+};
+
+static gboolean
+show_error_thread(gpointer user_data)
+{
+  struct show_data_t *data = user_data;
+
+  // Show error message
+  gtk_label_set_text (GTK_LABEL(data->self->label_info_bar), data->buffer);
+  gtk_info_bar_set_message_type(data->self->info_bar, GTK_MESSAGE_ERROR);
+  gtk_info_bar_set_show_close_button(data->self->info_bar, true);
+  gtk_widget_show (GTK_WIDGET(data->self->info_bar));
+
+  g_free(data->buffer);
+  return G_SOURCE_REMOVE;
+}
+
 static void
 show_error(LxiGuiWindow *self, const char *buffer)
 {
-  // Show error message
-  gtk_label_set_text (GTK_LABEL (self->label_info_bar), buffer);
-  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_ERROR);
-  gtk_info_bar_set_show_close_button(self->info_bar, true);
-  gtk_widget_show (GTK_WIDGET(self->info_bar));
+  struct show_data_t *data = g_new0(struct show_data_t, 1);
+  data->self = self;
+  data->buffer = g_strdup(buffer);
+  g_idle_add(show_error_thread, data);
+}
+
+static gboolean
+show_info_thread(gpointer user_data)
+{
+  struct show_data_t *data = user_data;
+
+  // Show info message
+  gtk_label_set_text (GTK_LABEL(data->self->label_info_bar), data->buffer);
+  gtk_info_bar_set_message_type(data->self->info_bar, GTK_MESSAGE_INFO);
+  gtk_info_bar_set_show_close_button(data->self->info_bar, true);
+  gtk_widget_show (GTK_WIDGET(data->self->info_bar));
+
+  g_free(data->buffer);
+  return G_SOURCE_REMOVE;
 }
 
 static void
 show_info(LxiGuiWindow *self, const char *buffer)
 {
-  // Show info message
-  gtk_label_set_text (GTK_LABEL (self->label_info_bar), buffer);
-  gtk_info_bar_set_message_type (self->info_bar, GTK_MESSAGE_INFO);
-  gtk_info_bar_set_show_close_button(self->info_bar, false);
-  gtk_widget_show (GTK_WIDGET(self->info_bar));
+  struct show_data_t *data = g_new0(struct show_data_t, 1);
+  data->self = self;
+  data->buffer = g_strdup(buffer);
+  g_idle_add(show_info_thread, data);
 }
 
 static void
 hide_info_bar(LxiGuiWindow *self)
 {
-  gtk_widget_hide (GTK_WIDGET(self->info_bar));
+  gtk_widget_hide(GTK_WIDGET(self->info_bar));
 }
 
 static GtkWidget*
@@ -420,10 +456,10 @@ text_view_clear_buffer(GtkTextView *view)
 }
 
 
-
-static void
-entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
+static gpointer
+send_worker_thread(gpointer data)
 {
+  LxiGuiWindow *self = data;
   int device = 0;
   const char *input_buffer;
   GString *tx_buffer;
@@ -437,14 +473,16 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
   if (self->ip == NULL)
   {
     show_error(self, "No instrument selected");
-    return;
+    return NULL;
   }
 
   // Prepare buffer to send
-  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(GTK_ENTRY(entry));
+  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(GTK_ENTRY(self->entry_scpi));
   input_buffer = gtk_entry_buffer_get_text(entry_buffer);
+
   if (strlen(input_buffer) == 0)
-    return;
+    return NULL;
+
   tx_buffer = g_string_new_len(input_buffer, strlen(input_buffer));
   strip_trailing_space(tx_buffer->str);
 
@@ -500,13 +538,31 @@ error_receive:
   lxi_disconnect(device);
 error_connect:
   g_string_free(tx_buffer, true);
+  return NULL;
 }
 
 static void
-button_clicked_scpi (LxiGuiWindow *self, GtkButton *button)
+button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
+{
+  UNUSED(button);
+
+  // Start thread which sends the SCPI message
+  self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
+}
+
+static void
+entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
+{
+  UNUSED(entry);
+
+  // Start thread which sends the SCPI message
+  self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
+}
+
+static void
+button_clicked_scpi(LxiGuiWindow *self, GtkButton *button)
 {
   // Insert button label at entry cursor position
-
   const char *button_label = gtk_button_get_label(button);
   int cursor_position = gtk_editable_get_position(GTK_EDITABLE(self->entry_scpi));
   GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(self->entry_scpi);
@@ -517,13 +573,6 @@ button_clicked_scpi (LxiGuiWindow *self, GtkButton *button)
   cursor_position = cursor_position + strlen(button_label);
 
   gtk_editable_set_position(GTK_EDITABLE(self->entry_scpi), cursor_position);
-}
-
-static void
-button_clicked_scpi_send (LxiGuiWindow *self, GtkButton *button)
-{
-  UNUSED(button);
-  entry_scpi_enter_pressed(self, self->entry_scpi);
 }
 
 static bool
