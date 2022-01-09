@@ -34,8 +34,8 @@ an independent open source community effort.
 The lxi-gui application provides some of the same features as the commandline
 tool but presents them in a modern GUI frontend.
 
-<figure align="center">
-  <img src="images/lxi-gui-scpi.png">
+<figure>
+  <img src="images/lxi-gui-scpi.png" align="center">
   <figcaption>SCPI mode</figcaption>
 </figure>
 
