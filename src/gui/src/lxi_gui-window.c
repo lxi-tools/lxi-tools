@@ -688,6 +688,7 @@ button_clicked_screenshot_grab(LxiGuiWindow *self, GtkButton *button)
   if (self->ip == NULL)
   {
     show_error(self, "No instrument selected");
+    gtk_toggle_button_set_active(self->toggle_button_screenshot_grab, false);
     return;
   }
 
