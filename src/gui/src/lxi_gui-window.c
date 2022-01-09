@@ -321,36 +321,74 @@ button_clicked_search (LxiGuiWindow *self, GtkToggleButton *button)
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
 }
 
-static void
-scroll_to_end(GtkTextView *text_view)
+struct dispatch_data_t
 {
+  GtkTextView *text_view;
+  gchar *buffer;
+};
+
+static gboolean
+text_view_add_buffer_thread(gpointer user_data)
+{
+  struct dispatch_data_t *data = user_data;
+  GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(data->text_view);
   GtkTextIter iter;
-  GtkTextBuffer *buffer = gtk_text_view_get_buffer(text_view);
-  gtk_text_buffer_get_end_iter(buffer,&iter);
-  GtkTextMark *mark = gtk_text_buffer_create_mark(buffer, NULL, &iter, FALSE);
-  gtk_text_view_scroll_mark_onscreen(text_view, mark);
-  gtk_text_buffer_delete_mark(buffer, mark);
+
+  // Append text
+  gtk_text_buffer_get_end_iter(text_buffer, &iter);
+  gtk_text_buffer_insert (text_buffer, &iter, data->buffer, -1);
+
+  // Scroll down
+  gtk_text_buffer_get_end_iter(text_buffer, &iter);
+  GtkTextMark *end_mark = gtk_text_buffer_create_mark(text_buffer, NULL, &iter, FALSE);
+  gtk_text_view_scroll_mark_onscreen(data->text_view, end_mark);
+  gtk_text_buffer_delete_mark(text_buffer, end_mark);
+
+  // Cleanup
+  g_free(data->buffer);
+  g_free(data);
+  return G_SOURCE_REMOVE;
 }
 
 static void
 text_view_add_buffer(GtkTextView *view, const char *buffer)
 {
+  struct dispatch_data_t *data = g_new0(struct dispatch_data_t, 1);
+  data->text_view = view;
+  data->buffer = g_strdup(buffer);
+  g_idle_add(text_view_add_buffer_thread, data);
+}
+
+static gboolean
+text_view_add_markup_buffer_thread(gpointer user_data)
+{
+  struct dispatch_data_t *data = user_data;
+  GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(data->text_view);
   GtkTextIter iter;
-  GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
+
+  // Append text
   gtk_text_buffer_get_end_iter(text_buffer, &iter);
-  gtk_text_buffer_insert (text_buffer, &iter, buffer, -1);
+  gtk_text_buffer_insert_markup(text_buffer, &iter, data->buffer, -1);
+
+  // Scroll down
+  gtk_text_buffer_get_end_iter(text_buffer, &iter);
+  GtkTextMark *end_mark = gtk_text_buffer_create_mark(text_buffer, NULL, &iter, FALSE);
+  gtk_text_view_scroll_mark_onscreen(data->text_view, end_mark);
+  gtk_text_buffer_delete_mark(text_buffer, end_mark);
+
+  // Cleanup
+  g_free(data->buffer);
+  g_free(data);
+  return G_SOURCE_REMOVE;
 }
 
 static void
 text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
 {
-  GtkTextIter iter;
-  char markup_buffer[65536];
-
-  snprintf(markup_buffer, sizeof(markup_buffer), "<span foreground=\"dimgray\">%s</span>", buffer);
-  GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
-  gtk_text_buffer_get_end_iter(text_buffer, &iter);
-  gtk_text_buffer_insert_markup (text_buffer, &iter, markup_buffer, -1);
+  struct dispatch_data_t *data = g_new0(struct dispatch_data_t, 1);
+  data->text_view = view;
+  data->buffer = g_strdup_printf("<span foreground=\"dimgray\">%s</span>", buffer);
+  g_idle_add(text_view_add_markup_buffer_thread, data);
 }
 
 static void
@@ -361,6 +399,8 @@ text_view_clear_buffer(GtkTextView *view)
   gtk_text_buffer_get_bounds(text_buffer, &start, &end);
   gtk_text_buffer_delete(text_buffer, &start, &end);
 }
+
+
 
 static void
 entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
@@ -431,7 +471,6 @@ entry_scpi_enter_pressed (LxiGuiWindow *self, GtkEntry *entry)
 
     // Add received response to text view
     text_view_add_buffer(self->text_view_scpi, rx_buffer);
-    scroll_to_end(self->text_view_scpi);
   }
 
   // Clear text in text input entry
@@ -970,14 +1009,12 @@ static void lua_print_error(LxiGuiWindow *self, const char *string)
 {
   text_view_add_buffer(self->text_view_script_status, string);
   text_view_add_buffer(self->text_view_script_status, "\n");
-  scroll_to_end(self->text_view_script_status);
 }
 
 static void lua_print_string(const char *string)
 {
   text_view_add_buffer(self_global->text_view_script_status, string);
   text_view_add_buffer(self_global->text_view_script_status, "\n");
-  scroll_to_end(self_global->text_view_script_status);
 }
 
 static int lua_print(lua_State* L)
