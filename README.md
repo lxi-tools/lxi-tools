@@ -40,6 +40,8 @@ tool but presents them in a modern GUI frontend.
 
 <img src="images/lxi-gui-benchmark.png" align="center">
 
+<img src="images/lxi-gui-script.png" align="center">
+
 ### 2.2 lxi
 
 The commandline interface of the lxi application is described in the output
