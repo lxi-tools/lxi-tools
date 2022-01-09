@@ -275,6 +275,27 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   pthread_mutex_unlock(&session_mutex);
 }
 
+static gboolean
+gui_update_search_finished_thread(gpointer user_data)
+{
+  LxiGuiWindow *self = user_data;
+
+  // Restore search button
+  gtk_toggle_button_set_active(self->toggle_button_search, false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+
+  // Hide broadcasting info bar
+  hide_info_bar(self);
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+gui_update_search_finished(LxiGuiWindow *self)
+{
+  g_idle_add(gui_update_search_finished_thread, self);
+}
+
 static gpointer
 search_worker_function(gpointer data)
 {
@@ -288,16 +309,13 @@ search_worker_function(gpointer data)
   else
     lxi_discover(&info, timeout, DISCOVER_VXI11);
 
-  gtk_toggle_button_set_active(self->toggle_button_search, false);
-  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
-
-  hide_info_bar(self);
+  gui_update_search_finished(self);
 
   return NULL;
 }
 
 static void
-button_clicked_search (LxiGuiWindow *self, GtkToggleButton *button)
+button_clicked_search(LxiGuiWindow *self, GtkToggleButton *button)
 {
   UNUSED(button);
 
@@ -311,11 +329,12 @@ button_clicked_search (LxiGuiWindow *self, GtkToggleButton *button)
     child = gtk_widget_get_first_child (GTK_WIDGET(self->list_instruments));
   }
 
+  // Reset selected IP and ID
   self->ip = NULL;
   self->id = NULL;
 
   // Start thread which searches for LXI instruments
-  self->search_worker_thread = g_thread_new("search_worker", search_worker_function, (gpointer) self);
+  self->search_worker_thread = g_thread_new("search_worker", search_worker_function, (gpointer)self);
 
   // Only allow one search activity at a time
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
