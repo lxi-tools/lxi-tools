@@ -286,7 +286,7 @@ int screenshot(char *address, char *plugin_name, char *filename,
     if (strlen(address) == 0)
     {
         error_printf("Missing address\n");
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     // Save variables
@@ -304,7 +304,7 @@ int screenshot(char *address, char *plugin_name, char *filename,
         if (get_device_id(address, id, timeout) != 0)
         {
             error_printf("Unable to retrieve instrument ID\n");
-            exit(EXIT_FAILURE);
+            return 1;
         }
 
         // Find relevant screenshot plugin (match instrument ID to plugin)
@@ -352,8 +352,8 @@ int screenshot(char *address, char *plugin_name, char *filename,
 
         if (plugin_winner == -1)
         {
-            error_printf("Could not autodetect which screenshot plugin to use - please specify plugin name manually\n");
-            exit(EXIT_FAILURE);
+            error_printf("Could not autodetect which screenshot plugin to use\n");
+            return 1;
         }
 
         if (isatty(fileno(stdout)) && screenshot_no_gui)
@@ -379,7 +379,7 @@ int screenshot(char *address, char *plugin_name, char *filename,
     if (no_match)
     {
         error_printf("Unknown plugin name\n");
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     // Call capture screenshot function

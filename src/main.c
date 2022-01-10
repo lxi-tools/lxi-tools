@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
             if (option.list)
             {
                 screenshot_list_plugins();
-                return 0;
+                return EXIT_SUCCESS;
             }
             status = screenshot(option.ip, option.plugin_name, option.screenshot_filename, option.timeout, true, NULL, NULL, NULL, NULL);
             break;

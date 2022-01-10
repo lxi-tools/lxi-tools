@@ -90,6 +90,7 @@ struct _LxiGuiWindow
   char                image_filename[1000];
   GFile               *script_file;
   lua_State           *L;
+  gboolean            screenshot_ready;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -619,7 +620,7 @@ grab_screenshot(LxiGuiWindow *self)
   status = screenshot((char *)self->ip, plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
   if (status != 0)
   {
-    show_error(self, "Failure grabbing screenshot");
+    show_error(self, "Failed to grab screenshot");
     g_free(self->image_buffer);
     return 1;
   }
@@ -633,23 +634,29 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
   LxiGuiWindow *self = user_data;
   GdkPixbufLoader *loader;
 
-  // Show screenshot
-  //loader = gdk_pixbuf_loader_new ();
-  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
-  status = gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
-  self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
-  if (self->pixbuf_screenshot == NULL)
+  if (self->screenshot_ready)
   {
-    show_error(self, "Failure handling image format");
-    goto error_image_format;
-  }
-  gtk_widget_set_valign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
-  gtk_widget_set_halign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
-  gtk_image_set_pixel_size(self->image_screenshot, -1);
-  gtk_image_set_from_pixbuf(self->image_screenshot, self->pixbuf_screenshot);
+    // Show screenshot
+    //loader = gdk_pixbuf_loader_new ();
+    loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+    gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+    self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
+    if (self->pixbuf_screenshot == NULL)
+    {
+      show_error(self, "Failure handling image format");
+    }
+    else
+    {
+      gtk_widget_set_valign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
+      gtk_widget_set_halign(GTK_WIDGET(self->image_screenshot), GTK_ALIGN_FILL);
+      gtk_image_set_pixel_size(self->image_screenshot, -1);
+      gtk_image_set_from_pixbuf(self->image_screenshot, self->pixbuf_screenshot);
+      gdk_pixbuf_loader_close(loader, NULL);
+      g_object_unref(loader);
+    }
 
-error_image_format:
-  g_free(self->image_buffer);
+    g_free(self->image_buffer);
+  }
 
   // Restore screenshot buttons
   gtk_toggle_button_set_active(self->toggle_button_screenshot_grab, false);
@@ -674,7 +681,14 @@ screenshot_grab_worker_thread(gpointer data)
 {
   LxiGuiWindow *self = data;
 
-  grab_screenshot(self);
+  if (grab_screenshot(self) == 0)
+  {
+    self->screenshot_ready = true;
+  }
+  else
+  {
+    self->screenshot_ready = false;
+  }
 
   gui_update_grab_screenshot_finished(self);
 
