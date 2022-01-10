@@ -333,12 +333,6 @@ gui_update_search_finished_thread(gpointer user_data)
   return G_SOURCE_REMOVE;
 }
 
-static void
-gui_update_search_finished(LxiGuiWindow *self)
-{
-  g_idle_add(gui_update_search_finished_thread, self);
-}
-
 static gpointer
 search_worker_function(gpointer data)
 {
@@ -352,7 +346,7 @@ search_worker_function(gpointer data)
   else
     lxi_discover(&info, timeout, DISCOVER_VXI11);
 
-  gui_update_search_finished(self);
+  g_idle_add(gui_update_search_finished_thread, self);
 
   return NULL;
 }
@@ -681,12 +675,6 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
   return G_SOURCE_REMOVE;
 }
 
-static void
-gui_update_grab_screenshot_finished(LxiGuiWindow *self)
-{
-  g_idle_add(gui_update_grab_screenshot_finished_thread, self);
-}
-
 static gpointer
 screenshot_grab_worker_thread(gpointer data)
 {
@@ -701,7 +689,7 @@ screenshot_grab_worker_thread(gpointer data)
     self->screenshot_ready = false;
   }
 
-  gui_update_grab_screenshot_finished(self);
+  g_idle_add(gui_update_grab_screenshot_finished_thread, self);
 
   return NULL;
 }
