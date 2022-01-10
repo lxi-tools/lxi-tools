@@ -453,15 +453,24 @@ text_view_add_buffer_in_dimgray(GtkTextView *view, const char *buffer)
   g_idle_add(text_view_add_markup_buffer_thread, data);
 }
 
-static void
-text_view_clear_buffer(GtkTextView *view)
+static gboolean
+text_view_clear_buffer_thread(gpointer data)
 {
+  GtkTextView *view = data;
+
   GtkTextIter start, end;
   GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(view);
   gtk_text_buffer_get_bounds(text_buffer, &start, &end);
   gtk_text_buffer_delete(text_buffer, &start, &end);
+
+  return G_SOURCE_REMOVE;
 }
 
+static void
+text_view_clear_buffer(GtkTextView *view)
+{
+  g_idle_add(text_view_clear_buffer_thread, view);
+}
 
 static gpointer
 send_worker_thread(gpointer data)
@@ -1257,6 +1266,8 @@ static void
 toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
+
+  text_view_clear_buffer(self->text_view_script_status);
 
   // Start thread which starts interpreting the Lua script
   self->script_run_worker_thread = g_thread_new("script_worker", script_run_worker_function, (gpointer) self);
