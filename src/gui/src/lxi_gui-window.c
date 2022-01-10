@@ -635,10 +635,9 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
   gboolean status;
 
   // Show screenshot
-  //loader = gdk_pixbuf_loader_new ();
-  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+  loader = gdk_pixbuf_loader_new ();
+  //loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
   status = gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
-  g_print("status = %d\n", status);
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
   if (self->pixbuf_screenshot == NULL)
   {
@@ -1455,14 +1454,4 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Initialize lua script engine
   initialize_script_engine(self);
-
-  // Show supported formats
-  g_print("Supported image formats:\n");
-  GSList *formats, *l;
-  formats = gdk_pixbuf_get_formats ();
-  for (l = formats; l != NULL; l = l->next)
-  {
-    GdkPixbufFormat *format = l->data;
-    g_print ("%s\n", gdk_pixbuf_format_get_name(format));
-  }
 }
