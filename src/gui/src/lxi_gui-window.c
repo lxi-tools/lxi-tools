@@ -91,6 +91,8 @@ struct _LxiGuiWindow
   GFile               *script_file;
   lua_State           *L;
   gboolean            screenshot_ready;
+  double              progress_bar_fraction;
+  char                *benchmark_result_text;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -806,6 +808,16 @@ button_clicked_screenshot_save (LxiGuiWindow *self, GtkButton *button)
                     NULL);
 }
 
+static gboolean
+gui_update_progress_bar_fraction_thread(gpointer user_data)
+{
+  LxiGuiWindow *self = user_data;
+
+  gtk_progress_bar_set_fraction(self_global->progress_bar_benchmark, self->progress_bar_fraction);
+
+  return G_SOURCE_REMOVE;
+}
+
 static void
 benchmark_progress_cb(unsigned int count)
 {
@@ -816,19 +828,29 @@ benchmark_progress_cb(unsigned int count)
   ten_percent_count = total_count / 10;
   if ((++count % (unsigned int) ten_percent_count) == 0)
   {
-    double fraction = count / ten_percent_count / 10;
-    gtk_progress_bar_set_fraction(self_global->progress_bar_benchmark, fraction);
-
-    // The following reduces the risk of "Trying to snapshot *some widget* without a current allocation" errors
-    gtk_widget_queue_draw(GTK_WIDGET(self_global->progress_bar_benchmark));
+    self_global->progress_bar_fraction = count / ten_percent_count / 10;
+    g_idle_add(gui_update_progress_bar_fraction_thread, self_global);
   }
+}
+
+static gboolean
+gui_update_benchmark_finished_thread(gpointer user_data)
+{
+  LxiGuiWindow *self = user_data;
+
+  gtk_label_set_text(self->label_benchmark_result, self->benchmark_result_text);
+  g_free(self->benchmark_result_text);
+
+  gtk_toggle_button_set_active(self->toggle_button_benchmark_start, false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_benchmark_start), true);
+
+  return G_SOURCE_REMOVE;
 }
 
 static gpointer
 benchmark_worker_function(gpointer data)
 {
   double result;
-  char result_text[20];
   LxiGuiWindow *self = data;
   unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
   unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
@@ -843,13 +865,22 @@ benchmark_worker_function(gpointer data)
   }
 
   // Show benchmark result
-  sprintf(result_text, "%.1f requests/s", result);
-  gtk_label_set_text(self->label_benchmark_result, result_text);
-
-  gtk_toggle_button_set_active(self->toggle_button_benchmark_start, false);
-  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_benchmark_start), true);
+  self->benchmark_result_text = g_strdup_printf("%.1f requests/s", result);
+  g_idle_add(gui_update_benchmark_finished_thread, self);
 
   return NULL;
+}
+
+static gboolean
+gui_update_progress_bar_reset_thread(gpointer user_data)
+{
+  LxiGuiWindow *self = user_data;
+
+  // Reset
+  gtk_progress_bar_set_fraction(self->progress_bar_benchmark, 0);
+  gtk_label_set_text(self->label_benchmark_result, "");
+
+  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -858,9 +889,8 @@ button_clicked_benchmark_start (LxiGuiWindow *self, GtkToggleButton *button)
   UNUSED(button);
 
   // Reset
-  self->benchmark_requests_count = gtk_spin_button_get_value(self_global->spin_button_benchmark_requests);
-  gtk_progress_bar_set_fraction(self->progress_bar_benchmark, 0);
-  gtk_label_set_text(self->label_benchmark_result, " ");
+  g_idle_add(gui_update_progress_bar_reset_thread, self);
+  self->benchmark_requests_count = gtk_spin_button_get_value(self->spin_button_benchmark_requests);
 
   if (self->ip == NULL)
   {
