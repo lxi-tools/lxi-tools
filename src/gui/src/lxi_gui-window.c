@@ -524,7 +524,7 @@ send_worker_thread(gpointer data)
     rx_bytes = lxi_receive(device, rx_buffer, sizeof(rx_buffer), timeout);
     if (rx_bytes == LXI_ERROR)
     {
-      show_error(self, "Error receiving");
+      show_error(self, "No response received");
       goto error_receive;
     }
 

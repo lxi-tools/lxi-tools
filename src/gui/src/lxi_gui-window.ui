@@ -87,6 +87,7 @@
                   <object class="GtkInfoBar" id="info_bar">
                     <property name="visible">0</property>
                     <property name="hexpand">1</property>
+                    <property name="height-request">43</property>
                     <property name="valign">GTK_ALIGN_START</property>
                     <property name="margin-bottom">10</property>
                     <signal name="response" handler="info_bar_clicked"/>
