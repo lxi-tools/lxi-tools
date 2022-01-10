@@ -632,7 +632,6 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
 {
   LxiGuiWindow *self = user_data;
   GdkPixbufLoader *loader;
-  gboolean status;
 
   // Show screenshot
   //loader = gdk_pixbuf_loader_new ();
