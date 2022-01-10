@@ -635,8 +635,8 @@ gui_update_grab_screenshot_finished_thread(gpointer user_data)
   gboolean status;
 
   // Show screenshot
-  loader = gdk_pixbuf_loader_new ();
-  //loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+  //loader = gdk_pixbuf_loader_new ();
+  loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
   status = gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
   self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
   if (self->pixbuf_screenshot == NULL)
