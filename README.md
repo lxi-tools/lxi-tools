@@ -199,8 +199,10 @@ following dependencies:
  * liblxi
  * libreadline
  * lua
- * bash-completion (optional)
- * libgtk (optional)
+ * bash-completion
+ * libgtk
+ * gtksourceview
+ * libadwaita
 
 Install steps:
 ```
