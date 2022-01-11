@@ -42,8 +42,6 @@
 #include <locale.h>
 #include <gtksourceview/gtksource.h>
 
-static pthread_mutex_t session_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 static lxi_info_t info;
 
 struct _LxiGuiWindow
@@ -268,12 +266,22 @@ action_cb (GtkWidget  *widget,
   }
 }
 
+static gboolean
+gui_update_search_add_instrument_thread(gpointer data)
+{
+  GtkWidget *list_box = data;
+
+  // Add list box to list (GtkListBoxRow automatically inserted inbetween)
+  gtk_list_box_append(self_global->list_instruments, list_box);
+
+  return G_SOURCE_REMOVE;
+}
 
 /* Add instrument to list */
 static void
 list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
 {
-  pthread_mutex_lock(&session_mutex);
+  UNUSED(self);
 
   GtkWidget *list_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   GtkWidget *list_text_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -312,16 +320,28 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   // Add text box to list box
   gtk_box_append(GTK_BOX(list_box), list_text_box);
 
-  // Add list box to list (GtkListBoxRow automatically inserted inbetween)
-  gtk_list_box_append(self->list_instruments, list_box);
+  // Add list box to instrument list
+  g_idle_add(gui_update_search_add_instrument_thread, list_box);
+}
 
-  pthread_mutex_unlock(&session_mutex);
+static void vxi11_broadcast(const char *address, const char *interface)
+{
+  UNUSED(address);
+
+  char *text = g_strdup_printf ("Broadcasting on interface %s", interface);
+  show_info(self_global, text);
+  g_free(text);
+}
+
+static void vxi11_device(const char *address, const char *id)
+{
+  list_add_instrument(self_global, address, id);
 }
 
 static gboolean
-gui_update_search_finished_thread(gpointer user_data)
+gui_update_search_finished_thread(gpointer data)
 {
-  LxiGuiWindow *self = user_data;
+  LxiGuiWindow *self = data;
 
   // Restore search button
   gtk_toggle_button_set_active(self->toggle_button_search, false);
@@ -334,7 +354,7 @@ gui_update_search_finished_thread(gpointer user_data)
 }
 
 static gpointer
-search_worker_function(gpointer data)
+search_worker_thread(gpointer data)
 {
   LxiGuiWindow *self = data;
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-discover");
@@ -351,12 +371,14 @@ search_worker_function(gpointer data)
   return NULL;
 }
 
-static void
-button_clicked_search(LxiGuiWindow *self, GtkToggleButton *button)
+static gboolean
+gui_update_search_start_thread(gpointer data)
 {
-  UNUSED(button);
-
+  LxiGuiWindow *self = data;
   GtkWidget *child;
+
+  // Only allow one search activity at a time
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
 
   // Clear instrument list
   child = gtk_widget_get_first_child (GTK_WIDGET(self->list_instruments));
@@ -371,10 +393,17 @@ button_clicked_search(LxiGuiWindow *self, GtkToggleButton *button)
   self->id = NULL;
 
   // Start thread which searches for LXI instruments
-  self->search_worker_thread = g_thread_new("search_worker", search_worker_function, (gpointer)self);
+  self->search_worker_thread = g_thread_new("search_worker", search_worker_thread, (gpointer)self);
 
-  // Only allow one search activity at a time
-  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
+  return G_SOURCE_REMOVE;
+}
+
+static void
+button_clicked_search(LxiGuiWindow *self, GtkToggleButton *button)
+{
+  UNUSED(button);
+
+  g_idle_add(gui_update_search_start_thread, self);
 }
 
 struct dispatch_data_t
@@ -551,6 +580,7 @@ error_connect:
 error_no_instrument:
 error_no_input:
   // Restore send button state
+  // Defer!
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), true);
   gtk_toggle_button_set_active(self->toggle_button_scpi_send, false);
 
@@ -1277,20 +1307,6 @@ info_bar_clicked (LxiGuiWindow *self, GtkInfoBar *infobar)
 
   // TODO: Fix and use callback parameters
   gtk_widget_hide(GTK_WIDGET(self_global->info_bar));
-}
-
-static void vxi11_broadcast(const char *address, const char *interface)
-{
-  UNUSED(address);
-
-  char *text = g_strdup_printf ("Broadcasting on interface %s", interface);
-  show_info(self_global, text);
-  g_free(text);
-}
-
-static void vxi11_device(const char *address, const char *id)
-{
-  list_add_instrument(self_global, address, id);
 }
 
 static void mdns_service(const char *address, const char *id, const char *service, int port)
