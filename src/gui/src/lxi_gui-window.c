@@ -395,6 +395,10 @@ search_worker_thread(gpointer data)
   unsigned int timeout = g_settings_get_uint(self->settings, "timeout-discover");
   bool use_mdns_discovery = g_settings_get_boolean(self->settings, "use-mdns-discovery");
 
+  // Reset selected IP and ID
+  self->ip = NULL;
+  self->id = NULL;
+
   // Search for LXI devices
   if (use_mdns_discovery)
     lxi_discover(&info, timeout, DISCOVER_MDNS);
@@ -402,10 +406,6 @@ search_worker_thread(gpointer data)
     lxi_discover(&info, timeout, DISCOVER_VXI11);
 
   g_idle_add(gui_update_search_finished_thread, self);
-
-  // Reset selected IP and ID
-  self->ip = NULL;
-  self->id = NULL;
 
   return NULL;
 }
