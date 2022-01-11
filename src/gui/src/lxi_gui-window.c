@@ -288,8 +288,15 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   GtkWidget *list_title = gtk_label_new(ip);
   GtkWidget *list_subtitle = gtk_label_new (id);
 
-  // Set height of list box
+  // Set properties of list box
   gtk_widget_set_size_request(list_box, -1, 60);
+
+  // Set properties of list text box
+  gtk_widget_set_hexpand(list_text_box, true);
+  gtk_widget_set_hexpand_set(list_text_box, true);
+  gtk_widget_set_margin_top(list_text_box, 8);
+  gtk_widget_set_margin_end(list_text_box, 5);
+  gtk_widget_set_halign(list_text_box, GTK_ALIGN_START);
 
   // Add image to list box
   GtkWidget *image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument.png");
@@ -298,12 +305,12 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   gtk_image_set_pixel_size(GTK_IMAGE(image), 50);
   gtk_box_append(GTK_BOX(list_box), image);
 
-  // Add title to text box
+  // Add title to list text box
   gtk_widget_set_name(list_title, "list-title");
   gtk_widget_set_halign(list_title, GTK_ALIGN_START);
   gtk_box_append(GTK_BOX(list_text_box), list_title);
 
-  // Add subtitle to text box
+  // Add subtitle to list text box
   gtk_widget_set_name(list_subtitle, "list-subtitle");
   gtk_widget_add_css_class(list_subtitle, "subtitle");
   GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (list_subtitle));
@@ -314,6 +321,7 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   gtk_widget_set_vexpand_set(list_subtitle, true);
   gtk_widget_set_valign(list_subtitle, GTK_ALIGN_START);
   gtk_label_set_wrap(GTK_LABEL(list_subtitle), true);
+  gtk_label_set_natural_wrap_mode(GTK_LABEL(list_subtitle), GTK_NATURAL_WRAP_NONE);
   gtk_label_set_wrap_mode(GTK_LABEL(list_subtitle), PANGO_WRAP_CHAR);
   gtk_box_append(GTK_BOX(list_text_box), list_subtitle);
 
