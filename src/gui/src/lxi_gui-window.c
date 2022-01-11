@@ -324,6 +324,33 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   g_idle_add(gui_update_search_add_instrument_thread, list_box);
 }
 
+static void mdns_service(const char *address, const char *id, const char *service, int port)
+{
+  UNUSED(service);
+  UNUSED(port);
+
+  GtkWidget *child, *subtitle_child;
+
+  // Traverse list of instruments
+  for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
+      child != NULL;
+      child = gtk_widget_get_next_sibling(child))
+  {
+    subtitle_child = find_child_by_name(GTK_WIDGET(child), "list-subtitle");
+    if (subtitle_child != NULL)
+    {
+      if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
+      {
+        // Instruments already exists, do not add
+        return;
+      }
+    }
+  }
+
+  // No match found, add instrument to list box
+  list_add_instrument(self_global, address, id);
+}
+
 static void vxi11_broadcast(const char *address, const char *interface)
 {
   UNUSED(address);
@@ -932,11 +959,10 @@ button_clicked_benchmark_start (LxiGuiWindow *self, GtkToggleButton *button)
 static void
 button_clicked_add_instrument (LxiGuiWindow *self, GtkButton *button)
 {
+  UNUSED(self);
   UNUSED(button);
 
-  g_print ("Add instrument pressed\n");
-
-  list_add_instrument(self, "192.168.100.201", "Samsung Evo 970 Pro");
+  // Not implemented
 }
 
 static void
@@ -1307,33 +1333,6 @@ info_bar_clicked (LxiGuiWindow *self, GtkInfoBar *infobar)
 
   // TODO: Fix and use callback parameters
   gtk_widget_hide(GTK_WIDGET(self_global->info_bar));
-}
-
-static void mdns_service(const char *address, const char *id, const char *service, int port)
-{
-  UNUSED(service);
-  UNUSED(port);
-
-  GtkWidget *child, *subtitle_child;
-
-  // Traverse list of instruments
-  for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
-      child != NULL;
-      child = gtk_widget_get_next_sibling(child))
-  {
-    subtitle_child = find_child_by_name(GTK_WIDGET(child), "list-subtitle");
-    if (subtitle_child != NULL)
-    {
-      if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
-      {
-        // Instruments already exists, do not add
-        return;
-      }
-    }
-  }
-
-  // No match found, add instrument to list box
-  list_add_instrument(self_global, address, id);
 }
 
 static void
