@@ -884,14 +884,14 @@ gui_update_progress_bar_fraction_thread(gpointer user_data)
 static void
 benchmark_progress_cb(unsigned int count)
 {
-  double ten_percent_count;
+  double fraction_count;
   double total_count = self_global->benchmark_requests_count;
 
-  // Update progress for every 10% fraction reached
-  ten_percent_count = total_count / 10;
-  if ((++count % (unsigned int) ten_percent_count) == 0)
+  // Update progress for every 5% fraction reached
+  fraction_count = total_count / 20;
+  if ((++count % (unsigned int) fraction_count) == 0)
   {
-    self_global->progress_bar_fraction = count / ten_percent_count / 10;
+    self_global->progress_bar_fraction = count / fraction_count / 20;
     g_idle_add(gui_update_progress_bar_fraction_thread, self_global);
   }
 }
