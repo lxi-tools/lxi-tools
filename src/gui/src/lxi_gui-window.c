@@ -460,6 +460,7 @@ text_view_add_buffer_thread(gpointer user_data)
 
   // Scroll down
   gtk_text_buffer_get_end_iter(text_buffer, &iter);
+  gtk_text_iter_backward_char(&iter);
   GtkTextMark *end_mark = gtk_text_buffer_create_mark(text_buffer, NULL, &iter, FALSE);
   gtk_text_view_scroll_mark_onscreen(data->text_view, end_mark);
   gtk_text_buffer_delete_mark(text_buffer, end_mark);
