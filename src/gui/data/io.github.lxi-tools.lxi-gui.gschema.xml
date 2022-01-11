@@ -12,7 +12,7 @@
       <description>Timeout in milliseconds for communicating with LXI devices.</description>
     </key>
     <key name="timeout-screenshot" type="u">
-      <default>20000</default>
+      <default>10000</default>
       <summary>Screenshot timeout</summary>
       <description>Timeout in milliseconds for communicating screenshot with LXI devices.</description>
     </key>
