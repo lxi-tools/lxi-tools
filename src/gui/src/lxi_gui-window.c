@@ -395,6 +395,10 @@ search_worker_thread(gpointer data)
 
   g_idle_add(gui_update_search_finished_thread, self);
 
+  // Reset selected IP and ID
+  self->ip = NULL;
+  self->id = NULL;
+
   return NULL;
 }
 
@@ -414,10 +418,6 @@ gui_update_search_start_thread(gpointer data)
     gtk_list_box_remove (GTK_LIST_BOX (self->list_instruments), child);
     child = gtk_widget_get_first_child (GTK_WIDGET(self->list_instruments));
   }
-
-  // Reset selected IP and ID
-  self->ip = NULL;
-  self->id = NULL;
 
   // Start thread which searches for LXI instruments
   self->search_worker_thread = g_thread_new("search_worker", search_worker_thread, (gpointer)self);
