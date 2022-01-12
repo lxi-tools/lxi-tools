@@ -79,6 +79,7 @@ struct _LxiGuiWindow
   GtkInfoBar          *info_bar;
   GtkLabel            *label_info_bar;
   GtkViewport         *viewport_screenshot;
+  GtkToggleButton     *toggle_button_script_run;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -93,6 +94,7 @@ struct _LxiGuiWindow
   int                 screenshot_size;
   double              progress_bar_fraction;
   char                *benchmark_result_text;
+  gboolean            lua_stop_requested;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -1174,6 +1176,8 @@ void initialize_script_engine(LxiGuiWindow *self)
   text_view_add_buffer(self->text_view_script_status, text);
   text_view_add_buffer(self->text_view_script_status, "Loaded lxi extensions.\n");
   g_free(text);
+
+  self->lua_stop_requested = false;
 }
 
 static void lua_print_error(LxiGuiWindow *self, const char *string)
@@ -1222,6 +1226,24 @@ extern int lua_register_print(lua_State *L)
   return 0;
 }
 
+static void lua_line_hook(lua_State *L, lua_Debug *ar)
+{
+  if (ar->event == LUA_HOOKLINE)
+  {
+    if (self_global->lua_stop_requested == true)
+    {
+      luaL_error(L, "Stopped by user");
+    }
+  }
+}
+
+int lua_register_control_hook(lua_State *L)
+{
+  lua_sethook(L, &lua_line_hook, LUA_MASKLINE, 0);
+
+  return 0;
+}
+
 static gpointer
 script_run_worker_function(gpointer data)
 {
@@ -1233,11 +1255,17 @@ script_run_worker_function(gpointer data)
   char *chunkname = NULL;
   char *filename;
 
-  // Initialize Lua session
+  // Reset lua control state
+  self->lua_stop_requested = false;
+
+  // Initialize new Lua session
   lua_State *L = luaL_newstate();
 
   // Open all standard Lua libraries
   luaL_openlibs(L);
+
+  // Register control hook to manage stop/pause
+  lua_register_control_hook(L);
 
   // Bind print function (override)
   lua_register_print(L);
@@ -1277,6 +1305,10 @@ script_run_worker_function(gpointer data)
   g_free(chunkname);
   lua_close(L);
 
+  // Restore script run button
+  gtk_toggle_button_set_active(self->toggle_button_script_run, false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
+
   return NULL;
 }
 
@@ -1284,6 +1316,9 @@ static void
 toggle_button_clicked_script_run (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
+
+  // Only allow to run once until execution is done
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), false);
 
   text_view_clear_buffer(self->text_view_script_status);
 
@@ -1296,7 +1331,9 @@ button_clicked_script_stop (LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(self);
   UNUSED(button);
-  g_print("stop\n");
+
+  // Signal lua script engine to stop execution
+  self->lua_stop_requested = true;
 }
 
 static void
@@ -1351,6 +1388,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, info_bar);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_info_bar);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, viewport_screenshot);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_script_run);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);

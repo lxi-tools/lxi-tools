@@ -1221,7 +1221,7 @@
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkToggleButton">
+                                          <object class="GtkToggleButton" id="toggle_button_script_run">
                                             <property name="label" translatable="1">Run</property>
                                             <property name="tooltip-text" translatable="1">Run script</property>
                                             <signal name="clicked" handler="toggle_button_clicked_script_run" swapped="yes"/>
