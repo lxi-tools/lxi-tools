@@ -955,12 +955,25 @@
                                           <property name="row">0</property>
                                         </layout>
                                         <child>
-                                          <object class="GtkImage" id="image_screenshot">
-                                            <property name="can-focus">0</property>
-                                            <property name="valign">GTK_ALIGN_CENTER</property>
-                                            <property name="halign">GTK_ALIGN_CENTER</property>
-                                            <property name="hexpand">1</property>
-                                            <property name="vexpand">1</property>
+                                          <object class="GtkScrolledWindow">
+                                            <child>
+                                              <object class="GtkViewport" id="viewport_screenshot">
+                                                <property name="can-focus">0</property>
+                                                <child>
+                                                  <object class="GtkPicture" id="picture_screenshot">
+                                                    <property name="can-focus">0</property>
+                                                    <property name="valign">GTK_ALIGN_CENTER</property>
+                                                    <property name="halign">GTK_ALIGN_CENTER</property>
+                                                    <property name="hexpand">1</property>
+                                                    <property name="vexpand">1</property>
+                                                    <property name="margin-top">20</property>
+                                                    <property name="margin-bottom">20</property>
+                                                    <property name="margin-start">20</property>
+                                                    <property name="margin-end">20</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
                                           </object>
                                         </child>
                                       </object>
@@ -969,22 +982,11 @@
                                       <object class="GtkBox">
                                         <property name="homogeneous">1</property>
                                         <property name="spacing">6</property>
+                                        <property name="margin-top">10</property>
                                         <layout>
                                           <property name="column">0</property>
                                           <property name="row">1</property>
                                         </layout>
-                                        <child>
-                                          <object class="GtkToggleButton" id="toggle_button_screenshot_live_view">
-                                            <property name="label" translatable="yes">Live View</property>
-                                            <property name="receives-default">1</property>
-                                            <property name="visible">0</property>
-                                            <signal name="clicked" handler="button_clicked_screenshot_live_view" swapped="yes"/>
-                                            <style>
-                                              <class name="text-button"/>
-                                              <class name="suggested-action"/>
-                                            </style>
-                                          </object>
-                                        </child>
                                         <child>
                                           <object class="GtkToggleButton" id="toggle_button_screenshot_grab">
                                             <property name="label" translatable="yes">Grab Screenshot</property>
