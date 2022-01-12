@@ -215,29 +215,24 @@ pressed_cb (GtkGestureClick *gesture,
 
   if (row != NULL)
   {
-    // If left click
-    if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_PRIMARY)
+    child = find_child_by_name(GTK_WIDGET(row), "list-title");
+    if (child != NULL)
     {
-      child = find_child_by_name(GTK_WIDGET(row), "list-title");
-      if (child != NULL)
-      {
-        // Set active IP
-        self->ip = gtk_label_get_text(GTK_LABEL(child));
-      }
+      // Save IP selected via GUI
+      self->ip = gtk_label_get_text(GTK_LABEL(child));
+    }
+
+    child = find_child_by_name(GTK_WIDGET(row), "list-subtitle");
+    if (child != NULL)
+    {
+      // Save ID selected via GUI
+      self->id = gtk_label_get_text(GTK_LABEL(child));
     }
 
     // If right click
     if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_SECONDARY)
     {
-      child = find_child_by_name(GTK_WIDGET(row), "list-subtitle");
-      if (child != NULL)
-        self->id = gtk_label_get_text(GTK_LABEL(child));
-
-      child = find_child_by_name(GTK_WIDGET(row), "list-title");
-      if (child != NULL)
-        self->ip = gtk_label_get_text(GTK_LABEL(child));
-
-      /* We are placing our menu at the point where
+      /* Place our popup menu at the point where
        * the click happened, before popping it up.
        */
       gtk_popover_set_pointing_to (GTK_POPOVER (self->list_widget_popover_menu),
@@ -1225,9 +1220,36 @@ static int lua_print(lua_State* L)
   return 0;
 }
 
+static int lua_gui_ip(lua_State* L)
+{
+  // Return currently GUI selected IP
+  lua_pushstring(L, self_global->ip);
+
+  return 1;
+}
+
+static int lua_gui_id(lua_State* L)
+{
+  // Return currently GUI selected ID
+  lua_pushstring(L, self_global->id);
+
+  return 1;
+}
+
+static int lua_gui_version(lua_State* L)
+{
+  // Return GUI version
+  lua_pushstring(L, PACKAGE_VERSION);
+
+  return 1;
+}
+
 static const struct luaL_Reg gui_lib [] =
 {
   {"print", lua_print},
+  {"gui_ip", lua_gui_ip},
+  {"gui_id", lua_gui_id},
+  {"gui_version", lua_gui_version},
   {NULL, NULL}
 };
 
