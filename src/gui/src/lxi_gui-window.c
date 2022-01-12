@@ -1225,20 +1225,11 @@ static int lua_print(lua_State* L)
   return 0;
 }
 
-static const struct luaL_Reg printlib [] =
+static const struct luaL_Reg gui_lib [] =
 {
   {"print", lua_print},
   {NULL, NULL}
 };
-
-extern int lua_register_print(lua_State *L)
-{
-  lua_getglobal(L, "_G");
-  luaL_setfuncs(L, printlib, 0);
-  lua_pop(L, 1);
-
-  return 0;
-}
 
 static void lua_line_hook(lua_State *L, lua_Debug *ar)
 {
@@ -1251,8 +1242,14 @@ static void lua_line_hook(lua_State *L, lua_Debug *ar)
   }
 }
 
-int lua_register_control_hook(lua_State *L)
+extern int lua_register_gui(lua_State *L)
 {
+  // Register gui functions
+  lua_getglobal(L, "_G");
+  luaL_setfuncs(L, gui_lib, 0);
+  lua_pop(L, 1);
+
+  // Install line hook to manage run/stop execution
   lua_sethook(L, &lua_line_hook, LUA_MASKLINE, 0);
 
   return 0;
@@ -1278,11 +1275,8 @@ script_run_worker_function(gpointer data)
   // Open all standard Lua libraries
   luaL_openlibs(L);
 
-  // Register control hook to manage stop/pause
-  lua_register_control_hook(L);
-
-  // Bind print function (override)
-  lua_register_print(L);
+  // Bind GUI functions
+  lua_register_gui(L);
 
   // Bind lxi functions
   lua_register_lxi(L);
