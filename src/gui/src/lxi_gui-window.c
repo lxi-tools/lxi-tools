@@ -922,6 +922,7 @@ button_clicked_benchmark_start (LxiGuiWindow *self, GtkToggleButton *button)
   if (self->ip == NULL)
   {
     show_error(self, "No instrument selected");
+    gtk_toggle_button_set_active(self->toggle_button_benchmark_start, true);
     return;
   }
 

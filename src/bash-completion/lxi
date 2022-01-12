@@ -28,7 +28,7 @@ _lxi()
                -t --timeout \
                -x --hex \
                -i --interactive \
-               -s --script \
+               -f --file \
                -r --raw"
 
     screenshot_opts="-a --address \
@@ -41,8 +41,6 @@ _lxi()
                     -t --timeout \
                     -c --count \
                     -r --raw"
-
-    run_opts="-t --timeout"
 
     # Complete the options
     case "${COMP_CWORD}" in
@@ -64,7 +62,7 @@ _lxi()
                     COMPREPLY=( $(compgen -W "${benchmark_opts}" -- ${cur}) )
                     ;;
                 run)
-                    COMPREPLY=( $(compgen -o filenames -A file -W "${run_opts}" -- ${cur}) )
+                    COMPREPLY=( $(compgen -o filenames -A file -- ${cur}) )
                     ;;
                 *)
                     COMPREPLY=()
