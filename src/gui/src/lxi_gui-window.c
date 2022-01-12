@@ -842,7 +842,21 @@ gui_update_progress_bar_fraction_thread(gpointer user_data)
 {
   LxiGuiWindow *self = user_data;
 
-  gtk_progress_bar_set_fraction(self_global->progress_bar_benchmark, self->progress_bar_fraction);
+  static int count;
+
+  gtk_progress_bar_set_fraction(self->progress_bar_benchmark, self->progress_bar_fraction);
+
+  // Animate the runner
+  if (count++ % 2)
+  {
+    gtk_image_set_pixel_size(self->image_benchmark, 155);
+    gtk_widget_set_margin_start(GTK_WIDGET(self->image_benchmark), 10);
+  }
+  else
+  {
+    gtk_image_set_pixel_size(self->image_benchmark, 160);
+    gtk_widget_set_margin_start(GTK_WIDGET(self->image_benchmark), 0);
+  }
 
   return G_SOURCE_REMOVE;
 }
