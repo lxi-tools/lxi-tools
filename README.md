@@ -13,7 +13,8 @@ sending SCPI commands, grabbing screenshots from supported instruments,
 benchmarking SCPI message performance, scripting for automation. Both a
 commandline tool and a GUI tool are available.
 
-lxi-tools rely on liblxi for all communication.
+lxi-tools rely on [liblxi](https://github.com/lxi-tools/liblxi) for all
+communication.
 
 ### 1.1 What is LXI?
 
