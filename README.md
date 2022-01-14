@@ -277,10 +277,10 @@ All contributions (bug reports, code, doc, ideas, etc.) are welcome.
 
 Please use the github issue tracker and pull request features.
 
-Also, if you find this free open source software useful please consider making
-a donation:
+Also, if you find this free open source software useful please feel free to
+consider making a donation of your choice:
 
-[![Donate](https://www.paypal.com/en_US/i/btn/x-click-but21.gif)](https://www.paypal.me/lundmar)
+[![Donate](images/Paypal.png)](https://www.paypal.me/lundmar)
 
 ## 6. Website
 
