@@ -171,8 +171,6 @@ screenshot image to JPG:
 
 ## 3. Installation
 
-lxi-tools can be installed in various ways.
-
 ### 3.1 Installation using package manager
 
 lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
