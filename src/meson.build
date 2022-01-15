@@ -82,6 +82,7 @@ if enable_gui
     'lxi_gui-window.c',
     'lxi_gui-application.c',
     'lxi_gui-prefs.c',
+    'chart.c',
     common_sources,
     ]
   

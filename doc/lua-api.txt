@@ -1,0 +1,28 @@
+lxi-tools Lua API (WIP)
+
+
+
+Both the lxi tool and lxi-gui tool add the following lua functions in addition
+to the standard lua libraries:
+
+connect()
+disconnect()
+scpi()
+
+msleep()
+
+clock0 = clock_new()
+clock_read(clock0)
+clock_start(clock0)
+clock_reset(clock0)
+clock_free(clock0)
+
+
+The lxi-gui tools adds the following lua functions to present and manage data via the GUI:
+
+chart0 = chart_new()
+chart_close(chart0)
+chart_reset(chart0)
+chart_free(chart0)
+chart_dump_csv(chart0, file)
+chart_dump_image(chart0, file)

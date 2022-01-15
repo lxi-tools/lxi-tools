@@ -1,9 +1,12 @@
--- Basic Lua tests --
+-------------------------------------
+--  lxi-tools                      --
+--    https://lxi-tools.github.io  --
+-------------------------------------
 
+-- Basic Lua tests
 
 -- To run tests simply do:
 -- $ lxi run basic-tests.lua
-
 
 --[[
 

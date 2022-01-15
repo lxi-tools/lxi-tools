@@ -1,7 +1,9 @@
-------------------------------------
---  lxi-tools example script      --
---   https://lxi-tools.github.io  --
-------------------------------------
+-------------------------------------
+--  lxi-tools                      --
+--    https://lxi-tools.github.io  --
+-------------------------------------
+
+-- Example: Work with multiple devices
 
 -- Connect to instruments
 dso = connect("192.168.0.157", 5025, nil, 6000, "VXI11")

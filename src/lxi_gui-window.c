@@ -41,6 +41,7 @@
 #include <lualib.h>
 #include <locale.h>
 #include <gtksourceview/gtksource.h>
+#include "chart.h"
 
 static lxi_info_t info;
 
@@ -95,11 +96,30 @@ struct _LxiGuiWindow
   double              progress_bar_fraction;
   char                *benchmark_result_text;
   gboolean            lua_stop_requested;
+  GMutex              gui_chart_mutex;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static LxiGuiWindow *self_global;
+
+#define CHARTS_MAX 1024
+
+struct chart_t
+{
+  bool allocated;
+  enum chart_type_t type;
+  char *title;
+  char *x_label;
+  char *y_label;
+  double x_max;
+  double y_max;
+  int width;
+  bool autoscale;
+  GtkWidget *widget;
+};
+
+static struct chart_t gui_chart[CHARTS_MAX];
 
 struct show_data_t
 {
@@ -1201,7 +1221,138 @@ static void lua_print_string(const char *string)
   text_view_add_buffer(self_global->text_view_script_status, "\n");
 }
 
-static int lua_print(lua_State* L)
+static gboolean
+gui_chart_new_thread(gpointer data)
+{
+  struct chart_t *chart = data;
+
+  GtkWindow *window = GTK_WINDOW(gtk_window_new());
+  gtk_window_set_default_size(window, chart->width, chart->width/2);
+  gtk_window_set_decorated(window, true);
+  gtk_window_set_modal(window, false);
+  gtk_window_set_transient_for(window, GTK_WINDOW(self_global));
+  gtk_window_set_resizable(window, true);
+
+  switch (chart->type)
+  {
+    case CHART_TYPE_LINE:
+      gtk_window_set_title(GTK_WINDOW(window), "Line Chart");
+      break;
+    case CHART_TYPE_SCATTER:
+      gtk_window_set_title(GTK_WINDOW(window), "Scatter Chart");
+      break;
+  }
+
+  chart->widget = chart_new();
+
+  chart_set_type(CHART_WIDGET(chart->widget), chart->type);
+  chart_set_title(CHART_WIDGET(chart->widget), chart->title);
+  chart_set_x_label(CHART_WIDGET(chart->widget), chart->x_label);
+  chart_set_y_label(CHART_WIDGET(chart->widget), chart->y_label);
+  chart_set_x_max(CHART_WIDGET(chart->widget), chart->x_max);
+  chart_set_y_max(CHART_WIDGET(chart->widget), chart->y_max);
+  chart_set_width(CHART_WIDGET(chart->widget), chart->width);
+
+  gtk_window_set_child(window, chart->widget);
+  gtk_window_present(window);
+
+  // Cleanup
+  g_free(chart->title);
+  g_free(chart->x_label);
+  g_free(chart->y_label);
+
+  // Signal we are finished creating chart
+  g_mutex_unlock(&self_global->gui_chart_mutex);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_free(handle)
+static int
+lua_gui_chart_free(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+
+  gui_chart[handle].allocated = false;
+
+  return 0;
+}
+
+// lua: chart_plot(handle, x_value, y_value)
+static int
+lua_gui_chart_plot(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  double x = lua_tonumber(L, 2);
+  double y = lua_tonumber(L, 3);
+
+  chart_add_data_point(CHART_WIDGET(gui_chart[handle].widget), x, y);
+
+  return 0;
+}
+
+// lua: handle = chart_new(width, height, title, x_label, y_label, x_max, y_max, autoscale)
+static int
+lua_gui_chart_new(lua_State* L)
+{
+  int handle;
+
+  // Find free chart handle
+  for (handle=0; handle<CHARTS_MAX; handle++)
+  {
+    if (gui_chart[handle].allocated == false)
+    {
+      gui_chart[handle].allocated = true;
+      break;
+    }
+  }
+
+  struct chart_t *chart = &gui_chart[handle];
+
+  const char *type = lua_tostring(L, 1);
+  if (strcmp(type, "line-chart") == 0)
+  {
+    chart->type = CHART_TYPE_LINE;
+  }
+  else if (strcmp(type, "scatter-chart") == 0)
+  {
+    chart->type = CHART_TYPE_SCATTER;
+  }
+  else
+  {
+    // FIXME:
+    // Return error (negative value)
+    // Maybe also push error (msg)
+    exit(EXIT_FAILURE);
+  }
+
+  chart->title = g_strdup(lua_tostring(L, 2));
+  chart->x_label = g_strdup(lua_tostring(L, 3));
+  chart->y_label = g_strdup(lua_tostring(L, 4));
+  chart->x_max = lua_tonumber(L, 5);
+  chart->y_max = lua_tonumber(L, 6);
+  chart->width = lua_tointeger(L, 7);
+  chart->autoscale = lua_toboolean(L, 8);
+
+  // FIXME: Parameter checks here
+
+  // Create new plot window
+  g_idle_add(gui_chart_new_thread, chart);
+
+  // Wait for chart ready (sleeps here until unlocked)
+  // Alternative: Wait for g_signal?
+  g_mutex_lock(&self_global->gui_chart_mutex);
+
+  // Return chart handle
+  lua_pushinteger(L, handle);
+
+  return 1;
+}
+
+// lua: print(string)
+// Note: Overrides lua builtin print()
+static int
+lua_print(lua_State* L)
 {
   int nargs = lua_gettop(L);
 
@@ -1220,7 +1371,9 @@ static int lua_print(lua_State* L)
   return 0;
 }
 
-static int lua_gui_ip(lua_State* L)
+// lua: ip = selected_ip()
+static int
+lua_gui_ip(lua_State* L)
 {
   // Return currently GUI selected IP
   lua_pushstring(L, self_global->ip);
@@ -1228,7 +1381,9 @@ static int lua_gui_ip(lua_State* L)
   return 1;
 }
 
-static int lua_gui_id(lua_State* L)
+// lua: id = selected_id()
+static int
+lua_gui_id(lua_State* L)
 {
   // Return currently GUI selected ID
   lua_pushstring(L, self_global->id);
@@ -1236,6 +1391,7 @@ static int lua_gui_id(lua_State* L)
   return 1;
 }
 
+// lua: version = version()
 static int lua_gui_version(lua_State* L)
 {
   // Return GUI version
@@ -1246,10 +1402,13 @@ static int lua_gui_version(lua_State* L)
 
 static const struct luaL_Reg gui_lib [] =
 {
+  {"chart_new", lua_gui_chart_new},
+  {"chart_plot", lua_gui_chart_plot},
+  {"chart_free", lua_gui_chart_free},
+  {"selected_ip", lua_gui_ip},
+  {"selected_id", lua_gui_id},
+  {"version", lua_gui_version},
   {"print", lua_print},
-  {"gui_ip", lua_gui_ip},
-  {"gui_id", lua_gui_id},
-  {"gui_version", lua_gui_version},
   {NULL, NULL}
 };
 
@@ -1595,6 +1754,9 @@ lxi_gui_window_init (LxiGuiWindow *self)
   GtkSourceStyleSchemeManager* style_manager = gtk_source_style_scheme_manager_new();
   GtkSourceStyleScheme *style = gtk_source_style_scheme_manager_get_scheme(style_manager, "classic-dark");
   gtk_source_buffer_set_style_scheme(source_buffer_script, style);
+
+  // Initialize GUI chart mutex
+  g_mutex_lock(&self->gui_chart_mutex);
 
   // Initialize lua script engine
   initialize_script_engine(self);
