@@ -30,7 +30,7 @@
 
 #include <lxi.h>
 #include <ctype.h>
-#include "lxi_gui-config.h"
+#include "config.h"
 #include "lxi_gui-window.h"
 #include "screenshot.h"
 #include "benchmark.h"

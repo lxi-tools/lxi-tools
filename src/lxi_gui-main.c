@@ -30,7 +30,7 @@
 
 #include <glib/gi18n.h>
 
-#include "lxi_gui-config.h"
+#include "config.h"
 #include "lxi_gui-application.h"
 
 int

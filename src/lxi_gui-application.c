@@ -31,7 +31,7 @@
 #include "lxi_gui-application.h"
 #include "lxi_gui-window.h"
 #include "lxi_gui-prefs.h"
-#include "lxi_gui-config.h"
+#include "config.h"
 #include "misc.h"
 
 struct _LxiGuiApplication
