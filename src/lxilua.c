@@ -33,19 +33,31 @@
 #include <lauxlib.h>
 #include <lualib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <time.h>
 #include <lxi.h>
 #include "error.h"
 #include "misc.h"
 
 #define RESPONSE_LENGTH_MAX 0x400000
 #define SESSIONS_MAX 1024
+#define CLOCKS_MAX 1024
 
-struct session_t {
+struct session_t
+{
     int timeout;
     int protocol;
 };
 
 static struct session_t session[SESSIONS_MAX];
+
+struct lua_clock_t
+{
+    double time_start;
+    bool allocated;
+};
+
+static struct lua_clock_t lua_clock[CLOCKS_MAX];
 
 // lua: device = lxi_connect(address, port, name, timeout, protocol)
 static int connect(lua_State *L)
@@ -240,6 +252,77 @@ static int msleep(lua_State *L)
     return 0;
 }
 
+// lua: handle = clock_new()
+static int clock_new(lua_State *L)
+{
+    int handle;
+
+    // Find free clock
+    for (handle=0; handle<CLOCKS_MAX; handle++)
+    {
+        if (lua_clock[handle].allocated == false)
+        {
+            lua_clock[handle].allocated = true;
+            lua_clock[handle].time_start = 0;
+            break;
+        }
+    }
+
+    // Return clock handle
+    lua_pushinteger(L, handle);
+    return 1;
+}
+
+// lua: clock = clock_read()
+static int clock_read(lua_State *L)
+{
+    int handle = lua_tointeger(L, 1);
+    struct timespec time_spec;
+    double time;
+
+    // Get current time
+    clock_gettime(CLOCK_MONOTONIC, &time_spec);
+    time = time_spec.tv_sec;
+    time += time_spec.tv_nsec * 0.000000001;
+
+    // If first read call
+    if (lua_clock[handle].time_start == 0)
+    {
+        // Save start time
+        lua_clock[handle].time_start = time;
+
+        // Return 0 time
+        lua_pushnumber(L, 0);
+        return 1;
+    }
+
+    // Return elapsed time since clock start
+    time = time - lua_clock[handle].time_start;
+    lua_pushnumber(L, time);
+    return 1;
+}
+
+// lua: clock_reset()
+static int clock_reset(lua_State *L)
+{
+    int handle = lua_tointeger(L, 1);
+
+    lua_clock[handle].time_start = 0;
+
+    return 0;
+}
+
+// lua: clock_free()
+static int clock_free(lua_State *L)
+{
+    int handle = lua_tointeger(L, 1);
+
+    lua_clock[handle].allocated = false;
+    lua_clock[handle].time_start = 0;
+
+    return 0;
+}
+
 int lua_register_lxi(lua_State *L)
 {
     lua_register(L, "connect", connect);
@@ -248,5 +331,9 @@ int lua_register_lxi(lua_State *L)
     lua_register(L, "scpi_raw", scpi_raw);
     lua_register(L, "sleep", sleep_);
     lua_register(L, "msleep", msleep);
+    lua_register(L, "clock_new", clock_new);
+    lua_register(L, "clock_read", clock_read);
+    lua_register(L, "clock_reset", clock_reset);
+    lua_register(L, "clock_free", clock_free);
     return 0;
 }
