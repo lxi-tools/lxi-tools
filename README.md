@@ -23,7 +23,7 @@ Consortium, an industry consortium that maintains the LXI specification and
 promotes the LXI Standard. The LXI standard defines the communication protocols
 for modern instrumentation and data acquisition systems using Ethernet.
 
-Visit https://www.lxistandard.org for more details.
+Visit www.lxistandard.org for more details.
 
 Please notice that lxi-tools is not affiliated with the LXI consortium - it is
 an independent open source community effort.
@@ -218,7 +218,7 @@ using meson.
 
 ## 4. Tested instruments
 
-The lxi tools are tested to work successfully with the following LXI compatible
+The tools are tested to work successfully with the following LXI compatible
 instruments:
 
 | Instrument                        | Working features           |
@@ -283,7 +283,7 @@ consider making a donation of your choice:
 
 ## 6. Website
 
-Visit https://lxi-tools.github.io
+Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
 ## 7. License
 
@@ -301,6 +301,6 @@ See the AUTHORS file for full list of contributors.
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
 
- * Siglent Technologies - https://www.siglent.com
- * KIKUSUI Electronics Corp. - https://www.kikusui.co.jp
+ * Siglent Technologies - www.siglent.com
+ * KIKUSUI Electronics Corp. - www.kikusui.co.jp
 
