@@ -1,28 +1,215 @@
-lxi-tools Lua API (WIP)
+------------------------------------------------------------------------------
 
+                             lxi-tools Lua API
 
+------------------------------------------------------------------------------
 
 Both the lxi tool and lxi-gui tool add the following lua functions in addition
-to the standard lua libraries:
+to the standard lua library functions:
 
-connect()
-disconnect()
-scpi()
+------------------------------------------------------------------------------
 
-msleep()
+  Function
+    device = connect(address, port, name, timeout, protocol)
 
-clock0 = clock_new()
-clock_read(clock0)
-clock_start(clock0)
-clock_reset(clock0)
-clock_free(clock0)
+  Description
+    Connect to LXI compatible device
 
+  Parameters
+     address: Address of remote device to connect [string]
+        port: Port of remote device [integer] (only used for RAW connections)
+        name: Name of remote device [string] (only used for VXI11 connection,
+              best use nil to default to "inst0")
+     timeout: Timeout in miliseconds [integer]
+    protocol: Communications protocol to use [VXI11, RAW]
 
-The lxi-gui tools adds the following lua functions to present and manage data via the GUI:
+  Returns
+      device: Handle to connected device
 
-chart0 = chart_new()
-chart_close(chart0)
-chart_reset(chart0)
-chart_free(chart0)
-chart_dump_csv(chart0, file)
-chart_dump_image(chart0, file)
+------------------------------------------------------------------------------
+
+  Function
+    response = scpi(device, command, timeout)
+
+  Description
+    Send SCPI command and receive response if expected
+
+  Parameters
+      device: Handle of connected device
+     command: SCPI command to send [string]. A response is expected if the
+              command ends with "?".
+     timeout: Timeout in miliseconds [integer]
+
+  Returns
+    response: Returns response [string] if command string ended with "?". If a
+              timeout occurs the response is nil.
+
+------------------------------------------------------------------------------
+
+  Function
+    disconnect(device)
+
+  Description
+    Disconnect connected device
+
+  Paramters
+     device: Device handle to disconnect
+
+------------------------------------------------------------------------------
+
+  Function
+    sleep(time)
+
+  Description
+    Sleep for specified amount of time
+
+  Parameters
+        time: Time to sleep in seconds [integer]
+
+------------------------------------------------------------------------------
+
+  Function
+    msleep(time)
+
+  Description
+    Sleep for specified amount of time
+
+  Parameters
+        time: Time to sleep in miliseconds [integer]
+
+------------------------------------------------------------------------------
+
+  Function
+    clock = clock_new()
+
+  Description
+    Create new clock resource
+
+  Returns
+    clock: Handle to new clock
+     
+------------------------------------------------------------------------------
+
+  Function
+    time = clock_read(clock)
+
+  Description
+    Read out the elapsed time of the clock since first clock_read() call
+
+  Paramters
+      clock: Handle to clock
+  
+  Returns
+       time: Time in seconds since last call [integer]. If first call it will
+       return 0 and the clock will start ticking.
+
+------------------------------------------------------------------------------
+
+  Function
+    clock_reset(clock)
+
+  Description
+    Reset clock so that it stops ticking. First clock_read() will make the
+    clock tick again.
+
+------------------------------------------------------------------------------
+
+  Function
+    clock_free(clock)
+
+  Desription
+    Release clock resouce
+
+  Parameters
+       clock: Handle of clock to release
+
+------------------------------------------------------------------------------
+
+Additionally, the lxi-gui tools adds the following lua functions to present and
+manage data via the GUI:
+
+------------------------------------------------------------------------------
+
+  Function
+    chart = chart_new(type, title, x_label, y_label, x_max, y_max, width)
+
+  Description
+    Create and present a new chart in a GUI window
+
+  Parameters
+        type: Chart type [string] - currently only "line-chart" is supported
+       title: Title of chart [string]
+     x_label: Label of x-axis [string]
+     y_label: Label of y-axis [string]
+       x_max: Maximum value of x-axis [double]
+       y_max: Maximum value of y-axis [double]
+       width: Width of window containing the chart in pixels [integer]
+
+  Returns
+       chart: Handle to chart
+
+------------------------------------------------------------------------------
+
+  Function
+    chart_plot(chart, x, y)
+
+  Description
+    Plot x and y value to chart
+
+  Paramters
+      chart: Handle of chart
+          x: X value [double]
+          y: Y value [double]
+
+------------------------------------------------------------------------------
+
+  Function
+    chart_free(chart)
+
+  Description
+    Release chart resource
+
+  Paramters
+      chart: Handle of chart to release
+
+------------------------------------------------------------------------------
+
+  Function
+    version = version()
+
+  Description
+    Get version of lxi-tools
+
+  Returns
+    version: Version of lxi-tools [string]
+
+------------------------------------------------------------------------------
+
+  Function
+    ip = selected_ip()
+
+  Description
+    Get IP of device selected in GUI
+
+  Returns
+      ip: IP of device selected in GUI [string]. Returns nil if none selected.
+
+------------------------------------------------------------------------------
+
+  Function
+    id = selected_id()
+
+  Description
+    Get ID of device selected in GUI
+
+  Returns
+      id: ID of device selected in GUI [string]. Returns nil if none selected.
+
+------------------------------------------------------------------------------
+
+Not yet documented or implemented:
+
+chart_close_window(chart0) - Close chart window
+chart_reset(chart0) - Reset chart
+chart_dump_csv(chart0, file) - Dump plotted chart values to file in CSV format
+chart_dump_image(chart0, file) - Dump image of chart to file in PNG format
