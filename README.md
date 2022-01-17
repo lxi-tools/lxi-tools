@@ -250,6 +250,7 @@ instruments:
 | Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |
 | Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |
 | Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |
+| Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |
 | Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |
 | Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |
 | Siglent Technologies SDG6052      | [discover+scpi+screenshot] |
