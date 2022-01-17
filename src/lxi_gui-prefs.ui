@@ -1,204 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="LxiGuiPrefs" parent="GtkDialog">
-    <property name="title" translatable="yes">Preferences</property>
-    <property name="resizable">0</property>
-    <property name="modal">1</property>
-    <child internal-child="content_area">
-      <object class="GtkBox" id="content_area">
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="LxiGuiPrefs" parent="AdwPreferencesWindow">
+    <property name="default-height">620</property>
+    <style>
+      <class name="preferences"/>
+    </style>
+    <property name="search-enabled">false</property>
+    <child>
+      <object class="AdwPreferencesPage">
         <child>
-          <object class="GtkGrid" id="grid">
-            <property name="margin-start">12</property>
-            <property name="margin-end">12</property>
-            <property name="margin-top">12</property>
-            <property name="margin-bottom">12</property>
-            <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Communication</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">_Discover timeout [ms]:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">spin_button_timeout_discover</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">0</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Discover timeout [ms]</property>
+                <child>
+                  <object class="GtkSpinButton" id="spin_button_timeout_discover">
+                    <property name="adjustment">adjustment_timeout_discover</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Instrument discovery timeout in milliseconds</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spin_button_timeout_discover">
-                <property name="adjustment">adjustment_timeout_discover</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">Instrument discovery timeout in milliseconds</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">0</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">SCPI timeout [ms]</property>
+                <child>
+                  <object class="GtkSpinButton" id="spin_button_timeout_scpi">
+                    <property name="adjustment">adjustment_timeout_scpi</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">SCPI communications timeout in milliseconds</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">_SCPI timeout [ms]:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">spin_button_timeout_scpi</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">1</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Screenshot timeout [ms]</property>
+                <child>
+                  <object class="GtkSpinButton" id="spin_button_timeout_screenshot">
+                    <property name="adjustment">adjustment_timeout_screenshot</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Screenshot communications timeout in milliseconds</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spin_button_timeout_scpi">
-                <property name="adjustment">adjustment_timeout_scpi</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">SCPI communications timeout in milliseconds</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">1</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Use mDNS discovery</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_use_mdns_discovery">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Use mDNS for instrument discovery</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">_Screenshot timeout [ms]:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">spin_button_timeout_screenshot</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">2</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Communications protocol</property>
+                <child>
+                  <object class="GtkComboBoxText" id="combo_box_text_com_protocol">
+                    <property name="active">0</property>
+                    <property name="tooltip-text">Communications protocol used for SCPI and benchmark</property>
+                    <property name="valign">center</property>
+                    <items>
+                      <item>VXI11/TCP</item>
+                      <item>RAW/TCP</item>
+                    </items>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spin_button_timeout_screenshot">
-                <property name="adjustment">adjustment_timeout_screenshot</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">Screenshot communications timeout in milliseconds</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">2</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">RAW/TCP port</property>
+                <child>
+                  <object class="GtkSpinButton" id="spin_button_raw_port">
+                    <property name="adjustment">adjustment_raw_port</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">RAW/TCP network port</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Appearance</property>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Show sent SCPI commands</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_show_sent_scpi">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Show sent SCPI commands</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="label">_Show sent SCPI commands:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">switch_show_sent_scpi</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">3</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="switch_show_sent_scpi">
-                <property name="halign">GTK_ALIGN_START</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">Show sent SCPI commands</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">3</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">_Use mDNS discovery:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">switch_use_mdns_discovery</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">4</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="switch_use_mdns_discovery">
-                <property name="halign">GTK_ALIGN_START</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">Use mDNS for instrument discovery</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">4</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">_Communications protocol:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">combo_box_text_com_protocol</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">5</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="combo_box_text_com_protocol">
-                <property name="active">0</property>
-                <property name="tooltip-text">Communications protocol used for SCPI and benchmark</property>
-                <items>
-                  <item>VXI11/TCP</item>
-                  <item>RAW/TCP</item>
-                </items>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">5</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">_RAW/TCP port:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">6</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="spin_button_raw_port">
-                <property name="adjustment">adjustment_raw_port</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">RAW/TCP network port</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">6</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">_Prefer dark theme:</property>
-                <property name="use-underline">1</property>
-                <property name="xalign">1</property>
-                <property name="mnemonic-widget">switch_prefer_dark_theme</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">7</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="switch_prefer_dark_theme">
-                <property name="halign">GTK_ALIGN_START</property>
-                <property name="has-tooltip">1</property>
-                <property name="tooltip-text">Prefer dark theme</property>
-                <signal name="state-set" handler="switch_activate_prefer_dark_theme" swapped="yes"/>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">7</property>
-                </layout>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Prefer dark color theme</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_prefer_dark_theme">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Prefer dark theme</property>
+                    <property name="valign">center</property>
+                    <signal name="state-set" handler="switch_activate_prefer_dark_theme" swapped="yes"/>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

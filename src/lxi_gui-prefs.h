@@ -32,11 +32,12 @@
 #define __LXI_GUI_PREFS_H
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 #include "lxi_gui-window.h"
 
 
 #define LXI_GUI_PREFS_TYPE (lxi_gui_prefs_get_type ())
-G_DECLARE_FINAL_TYPE (LxiGuiPrefs, lxi_gui_prefs, LXI_GUI, PREFS, GtkDialog)
+G_DECLARE_FINAL_TYPE (LxiGuiPrefs, lxi_gui_prefs, LXI_GUI, PREFS, AdwPreferencesWindow)
 
 
 LxiGuiPrefs        *lxi_gui_prefs_new          (LxiGuiWindow *win);

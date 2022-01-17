@@ -33,23 +33,14 @@
 #include "lxi_gui-prefs.h"
 #include "config.h"
 #include "misc.h"
+#include <adwaita.h>
 
 struct _LxiGuiApplication
 {
   GtkApplication parent_instance;
 };
 
-G_DEFINE_TYPE (LxiGuiApplication, lxi_gui_application, GTK_TYPE_APPLICATION)
-
-LxiGuiApplication *
-lxi_gui_application_new (gchar *application_id,
-                         GApplicationFlags  flags)
-{
-  return g_object_new (LXI_GUI_TYPE_APPLICATION,
-                       "application-id", application_id,
-                       "flags", flags,
-                       NULL);
-}
+G_DEFINE_TYPE (LxiGuiApplication, lxi_gui_application, ADW_TYPE_APPLICATION)
 
 static void
 lxi_gui_application_finalize (GObject *object)
@@ -87,7 +78,7 @@ static void
 lxi_gui_application_class_init (LxiGuiApplicationClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GApplicationClass *app_class = G_APPLICATION_CLASS (klass);
+//  GApplicationClass *app_class = G_APPLICATION_CLASS (klass);
 
   object_class->finalize = lxi_gui_application_finalize;
 
@@ -97,7 +88,7 @@ lxi_gui_application_class_init (LxiGuiApplicationClass *klass)
    * tries to launch a "second instance" of the application. When they try
    * to do that, we'll just present any existing window.
    */
-  app_class->activate = lxi_gui_application_activate;
+//  app_class->activate = lxi_gui_application_activate;
 }
 
 static void
@@ -107,14 +98,13 @@ lxi_gui_application_show_about (GSimpleAction *action,
 {
   UNUSED(action);
   UNUSED(parameter);
-  LxiGuiApplication *self = LXI_GUI_APPLICATION (user_data);
-  GtkWindow *window = NULL;
-  const gchar *authors[] = {"Martin Lund", NULL};
+  GtkWindow *window;
+
+  window = gtk_application_get_active_window (GTK_APPLICATION (user_data));
   GdkTexture *logo = gdk_texture_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-tools-icon-128px.png");
+  const gchar *authors[] = {"Martin Lund", NULL};
 
-  g_return_if_fail (LXI_GUI_IS_APPLICATION (self));
-
-  window = gtk_application_get_active_window (GTK_APPLICATION (self));
+  //g_return_if_fail (LXI_GUI_IS_APPLICATION (GTK_APPLICATION(user_data)));
 
   gtk_show_about_dialog (window,
                          "program-name", "lxi-gui",
@@ -133,14 +123,14 @@ lxi_gui_application_show_about (GSimpleAction *action,
 static void
 lxi_gui_application_show_preferences (GSimpleAction *action,
                                       GVariant      *parameter,
-                                      gpointer       app)
+                                      gpointer       user_data)
 {
   UNUSED(action);
   UNUSED(parameter);
   LxiGuiPrefs *prefs;
   GtkWindow *win;
 
-  win = gtk_application_get_active_window (GTK_APPLICATION (app));
+  win = gtk_application_get_active_window (GTK_APPLICATION (user_data));
   prefs = lxi_gui_prefs_new (LXI_GUI_WINDOW (win));
   gtk_window_present (GTK_WINDOW (prefs));
 
@@ -163,4 +153,20 @@ lxi_gui_application_init (LxiGuiApplication *self)
 
   const char *accels[] = {"<primary>q", NULL};
   gtk_application_set_accels_for_action (GTK_APPLICATION (self), "app.quit", accels);
+
+  g_signal_connect (self, "activate", G_CALLBACK (lxi_gui_application_activate), NULL);
+}
+
+LxiGuiApplication *
+lxi_gui_application_new (gchar *application_id,
+                         GApplicationFlags  flags)
+{
+  LxiGuiApplication *app = g_object_new (ADW_TYPE_APPLICATION,
+                                         "application-id", application_id,
+                                         "flags", flags,
+                                         NULL);
+
+  lxi_gui_application_init (app);
+
+  return app;
 }

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
   <template class="LxiGuiWindow" parent="GtkApplicationWindow">
     <property name="default-width">950</property>
     <property name="default-height">700</property>
     <child type="titlebar">
-      <object class="GtkHeaderBar" id="header_bar">
+      <object class="AdwHeaderBar">
         <child type="title">
-          <object class="GtkStackSwitcher" id="stack_switcher">
+          <object class="AdwViewSwitcherTitle">
             <property name="stack">toplevel_stack</property>
-            <property name="halign">GTK_ALIGN_END</property>
-            <property name="hexpand">1</property>
+            <property name="halign">GTK_ALIGN_CENTER</property>
+            <property name="hexpand">false</property>
             <property name="focus-on-click">0</property>
             <property name="can-focus">0</property>
           </object>
@@ -17,7 +19,6 @@
         <child>
           <object class="GtkBox">
             <property name="hexpand">1</property>
-            <property name="spacing">6</property>
             <child>
               <object class="GtkToggleButton" id="toggle_button_search">
                 <property name="icon-name">edit-find-symbolic</property>
@@ -106,12 +107,11 @@
                     <property name="margin-top">10</property>
                     <property name="margin-bottom">10</property>
                     <child>
-                      <object class="GtkStack" id="toplevel_stack">
-                        <property name="transition-duration">250</property>
-                        <property name="transition-type">1</property>
+                      <object class="AdwViewStack" id="toplevel_stack">
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="AdwViewStackPage">
                             <property name="name">page_scpi</property>
+                            <property name="icon-name">pda-symbolic</property>
                             <property name="title" translatable="1">SCPI</property>
                             <property name="use-underline">1</property>
                             <property name="child">
@@ -935,9 +935,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="AdwViewStackPage">
                             <property name="name">page_screenshot</property>
                             <property name="title" translatable="1">Screenshot</property>
+                            <property name="icon-name">camera-photo-symbolic</property>
                             <property name="use-underline">1</property>
                             <property name="child">
                               <object class="GtkBox" id="page_screenshot">
@@ -1014,8 +1015,9 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="AdwViewStackPage">
                             <property name="name">page_benchmark</property>
+                            <property name="icon-name">stopwatch</property>
                             <property name="title" translatable="1">Benchmark</property>
                             <property name="use-underline">1</property>
                             <property name="child">
@@ -1140,8 +1142,9 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStackPage">
+                          <object class="AdwViewStackPage">
                             <property name="name">page_script</property>
+                            <property name="icon-name">accessories-text-editor-symbolic</property>
                             <property name="title" translatable="1">Script</property>
                             <property name="use-underline">1</property>
                             <property name="child">

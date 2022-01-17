@@ -29,6 +29,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 
 #include "lxi_gui-application.h"
 #include "lxi_gui-window.h"
@@ -50,17 +51,24 @@ struct _LxiGuiPrefs
   GtkSwitch *switch_prefer_dark_theme;
 };
 
-G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, ADW_TYPE_PREFERENCES_WINDOW)
 
 static void
 switch_activate_prefer_dark_theme (LxiGuiPrefs *self, GtkSwitch *Switch)
 {
   UNUSED(Switch);
+  AdwStyleManager *adw_style_manager = adw_style_manager_get_default();
 
   // Manage dark theme setting
   bool prefer_dark_theme = gtk_switch_get_active(self->switch_prefer_dark_theme);
-  GtkSettings *gtk_settings = gtk_settings_get_default ();
-  g_object_set(gtk_settings, "gtk-application-prefer-dark-theme", prefer_dark_theme, NULL);
+  if (prefer_dark_theme)
+  {
+    adw_style_manager_set_color_scheme(adw_style_manager, ADW_COLOR_SCHEME_PREFER_DARK);
+  }
+  else
+  {
+    adw_style_manager_set_color_scheme(adw_style_manager, ADW_COLOR_SCHEME_DEFAULT);
+  }
 }
 
 static void
@@ -132,5 +140,5 @@ lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
 LxiGuiPrefs *
 lxi_gui_prefs_new (LxiGuiWindow *win)
 {
-  return g_object_new (LXI_GUI_PREFS_TYPE, "transient-for", win, "use-header-bar", TRUE, NULL);
+  return g_object_new (LXI_GUI_PREFS_TYPE, "transient-for", win, NULL);
 }
