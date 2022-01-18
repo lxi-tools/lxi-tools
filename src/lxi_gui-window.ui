@@ -111,7 +111,7 @@
                         <child>
                           <object class="AdwViewStackPage">
                             <property name="name">page_scpi</property>
-                            <property name="icon-name">pda-symbolic</property>
+                            <property name="icon-name">scpi-symbolic</property>
                             <property name="title" translatable="1">SCPI</property>
                             <property name="use-underline">1</property>
                             <property name="child">
@@ -938,7 +938,7 @@
                           <object class="AdwViewStackPage">
                             <property name="name">page_screenshot</property>
                             <property name="title" translatable="1">Screenshot</property>
-                            <property name="icon-name">camera-photo-symbolic</property>
+                            <property name="icon-name">screenshot-symbolic</property>
                             <property name="use-underline">1</property>
                             <property name="child">
                               <object class="GtkBox" id="page_screenshot">
@@ -1017,7 +1017,7 @@
                         <child>
                           <object class="AdwViewStackPage">
                             <property name="name">page_benchmark</property>
-                            <property name="icon-name">stopwatch</property>
+                            <property name="icon-name">benchmark-symbolic</property>
                             <property name="title" translatable="1">Benchmark</property>
                             <property name="use-underline">1</property>
                             <property name="child">
@@ -1144,7 +1144,7 @@
                         <child>
                           <object class="AdwViewStackPage">
                             <property name="name">page_script</property>
-                            <property name="icon-name">accessories-text-editor-symbolic</property>
+                            <property name="icon-name">script-symbolic</property>
                             <property name="title" translatable="1">Script</property>
                             <property name="use-underline">1</property>
                             <property name="child">
