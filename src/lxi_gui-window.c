@@ -97,7 +97,8 @@ struct _LxiGuiWindow
   double              progress_bar_fraction;
   char                *benchmark_result_text;
   gboolean            lua_stop_requested;
-  GMutex              gui_chart_mutex;
+  GMutex              mutex_gui_chart;
+  GMutex              mutex_mdns;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -296,6 +297,8 @@ gui_update_search_add_instrument_thread(gpointer data)
   // Add list box to list (GtkListBoxRow automatically inserted inbetween)
   gtk_list_box_append(self_global->list_instruments, list_box);
 
+  g_mutex_unlock(&self_global->mutex_mdns);
+
   return G_SOURCE_REMOVE;
 }
 
@@ -361,6 +364,8 @@ static void mdns_service(const char *address, const char *id, const char *servic
 
   GtkWidget *child, *subtitle_child;
 
+  g_mutex_lock(&self_global->mutex_mdns);
+
   // Traverse list of instruments
   for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
       child != NULL;
@@ -372,6 +377,7 @@ static void mdns_service(const char *address, const char *id, const char *servic
       if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
       {
         // Instruments already exists, do not add
+        g_mutex_unlock(&self_global->mutex_mdns);
         return;
       }
     }
@@ -1280,7 +1286,7 @@ gui_chart_new_thread(gpointer data)
   g_free(chart->y_label);
 
   // Signal we are finished creating chart
-  g_mutex_unlock(&self_global->gui_chart_mutex);
+  g_mutex_unlock(&self_global->mutex_gui_chart);
 
   return G_SOURCE_REMOVE;
 }
@@ -1365,7 +1371,7 @@ lua_gui_chart_new(lua_State* L)
 
   // Wait for chart ready (sleeps here until unlocked)
   // Alternative: Wait for g_signal?
-  g_mutex_lock(&self_global->gui_chart_mutex);
+  g_mutex_lock(&self_global->mutex_gui_chart);
 
   // Return chart handle
   lua_pushinteger(L, handle);
@@ -1783,7 +1789,7 @@ lxi_gui_window_init (LxiGuiWindow *self)
   gtk_source_buffer_set_style_scheme(source_buffer_script, style);
 
   // Initialize GUI chart mutex
-  g_mutex_lock(&self->gui_chart_mutex);
+  g_mutex_lock(&self->mutex_gui_chart);
 
   // Initialize lua script engine
   initialize_script_engine(self);
