@@ -109,6 +109,8 @@ static LxiGuiWindow *self_global;
 struct chart_t
 {
   bool allocated;
+  bool destroyed;
+  int handle;
   enum chart_type_t type;
   char *title;
   char *x_label;
@@ -1222,6 +1224,17 @@ static void lua_print_string(const char *string)
   text_view_add_buffer(self_global->text_view_script_status, "\n");
 }
 
+static void
+chart_destroyed_cb (GtkWidget *widget,
+                    gpointer user_data)
+{
+  UNUSED(user_data);
+
+  Chart *self = CHART_WIDGET(widget);
+
+  gui_chart[chart_get_handle(self)].destroyed = true;
+}
+
 static gboolean
 gui_chart_new_thread(gpointer data)
 {
@@ -1246,6 +1259,7 @@ gui_chart_new_thread(gpointer data)
 
   chart->widget = chart_new();
 
+  chart_set_handle(CHART_WIDGET(chart->widget), chart->handle);
   chart_set_type(CHART_WIDGET(chart->widget), chart->type);
   chart_set_title(CHART_WIDGET(chart->widget), chart->title);
   chart_set_x_label(CHART_WIDGET(chart->widget), chart->x_label);
@@ -1254,8 +1268,11 @@ gui_chart_new_thread(gpointer data)
   chart_set_y_max(CHART_WIDGET(chart->widget), chart->y_max);
   chart_set_width(CHART_WIDGET(chart->widget), chart->width);
 
+  g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
+
   gtk_window_set_child(window, chart->widget);
   gtk_window_present(window);
+
 
   // Cleanup
   g_free(chart->title);
@@ -1287,7 +1304,10 @@ lua_gui_chart_plot(lua_State* L)
   double x = lua_tonumber(L, 2);
   double y = lua_tonumber(L, 3);
 
-  chart_add_data_point(CHART_WIDGET(gui_chart[handle].widget), x, y);
+  if (gui_chart[handle].destroyed == false)
+  {
+    chart_add_data_point(CHART_WIDGET(gui_chart[handle].widget), x, y);
+  }
 
   return 0;
 }
@@ -1324,9 +1344,12 @@ lua_gui_chart_new(lua_State* L)
     // FIXME:
     // Return error (negative value)
     // Maybe also push error (msg)
+    g_print("Please specify ");
     exit(EXIT_FAILURE);
   }
 
+  chart->handle = handle;
+  chart->destroyed = false;
   chart->title = g_strdup(lua_tostring(L, 2));
   chart->x_label = g_strdup(lua_tostring(L, 3));
   chart->y_label = g_strdup(lua_tostring(L, 4));

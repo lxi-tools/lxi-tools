@@ -10,6 +10,7 @@ struct point_t
 struct _Chart
 {
   GtkWidget parent_instance;
+  int handle;
   int type;
   char *title;
   char *x_label;
@@ -18,6 +19,7 @@ struct _Chart
   double y_max;
   int width;
   GSList *point_list;
+  bool disposed;
 };
 
 struct _ChartClass
@@ -38,6 +40,7 @@ chart_init (Chart *self)
   self->x_max = 100;
   self->y_max = 100;
   self->width = 500;
+  self->disposed = false;
 
   //gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -47,6 +50,8 @@ static void
 chart_dispose (GObject *object)
 {
   Chart *self = CHART_WIDGET (object);
+
+  self->disposed = true;
 
   // Cleanup
   g_free(self->title);
@@ -343,6 +348,16 @@ chart_new (void)
   return GTK_WIDGET (self);  
 }
 
+void chart_set_handle(Chart *chart, int handle)
+{
+  chart->handle = handle;
+}
+
+int chart_get_handle(Chart *chart)
+{
+  return chart->handle;
+}
+
 void chart_set_type(Chart *chart, int type)
 {
   chart->type = type;
@@ -380,6 +395,9 @@ void chart_set_width(Chart *chart, int width)
 
 void chart_add_data_point(Chart *chart, double x, double y)
 {
+  if (chart->disposed)
+    return;
+
   // Allocate memory for new point
   struct point_t *point = g_new0(struct point_t, 1);
   point->x = x;

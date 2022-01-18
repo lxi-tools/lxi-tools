@@ -13,6 +13,9 @@ enum chart_type_t
   CHART_TYPE_SCATTER,
 };
 
+void chart_set_handle(Chart *chart, int handle);
+int chart_get_handle(Chart *chart);
+
 void chart_set_type(Chart *chart, int type);
 void chart_set_title(Chart *chart, const char *title);
 void chart_set_x_label(Chart *chart, const char *x_label);
