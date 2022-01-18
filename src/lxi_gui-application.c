@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021  Martin Lund
+ * Copyright (c) 2021-2022  Martin Lund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,7 +110,7 @@ lxi_gui_application_show_about (GSimpleAction *action,
                          "program-name", "lxi-gui",
                          "authors", authors,
                          "version", PACKAGE_VERSION,
-                         "copyright", "© 2021 Martin Lund",
+                         "copyright", "© 2021-2022 Martin Lund",
                          "license-type", GTK_LICENSE_BSD_3,
                          "website", "http://lxi-tools.github.io",
                          "comments", "Program for managing LXI compatible instruments.",
