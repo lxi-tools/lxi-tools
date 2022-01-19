@@ -339,18 +339,36 @@ chart_snapshot (GtkWidget   *widget,
   {
     struct point_t *point = l->data;
 
-    if (l == self->point_list)
+    switch (self->type)
     {
-      // Move to first point
-      cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
-    }
-    else
-    {
-      // Draw line to next point
-      cairo_line_to(cr, point->x * x_scale, point->y * y_scale);
-      cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-      cairo_stroke(cr);
-      cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
+      case CHART_TYPE_LINE:
+        if (l == self->point_list)
+        {
+          // Move to first point
+          cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
+        }
+        else
+        {
+          // Draw line to next point
+          cairo_line_to(cr, point->x * x_scale, point->y * y_scale);
+          cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+          cairo_stroke(cr);
+          cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
+        }
+        break;
+
+      case CHART_TYPE_SCATTER:
+        // Draw square
+        //cairo_rectangle (cr, point->x * x_scale, point->y * y_scale, 4, 4);
+        //cairo_fill(cr);
+
+        // Draw point
+        cairo_set_line_width(cr, 4);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
+        cairo_close_path (cr);
+        cairo_stroke (cr);
+        break;
     }
   }
 
