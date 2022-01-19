@@ -82,6 +82,7 @@ struct _LxiGuiWindow
   GtkLabel            *label_info_bar;
   GtkViewport         *viewport_screenshot;
   GtkToggleButton     *toggle_button_script_run;
+  AdwFlap             *flap;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -445,6 +446,9 @@ gui_update_search_start_thread(gpointer data)
 {
   LxiGuiWindow *self = data;
   GtkWidget *child;
+
+  // Reveal flap
+  adw_flap_set_reveal_flap(self->flap, true);
 
   // Only allow one search activity at a time
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
@@ -1610,6 +1614,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_info_bar);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, viewport_screenshot);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_script_run);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, flap);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);
@@ -1761,7 +1766,7 @@ lxi_gui_window_init (LxiGuiWindow *self)
   gtk_widget_grab_focus(GTK_WIDGET(self->entry_scpi));
 
   // Set application window minimum width and height
-  gtk_widget_set_size_request(GTK_WIDGET(self), 950, 700);
+//  gtk_widget_set_size_request(GTK_WIDGET(self), 950, 700);
 
   // Disable screenshot "Save" button until image is present
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);

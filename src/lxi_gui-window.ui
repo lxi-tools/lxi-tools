@@ -34,6 +34,13 @@
                 </style>
               </object>
             </child>
+            <child>
+              <object class="GtkToggleButton" id="button_flap">
+                <property name="icon-name">view-sidebar-start-symbolic</property>
+                <property name="margin-start">6</property>
+                <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
+              </object>
+            </child>
             <child type="end">
               <object class="GtkButton" id="button_add_instrument">
                 <property name="icon-name">list-add-symbolic</property>
@@ -62,11 +69,11 @@
       </object>
     </child>
     <child>
-      <object class="GtkPaned">
-        <property name="position">250</property>
-        <property name="position-set">1</property>
-        <child>
+      <object class="AdwFlap" id="flap">
+        <property name="vexpand">True</property>
+        <property name="flap">
           <object class="GtkScrolledWindow">
+            <property name="width-request">250</property>
             <child>
               <object class="GtkViewport" id="list_viewport">
                 <property name="can-focus">0</property>
@@ -78,8 +85,11 @@
               </object>
             </child>
           </object>
-        </child>
-        <child>
+        </property>
+        <property name="separator">
+          <object class="GtkSeparator"/>
+        </property>
+        <property name="content">
           <object class="GtkBox">
             <property name="orientation">1</property>
             <child>
@@ -1275,7 +1285,7 @@
               </object>
             </child>
           </object>
-        </child>
+        </property>
       </object>
     </child>
   </template>
