@@ -98,7 +98,7 @@ struct _LxiGuiWindow
   char                *benchmark_result_text;
   gboolean            lua_stop_requested;
   GMutex              mutex_gui_chart;
-  GMutex              mutex_mdns;
+  GMutex              mutex_discover;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -297,7 +297,7 @@ gui_update_search_add_instrument_thread(gpointer data)
   // Add list box to list (GtkListBoxRow automatically inserted inbetween)
   gtk_list_box_append(self_global->list_instruments, list_box);
 
-  g_mutex_unlock(&self_global->mutex_mdns);
+  g_mutex_unlock(&self_global->mutex_discover);
 
   return G_SOURCE_REMOVE;
 }
@@ -364,7 +364,7 @@ static void mdns_service(const char *address, const char *id, const char *servic
 
   GtkWidget *child, *subtitle_child;
 
-  g_mutex_lock(&self_global->mutex_mdns);
+  g_mutex_lock(&self_global->mutex_discover);
 
   // Traverse list of instruments
   for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
@@ -377,7 +377,7 @@ static void mdns_service(const char *address, const char *id, const char *servic
       if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
       {
         // Instruments already exists, do not add
-        g_mutex_unlock(&self_global->mutex_mdns);
+        g_mutex_unlock(&self_global->mutex_discover);
         return;
       }
     }
@@ -398,6 +398,8 @@ static void vxi11_broadcast(const char *address, const char *interface)
 
 static void vxi11_device(const char *address, const char *id)
 {
+  g_mutex_lock(&self_global->mutex_discover);
+
   list_add_instrument(self_global, address, id);
 }
 
