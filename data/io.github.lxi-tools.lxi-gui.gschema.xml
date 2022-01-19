@@ -7,12 +7,12 @@
       <description>Timeout in milliseconds for discovery of LXI devices.</description>
     </key>
     <key name="timeout-scpi" type="u">
-      <default>3000</default>
+      <default>2000</default>
       <summary>SCPI timeout</summary>
       <description>Timeout in milliseconds for communicating with LXI devices.</description>
     </key>
     <key name="timeout-screenshot" type="u">
-      <default>10000</default>
+      <default>8000</default>
       <summary>Screenshot timeout</summary>
       <description>Timeout in milliseconds for communicating screenshot with LXI devices.</description>
     </key>
