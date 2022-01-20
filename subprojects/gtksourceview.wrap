@@ -1,4 +1,4 @@
 [wrap-git]
 directory=gtksourceview
-url=https://github.com/lundmar/gtksourceview.git
-revision=hacked
+url=https://gitlab.gnome.org/GNOME/gtksourceview.git
+revision=5.3.1

@@ -56,7 +56,7 @@ subdir('bash-completion')
 enable_gui = get_option('gui')
 if enable_gui
 
-  libglib_dep = dependency('glib-2.0', version: '>= 2.68.4',
+  libglib_dep = dependency('glib-2.0', version: '>= 2.70',
                                     fallback : ['glib', 'libglib_dep'],
                                     default_options: ['tests=false'])
 
