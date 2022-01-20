@@ -416,6 +416,9 @@ gui_update_search_finished_thread(gpointer data)
   // Hide broadcasting info bar
   hide_info_bar(self);
 
+  // Reenable search shortcut
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "action.search", true);
+
   return G_SOURCE_REMOVE;
 }
 
@@ -1595,7 +1598,27 @@ lxi_gui_window_action_search_cb (GtkWidget  *widget,
 
   g_assert (LXI_GUI_IS_WINDOW (self));
 
+  // Disable shortcut action temporarily
+  gtk_widget_action_set_enabled (GTK_WIDGET (self), "action.search", false);
+
   button_clicked_search(self, NULL);
+}
+
+static void
+lxi_gui_window_action_toggle_flap_cb (GtkWidget  *widget,
+                                      const char *action_name,
+                                      GVariant   *param)
+{
+  UNUSED(action_name);
+  UNUSED(param);
+  LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+
+  g_assert (LXI_GUI_IS_WINDOW (self));
+
+  bool flap_state = adw_flap_get_reveal_flap(self->flap);
+
+  // Toggle flap
+  adw_flap_set_reveal_flap(self->flap, !flap_state);
 }
 
 static void
@@ -1651,9 +1674,11 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_install_action (widget_class, "action.copy_id", NULL, action_cb);
   gtk_widget_class_install_action (widget_class, "action.open_browser", NULL, action_cb);
   gtk_widget_class_install_action (widget_class, "action.search", NULL, lxi_gui_window_action_search_cb);
+  gtk_widget_class_install_action (widget_class, "action.toggle_flap", NULL, lxi_gui_window_action_toggle_flap_cb);
 
   /* Create shortcuts */
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_s, GDK_CONTROL_MASK, "action.search", NULL);
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_h, GDK_CONTROL_MASK, "action.toggle_flap", NULL);
 
   // Initialize LXI library
   lxi_init();

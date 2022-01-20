@@ -17,6 +17,12 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Hide/unhide search sidebar</property>
+                <property name="action-name">action.toggle_flap</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes" context="shortcut window">Show Shortcuts</property>
                 <property name="action-name">win.show-help-overlay</property>
               </object>

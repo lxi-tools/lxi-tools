@@ -157,6 +157,7 @@ lxi_gui_application_init (LxiGuiApplication *self)
     const char *accelerators[2];
   } accels[] = {
     { "action.search", { "<Control>s", NULL } },
+    { "action.toggle_flap", { "<Control>h", NULL } },
     { "app.quit", { "<primary>q", NULL } },
   };
 

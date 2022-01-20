@@ -25,7 +25,7 @@
                 <property name="label">Search</property>
                 <property name="halign">3</property>
                 <property name="receives-default">1</property>
-                <property name="tooltip-text">Search for instruments</property>
+                <property name="tooltip-text">Search for devices</property>
                 <property name="focus-on-click">0</property>
                 <signal name="clicked" handler="button_clicked_search" swapped="yes"/>
                 <style>
@@ -37,6 +37,7 @@
             <child>
               <object class="GtkToggleButton" id="button_flap">
                 <property name="icon-name">view-sidebar-start-symbolic</property>
+                <property name="tooltip-text">Hide/unhide search sidebar</property>
                 <property name="margin-start">6</property>
                 <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
               </object>
