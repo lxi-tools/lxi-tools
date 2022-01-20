@@ -25,7 +25,7 @@
                 <property name="label">Search</property>
                 <property name="halign">3</property>
                 <property name="receives-default">1</property>
-                <property name="tooltip-text">Search for devices</property>
+                <property name="tooltip-text">Search for instruments</property>
                 <property name="focus-on-click">0</property>
                 <signal name="clicked" handler="button_clicked_search" swapped="yes"/>
                 <style>
