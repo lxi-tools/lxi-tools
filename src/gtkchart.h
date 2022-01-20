@@ -31,26 +31,26 @@
 
 #include <gtk/gtk.h>
 
-#define CHART_TYPE_WIDGET (chart_get_type ())
-G_DECLARE_FINAL_TYPE (Chart, chart, CHART, WIDGET, GtkWidget)
+#define GTK_CHART_TYPE_WIDGET (gtk_chart_get_type ())
+G_DECLARE_FINAL_TYPE (GtkChart, gtk_chart, GTK_CHART, WIDGET, GtkWidget)
 
-GtkWidget * chart_new (void);
+GtkWidget * gtk_chart_new (void);
 
-enum chart_type_t
+enum gtk_chart_type_t
 {
-  CHART_TYPE_LINE,
-  CHART_TYPE_SCATTER,
+  GTK_CHART_TYPE_LINE,
+  GTK_CHART_TYPE_SCATTER,
 };
 
-void chart_set_handle(Chart *chart, int handle);
-int chart_get_handle(Chart *chart);
+void gtk_chart_set_handle(GtkChart *chart, int handle);
+int gtk_chart_get_handle(GtkChart *chart);
 
-void chart_set_type(Chart *chart, int type);
-void chart_set_title(Chart *chart, const char *title);
-void chart_set_x_label(Chart *chart, const char *x_label);
-void chart_set_y_label(Chart *chart, const char *y_label);
-void chart_set_x_max(Chart *chart, double x_max);
-void chart_set_y_max(Chart *chart, double y_max);
-void chart_set_width(Chart *chart, int width);
-void chart_add_data_point(Chart *chart, double x, double y);
+void gtk_chart_set_type(GtkChart *chart, int type);
+void gtk_chart_set_title(GtkChart *chart, const char *title);
+void gtk_chart_set_x_label(GtkChart *chart, const char *x_label);
+void gtk_chart_set_y_label(GtkChart *chart, const char *y_label);
+void gtk_chart_set_x_max(GtkChart *chart, double x_max);
+void gtk_chart_set_y_max(GtkChart *chart, double y_max);
+void gtk_chart_set_width(GtkChart *chart, int width);
+void gtk_chart_add_data_point(GtkChart *chart, double x, double y);
 

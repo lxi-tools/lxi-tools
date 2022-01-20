@@ -41,7 +41,7 @@
 #include <lualib.h>
 #include <locale.h>
 #include <gtksourceview/gtksource.h>
-#include "chart.h"
+#include "gtkchart.h"
 #include <adwaita.h>
 
 static lxi_info_t info;
@@ -113,7 +113,7 @@ struct chart_t
   bool allocated;
   bool destroyed;
   int handle;
-  enum chart_type_t type;
+  enum gtk_chart_type_t type;
   char *title;
   char *x_label;
   char *y_label;
@@ -1245,9 +1245,9 @@ chart_destroyed_cb (GtkWidget *widget,
 {
   UNUSED(user_data);
 
-  Chart *self = CHART_WIDGET(widget);
+  GtkChart *self = GTK_CHART_WIDGET(widget);
 
-  gui_chart[chart_get_handle(self)].destroyed = true;
+  gui_chart[gtk_chart_get_handle(self)].destroyed = true;
 }
 
 static gboolean
@@ -1264,30 +1264,29 @@ gui_chart_new_thread(gpointer data)
 
   switch (chart->type)
   {
-    case CHART_TYPE_LINE:
+    case GTK_CHART_TYPE_LINE:
       gtk_window_set_title(GTK_WINDOW(window), "Line Chart");
       break;
-    case CHART_TYPE_SCATTER:
+    case GTK_CHART_TYPE_SCATTER:
       gtk_window_set_title(GTK_WINDOW(window), "Scatter Chart");
       break;
   }
 
-  chart->widget = chart_new();
+  chart->widget = gtk_chart_new();
 
-  chart_set_handle(CHART_WIDGET(chart->widget), chart->handle);
-  chart_set_type(CHART_WIDGET(chart->widget), chart->type);
-  chart_set_title(CHART_WIDGET(chart->widget), chart->title);
-  chart_set_x_label(CHART_WIDGET(chart->widget), chart->x_label);
-  chart_set_y_label(CHART_WIDGET(chart->widget), chart->y_label);
-  chart_set_x_max(CHART_WIDGET(chart->widget), chart->x_max);
-  chart_set_y_max(CHART_WIDGET(chart->widget), chart->y_max);
-  chart_set_width(CHART_WIDGET(chart->widget), chart->width);
+  gtk_chart_set_handle(GTK_CHART_WIDGET(chart->widget), chart->handle);
+  gtk_chart_set_type(GTK_CHART_WIDGET(chart->widget), chart->type);
+  gtk_chart_set_title(GTK_CHART_WIDGET(chart->widget), chart->title);
+  gtk_chart_set_x_label(GTK_CHART_WIDGET(chart->widget), chart->x_label);
+  gtk_chart_set_y_label(GTK_CHART_WIDGET(chart->widget), chart->y_label);
+  gtk_chart_set_x_max(GTK_CHART_WIDGET(chart->widget), chart->x_max);
+  gtk_chart_set_y_max(GTK_CHART_WIDGET(chart->widget), chart->y_max);
+  gtk_chart_set_width(GTK_CHART_WIDGET(chart->widget), chart->width);
 
   g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
 
   gtk_window_set_child(window, chart->widget);
   gtk_window_present(window);
-
 
   // Cleanup
   g_free(chart->title);
@@ -1321,7 +1320,7 @@ lua_gui_chart_plot(lua_State* L)
 
   if (gui_chart[handle].destroyed == false)
   {
-    chart_add_data_point(CHART_WIDGET(gui_chart[handle].widget), x, y);
+    gtk_chart_add_data_point(GTK_CHART_WIDGET(gui_chart[handle].widget), x, y);
   }
 
   return 0;
@@ -1348,11 +1347,11 @@ lua_gui_chart_new(lua_State* L)
   const char *type = lua_tostring(L, 1);
   if (strcmp(type, "line-chart") == 0)
   {
-    chart->type = CHART_TYPE_LINE;
+    chart->type = GTK_CHART_TYPE_LINE;
   }
   else if (strcmp(type, "scatter-chart") == 0)
   {
-    chart->type = CHART_TYPE_SCATTER;
+    chart->type = GTK_CHART_TYPE_SCATTER;
   }
   else
   {

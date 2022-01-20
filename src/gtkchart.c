@@ -28,8 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "chart.h"
-#include "misc.h"
+#include "gtkchart.h"
 
 struct point_t
 {
@@ -37,7 +36,7 @@ struct point_t
   double y;
 };
 
-struct _Chart
+struct _GtkChart
 {
   GtkWidget parent_instance;
   int handle;
@@ -52,18 +51,18 @@ struct _Chart
   bool disposed;
 };
 
-struct _ChartClass
+struct _GtkChartClass
 {
   GtkWidgetClass parent_class;
 };
 
-G_DEFINE_TYPE (Chart, chart, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE (GtkChart, gtk_chart, GTK_TYPE_WIDGET)
 
 static void
-chart_init (Chart *self)
+gtk_chart_init (GtkChart *self)
 {
   // Defaults
-  self->type = CHART_TYPE_LINE;
+  self->type = GTK_CHART_TYPE_LINE;
   self->title = NULL;
   self->x_label = NULL;
   self->y_label = NULL;
@@ -77,9 +76,9 @@ chart_init (Chart *self)
 }
 
 static void
-chart_dispose (GObject *object)
+gtk_chart_dispose (GObject *object)
 {
-  Chart *self = CHART_WIDGET (object);
+  GtkChart *self = GTK_CHART_WIDGET (object);
 
   self->disposed = true;
 
@@ -91,14 +90,14 @@ chart_dispose (GObject *object)
   g_slist_free_full(g_steal_pointer(&self->point_list), g_free);
   g_slist_free(self->point_list);
 
-  G_OBJECT_CLASS (chart_parent_class)->dispose (object);
+  G_OBJECT_CLASS (gtk_chart_parent_class)->dispose (object);
 }
 
 static void
-chart_snapshot (GtkWidget   *widget,
+gtk_chart_snapshot (GtkWidget   *widget,
                 GtkSnapshot *snapshot)
 {
-  Chart *self = CHART_WIDGET(widget);
+  GtkChart *self = GTK_CHART_WIDGET(widget);
 
   GdkRGBA bg_color, white, blue, red, line, grid;
   cairo_text_extents_t extents;
@@ -324,7 +323,7 @@ chart_snapshot (GtkWidget   *widget,
   cairo_line_to (cr, 0.9 * w, 0.2 * h);
   cairo_stroke (cr);
 
-  // Move coordinate system to (0,0) of drawn chart
+  // Move coordinate system to (0,0) of drawn gtk_chart
   cairo_translate(cr, 0.1 * w, 0.2 * h);
   gdk_cairo_set_source_rgba (cr, &line);
   cairo_set_line_width (cr, 2.0);
@@ -341,7 +340,7 @@ chart_snapshot (GtkWidget   *widget,
 
     switch (self->type)
     {
-      case CHART_TYPE_LINE:
+      case GTK_CHART_TYPE_LINE:
         if (l == self->point_list)
         {
           // Move to first point
@@ -357,7 +356,7 @@ chart_snapshot (GtkWidget   *widget,
         }
         break;
 
-      case CHART_TYPE_SCATTER:
+      case GTK_CHART_TYPE_SCATTER:
         // Draw square
         //cairo_rectangle (cr, point->x * x_scale, point->y * y_scale, 4, 4);
         //cairo_fill(cr);
@@ -376,72 +375,72 @@ chart_snapshot (GtkWidget   *widget,
 }
 
 static void
-chart_class_init (ChartClass *class)
+gtk_chart_class_init (GtkChartClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
-  object_class->dispose = chart_dispose;
+  object_class->dispose = gtk_chart_dispose;
   
-  widget_class->snapshot = chart_snapshot;
+  widget_class->snapshot = gtk_chart_snapshot;
 }
 
 GtkWidget *
-chart_new (void)
+gtk_chart_new (void)
 {
-  Chart *self;
+  GtkChart *self;
 
-  self = g_object_new (CHART_TYPE_WIDGET, NULL);
+  self = g_object_new (GTK_CHART_TYPE_WIDGET, NULL);
 
   return GTK_WIDGET (self);  
 }
 
-void chart_set_handle(Chart *chart, int handle)
+void gtk_chart_set_handle(GtkChart *chart, int handle)
 {
   chart->handle = handle;
 }
 
-int chart_get_handle(Chart *chart)
+int gtk_chart_get_handle(GtkChart *chart)
 {
   return chart->handle;
 }
 
-void chart_set_type(Chart *chart, int type)
+void gtk_chart_set_type(GtkChart *chart, int type)
 {
   chart->type = type;
 }
 
-void chart_set_title(Chart *chart, const char *title)
+void gtk_chart_set_title(GtkChart *chart, const char *title)
 {
   chart->title = g_strdup(title);
 }
 
-void chart_set_x_label(Chart *chart, const char *x_label)
+void gtk_chart_set_x_label(GtkChart *chart, const char *x_label)
 {
   chart->x_label = g_strdup(x_label);
 }
 
-void chart_set_y_label(Chart *chart, const char *y_label)
+void gtk_chart_set_y_label(GtkChart *chart, const char *y_label)
 {
   chart->y_label = g_strdup(y_label);
 }
 
-void chart_set_x_max(Chart *chart, double x_max)
+void gtk_chart_set_x_max(GtkChart *chart, double x_max)
 {
   chart->x_max = x_max;
 }
 
-void chart_set_y_max(Chart *chart, double y_max)
+void gtk_chart_set_y_max(GtkChart *chart, double y_max)
 {
   chart->y_max = y_max;
 }
 
-void chart_set_width(Chart *chart, int width)
+void gtk_chart_set_width(GtkChart *chart, int width)
 {
   chart->width = width;
 }
 
-void chart_add_data_point(Chart *chart, double x, double y)
+void gtk_chart_add_data_point(GtkChart *chart, double x, double y)
 {
   if (chart->disposed)
     return;
