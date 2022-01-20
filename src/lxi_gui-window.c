@@ -1807,9 +1807,6 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Grab focus to SCPI input entry
   gtk_widget_grab_focus(GTK_WIDGET(self->entry_scpi));
 
-  // Set application window minimum width and height
-//  gtk_widget_set_size_request(GTK_WIDGET(self), 950, 700);
-
   // Disable screenshot "Save" button until image is present
   gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
 
