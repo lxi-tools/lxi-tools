@@ -1585,6 +1585,20 @@ lxi_gui_window_dispose (GObject *object)
 }
 
 static void
+lxi_gui_window_action_search_cb (GtkWidget  *widget,
+                                 const char *action_name,
+                                 GVariant   *param)
+{
+  UNUSED(action_name);
+  UNUSED(param);
+  LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+
+  g_assert (LXI_GUI_IS_WINDOW (self));
+
+  button_clicked_search(self, NULL);
+}
+
+static void
 lxi_gui_window_class_init (LxiGuiWindowClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -1636,6 +1650,10 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_install_action (widget_class, "action.copy_ip", NULL, action_cb);
   gtk_widget_class_install_action (widget_class, "action.copy_id", NULL, action_cb);
   gtk_widget_class_install_action (widget_class, "action.open_browser", NULL, action_cb);
+  gtk_widget_class_install_action (widget_class, "action.search", NULL, lxi_gui_window_action_search_cb);
+
+  /* Create shortcuts */
+  gtk_widget_class_add_binding_action (widget_class, GDK_KEY_s, GDK_CONTROL_MASK, "action.search", NULL);
 
   // Initialize LXI library
   lxi_init();

@@ -3,7 +3,7 @@
 --    https://lxi-tools.github.io  --
 -------------------------------------
 
--- Example: Work with multiple devices
+-- Example: Working with multiple devices
 
 -- Connect to instruments
 dso = connect("192.168.0.157", nil, nil, 6000, "VXI11")

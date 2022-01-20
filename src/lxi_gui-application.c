@@ -151,9 +151,22 @@ lxi_gui_application_init (LxiGuiApplication *self)
   g_signal_connect (about_action, "activate", G_CALLBACK (lxi_gui_application_show_about), self);
   g_action_map_add_action (G_ACTION_MAP (self), G_ACTION (about_action));
 
-  const char *accels[] = {"<primary>q", NULL};
-  gtk_application_set_accels_for_action (GTK_APPLICATION (self), "app.quit", accels);
+  // Install key shortcuts in help window (accelerator type)
+  struct {
+    const char *action_and_target;
+    const char *accelerators[2];
+  } accels[] = {
+    { "action.search", { "<Control>s", NULL } },
+    { "app.quit", { "<primary>q", NULL } },
+  };
 
+  long unsigned int i;
+  for (i = 0; i < G_N_ELEMENTS (accels); i++)
+  {
+    gtk_application_set_accels_for_action (GTK_APPLICATION(self), accels[i].action_and_target, accels[i].accelerators);
+  }
+
+  // Connect activate signal (required to start application)
   g_signal_connect (self, "activate", G_CALLBACK (lxi_gui_application_activate), NULL);
 }
 
