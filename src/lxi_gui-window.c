@@ -813,9 +813,8 @@ button_clicked_screenshot_grab(LxiGuiWindow *self, GtkButton *button)
     return;
   }
 
-  // Disable buttons while grabbing the screenshot
+  // Disable grab button while grabbing the screenshot
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
-  gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
 
   // Start worker thread that will perform the grab screenshot work
   self->screenshot_grab_worker_thread = g_thread_new("screenshot_grab_worker", screenshot_grab_worker_thread, (gpointer) self);
