@@ -1233,6 +1233,13 @@
                                             </layout>
                                             <child>
                                               <object class="GtkButton">
+                                                <property name="label" translatable="1">New</property>
+                                                <property name="tooltip-text" translatable="1">New script</property>
+                                                <signal name="clicked" handler="button_clicked_script_new" swapped="yes"/>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkButton">
                                                 <property name="label" translatable="1">Open</property>
                                                 <property name="tooltip-text" translatable="1">Open a script</property>
                                                 <signal name="clicked" handler="button_clicked_script_open" swapped="yes"/>

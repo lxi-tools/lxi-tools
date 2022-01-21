@@ -1050,6 +1050,7 @@ on_script_file_open_response (GtkDialog *dialog,
       g_object_unref(file_input_stream);
       g_free(buffer);
       g_free(input_stream);
+      return;
     }
 
     // Get source buffer of script source view
@@ -1072,6 +1073,17 @@ on_script_file_open_response (GtkDialog *dialog,
     // Update script file reference
     self->script_file = file;
 
+    // Print status
+    if (self->script_file != NULL)
+    {
+      char *filename = g_file_get_path(self->script_file);
+      char *basename = g_path_get_basename(filename);
+      g_free(filename);
+
+      char *text = g_strdup_printf ("Opened file %s.\n", basename);
+      text_view_add_buffer(self->text_view_script_status, text);
+      g_free(text);
+    }
 
     // Cleanup
     g_free(buffer);
@@ -1082,6 +1094,27 @@ on_script_file_open_response (GtkDialog *dialog,
   // TODO: Report errors to GUI
 
   gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+static void
+button_clicked_script_new (LxiGuiWindow *self, GtkButton *button)
+{
+  UNUSED(button);
+  GtkSourceBuffer *source_buffer_script;
+
+  // Clear existing script file
+  self->script_file = NULL;
+
+  // Get source buffer of script source view
+  source_buffer_script = GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
+
+  // Clear existing text buffer
+  GtkTextIter start, end;
+  gtk_text_buffer_get_bounds(GTK_TEXT_BUFFER(source_buffer_script), &start, &end);
+  gtk_text_buffer_delete(GTK_TEXT_BUFFER(source_buffer_script), &start, &end);
+
+  // Print status
+  text_view_add_buffer(self->text_view_script_status, "New script.\n");
 }
 
 static void
@@ -1153,6 +1186,18 @@ on_script_file_save_response (GtkDialog *dialog,
 
     // Update script file reference
     self->script_file = file;
+
+    // Print status
+    if (self->script_file != NULL)
+    {
+      char *filename = g_file_get_path(self->script_file);
+      char *basename = g_path_get_basename(filename);
+      g_free(filename);
+
+      char *text = g_strdup_printf ("Saved file %s.\n", basename);
+      text_view_add_buffer(self->text_view_script_status, text);
+      g_free(text);
+    }
   }
 
   gtk_window_destroy (GTK_WINDOW (dialog));
@@ -1168,6 +1213,15 @@ button_clicked_script_save (LxiGuiWindow *self, GtkButton *button)
     // Save file
     GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script));
     save_text_buffer_to_file(self->script_file, text_buffer);
+
+    // Print status
+    char *filename = g_file_get_path(self->script_file);
+    char *basename = g_path_get_basename(filename);
+    g_free(filename);
+
+    char *text = g_strdup_printf ("Saved file %s.\n", basename);
+    text_view_add_buffer(self->text_view_script_status, text);
+    g_free(text);
   }
   else
   {
@@ -1661,6 +1715,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_grab);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_save);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_benchmark_start);
+  gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_new);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_open);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_save);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_save_as);
