@@ -1,7 +1,7 @@
 /* SCPI page */
 
 .text-view-scpi {
-  background-color: shade(@theme_base_color, .85);
+  background-color: shade(@theme_base_color, .90);
   border-color: alpha(black, 0.8);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -68,7 +68,7 @@
 }
 
 .text-view-script-status {
-  background-color: shade(@theme_base_color, .85);
+  background-color: shade(@theme_base_color, .80);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 10px;
