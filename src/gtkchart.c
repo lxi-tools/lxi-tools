@@ -30,7 +30,7 @@
 
 #include "gtkchart.h"
 
-struct point_t
+struct chart_point_t
 {
   double x;
   double y;
@@ -58,8 +58,7 @@ struct _GtkChartClass
 
 G_DEFINE_TYPE (GtkChart, gtk_chart, GTK_TYPE_WIDGET)
 
-static void
-gtk_chart_init (GtkChart *self)
+static void gtk_chart_init (GtkChart *self)
 {
   // Defaults
   self->type = GTK_CHART_TYPE_LINE;
@@ -74,8 +73,7 @@ gtk_chart_init (GtkChart *self)
   //gtk_widget_init_template (GTK_WIDGET (self));
 }
 
-static void
-gtk_chart_dispose (GObject *object)
+static void gtk_chart_dispose (GObject *object)
 {
   GtkChart *self = GTK_CHART_WIDGET (object);
 
@@ -92,27 +90,22 @@ gtk_chart_dispose (GObject *object)
   G_OBJECT_CLASS (gtk_chart_parent_class)->dispose (object);
 }
 
-static void
-gtk_chart_snapshot (GtkWidget   *widget,
-                GtkSnapshot *snapshot)
+void chart_draw_line_or_scatter(GtkChart *self,
+                                GtkSnapshot *snapshot,
+                                float h,
+                                float w)
 {
-  GtkChart *self = GTK_CHART_WIDGET(widget);
-
   GdkRGBA bg_color, white, blue, red, line, grid;
   cairo_text_extents_t extents;
-  float w, h;
   char value[20];
 
-//  gdk_rgba_parse (&bg_color, "#2d2d2d");
+  //gdk_rgba_parse (&bg_color, "#2d2d2d");
   gdk_rgba_parse (&bg_color, "black");
   gdk_rgba_parse (&white, "rgba(255,255,255,0.75)");
   gdk_rgba_parse (&blue, "blue");
   gdk_rgba_parse (&red, "red");
   gdk_rgba_parse (&line, "#325aad");
   gdk_rgba_parse (&grid, "rgba(255,255,255,0.1)");
-
-  w = gtk_widget_get_width (widget);
-  h = gtk_widget_get_height (widget);
 
   // Set background color
   gtk_snapshot_append_color (snapshot,
@@ -335,7 +328,7 @@ gtk_chart_snapshot (GtkWidget   *widget,
   GSList *l;
   for (l = self->point_list; l != NULL; l = l->next)
   {
-    struct point_t *point = l->data;
+    struct chart_point_t *point = l->data;
 
     switch (self->type)
     {
@@ -373,8 +366,25 @@ gtk_chart_snapshot (GtkWidget   *widget,
   cairo_destroy (cr);
 }
 
-static void
-gtk_chart_class_init (GtkChartClass *class)
+static void gtk_chart_snapshot (GtkWidget   *widget,
+                                GtkSnapshot *snapshot)
+{
+  GtkChart *self = GTK_CHART_WIDGET(widget);
+
+  float width = gtk_widget_get_width (widget);
+  float height = gtk_widget_get_height (widget);
+
+  // Draw various chart types
+  switch (self->type)
+  {
+    case GTK_CHART_TYPE_LINE:
+    case GTK_CHART_TYPE_SCATTER:
+      chart_draw_line_or_scatter(self, snapshot, height, width);
+      break;
+  }
+}
+
+static void gtk_chart_class_init (GtkChartClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
@@ -384,8 +394,7 @@ gtk_chart_class_init (GtkChartClass *class)
   widget_class->snapshot = gtk_chart_snapshot;
 }
 
-GtkWidget *
-gtk_chart_new (void)
+GtkWidget * gtk_chart_new (void)
 {
   GtkChart *self;
 
@@ -445,7 +454,7 @@ void gtk_chart_plot_point(GtkChart *chart, double x, double y)
     return;
 
   // Allocate memory for new point
-  struct point_t *point = g_new0(struct point_t, 1);
+  struct chart_point_t *point = g_new0(struct chart_point_t, 1);
   point->x = x;
   point->y = y;
 
