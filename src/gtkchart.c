@@ -39,7 +39,6 @@ struct point_t
 struct _GtkChart
 {
   GtkWidget parent_instance;
-  int handle;
   int type;
   char *title;
   char *x_label;
@@ -47,6 +46,7 @@ struct _GtkChart
   double x_max;
   double y_max;
   int width;
+  void *user_data;
   GSList *point_list;
   bool disposed;
 };
@@ -72,7 +72,6 @@ gtk_chart_init (GtkChart *self)
   self->disposed = false;
 
   //gtk_widget_init_template (GTK_WIDGET (self));
-
 }
 
 static void
@@ -395,14 +394,14 @@ gtk_chart_new (void)
   return GTK_WIDGET (self);  
 }
 
-void gtk_chart_set_handle(GtkChart *chart, int handle)
+void gtk_chart_set_user_data(GtkChart *chart, void *user_data)
 {
-  chart->handle = handle;
+  chart->user_data = user_data;
 }
 
-int gtk_chart_get_handle(GtkChart *chart)
+void * gtk_chart_get_user_data(GtkChart *chart)
 {
-  return chart->handle;
+  return chart->user_data;
 }
 
 void gtk_chart_set_type(GtkChart *chart, int type)
@@ -440,7 +439,7 @@ void gtk_chart_set_width(GtkChart *chart, int width)
   chart->width = width;
 }
 
-void gtk_chart_add_data_point(GtkChart *chart, double x, double y)
+void gtk_chart_plot_point(GtkChart *chart, double x, double y)
 {
   if (chart->disposed)
     return;

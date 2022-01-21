@@ -1246,8 +1246,8 @@ chart_destroyed_cb (GtkWidget *widget,
   UNUSED(user_data);
 
   GtkChart *self = GTK_CHART_WIDGET(widget);
-
-  gui_chart[gtk_chart_get_handle(self)].destroyed = true;
+  int *handle = gtk_chart_get_user_data(self);
+  gui_chart[*handle].destroyed = true;
 }
 
 static gboolean
@@ -1274,7 +1274,7 @@ gui_chart_new_thread(gpointer data)
 
   chart->widget = gtk_chart_new();
 
-  gtk_chart_set_handle(GTK_CHART_WIDGET(chart->widget), chart->handle);
+  gtk_chart_set_user_data(GTK_CHART_WIDGET(chart->widget), &chart->handle);
   gtk_chart_set_type(GTK_CHART_WIDGET(chart->widget), chart->type);
   gtk_chart_set_title(GTK_CHART_WIDGET(chart->widget), chart->title);
   gtk_chart_set_x_label(GTK_CHART_WIDGET(chart->widget), chart->x_label);
@@ -1320,7 +1320,7 @@ lua_gui_chart_plot(lua_State* L)
 
   if (gui_chart[handle].destroyed == false)
   {
-    gtk_chart_add_data_point(GTK_CHART_WIDGET(gui_chart[handle].widget), x, y);
+    gtk_chart_plot_point(GTK_CHART_WIDGET(gui_chart[handle].widget), x, y);
   }
 
   return 0;
