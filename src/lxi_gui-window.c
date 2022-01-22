@@ -111,14 +111,17 @@ static LxiGuiWindow *self_global;
 struct chart_t
 {
   bool allocated;
-  bool destroyed;
   int handle;
   enum gtk_chart_type_t type;
   char *title;
+  char *label;
   char *x_label;
   char *y_label;
   double x_max;
   double y_max;
+  double value;
+  double value_min;
+  double value_max;
   int width;
   bool autoscale;
   GtkWidget *widget;
@@ -1297,10 +1300,17 @@ chart_destroyed_cb (GtkWidget *widget,
                     gpointer user_data)
 {
   UNUSED(user_data);
+  int handle;
 
-  GtkChart *self = GTK_CHART_WIDGET(widget);
-  int *handle = gtk_chart_get_user_data(self);
-  gui_chart[*handle].destroyed = true;
+  // Mark widget deallocated
+  for (handle=0; handle<CHARTS_MAX; handle++)
+  {
+    if (gui_chart[handle].widget == widget)
+    {
+      gui_chart[handle].allocated = false;
+      break;
+    }
+  }
 }
 
 static gboolean
@@ -1308,8 +1318,8 @@ gui_chart_new_thread(gpointer data)
 {
   struct chart_t *chart = data;
 
+  // Prepare window
   GtkWindow *window = GTK_WINDOW(gtk_window_new());
-  gtk_window_set_default_size(window, chart->width, chart->width/2);
   gtk_window_set_decorated(window, true);
   gtk_window_set_modal(window, false);
   gtk_window_set_transient_for(window, GTK_WINDOW(self_global));
@@ -1318,33 +1328,59 @@ gui_chart_new_thread(gpointer data)
   switch (chart->type)
   {
     case GTK_CHART_TYPE_LINE:
-      gtk_window_set_title(GTK_WINDOW(window), "Line Chart");
+      gtk_window_set_title(window, "Line Chart");
+      gtk_window_set_default_size(window, chart->width, chart->width/2);
       break;
     case GTK_CHART_TYPE_SCATTER:
-      gtk_window_set_title(GTK_WINDOW(window), "Scatter Chart");
+      gtk_window_set_title(window, "Scatter Chart");
+      gtk_window_set_default_size(window, chart->width, chart->width/2);
+      break;
+    case GTK_CHART_TYPE_NUMBER:
+      gtk_window_set_title(window, "Number Chart");
+      gtk_window_set_default_size(window, chart->width, chart->width/2);
+      break;
+    default: // Do nothing
       break;
   }
 
+  // Prepare chart
   chart->widget = gtk_chart_new();
-
-  gtk_chart_set_user_data(GTK_CHART_WIDGET(chart->widget), &chart->handle);
   gtk_chart_set_type(GTK_CHART_WIDGET(chart->widget), chart->type);
   gtk_chart_set_title(GTK_CHART_WIDGET(chart->widget), chart->title);
-  gtk_chart_set_x_label(GTK_CHART_WIDGET(chart->widget), chart->x_label);
-  gtk_chart_set_y_label(GTK_CHART_WIDGET(chart->widget), chart->y_label);
-  gtk_chart_set_x_max(GTK_CHART_WIDGET(chart->widget), chart->x_max);
-  gtk_chart_set_y_max(GTK_CHART_WIDGET(chart->widget), chart->y_max);
+  g_free(chart->title);
   gtk_chart_set_width(GTK_CHART_WIDGET(chart->widget), chart->width);
+
+  switch (chart->type)
+  {
+    case GTK_CHART_TYPE_LINE:
+    case GTK_CHART_TYPE_SCATTER:
+      gtk_chart_set_x_label(GTK_CHART_WIDGET(chart->widget), chart->x_label);
+      g_free(chart->x_label);
+      gtk_chart_set_y_label(GTK_CHART_WIDGET(chart->widget), chart->y_label);
+      g_free(chart->y_label);
+      gtk_chart_set_x_max(GTK_CHART_WIDGET(chart->widget), chart->x_max);
+      gtk_chart_set_y_max(GTK_CHART_WIDGET(chart->widget), chart->y_max);
+      break;
+    case GTK_CHART_TYPE_NUMBER:
+      gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
+      g_free(chart->label);
+      break;
+    case GTK_CHART_TYPE_GAUGE_CIRCULAR:
+    case GTK_CHART_TYPE_GAUGE_LINEAR:
+      gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
+      g_free(chart->label);
+      gtk_chart_set_value_min(GTK_CHART_WIDGET(chart->widget), chart->value_min);
+      gtk_chart_set_value_max(GTK_CHART_WIDGET(chart->widget), chart->value_max);
+      break;
+
+    default: // Do nothing
+      break;
+  }
 
   g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
 
   gtk_window_set_child(window, chart->widget);
   gtk_window_present(window);
-
-  // Cleanup
-  g_free(chart->title);
-  g_free(chart->x_label);
-  g_free(chart->y_label);
 
   // Signal we are finished creating chart
   g_mutex_unlock(&self_global->mutex_gui_chart);
@@ -1371,9 +1407,24 @@ lua_gui_chart_plot(lua_State* L)
   double x = lua_tonumber(L, 2);
   double y = lua_tonumber(L, 3);
 
-  if (gui_chart[handle].destroyed == false)
+  if (gui_chart[handle].allocated == true)
   {
     gtk_chart_plot_point(GTK_CHART_WIDGET(gui_chart[handle].widget), x, y);
+  }
+
+  return 0;
+}
+
+// lua: chart_set_value(handle, value)
+static int
+lua_gui_chart_set_value(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  double value = lua_tonumber(L, 2);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    gtk_chart_set_value(GTK_CHART_WIDGET(gui_chart[handle].widget), value);
   }
 
   return 0;
@@ -1406,28 +1457,55 @@ lua_gui_chart_new(lua_State* L)
   {
     chart->type = GTK_CHART_TYPE_SCATTER;
   }
+  else if (strcmp(type, "number") == 0)
+  {
+    chart->type = GTK_CHART_TYPE_NUMBER;
+  }
   else
   {
     // FIXME:
     // Return error (negative value)
     // Maybe also push error (msg)
-    g_print("Please specify ");
-    exit(EXIT_FAILURE);
+    g_print("Please specify chart type\n");
   }
 
   chart->handle = handle;
-  chart->destroyed = false;
-  chart->title = g_strdup(lua_tostring(L, 2));
-  chart->x_label = g_strdup(lua_tostring(L, 3));
-  chart->y_label = g_strdup(lua_tostring(L, 4));
-  chart->x_max = lua_tonumber(L, 5);
-  chart->y_max = lua_tonumber(L, 6);
-  chart->width = lua_tointeger(L, 7);
-  chart->autoscale = lua_toboolean(L, 8);
+
+  // Parse arguments depending on chart type
+  switch (chart->type)
+  {
+    case GTK_CHART_TYPE_LINE:
+    case GTK_CHART_TYPE_SCATTER:
+      chart->title = g_strdup(lua_tostring(L, 2));
+      chart->x_label = g_strdup(lua_tostring(L, 3));
+      chart->y_label = g_strdup(lua_tostring(L, 4));
+      chart->x_max = lua_tonumber(L, 5);
+      chart->y_max = lua_tonumber(L, 6);
+      chart->width = lua_tointeger(L, 7);
+      chart->autoscale = lua_toboolean(L, 8);
+      break;
+
+    case GTK_CHART_TYPE_NUMBER:
+      chart->title = g_strdup(lua_tostring(L, 2));
+      chart->label = g_strdup(lua_tostring(L, 3));
+      chart->width = lua_tointeger(L, 4);
+      break;
+
+    case GTK_CHART_TYPE_GAUGE_CIRCULAR:
+      chart->title = g_strdup(lua_tostring(L, 2));
+      chart->label = g_strdup(lua_tostring(L, 3));
+      chart->value_min = lua_tonumber(L, 4);
+      chart->value_max = lua_tonumber(L, 5);
+      chart->width = lua_tointeger(L, 6);
+      break;
+
+    default:
+      break;
+  }
 
   // FIXME: Parameter checks here
 
-  // Create new plot window
+  // Create new chart window
   g_idle_add(gui_chart_new_thread, chart);
 
   // Wait for chart ready (sleeps here until unlocked)
@@ -1495,6 +1573,7 @@ static const struct luaL_Reg gui_lib [] =
 {
   {"chart_new", lua_gui_chart_new},
   {"chart_plot", lua_gui_chart_plot},
+  {"chart_set_value", lua_gui_chart_set_value},
   {"chart_free", lua_gui_chart_free},
   {"selected_ip", lua_gui_ip},
   {"selected_id", lua_gui_id},

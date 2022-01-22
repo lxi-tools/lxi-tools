@@ -41,14 +41,17 @@ struct _GtkChart
   GtkWidget parent_instance;
   int type;
   char *title;
+  char *label;
   char *x_label;
   char *y_label;
   double x_max;
   double y_max;
+  double value;
+  double value_min;
+  double value_max;
   int width;
   void *user_data;
   GSList *point_list;
-  bool disposed;
 };
 
 struct _GtkChartClass
@@ -63,12 +66,14 @@ static void gtk_chart_init (GtkChart *self)
   // Defaults
   self->type = GTK_CHART_TYPE_LINE;
   self->title = NULL;
+  self->label = NULL;
   self->x_label = NULL;
   self->y_label = NULL;
   self->x_max = 100;
   self->y_max = 100;
+  self->value_min = 0;
+  self->value_max = 100;
   self->width = 500;
-  self->disposed = false;
 
   //gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -77,10 +82,9 @@ static void gtk_chart_dispose (GObject *object)
 {
   GtkChart *self = GTK_CHART_WIDGET (object);
 
-  self->disposed = true;
-
   // Cleanup
   g_free(self->title);
+  g_free(self->label);
   g_free(self->x_label);
   g_free(self->y_label);
 
@@ -167,7 +171,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_stroke (cr);
 
   // Draw x-axis value at 100% mark
-  g_snprintf(value, 20, "%.1f", self->x_max);
+  g_snprintf(value, sizeof(value), "%.1f", self->x_max);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.9 * w - extents.width/2, 0.16 * h);
@@ -177,7 +181,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw x-axis value at 75% mark
-  g_snprintf(value, 20, "%.1f", (self->x_max/4) * 3);
+  g_snprintf(value, sizeof(value), "%.1f", (self->x_max/4) * 3);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.7 * w - extents.width/2, 0.16 * h);
@@ -187,7 +191,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw x-axis value at 50% mark
-  g_snprintf(value, 20, "%.1f", self->x_max/2);
+  g_snprintf(value, sizeof(value), "%.1f", self->x_max/2);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.5 * w - extents.width/2, 0.16 * h);
@@ -197,7 +201,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw x-axis value at 25% mark
-  g_snprintf(value, 20, "%.1f", self->x_max/4);
+  g_snprintf(value, sizeof(value), "%.1f", self->x_max/4);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.3 * w - extents.width/2, 0.16 * h);
@@ -225,7 +229,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw y-axis value at 25% mark
-  g_snprintf(value, 20, "%.1f", self->y_max/4);
+  g_snprintf(value, sizeof(value), "%.1f", self->y_max/4);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.091 * w - extents.width, 0.34 * h);
@@ -235,7 +239,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw y-axis value at 50% mark
-  g_snprintf(value, 20, "%.1f", self->y_max/2);
+  g_snprintf(value, sizeof(value), "%.1f", self->y_max/2);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.091 * w - extents.width, 0.49 * h);
@@ -245,7 +249,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw y-axis value at 75% mark
-  g_snprintf(value, 20, "%.1f", (self->y_max/4) * 3);
+  g_snprintf(value, sizeof(value), "%.1f", (self->y_max/4) * 3);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.091 * w - extents.width, 0.64 * h);
@@ -255,7 +259,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_restore(cr);
 
   // Draw y-axis value at 100% mark
-  g_snprintf(value, 20, "%.1f", self->y_max);
+  g_snprintf(value, sizeof(value), "%.1f", self->y_max);
   cairo_set_font_size (cr, 8.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to (cr, 0.091 * w - extents.width, 0.79 * h);
@@ -366,6 +370,73 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_destroy (cr);
 }
 
+void chart_draw_number(GtkChart *self,
+                       GtkSnapshot *snapshot,
+                       float h,
+                       float w)
+{
+  GdkRGBA bg_color, white, blue, red, line, grid;
+  cairo_text_extents_t extents;
+  char value[20];
+
+  gdk_rgba_parse (&bg_color, "black");
+  gdk_rgba_parse (&white, "rgba(255,255,255,0.75)");
+  gdk_rgba_parse (&blue, "blue");
+  gdk_rgba_parse (&red, "red");
+  gdk_rgba_parse (&line, "#325aad");
+  gdk_rgba_parse (&grid, "rgba(255,255,255,0.1)");
+
+  // Set background color
+  gtk_snapshot_append_color (snapshot,
+                             &bg_color,
+                             &GRAPHENE_RECT_INIT(0, 0, w, h));
+
+  // Assume aspect ratio w:h = 1:1
+
+  // Set up Cairo region
+  cairo_t * cr = gtk_snapshot_append_cairo (snapshot, &GRAPHENE_RECT_INIT(0, 0, w, h));
+  cairo_set_antialias (cr, CAIRO_ANTIALIAS_FAST);
+  cairo_set_tolerance (cr, 1.5);
+  gdk_cairo_set_source_rgba (cr, &white);
+  cairo_select_font_face (cr, "Ubuntu", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+  // Move coordinate system to bottom left
+  cairo_translate(cr, 0, h);
+
+  // Invert y-axis
+  cairo_scale(cr, 1, -1);
+
+  // Draw title
+  cairo_set_font_size (cr, 15.0 * (w/650));
+  cairo_text_extents(cr, self->title, &extents);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text (cr, self->title);
+  cairo_restore(cr);
+
+  // Draw label
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, self->label, &extents);
+  cairo_move_to(cr, 0.5 * w - extents.width/2, 0.2 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, self->label);
+  cairo_restore(cr);
+
+  // Draw number
+  g_snprintf(value, sizeof(value), "%.1f", self->value);
+  cairo_set_font_size (cr, 140.0 * (w/650));
+  cairo_text_extents(cr, value, &extents);
+  cairo_move_to(cr, 0.5 * w - extents.width/2, 0.5 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, value);
+  cairo_restore(cr);
+
+  cairo_destroy (cr);
+}
+
 static void gtk_chart_snapshot (GtkWidget   *widget,
                                 GtkSnapshot *snapshot)
 {
@@ -380,6 +451,9 @@ static void gtk_chart_snapshot (GtkWidget   *widget,
     case GTK_CHART_TYPE_LINE:
     case GTK_CHART_TYPE_SCATTER:
       chart_draw_line_or_scatter(self, snapshot, height, width);
+      break;
+    case GTK_CHART_TYPE_NUMBER:
+      chart_draw_number(self, snapshot, height, width);
       break;
   }
 }
@@ -423,6 +497,11 @@ void gtk_chart_set_title(GtkChart *chart, const char *title)
   chart->title = g_strdup(title);
 }
 
+void gtk_chart_set_label(GtkChart *chart, const char *label)
+{
+  chart->label = g_strdup(label);
+}
+
 void gtk_chart_set_x_label(GtkChart *chart, const char *x_label)
 {
   chart->x_label = g_strdup(x_label);
@@ -450,9 +529,6 @@ void gtk_chart_set_width(GtkChart *chart, int width)
 
 void gtk_chart_plot_point(GtkChart *chart, double x, double y)
 {
-  if (chart->disposed)
-    return;
-
   // Allocate memory for new point
   struct chart_point_t *point = g_new0(struct chart_point_t, 1);
   point->x = x;
@@ -463,4 +539,22 @@ void gtk_chart_plot_point(GtkChart *chart, double x, double y)
 
   // Queue draw of widget
   gtk_widget_queue_draw(GTK_WIDGET(chart));
+}
+
+void gtk_chart_set_value(GtkChart *chart, double value)
+{
+  chart->value = value;
+
+  // Queue draw of widget
+  gtk_widget_queue_draw(GTK_WIDGET(chart));
+}
+
+void gtk_chart_set_value_min(GtkChart *chart, double value)
+{
+  chart->value_min = value;
+}
+
+void gtk_chart_set_value_max(GtkChart *chart, double value)
+{
+  chart->value_max = value;
 }

@@ -40,15 +40,22 @@ enum gtk_chart_type_t
 {
   GTK_CHART_TYPE_LINE,
   GTK_CHART_TYPE_SCATTER,
+  GTK_CHART_TYPE_GAUGE_CIRCULAR,
+  GTK_CHART_TYPE_GAUGE_LINEAR,
+  GTK_CHART_TYPE_NUMBER,
 };
 
 void gtk_chart_set_type(GtkChart *chart, int type);
 void gtk_chart_set_title(GtkChart *chart, const char *title);
+void gtk_chart_set_label(GtkChart *chart, const char *label);
 void gtk_chart_set_x_label(GtkChart *chart, const char *x_label);
 void gtk_chart_set_y_label(GtkChart *chart, const char *y_label);
 void gtk_chart_set_x_max(GtkChart *chart, double x_max);
 void gtk_chart_set_y_max(GtkChart *chart, double y_max);
 void gtk_chart_set_width(GtkChart *chart, int width);
 void gtk_chart_plot_point(GtkChart *chart, double x, double y);
+void gtk_chart_set_value(GtkChart *chart, double value);
+void gtk_chart_set_value_min(GtkChart *chart, double value);
+void gtk_chart_set_value_max(GtkChart *chart, double value);
 void gtk_chart_set_user_data(GtkChart *chart, void *user_data);
 void * gtk_chart_get_user_data(GtkChart *chart);

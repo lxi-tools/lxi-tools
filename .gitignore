@@ -1,6 +1,9 @@
 /subprojects/*/
 /subprojects/gi-docgen.wrap
 /subprojects/pango.wrap
+/subprojects/gobject-introspection.wrap
+/subprojects/graphene.wrap
+/subprojects/mutest.wrap
 build
 *.swp
 *.tar.xz

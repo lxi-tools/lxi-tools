@@ -3,14 +3,14 @@
 --    https://lxi-tools.github.io  --
 -------------------------------------
 
--- Sine wave plot
+-- Line chart test - plotting a sine wave function
 
 -- Init
 clock0 = clock_new()
 chart0 = chart_new("line-chart",                         -- chart type
                    "Sine wave plot, f(x) = 5 + 2sin(x)", -- title
-                   "Time [s]",                           -- x-axis title
-                   "Value [ ]",                          -- y-axis title
+                   "Time [s]",                           -- x-axis label
+                   "Value [ ]",                          -- y-axis label
                    10, 10, 700)                          -- x max, y max, window width
 
 -- Sample and plot sine wave at 100 Hz for 10 seconds
