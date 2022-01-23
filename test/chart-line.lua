@@ -7,18 +7,18 @@
 
 -- Init
 clock0 = clock_new()
-chart0 = chart_new("line-chart",                         -- chart type
-                   "Sine wave plot, f(x) = 5 + 2sin(x)", -- title
-                   "Time [s]",                           -- x-axis label
-                   "Value [ ]",                          -- y-axis label
-                   10, 10, 700)                          -- x max, y max, window width
+chart0 = chart_new("line-chart",                            -- chart type
+                   "Sine wave plot, f(x) = 5 + 2sin(0.1x)", -- title
+                   "Time [s]",                              -- x-axis label
+                   "Value [ ]",                             -- y-axis label
+                   10, 10, 700)                             -- x max, y max, window width
 
 -- Sample and plot sine wave at 100 Hz for 10 seconds
 clock = 0
 x = 0
 while (clock < 10)
 do
-   value = 5 + 2*math.sin(x)
+   value = 5 + 2*math.sin(0.1*x)
    clock = clock_read(clock0)
    chart_plot(chart0, clock, value)
    x = x + 1
