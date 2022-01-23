@@ -24,7 +24,7 @@ to the standard lua library functions:
     protocol: Communications protocol to use [VXI11, RAW]
 
   Returns
-      device: Handle to connected device
+      device: Handle of connected device
 
 ------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ to the standard lua library functions:
     Disconnect connected device
 
   Paramters
-     device: Device handle to disconnect
+    device: Handle of device
 
 ------------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ to the standard lua library functions:
     Sleep for specified amount of time
 
   Parameters
-        time: Time to sleep in seconds [integer]
+    time: Time to sleep in seconds [integer]
 
 ------------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ to the standard lua library functions:
     Sleep for specified amount of time
 
   Parameters
-        time: Time to sleep in miliseconds [integer]
+    time: Time to sleep in miliseconds [integer]
 
 ------------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ to the standard lua library functions:
     Create new clock resource
 
   Returns
-    clock: Handle to new clock
+    clock: Handle of new clock
      
 ------------------------------------------------------------------------------
 
@@ -97,11 +97,11 @@ to the standard lua library functions:
     Read out the elapsed time of the clock since first clock_read() call
 
   Paramters
-      clock: Handle to clock
+    clock: Handle of clock
   
   Returns
-       time: Time in seconds since last call [integer]. If first call it will
-       return 0 and the clock will start ticking.
+     time: Time in seconds since last call [double]. If first call it will
+           return 0 and the clock will start ticking.
 
 ------------------------------------------------------------------------------
 
@@ -112,16 +112,19 @@ to the standard lua library functions:
     Reset clock so that it stops ticking. First clock_read() will make the
     clock tick again.
 
+  Paramters
+    clock: Handle of clock
+
 ------------------------------------------------------------------------------
 
   Function
     clock_free(clock)
 
   Desription
-    Release clock resouce
+    Release clock resource
 
   Parameters
-       clock: Handle of clock to release
+    clock: Handle of clock
 
 ------------------------------------------------------------------------------
 
@@ -131,22 +134,49 @@ manage data via the GUI:
 ------------------------------------------------------------------------------
 
   Function
-    chart = chart_new(type, title, x_label, y_label, x_max, y_max, width)
+    chart = chart_new(type, ...)
 
   Description
-    Create and present a new chart in a GUI window
+    Create and present a new chart. The chart is opened in a new window.
 
   Parameters
-        type: Chart type [string] - currently only "line-chart" is supported
-       title: Title of chart [string]
-     x_label: Label of x-axis [string]
-     y_label: Label of y-axis [string]
-       x_max: Maximum value of x-axis [double]
-       y_max: Maximum value of y-axis [double]
-       width: Width of window containing the chart in pixels [integer]
+    type: Chart type [string]
+
+          The type can be any of the following:
+            "line-chart"
+            "scatter-chart"
+            "number"
+            "angular-gauge"
+            "linear-gauge"
+
+          The number of parameters following the first parameter depends on
+          which type of chart is requested:
+
+                "line-chart", "scatter-chart":
+
+                      title: Title [string]
+                    x_label: Label of x-axis [string]
+                    y_label: Label of y-axis [string]
+                      x_max: Maximum value of x-axis [double]
+                      y_max: Maximum value of y-axis [double]
+                      width: Width of window in pixels [integer]
+
+                "number":
+
+                      title: Title [string]
+                      label: Label [string]
+                      width: Width of window in pixels [integer]
+
+                "angular-gauge", "linear-gauge":
+
+                      title: Title [string]
+                      label: Label [string]
+                  value_min: Minimum value [double]
+                  value_max: Maximum value [double]
+                      width: Width of window in pixels [integer]
 
   Returns
-       chart: Handle to chart
+    chart: Handle of chart
 
 ------------------------------------------------------------------------------
 
@@ -157,20 +187,20 @@ manage data via the GUI:
     Plot x and y value to chart
 
   Paramters
-      chart: Handle of chart
-          x: X value [double]
-          y: Y value [double]
+    chart: Handle of chart
+        x: X value [double]
+        y: Y value [double]
 
 ------------------------------------------------------------------------------
 
   Function
-    chart_free(chart)
+    chart_close(chart)
 
   Description
-    Release chart resource
+    Close chart window
 
   Paramters
-      chart: Handle of chart to release
+    chart: Handle of chart
 
 ------------------------------------------------------------------------------
 
@@ -192,7 +222,7 @@ manage data via the GUI:
     Get IP of device selected in GUI
 
   Returns
-      ip: IP of device selected in GUI [string]. Returns nil if none selected.
+    ip: IP of device selected in GUI [string]. Returns nil if none selected.
 
 ------------------------------------------------------------------------------
 
@@ -203,13 +233,11 @@ manage data via the GUI:
     Get ID of device selected in GUI
 
   Returns
-      id: ID of device selected in GUI [string]. Returns nil if none selected.
+    id: ID of device selected in GUI [string]. Returns nil if none selected.
 
 ------------------------------------------------------------------------------
 
 Not yet documented or implemented:
 
-chart_close_window(chart0) - Close chart window
-chart_reset(chart0) - Reset chart
 chart_dump_csv(chart0, file) - Dump plotted chart values to file in CSV format
 chart_dump_image(chart0, file) - Dump image of chart to file in PNG format

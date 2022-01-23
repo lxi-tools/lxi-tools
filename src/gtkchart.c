@@ -88,6 +88,8 @@ static void gtk_chart_dispose (GObject *object)
   g_free(self->x_label);
   g_free(self->y_label);
 
+  gdk_display_sync(gdk_display_get_default());
+
   g_slist_free_full(g_steal_pointer(&self->point_list), g_free);
   g_slist_free(self->point_list);
 

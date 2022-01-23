@@ -125,6 +125,7 @@ struct chart_t
   int width;
   bool autoscale;
   GtkWidget *widget;
+  GtkWindow *window;
 };
 
 static struct chart_t gui_chart[CHARTS_MAX];
@@ -1082,7 +1083,7 @@ on_script_file_open_response (GtkDialog *dialog,
       char *basename = g_path_get_basename(filename);
       g_free(filename);
 
-      char *text = g_strdup_printf ("Opened file %s.\n", basename);
+      char *text = g_strdup_printf ("Opened file %s\n", basename);
       text_view_add_buffer(self->text_view_script_status, text);
       g_free(text);
     }
@@ -1196,7 +1197,7 @@ on_script_file_save_response (GtkDialog *dialog,
       char *basename = g_path_get_basename(filename);
       g_free(filename);
 
-      char *text = g_strdup_printf ("Saved file %s.\n", basename);
+      char *text = g_strdup_printf ("Saved file %s\n", basename);
       text_view_add_buffer(self->text_view_script_status, text);
       g_free(text);
     }
@@ -1221,7 +1222,7 @@ button_clicked_script_save (LxiGuiWindow *self, GtkButton *button)
     char *basename = g_path_get_basename(filename);
     g_free(filename);
 
-    char *text = g_strdup_printf ("Saved file %s.\n", basename);
+    char *text = g_strdup_printf ("Saved file %s\n", basename);
     text_view_add_buffer(self->text_view_script_status, text);
     g_free(text);
   }
@@ -1320,6 +1321,7 @@ gui_chart_new_thread(gpointer data)
 
   // Prepare window
   GtkWindow *window = GTK_WINDOW(gtk_window_new());
+  chart->window = window;
   gtk_window_set_decorated(window, true);
   gtk_window_set_modal(window, false);
   gtk_window_set_transient_for(window, GTK_WINDOW(self_global));
@@ -1365,7 +1367,7 @@ gui_chart_new_thread(gpointer data)
       gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
       g_free(chart->label);
       break;
-    case GTK_CHART_TYPE_GAUGE_CIRCULAR:
+    case GTK_CHART_TYPE_GAUGE_ANGULAR:
     case GTK_CHART_TYPE_GAUGE_LINEAR:
       gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
       g_free(chart->label);
@@ -1388,13 +1390,17 @@ gui_chart_new_thread(gpointer data)
   return G_SOURCE_REMOVE;
 }
 
-// lua: chart_free(handle)
+// lua: chart_close(handle)
 static int
-lua_gui_chart_free(lua_State* L)
+lua_gui_chart_close(lua_State* L)
 {
   int handle = lua_tointeger(L, 1);
 
-  gui_chart[handle].allocated = false;
+  if (gui_chart[handle].allocated == true)
+  {
+    gtk_widget_queue_draw(GTK_WIDGET(gui_chart[handle].window));
+    gtk_window_destroy(gui_chart[handle].window);
+  }
 
   return 0;
 }
@@ -1491,7 +1497,7 @@ lua_gui_chart_new(lua_State* L)
       chart->width = lua_tointeger(L, 4);
       break;
 
-    case GTK_CHART_TYPE_GAUGE_CIRCULAR:
+    case GTK_CHART_TYPE_GAUGE_ANGULAR:
       chart->title = g_strdup(lua_tostring(L, 2));
       chart->label = g_strdup(lua_tostring(L, 3));
       chart->value_min = lua_tonumber(L, 4);
@@ -1574,7 +1580,7 @@ static const struct luaL_Reg gui_lib [] =
   {"chart_new", lua_gui_chart_new},
   {"chart_plot", lua_gui_chart_plot},
   {"chart_set_value", lua_gui_chart_set_value},
-  {"chart_free", lua_gui_chart_free},
+  {"chart_close", lua_gui_chart_close},
   {"selected_ip", lua_gui_ip},
   {"selected_id", lua_gui_id},
   {"version", lua_gui_version},
