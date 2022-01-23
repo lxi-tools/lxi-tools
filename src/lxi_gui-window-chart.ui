@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <object class="GtkWindow" id="window">
+    <property name="default-width">400</property>
+    <property name="default-height">200</property>
+    <child type="titlebar">
+      <object class="AdwHeaderBar">
+        <child type="end">
+          <object class="GtkMenuButton">
+            <property name="icon-name">open-menu-symbolic</property>
+            <property name="menu-model">chart_menu_button_model</property>
+            <property name="focus-on-click">0</property>
+            <property name="can-focus">0</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <!--
+    <child>
+      <object class="GtkChart" id="chart">
+        <property name="hexpand">true</property>
+        <property name="vexpand">true</property>
+      </object>
+      </child>
+    -->
+  </object>
+  <menu id="chart_menu_button_model">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Save _image</attribute>
+        <attribute name="action">chart.save-image</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Save _CSV</attribute>
+        <attribute name="action">chart.save-csv</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

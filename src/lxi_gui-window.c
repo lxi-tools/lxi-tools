@@ -124,6 +124,7 @@ struct chart_t
   double value_max;
   int width;
   bool autoscale;
+  bool no_csv;
   GtkWidget *widget;
   GtkWindow *window;
 };
@@ -1314,13 +1315,64 @@ chart_destroyed_cb (GtkWidget *widget,
   }
 }
 
+static void
+chart_save_image (GSimpleAction *action,
+                  GVariant      *state,
+                  gpointer       user_data)
+{
+  UNUSED(action);
+  UNUSED(state);
+
+  struct chart_t *chart = user_data;
+
+  g_print("Save image!\n");
+}
+
+static void
+chart_save_rsv (GSimpleAction *action,
+                GVariant      *state,
+                gpointer       user_data)
+{
+  UNUSED(action);
+  UNUSED(state);
+
+  struct chart_t *chart = user_data;
+
+  g_print("Save csv!\n");
+}
+
+static GActionEntry win_actions[] =
+{
+  { "save-image", chart_save_image, NULL, NULL, NULL, {} },
+  { "save-csv", chart_save_rsv, NULL, NULL, NULL, {} }
+};
+
 static gboolean
 gui_chart_new_thread(gpointer data)
 {
   struct chart_t *chart = data;
 
+  GAction *action;
+  GActionGroup *actions;
+
+  /* Construct a GtkBuilder instance from UI description */
+  GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/lxi-tools/lxi-gui/lxi_gui-window-chart.ui");
+
   // Prepare window
-  GtkWindow *window = GTK_WINDOW(gtk_window_new());
+  GtkWindow *window = GTK_WINDOW(gtk_builder_get_object (builder, "window"));
+
+  // Map window actions
+  actions = G_ACTION_GROUP (g_simple_action_group_new ());
+  g_action_map_add_action_entries (G_ACTION_MAP(actions), win_actions, G_N_ELEMENTS(win_actions), chart);
+  gtk_widget_insert_action_group (GTK_WIDGET (window), "chart", G_ACTION_GROUP (actions));
+  action = g_action_map_lookup_action (G_ACTION_MAP (actions), "save-csv");
+
+  // Disable "Save CSV" if chart features no CSV data
+  if (chart->no_csv)
+  {
+    g_simple_action_set_enabled (G_SIMPLE_ACTION (action), false);
+  }
+
   chart->window = window;
   gtk_window_set_decorated(window, true);
   gtk_window_set_modal(window, false);
@@ -1341,38 +1393,48 @@ gui_chart_new_thread(gpointer data)
       gtk_window_set_title(window, "Number Chart");
       gtk_window_set_default_size(window, chart->width, chart->width/2);
       break;
+    case GTK_CHART_TYPE_GAUGE_LINEAR:
+      gtk_window_set_title(window, "Linear Gauge");
+      gtk_window_set_default_size(window, chart->width, chart->width*2);
+      break;
+    case GTK_CHART_TYPE_GAUGE_ANGULAR:
+      gtk_window_set_title(window, "Angular Gauge");
+      gtk_window_set_default_size(window, chart->width, chart->width);
+      break;
     default: // Do nothing
       break;
   }
 
-  // Prepare chart
-  chart->widget = gtk_chart_new();
-  gtk_chart_set_type(GTK_CHART_WIDGET(chart->widget), chart->type);
-  gtk_chart_set_title(GTK_CHART_WIDGET(chart->widget), chart->title);
+  // Prepare chart widget
+  GtkWidget *widget = gtk_chart_new();
+  //GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
+  chart->widget = widget;
+  gtk_chart_set_type(GTK_CHART_WIDGET(widget), chart->type);
+  gtk_chart_set_title(GTK_CHART_WIDGET(widget), chart->title);
   g_free(chart->title);
-  gtk_chart_set_width(GTK_CHART_WIDGET(chart->widget), chart->width);
+  gtk_chart_set_width(GTK_CHART_WIDGET(widget), chart->width);
 
   switch (chart->type)
   {
     case GTK_CHART_TYPE_LINE:
     case GTK_CHART_TYPE_SCATTER:
-      gtk_chart_set_x_label(GTK_CHART_WIDGET(chart->widget), chart->x_label);
+      gtk_chart_set_x_label(GTK_CHART_WIDGET(widget), chart->x_label);
       g_free(chart->x_label);
-      gtk_chart_set_y_label(GTK_CHART_WIDGET(chart->widget), chart->y_label);
+      gtk_chart_set_y_label(GTK_CHART_WIDGET(widget), chart->y_label);
       g_free(chart->y_label);
-      gtk_chart_set_x_max(GTK_CHART_WIDGET(chart->widget), chart->x_max);
-      gtk_chart_set_y_max(GTK_CHART_WIDGET(chart->widget), chart->y_max);
+      gtk_chart_set_x_max(GTK_CHART_WIDGET(widget), chart->x_max);
+      gtk_chart_set_y_max(GTK_CHART_WIDGET(widget), chart->y_max);
       break;
     case GTK_CHART_TYPE_NUMBER:
-      gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
+      gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
       g_free(chart->label);
       break;
-    case GTK_CHART_TYPE_GAUGE_ANGULAR:
     case GTK_CHART_TYPE_GAUGE_LINEAR:
-      gtk_chart_set_label(GTK_CHART_WIDGET(chart->widget), chart->label);
+    case GTK_CHART_TYPE_GAUGE_ANGULAR:
+      gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
       g_free(chart->label);
-      gtk_chart_set_value_min(GTK_CHART_WIDGET(chart->widget), chart->value_min);
-      gtk_chart_set_value_max(GTK_CHART_WIDGET(chart->widget), chart->value_max);
+      gtk_chart_set_value_min(GTK_CHART_WIDGET(widget), chart->value_min);
+      gtk_chart_set_value_max(GTK_CHART_WIDGET(widget), chart->value_max);
       break;
 
     default: // Do nothing
@@ -1381,7 +1443,10 @@ gui_chart_new_thread(gpointer data)
 
   g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
 
-  gtk_window_set_child(window, chart->widget);
+  // Add chart widget to window
+  gtk_window_set_child(window, widget);
+
+  // Show window
   gtk_window_present(window);
 
   // Signal we are finished creating chart
@@ -1399,7 +1464,7 @@ lua_gui_chart_close(lua_State* L)
   if (gui_chart[handle].allocated == true)
   {
     gtk_widget_queue_draw(GTK_WIDGET(gui_chart[handle].window));
-    gtk_window_destroy(gui_chart[handle].window);
+    gtk_window_close(gui_chart[handle].window);
   }
 
   return 0;
@@ -1467,6 +1532,14 @@ lua_gui_chart_new(lua_State* L)
   {
     chart->type = GTK_CHART_TYPE_NUMBER;
   }
+  else if (strcmp(type, "linear-gauge") == 0)
+  {
+    chart->type = GTK_CHART_TYPE_GAUGE_LINEAR;
+  }
+  else if (strcmp(type, "angular-gauge") == 0)
+  {
+    chart->type = GTK_CHART_TYPE_GAUGE_ANGULAR;
+  }
   else
   {
     // FIXME:
@@ -1489,20 +1562,24 @@ lua_gui_chart_new(lua_State* L)
       chart->y_max = lua_tonumber(L, 6);
       chart->width = lua_tointeger(L, 7);
       chart->autoscale = lua_toboolean(L, 8);
+      chart->no_csv = false;
       break;
 
     case GTK_CHART_TYPE_NUMBER:
       chart->title = g_strdup(lua_tostring(L, 2));
       chart->label = g_strdup(lua_tostring(L, 3));
       chart->width = lua_tointeger(L, 4);
+      chart->no_csv = true;
       break;
 
+    case GTK_CHART_TYPE_GAUGE_LINEAR:
     case GTK_CHART_TYPE_GAUGE_ANGULAR:
       chart->title = g_strdup(lua_tostring(L, 2));
       chart->label = g_strdup(lua_tostring(L, 3));
       chart->value_min = lua_tonumber(L, 4);
       chart->value_max = lua_tonumber(L, 5);
       chart->width = lua_tointeger(L, 6);
+      chart->no_csv = true;
       break;
 
     default:
