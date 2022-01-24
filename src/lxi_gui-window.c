@@ -127,6 +127,7 @@ struct chart_t
   bool no_csv;
   GtkWidget *widget;
   GtkWindow *window;
+  GdkPixbuf *pixbuf_image;
 };
 
 static struct chart_t gui_chart[CHARTS_MAX];
@@ -1316,6 +1317,31 @@ chart_destroyed_cb (GtkWidget *widget,
 }
 
 static void
+on_chart_save_image_response (GtkDialog      *dialog,
+                              int            response,
+                              struct chart_t *chart)
+{
+  GError *error = NULL;
+  gboolean status = true;
+
+  if (response == GTK_RESPONSE_ACCEPT)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+
+    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
+
+    status = gtk_chart_save_image(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
+    if (status == false)
+    {
+      g_error ("Error: %s\n", error->message);
+    }
+  }
+
+  g_free(chart->pixbuf_image);
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+static void
 chart_save_image (GSimpleAction *action,
                   GVariant      *state,
                   gpointer       user_data)
@@ -1323,28 +1349,92 @@ chart_save_image (GSimpleAction *action,
   UNUSED(action);
   UNUSED(state);
 
+  GtkWidget *dialog;
+  GtkFileChooser *chooser;
   struct chart_t *chart = user_data;
 
   g_print("Save image!\n");
+
+  // Show file save as dialog
+  dialog = gtk_file_chooser_dialog_new ("Select file",
+                                        GTK_WINDOW (chart->window),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        "_Cancel", GTK_RESPONSE_CANCEL,
+                                        "_Save", GTK_RESPONSE_ACCEPT,
+                                        NULL);
+  chooser = GTK_FILE_CHOOSER(dialog);
+  gtk_file_chooser_set_current_name (chooser, "Untitled screenshot.png");
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show (dialog);
+
+  g_signal_connect (dialog, "response",
+                    G_CALLBACK (on_chart_save_image_response),
+                    chart);
 }
 
 static void
-chart_save_rsv (GSimpleAction *action,
+on_chart_save_csv_response (GtkDialog      *dialog,
+                            int            response,
+                            struct chart_t *chart)
+{
+  GError *error = NULL;
+  gboolean status = true;
+
+  if (response == GTK_RESPONSE_ACCEPT)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+
+    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
+
+    status = gtk_chart_save_csv(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
+    if (status == false)
+    {
+      g_error ("Error: %s\n", error->message);
+    }
+  }
+
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+static void
+chart_save_csv (GSimpleAction *action,
                 GVariant      *state,
                 gpointer       user_data)
 {
   UNUSED(action);
   UNUSED(state);
 
+  GtkWidget *dialog;
+  GtkFileChooser *chooser;
   struct chart_t *chart = user_data;
 
   g_print("Save csv!\n");
+
+  // Show file save as dialog
+  dialog = gtk_file_chooser_dialog_new ("Select file",
+                                        GTK_WINDOW (chart->window),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        "_Cancel", GTK_RESPONSE_CANCEL,
+                                        "_Save", GTK_RESPONSE_ACCEPT,
+                                        NULL);
+  chooser = GTK_FILE_CHOOSER(dialog);
+  gtk_file_chooser_set_current_name (chooser, "Untitled.csv");
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show (dialog);
+
+  g_signal_connect (dialog, "response",
+                    G_CALLBACK (on_chart_save_csv_response),
+                    chart);
 }
 
 static GActionEntry win_actions[] =
 {
   { "save-image", chart_save_image, NULL, NULL, NULL, {} },
-  { "save-csv", chart_save_rsv, NULL, NULL, NULL, {} }
+  { "save-csv", chart_save_csv, NULL, NULL, NULL, {} }
 };
 
 static gboolean

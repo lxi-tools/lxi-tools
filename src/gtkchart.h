@@ -59,3 +59,5 @@ void gtk_chart_set_value_min(GtkChart *chart, double value);
 void gtk_chart_set_value_max(GtkChart *chart, double value);
 void gtk_chart_set_user_data(GtkChart *chart, void *user_data);
 void * gtk_chart_get_user_data(GtkChart *chart);
+bool gtk_chart_save_csv(GtkChart *chart, const char *filename);
+bool gtk_chart_save_image(GtkChart *chart, const char *filename);

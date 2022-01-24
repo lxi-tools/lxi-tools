@@ -52,6 +52,7 @@ struct _GtkChart
   int width;
   void *user_data;
   GSList *point_list;
+  GtkSnapshot *snapshot;
 };
 
 struct _GtkChartClass
@@ -74,6 +75,7 @@ static void gtk_chart_init (GtkChart *self)
   self->value_min = 0;
   self->value_max = 100;
   self->width = 500;
+  self->snapshot = NULL;
 
   //gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -458,6 +460,8 @@ static void gtk_chart_snapshot (GtkWidget   *widget,
       chart_draw_number(self, snapshot, height, width);
       break;
   }
+
+  self->snapshot = snapshot;
 }
 
 static void gtk_chart_class_init (GtkChartClass *class)
@@ -559,4 +563,55 @@ void gtk_chart_set_value_min(GtkChart *chart, double value)
 void gtk_chart_set_value_max(GtkChart *chart, double value)
 {
   chart->value_max = value;
+}
+
+bool gtk_chart_save_csv(GtkChart *chart, const char *filename)
+{
+  struct chart_point_t *point;
+  GSList *l;
+
+  // Open file
+  FILE *file = fopen(filename, "w"); // write only
+
+  if (file == NULL)
+  {
+    g_print("Error: Could not open file\n");
+    return false;
+  }
+
+  // Write CSV data
+  for (l = chart->point_list; l != NULL; l = l->next)
+  {
+    point = l->data;
+    fprintf(file, "%f, %f\n", point->x, point->y);
+  }
+
+  // Close file
+  fclose(file);
+
+  return true;
+}
+
+bool gtk_chart_save_image(GtkChart *chart, const char *filename)
+{
+  int width = gtk_widget_get_width (GTK_WIDGET(chart));
+  int height = gtk_widget_get_height (GTK_WIDGET(chart));
+
+  GdkPaintable *paintable = gtk_widget_paintable_new (GTK_WIDGET(chart));
+  GtkSnapshot *snapshot = gtk_snapshot_new ();
+  gdk_paintable_snapshot (paintable, snapshot, width, height);
+  GskRenderNode *node = gtk_snapshot_to_node (snapshot);
+  GdkSurface *surface = gdk_surface_new_toplevel (gdk_display_get_default());
+  GskRenderer *renderer = gsk_renderer_new_for_surface (surface);
+  GdkTexture *texture = gsk_renderer_render_texture (renderer, node, NULL);
+  gdk_texture_save_to_png (texture, filename);
+
+  g_object_unref(paintable);
+  g_object_unref(snapshot);
+  gsk_render_node_unref(node);
+  g_object_unref(surface);
+  g_object_unref(renderer);
+  g_object_unref(texture);
+
+  return true;
 }
