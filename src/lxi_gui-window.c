@@ -1437,6 +1437,16 @@ static GActionEntry win_actions[] =
   { "save-csv", chart_save_csv, NULL, NULL, NULL, {} }
 };
 
+static void
+chart_button_clicked_fullscreen (GtkButton *button, gpointer data)
+{
+  UNUSED(button);
+  GtkWindow *window = GTK_WINDOW(data);
+
+  gtk_window_fullscreen(window);
+}
+
+
 static gboolean
 gui_chart_new_thread(gpointer data)
 {
@@ -1448,21 +1458,24 @@ gui_chart_new_thread(gpointer data)
   /* Construct a GtkBuilder instance from UI description */
   GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/lxi-tools/lxi-gui/lxi_gui-window-chart.ui");
 
-  // Prepare window
+  // Get UI objects
   GtkWindow *window = GTK_WINDOW(gtk_builder_get_object (builder, "window"));
+  GObject *button = gtk_builder_get_object (builder, "button_fullscreen");
+  //GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
 
   // Map window actions
   actions = G_ACTION_GROUP (g_simple_action_group_new ());
   g_action_map_add_action_entries (G_ACTION_MAP(actions), win_actions, G_N_ELEMENTS(win_actions), chart);
   gtk_widget_insert_action_group (GTK_WIDGET (window), "chart", G_ACTION_GROUP (actions));
-  action = g_action_map_lookup_action (G_ACTION_MAP (actions), "save-csv");
 
   // Disable "Save CSV" if chart features no CSV data
+  action = g_action_map_lookup_action (G_ACTION_MAP (actions), "save-csv");
   if (chart->no_csv)
   {
     g_simple_action_set_enabled (G_SIMPLE_ACTION (action), false);
   }
 
+  // Prepare window
   chart->window = window;
   gtk_window_set_decorated(window, true);
   gtk_window_set_modal(window, false);
@@ -1475,29 +1488,33 @@ gui_chart_new_thread(gpointer data)
       gtk_window_set_title(window, "Line Chart");
       gtk_window_set_default_size(window, chart->width, chart->width/2);
       break;
+
     case GTK_CHART_TYPE_SCATTER:
       gtk_window_set_title(window, "Scatter Chart");
       gtk_window_set_default_size(window, chart->width, chart->width/2);
       break;
+
     case GTK_CHART_TYPE_NUMBER:
       gtk_window_set_title(window, "Number Chart");
       gtk_window_set_default_size(window, chart->width, chart->width/2);
       break;
+
     case GTK_CHART_TYPE_GAUGE_LINEAR:
       gtk_window_set_title(window, "Linear Gauge");
       gtk_window_set_default_size(window, chart->width, chart->width*2);
       break;
+
     case GTK_CHART_TYPE_GAUGE_ANGULAR:
       gtk_window_set_title(window, "Angular Gauge");
       gtk_window_set_default_size(window, chart->width, chart->width);
       break;
+
     default: // Do nothing
       break;
   }
 
   // Prepare chart widget
   GtkWidget *widget = gtk_chart_new();
-  //GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
   chart->widget = widget;
   gtk_chart_set_type(GTK_CHART_WIDGET(widget), chart->type);
   gtk_chart_set_title(GTK_CHART_WIDGET(widget), chart->title);
@@ -1515,10 +1532,12 @@ gui_chart_new_thread(gpointer data)
       gtk_chart_set_x_max(GTK_CHART_WIDGET(widget), chart->x_max);
       gtk_chart_set_y_max(GTK_CHART_WIDGET(widget), chart->y_max);
       break;
+
     case GTK_CHART_TYPE_NUMBER:
       gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
       g_free(chart->label);
       break;
+
     case GTK_CHART_TYPE_GAUGE_LINEAR:
     case GTK_CHART_TYPE_GAUGE_ANGULAR:
       gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
@@ -1531,6 +1550,8 @@ gui_chart_new_thread(gpointer data)
       break;
   }
 
+  // Connect signals
+  g_signal_connect (button, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
   g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
 
   // Add chart widget to window

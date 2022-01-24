@@ -8,11 +8,20 @@
     <child type="titlebar">
       <object class="AdwHeaderBar">
         <child type="end">
-          <object class="GtkMenuButton">
-            <property name="icon-name">open-menu-symbolic</property>
-            <property name="menu-model">chart_menu_button_model</property>
-            <property name="focus-on-click">0</property>
-            <property name="can-focus">0</property>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkButton" id="button_fullscreen">
+                <property name="icon-name">view-fullscreen-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">menu_button_model</property>
+                <property name="focus-on-click">0</property>
+                <property name="can-focus">0</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -26,7 +35,7 @@
       </child>
     -->
   </object>
-  <menu id="chart_menu_button_model">
+  <menu id="menu_button_model">
     <section>
       <item>
         <attribute name="label" translatable="yes">Save _image</attribute>
