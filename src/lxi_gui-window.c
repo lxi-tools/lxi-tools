@@ -1408,8 +1408,6 @@ chart_save_csv (GSimpleAction *action,
   GtkFileChooser *chooser;
   struct chart_t *chart = user_data;
 
-  g_print("Save csv!\n");
-
   // Show file save as dialog
   dialog = gtk_file_chooser_dialog_new ("Select file",
                                         GTK_WINDOW (chart->window),
