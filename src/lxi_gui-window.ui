@@ -37,7 +37,7 @@
             <child>
               <object class="GtkToggleButton" id="button_flap">
                 <property name="icon-name">view-sidebar-start-symbolic</property>
-                <property name="tooltip-text">Hide/unhide search sidebar</property>
+                <property name="tooltip-text">Hide/unhide instrument list</property>
                 <property name="margin-start">6</property>
                 <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
               </object>
