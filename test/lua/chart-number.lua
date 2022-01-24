@@ -7,9 +7,9 @@
 
 -- Init
 clock0 = clock_new()
-chart0 = chart_new("number", -- chart type
-                   "PSU Voltage",  -- title
-                   "Volt [V]",     -- label
+chart0 = chart_new("number",      -- chart type
+                   "PSU Voltage", -- title
+                   "Volt [V]",    -- label
                    500)           -- window width
 
 -- Manipulate gauge number for 10 seconds
