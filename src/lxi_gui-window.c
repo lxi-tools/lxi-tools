@@ -1444,6 +1444,27 @@ chart_button_clicked_fullscreen (GtkButton *button, gpointer data)
   gtk_window_fullscreen(window);
 }
 
+static bool
+chart_key_pressed_cb (GtkEventControllerKey* self,
+                      guint keyval,
+                      guint keycode,
+                      GdkModifierType state,
+                      gpointer user_data)
+{
+  GtkWindow *window = GTK_WINDOW(user_data);
+
+  // If <ESC> key pressed
+  if ((keyval == 0xff1b) && (keycode == 0x9))
+  {
+    // Exit fullscreen
+    if (gtk_window_is_fullscreen(window))
+    {
+      gtk_window_unfullscreen(window);
+    }
+  }
+
+  return true;
+}
 
 static gboolean
 gui_chart_new_thread(gpointer data)
@@ -1458,7 +1479,7 @@ gui_chart_new_thread(gpointer data)
 
   // Get UI objects
   GtkWindow *window = GTK_WINDOW(gtk_builder_get_object (builder, "window"));
-  GObject *button = gtk_builder_get_object (builder, "button_fullscreen");
+  GObject *button_fullscreen = gtk_builder_get_object (builder, "button_fullscreen");
   //GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
 
   // Map window actions
@@ -1548,9 +1569,15 @@ gui_chart_new_thread(gpointer data)
       break;
   }
 
+  // Install event controller to listen for key presses
+  GtkEventController *controller = gtk_event_controller_key_new();
+  g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
+  gtk_widget_add_controller(GTK_WIDGET(window), controller);
+
   // Connect signals
-  g_signal_connect (button, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
+  g_signal_connect (button_fullscreen, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
   g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
+  g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
 
   // Add chart widget to window
   gtk_window_set_child(window, widget);
