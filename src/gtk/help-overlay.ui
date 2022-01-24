@@ -17,7 +17,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes" context="shortcut window">Hide/unhide instrument list</property>
+                <property name="title" translatable="yes" context="shortcut window">Show/hide instrument list</property>
                 <property name="action-name">action.toggle_flap</property>
               </object>
             </child>

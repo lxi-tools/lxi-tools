@@ -1449,6 +1449,8 @@ chart_key_pressed_cb (GtkEventControllerKey* self,
                       GdkModifierType state,
                       gpointer user_data)
 {
+  UNUSED(self);
+  UNUSED(state);
   GtkWindow *window = GTK_WINDOW(user_data);
 
   // If <ESC> key pressed
