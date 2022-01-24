@@ -29,6 +29,7 @@
  */
 
 #include "gtkchart.h"
+#include <gsk/gl/gskglrenderer.h>
 
 struct chart_point_t
 {
@@ -597,19 +598,20 @@ bool gtk_chart_save_image(GtkChart *chart, const char *filename)
   int width = gtk_widget_get_width (GTK_WIDGET(chart));
   int height = gtk_widget_get_height (GTK_WIDGET(chart));
 
+  // Get to the PNG image file from paintable
   GdkPaintable *paintable = gtk_widget_paintable_new (GTK_WIDGET(chart));
   GtkSnapshot *snapshot = gtk_snapshot_new ();
   gdk_paintable_snapshot (paintable, snapshot, width, height);
   GskRenderNode *node = gtk_snapshot_to_node (snapshot);
-  GdkSurface *surface = gdk_surface_new_toplevel (gdk_display_get_default());
-  GskRenderer *renderer = gsk_renderer_new_for_surface (surface);
+  GskRenderer *renderer = gsk_gl_renderer_new();
+  gsk_renderer_realize (renderer, NULL, NULL);
   GdkTexture *texture = gsk_renderer_render_texture (renderer, node, NULL);
   gdk_texture_save_to_png (texture, filename);
 
+  // Cleanup
   g_object_unref(paintable);
   g_object_unref(snapshot);
   gsk_render_node_unref(node);
-  g_object_unref(surface);
   g_object_unref(renderer);
   g_object_unref(texture);
 
