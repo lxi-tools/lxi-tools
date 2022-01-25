@@ -14,12 +14,10 @@ chart0 = chart_new("number",      -- chart type
 
 -- Manipulate number for 10 seconds
 clock = 0
-value = 0
 while (clock < 10)
 do
    clock = clock_read(clock0)
-   chart_set_value(chart0, value)
-   value = value + 1
+   chart_set_value(chart0, clock)
    msleep(100)
 end
 

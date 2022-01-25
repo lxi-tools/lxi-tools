@@ -14,13 +14,11 @@ chart0 = chart_new("angular-gauge",      -- chart type
 
 -- Manipulate gauge for 10 seconds
 clock = 0
-x = 0
 while (clock < 10)
 do
-   value = 3000 + 1000*math.sin(0.1*x)
+   value = 3000 + 1000*math.sin(clock)
    clock = clock_read(clock0)
    chart_set_value(chart0, value)
-   x = x + 1
    msleep(50)
 end
 

@@ -14,13 +14,11 @@ chart0 = chart_new("linear-gauge",   -- chart type
 
 -- Manipulate gauge for 10 seconds
 clock = 0
-x = 0
 while (clock < 10)
 do
-   value = 50 + 20*math.sin(0.1*x)
    clock = clock_read(clock0)
+   value = 50 + 20*math.sin(10*clock)
    chart_set_value(chart0, value)
-   x = x + 1
    msleep(20)
 end
 
