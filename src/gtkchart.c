@@ -63,7 +63,8 @@ struct _GtkChartClass
 
 G_DEFINE_TYPE (GtkChart, gtk_chart, GTK_TYPE_WIDGET)
 
-static void gtk_chart_init (GtkChart *self)
+static void
+gtk_chart_init (GtkChart *self)
 {
   // Defaults
   self->type = GTK_CHART_TYPE_LINE;
@@ -81,7 +82,8 @@ static void gtk_chart_init (GtkChart *self)
   //gtk_widget_init_template (GTK_WIDGET (self));
 }
 
-static void gtk_chart_dispose (GObject *object)
+static void
+gtk_chart_dispose (GObject *object)
 {
   GtkChart *self = GTK_CHART_WIDGET (object);
 
@@ -99,10 +101,11 @@ static void gtk_chart_dispose (GObject *object)
   G_OBJECT_CLASS (gtk_chart_parent_class)->dispose (object);
 }
 
-void chart_draw_line_or_scatter(GtkChart *self,
-                                GtkSnapshot *snapshot,
-                                float h,
-                                float w)
+static void
+chart_draw_line_or_scatter(GtkChart *self,
+                           GtkSnapshot *snapshot,
+                           float h,
+                           float w)
 {
   GdkRGBA bg_color, white, blue, red, line, grid;
   cairo_text_extents_t extents;
@@ -139,7 +142,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   // Draw title
   cairo_set_font_size (cr, 15.0 * (w/650));
   cairo_text_extents(cr, self->title, &extents);
-  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h - extents.height/2);
   cairo_save(cr);
   cairo_scale(cr, 1, -1);
   cairo_show_text (cr, self->title);
@@ -324,7 +327,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_line_to (cr, 0.9 * w, 0.2 * h);
   cairo_stroke (cr);
 
-  // Move coordinate system to (0,0) of drawn gtk_chart
+  // Move coordinate system to (0,0) of drawn coordinate system
   cairo_translate(cr, 0.1 * w, 0.2 * h);
   gdk_cairo_set_source_rgba (cr, &line);
   cairo_set_line_width (cr, 2.0);
@@ -363,7 +366,7 @@ void chart_draw_line_or_scatter(GtkChart *self,
         //cairo_fill(cr);
 
         // Draw point
-        cairo_set_line_width(cr, 4);
+        cairo_set_line_width(cr, 3);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
         cairo_move_to(cr, point->x * x_scale, point->y * y_scale);
         cairo_close_path (cr);
@@ -375,10 +378,11 @@ void chart_draw_line_or_scatter(GtkChart *self,
   cairo_destroy (cr);
 }
 
-void chart_draw_number(GtkChart *self,
-                       GtkSnapshot *snapshot,
-                       float h,
-                       float w)
+static void
+chart_draw_number(GtkChart *self,
+                  GtkSnapshot *snapshot,
+                  float h,
+                  float w)
 {
   GdkRGBA bg_color, white, blue, red, line, grid;
   cairo_text_extents_t extents;
@@ -414,7 +418,7 @@ void chart_draw_number(GtkChart *self,
   // Draw title
   cairo_set_font_size (cr, 15.0 * (w/650));
   cairo_text_extents(cr, self->title, &extents);
-  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h - extents.height/2);
   cairo_save(cr);
   cairo_scale(cr, 1, -1);
   cairo_show_text (cr, self->title);
@@ -442,8 +446,112 @@ void chart_draw_number(GtkChart *self,
   cairo_destroy (cr);
 }
 
-static void gtk_chart_snapshot (GtkWidget   *widget,
-                                GtkSnapshot *snapshot)
+static void
+chart_draw_gauge_linear(GtkChart *self,
+                        GtkSnapshot *snapshot,
+                        float h,
+                        float w)
+{
+  GdkRGBA bg_color, white, blue, red, line, grid;
+  cairo_text_extents_t extents;
+  char value[20];
+
+  gdk_rgba_parse (&bg_color, "black");
+  gdk_rgba_parse (&white, "rgba(255,255,255,0.75)");
+  gdk_rgba_parse (&blue, "blue");
+  gdk_rgba_parse (&red, "red");
+  gdk_rgba_parse (&line, "#325aad");
+  gdk_rgba_parse (&grid, "rgba(255,255,255,0.1)");
+
+  // Set background color
+  gtk_snapshot_append_color (snapshot,
+                             &bg_color,
+                             &GRAPHENE_RECT_INIT(0, 0, w, h));
+
+  // Assume aspect ratio w:h = 1:2
+
+  // Set up Cairo region
+  cairo_t * cr = gtk_snapshot_append_cairo (snapshot, &GRAPHENE_RECT_INIT(0, 0, w, h));
+  cairo_set_antialias (cr, CAIRO_ANTIALIAS_FAST);
+  cairo_set_tolerance (cr, 1.5);
+  gdk_cairo_set_source_rgba (cr, &white);
+  cairo_select_font_face (cr, "Ubuntu", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+  // Move coordinate system to bottom left
+  cairo_translate(cr, 0, h);
+
+  // Invert y-axis
+  cairo_scale(cr, 1, -1);
+
+  // Draw title
+  cairo_set_font_size (cr, 15.0 * (2*w/650));
+  cairo_text_extents(cr, self->title, &extents);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.95 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text (cr, self->title);
+  cairo_restore(cr);
+
+  // Draw label
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, self->label, &extents);
+  cairo_move_to(cr, 0.5 * w - extents.width/2, 0.05 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, self->label);
+  cairo_restore(cr);
+
+  // Draw minimum value
+  g_snprintf(value, sizeof(value), "%.1f", self->value_min);
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, value, &extents);
+  cairo_move_to(cr, 0.7 * w, 0.1 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, value);
+  cairo_restore(cr);
+
+  // Draw minimum value
+  g_snprintf(value, sizeof(value), "%.1f", self->value_max);
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, value, &extents);
+  cairo_move_to(cr, 0.7 * w, 0.9 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, value);
+  cairo_restore(cr);
+
+  // Draw minimum line
+  gdk_cairo_set_source_rgba (cr, &grid);
+  cairo_move_to(cr, 0.375 * w, 0.1 * h);
+  cairo_line_to(cr, 0.625 * w, 0.1 * h);
+  cairo_set_line_width (cr, 1);
+  cairo_stroke (cr);
+
+  // Draw maximum line
+  cairo_move_to(cr, 0.375 * w, 0.9 * h);
+  cairo_line_to(cr, 0.625 * w, 0.9 * h);
+  cairo_set_line_width (cr, 1);
+  cairo_stroke (cr);
+
+  // Move coordinate system to (0,0) of gauge line start
+  cairo_translate(cr, 0.5 * w, 0.1 * h);
+
+  // Draw gauge line
+  gdk_cairo_set_source_rgba (cr, &line);
+  cairo_move_to(cr, 0, 0);
+  float y_scale = (h - 2 * 0.1 * h) / self->value_max;
+  cairo_set_line_width (cr, 0.2 * w);
+  cairo_line_to(cr, 0, self->value * y_scale);
+//  cairo_line_to(cr, 0, self->value_max * y_scale);
+  cairo_stroke (cr);
+
+  cairo_destroy (cr);
+}
+
+static void
+gtk_chart_snapshot (GtkWidget   *widget,
+                    GtkSnapshot *snapshot)
 {
   GtkChart *self = GTK_CHART_WIDGET(widget);
 
@@ -459,6 +567,9 @@ static void gtk_chart_snapshot (GtkWidget   *widget,
       break;
     case GTK_CHART_TYPE_NUMBER:
       chart_draw_number(self, snapshot, height, width);
+      break;
+    case GTK_CHART_TYPE_GAUGE_LINEAR:
+      chart_draw_gauge_linear(self, snapshot, height, width);
       break;
   }
 

@@ -11,7 +11,7 @@ chart0 = chart_new("scatter-chart",                         -- chart type
                    "Sine wave plot, f(x) = 5 + 2sin(0.1x)", -- title
                    "Time [s]",                              -- x-axis label
                    "Value [ ]",                             -- y-axis label
-                   10, 10, 700)                             -- x max, y max, window width
+                   10, 10, 800)                             -- x max, y max, window width
 
 -- Sample and plot sine wave at 100 Hz for 10 seconds
 clock = 0

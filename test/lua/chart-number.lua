@@ -9,10 +9,10 @@
 clock0 = clock_new()
 chart0 = chart_new("number",      -- chart type
                    "PSU Voltage", -- title
-                   "Volt [V]",    -- label
-                   500)           -- window width
+                   "[ V ]",    -- label
+                   800)           -- window width
 
--- Manipulate gauge number for 10 seconds
+-- Manipulate number for 10 seconds
 clock = 0
 value = 0
 while (clock < 10)
@@ -25,5 +25,5 @@ end
 
 -- Cleanup
 clock_free(clock0)
-chart_close(chart0)
+--chart_close(chart0)
 print("Done")
