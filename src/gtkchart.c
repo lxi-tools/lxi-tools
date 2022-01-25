@@ -502,7 +502,7 @@ chart_draw_gauge_linear(GtkChart *self,
   cairo_restore(cr);
 
   // Draw minimum value
-  g_snprintf(value, sizeof(value), "%.1f", self->value_min);
+  g_snprintf(value, sizeof(value), "%.0f", self->value_min);
   cairo_set_font_size (cr, 25.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to(cr, 0.7 * w, 0.1 * h - extents.height/2);
@@ -511,8 +511,8 @@ chart_draw_gauge_linear(GtkChart *self,
   cairo_show_text(cr, value);
   cairo_restore(cr);
 
-  // Draw minimum value
-  g_snprintf(value, sizeof(value), "%.1f", self->value_max);
+  // Draw maximum value
+  g_snprintf(value, sizeof(value), "%.0f", self->value_max);
   cairo_set_font_size (cr, 25.0 * (w/650));
   cairo_text_extents(cr, value, &extents);
   cairo_move_to(cr, 0.7 * w, 0.9 * h - extents.height/2);
@@ -543,7 +543,112 @@ chart_draw_gauge_linear(GtkChart *self,
   float y_scale = (h - 2 * 0.1 * h) / self->value_max;
   cairo_set_line_width (cr, 0.2 * w);
   cairo_line_to(cr, 0, self->value * y_scale);
-//  cairo_line_to(cr, 0, self->value_max * y_scale);
+  cairo_stroke (cr);
+
+  cairo_destroy (cr);
+}
+
+static void
+chart_draw_gauge_angular(GtkChart *self,
+                        GtkSnapshot *snapshot,
+                        float h,
+                        float w)
+{
+  GdkRGBA bg_color, white, blue, red, line, grid;
+  cairo_text_extents_t extents;
+  char value[20];
+
+  gdk_rgba_parse (&bg_color, "black");
+  gdk_rgba_parse (&white, "rgba(255,255,255,0.75)");
+  gdk_rgba_parse (&blue, "blue");
+  gdk_rgba_parse (&red, "red");
+  gdk_rgba_parse (&line, "#325aad");
+  gdk_rgba_parse (&grid, "rgba(255,255,255,0.1)");
+
+  // Set background color
+  gtk_snapshot_append_color (snapshot,
+                             &bg_color,
+                             &GRAPHENE_RECT_INIT(0, 0, w, h));
+
+  // Assume aspect ratio w:h = 1:1
+
+  // Set up Cairo region
+  cairo_t * cr = gtk_snapshot_append_cairo (snapshot, &GRAPHENE_RECT_INIT(0, 0, w, h));
+  cairo_set_antialias (cr, CAIRO_ANTIALIAS_FAST);
+//  cairo_set_tolerance (cr, 1.5);
+  gdk_cairo_set_source_rgba (cr, &white);
+  cairo_select_font_face (cr, "Ubuntu", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+  // Move coordinate system to bottom left
+  cairo_translate(cr, 0, h);
+
+  // Invert y-axis
+  cairo_scale(cr, 1, -1);
+
+  // Draw title
+  cairo_set_font_size (cr, 15.0 * (2*w/650));
+  cairo_text_extents(cr, self->title, &extents);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.9 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text (cr, self->title);
+  cairo_restore(cr);
+
+  // Draw label
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, self->label, &extents);
+  cairo_move_to(cr, 0.5 * w - extents.width/2, 0.1 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, self->label);
+  cairo_restore(cr);
+
+  // Draw minimum value
+  g_snprintf(value, sizeof(value), "%.0f", self->value_min);
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, value, &extents);
+  cairo_move_to(cr, 0.225 * w, 0.25 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, value);
+  cairo_restore(cr);
+
+  // Draw maximum value
+  g_snprintf(value, sizeof(value), "%.0f", self->value_max);
+  cairo_set_font_size (cr, 25.0 * (w/650));
+  cairo_text_extents(cr, value, &extents);
+  cairo_move_to(cr, 0.77 * w - extents.width, 0.25 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text(cr, value);
+  cairo_restore(cr);
+
+  // Draw minimum line
+  gdk_cairo_set_source_rgba (cr, &grid);
+  cairo_move_to(cr, 0.08 * w, 0.25 * h);
+  cairo_line_to(cr, 0.22 * w, 0.25 * h);
+  cairo_set_line_width (cr, 1);
+  cairo_stroke (cr);
+
+  // Draw maximum line
+  cairo_move_to(cr, 0.78 * w, 0.25 * h);
+  cairo_line_to(cr, 0.92 * w, 0.25 * h);
+  cairo_set_line_width (cr, 1);
+  cairo_stroke (cr);
+
+  // Re-invert y-axis
+  cairo_scale(cr, 1, -1);
+
+  // Draw arc
+  gdk_cairo_set_source_rgba (cr, &line);
+  double xc = 0.5 * w;
+  double yc = -0.25 * h;
+  double radius = 0.35 * w;
+  double angle1 = 180 * (M_PI/180.0);
+  double angle = self->value * (180 / (self->value_max));
+  double angle2 = 180 * (M_PI/180.0) + angle * (M_PI/180.0);
+  cairo_set_line_width (cr, 0.1 * w);
+  cairo_arc (cr, xc, yc, radius, angle1, angle2);
   cairo_stroke (cr);
 
   cairo_destroy (cr);
@@ -565,11 +670,17 @@ gtk_chart_snapshot (GtkWidget   *widget,
     case GTK_CHART_TYPE_SCATTER:
       chart_draw_line_or_scatter(self, snapshot, height, width);
       break;
+
     case GTK_CHART_TYPE_NUMBER:
       chart_draw_number(self, snapshot, height, width);
       break;
+
     case GTK_CHART_TYPE_GAUGE_LINEAR:
       chart_draw_gauge_linear(self, snapshot, height, width);
+      break;
+
+    case GTK_CHART_TYPE_GAUGE_ANGULAR:
+      chart_draw_gauge_angular(self, snapshot, height, width);
       break;
   }
 
