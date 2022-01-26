@@ -825,8 +825,9 @@ bool gtk_chart_save_image(GtkChart *chart, const char *filename)
   GtkSnapshot *snapshot = gtk_snapshot_new ();
   gdk_paintable_snapshot (paintable, snapshot, width, height);
   GskRenderNode *node = gtk_snapshot_to_node (snapshot);
-  GskRenderer *renderer = gsk_gl_renderer_new();
-  gsk_renderer_realize (renderer, NULL, NULL);
+  GdkSurface *surface = gdk_surface_new_toplevel (gdk_display_get_default());
+  GskRenderer *renderer = gsk_renderer_new_for_surface (surface);
+  gsk_renderer_realize (renderer, surface, NULL);
   GdkTexture *texture = gsk_renderer_render_texture (renderer, node, NULL);
   gdk_texture_save_to_png (texture, filename);
 
