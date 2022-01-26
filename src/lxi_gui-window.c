@@ -41,8 +41,9 @@
 #include <lualib.h>
 #include <locale.h>
 #include <gtksourceview/gtksource.h>
-#include "gtkchart.h"
 #include <adwaita.h>
+#include "gtkchart.h"
+#include "lxi_gui-resources.h"
 
 static lxi_info_t info;
 
@@ -1119,7 +1120,7 @@ button_clicked_script_new (LxiGuiWindow *self, GtkButton *button)
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(source_buffer_script), &start, &end);
 
   // Print status
-  text_view_add_buffer(self->text_view_script_status, "New script.\n");
+  text_view_add_buffer(self->text_view_script_status, "New script\n");
 }
 
 static void
@@ -1825,6 +1826,29 @@ extern int lua_register_gui(lua_State *L)
   return 0;
 }
 
+static void load_log_script(lua_State *L)
+{
+  gsize size;
+  int error;
+
+  GResource *resource = lxi_gui_get_resource();
+
+  GBytes *script = g_resource_lookup_data (resource,
+                                           "/io/github/lxi-tools/lxi-gui/log.lua",
+                                           G_RESOURCE_LOOKUP_FLAGS_NONE,
+                                           NULL);
+
+  gconstpointer script_buffer = g_bytes_get_data (script, &size);
+
+  error = luaL_loadbuffer(L, script_buffer, strlen(script_buffer), "lxi-gui") ||
+    lua_pcall(L, 0, 0, 0);
+  if (error)
+  {
+    lua_print_error(self_global, lua_tostring(L, -1));
+    lua_pop(L, 1);  /* pop error message from the stack */
+  }
+}
+
 static gpointer
 script_run_worker_function(gpointer data)
 {
@@ -1850,6 +1874,9 @@ script_run_worker_function(gpointer data)
 
   // Bind lxi functions
   lua_register_lxi(L);
+
+  // Load data logger script
+  load_log_script(L);
 
   // Hardcode locale so script handles number conversion correct etc.
   setlocale(LC_ALL, "C.UTF-8");

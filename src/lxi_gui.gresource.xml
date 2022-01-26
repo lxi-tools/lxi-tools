@@ -16,5 +16,6 @@
     <file>images/photo-camera.png</file>
     <file>images/runner.png</file>
     <file>lxi_gui.css</file>
+    <file>log.lua</file>
   </gresource>
 </gresources>
