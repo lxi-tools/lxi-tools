@@ -806,7 +806,7 @@ bool gtk_chart_save_csv(GtkChart *chart, const char *filename)
   for (l = chart->point_list; l != NULL; l = l->next)
   {
     point = l->data;
-    fprintf(file, "%f, %f\n", point->x, point->y);
+    fprintf(file, "%f,%f\n", point->x, point->y);
   }
 
   // Close file
