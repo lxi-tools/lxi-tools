@@ -9,7 +9,7 @@
 clock0 = clock_new()
 chart0 = chart_new("number",      -- chart type
                    "PSU Voltage", -- title
-                   "[ V ]",    -- label
+                   "[ V ]",       -- label
                    800)           -- window width
 
 -- Manipulate number for 10 seconds
