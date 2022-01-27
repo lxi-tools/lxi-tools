@@ -35,11 +35,11 @@ an independent open source community effort.
 The lxi-gui application provides some of the same features as the commandline
 tool but presents them in a modern GUI frontend.
 
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-scpi.png" align="center">
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-search.png" align="center">
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-screenshot.png" align="center">
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-benchmark.png" align="center">
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script.png" align="center">
+<img src="images/lxi-gui-scpi.png" align="center">
+<img src="images/lxi-gui-search.png" align="center">
+<img src="images/lxi-gui-screenshot.png" align="center">
+<img src="images/lxi-gui-benchmark.png" align="center">
+<img src="images/lxi-gui-script.png" align="center">
 
 ### 2.2 lxi
 
