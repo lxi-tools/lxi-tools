@@ -19,11 +19,11 @@ scpi(psu, "output on")
 msleep(1000)
 
 -- Setup line chart and clock
-chart0 = chart_new("line-chart",              -- chart type
-                   "PSU Channel 1 Data Log",  -- title
-                   "Time [s]",                -- x-axis label
-                   "Volt [V]",                -- y-axis label
-                   100, 10, 800)              -- x max, y max, window width
+chart0 = chart_new("line-chart",             -- chart type
+                   "PSU Channel 1 Data Log", -- title
+                   "Time [ s ]",             -- x-axis label
+                   "Volt [ V ]",             -- y-axis label
+                   100, 10, 800)             -- x max, y max, window width
 clock0 = clock_new()
 
 -- Capture and plot samples at 10 Hz for 100 seconds
@@ -39,7 +39,7 @@ end
 
 -- Cleanup
 clock_free(c0)
-chart_free(chart0)
+--chart_close(chart0)
 
 -- Turn off power supply
 scpi(psu, "output off")

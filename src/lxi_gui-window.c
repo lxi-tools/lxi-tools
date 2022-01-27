@@ -1085,7 +1085,7 @@ on_script_file_open_response (GtkDialog *dialog,
       char *basename = g_path_get_basename(filename);
       g_free(filename);
 
-      char *text = g_strdup_printf ("Opened file %s\n", basename);
+      char *text = g_strdup_printf ("Opening %s\n", basename);
       text_view_add_buffer(self->text_view_script_status, text);
       g_free(text);
     }
@@ -1199,7 +1199,7 @@ on_script_file_save_response (GtkDialog *dialog,
       char *basename = g_path_get_basename(filename);
       g_free(filename);
 
-      char *text = g_strdup_printf ("Saved file %s\n", basename);
+      char *text = g_strdup_printf ("Saving %s\n", basename);
       text_view_add_buffer(self->text_view_script_status, text);
       g_free(text);
     }
@@ -1224,7 +1224,7 @@ button_clicked_script_save (LxiGuiWindow *self, GtkButton *button)
     char *basename = g_path_get_basename(filename);
     g_free(filename);
 
-    char *text = g_strdup_printf ("Saved file %s\n", basename);
+    char *text = g_strdup_printf ("Saving %s\n", basename);
     text_view_add_buffer(self->text_view_script_status, text);
     g_free(text);
   }
@@ -1599,6 +1599,9 @@ lua_gui_chart_save_csv(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
     gtk_chart_save_csv(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
   }
 
@@ -1614,6 +1617,9 @@ lua_gui_chart_save_png(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
     gtk_chart_save_png(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
   }
 
