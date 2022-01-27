@@ -832,6 +832,7 @@ bool gtk_chart_save_image(GtkChart *chart, const char *filename)
 
   // Cleanup
   g_object_unref(texture);
+  gsk_renderer_unrealize(renderer);
   g_object_unref(renderer);
   gsk_render_node_unref(node);
   g_object_unref(snapshot);
