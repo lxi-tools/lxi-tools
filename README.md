@@ -40,6 +40,7 @@ tool but presents them in a modern GUI frontend.
 <img src="images/lxi-gui-screenshot.png" align="center">
 <img src="images/lxi-gui-benchmark.png" align="center">
 <img src="images/lxi-gui-script.png" align="center">
+<img src="images/lxi-gui-script-in-action.png" align="center">
 
 ### 2.2 lxi
 
