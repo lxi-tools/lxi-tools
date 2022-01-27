@@ -831,11 +831,11 @@ bool gtk_chart_save_image(GtkChart *chart, const char *filename)
   gdk_texture_save_to_png (texture, filename);
 
   // Cleanup
-  g_object_unref(paintable);
-  g_object_unref(snapshot);
-  gsk_render_node_unref(node);
-  g_object_unref(renderer);
   g_object_unref(texture);
+  g_object_unref(renderer);
+  gsk_render_node_unref(node);
+  g_object_unref(snapshot);
+  g_object_unref(paintable);
 
   return true;
 }
