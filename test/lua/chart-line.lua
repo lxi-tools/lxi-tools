@@ -23,6 +23,10 @@ do
    msleep(10)
 end
 
+-- Save chart data
+chart_save_csv(chart0, "chart0.csv")
+chart_save_png(chart0, "chart0.png")
+
 -- Cleanup
 clock_free(clock0)
 --chart_close(chart0)

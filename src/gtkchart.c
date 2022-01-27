@@ -31,6 +31,8 @@
 #include "gtkchart.h"
 #include <gsk/gl/gskglrenderer.h>
 
+#define UNUSED(expr) do { (void)(expr); } while (0)
+
 struct chart_point_t
 {
   double x;
@@ -67,7 +69,7 @@ static void
 gtk_chart_init (GtkChart *self)
 {
   // Defaults
-  self->type = GTK_CHART_TYPE_LINE;
+  self->type = GTK_CHART_TYPE_UNKNOWN;
   self->title = NULL;
   self->label = NULL;
   self->x_label = NULL;
@@ -655,6 +657,50 @@ chart_draw_gauge_angular(GtkChart *self,
 }
 
 static void
+chart_draw_unknown_type(GtkChart *self,
+                        GtkSnapshot *snapshot,
+                        float h,
+                        float w)
+{
+  UNUSED(self);
+
+  GdkRGBA bg_color, white;
+  cairo_text_extents_t extents;
+  const char *warning = "Unknown chart type";
+
+  gdk_rgba_parse (&bg_color, "black");
+  gdk_rgba_parse (&white, "rgba(255,255,255,0.75)");
+
+  // Set background color
+  gtk_snapshot_append_color (snapshot,
+                             &bg_color,
+                             &GRAPHENE_RECT_INIT(0, 0, w, h));
+
+  // Set up Cairo region
+  cairo_t * cr = gtk_snapshot_append_cairo (snapshot, &GRAPHENE_RECT_INIT(0, 0, w, h));
+  gdk_cairo_set_source_rgba (cr, &white);
+  cairo_select_font_face (cr, "Ubuntu", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+  // Move coordinate system to bottom left
+  cairo_translate(cr, 0, h);
+
+  // Invert y-axis
+  cairo_scale(cr, 1, -1);
+
+  // Draw title
+  cairo_set_font_size (cr, 30.0 * (w/650));
+  cairo_text_extents(cr, warning, &extents);
+  cairo_move_to (cr, 0.5 * w - extents.width/2, 0.5 * h - extents.height/2);
+  cairo_save(cr);
+  cairo_scale(cr, 1, -1);
+  cairo_show_text (cr, warning);
+  cairo_restore(cr);
+
+  cairo_destroy (cr);
+}
+
+
+static void
 gtk_chart_snapshot (GtkWidget   *widget,
                     GtkSnapshot *snapshot)
 {
@@ -681,6 +727,10 @@ gtk_chart_snapshot (GtkWidget   *widget,
 
     case GTK_CHART_TYPE_GAUGE_ANGULAR:
       chart_draw_gauge_angular(self, snapshot, height, width);
+      break;
+
+    default:
+      chart_draw_unknown_type(self, snapshot, height, width);
       break;
   }
 
@@ -815,7 +865,7 @@ bool gtk_chart_save_csv(GtkChart *chart, const char *filename)
   return true;
 }
 
-bool gtk_chart_save_image(GtkChart *chart, const char *filename)
+bool gtk_chart_save_png(GtkChart *chart, const char *filename)
 {
   int width = gtk_widget_get_width (GTK_WIDGET(chart));
   int height = gtk_widget_get_height (GTK_WIDGET(chart));

@@ -38,6 +38,7 @@ GtkWidget * gtk_chart_new (void);
 
 enum gtk_chart_type_t
 {
+  GTK_CHART_TYPE_UNKNOWN,
   GTK_CHART_TYPE_LINE,
   GTK_CHART_TYPE_SCATTER,
   GTK_CHART_TYPE_GAUGE_ANGULAR,
@@ -57,7 +58,7 @@ void gtk_chart_plot_point(GtkChart *chart, double x, double y);
 void gtk_chart_set_value(GtkChart *chart, double value);
 void gtk_chart_set_value_min(GtkChart *chart, double value);
 void gtk_chart_set_value_max(GtkChart *chart, double value);
+bool gtk_chart_save_csv(GtkChart *chart, const char *filename);
+bool gtk_chart_save_png(GtkChart *chart, const char *filename);
 void gtk_chart_set_user_data(GtkChart *chart, void *user_data);
 void * gtk_chart_get_user_data(GtkChart *chart);
-bool gtk_chart_save_csv(GtkChart *chart, const char *filename);
-bool gtk_chart_save_image(GtkChart *chart, const char *filename);

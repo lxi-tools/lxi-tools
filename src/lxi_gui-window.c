@@ -128,7 +128,6 @@ struct chart_t
   bool no_csv;
   GtkWidget *widget;
   GtkWindow *window;
-  GdkPixbuf *pixbuf_image;
 };
 
 static struct chart_t gui_chart[CHARTS_MAX];
@@ -1331,14 +1330,13 @@ on_chart_save_image_response (GtkDialog      *dialog,
 
     g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
 
-    status = gtk_chart_save_image(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
+    status = gtk_chart_save_png(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
     if (status == false)
     {
       g_error ("Error: %s\n", error->message);
     }
   }
 
-  g_free(chart->pixbuf_image);
   gtk_window_destroy (GTK_WINDOW (dialog));
 }
 
@@ -1592,6 +1590,36 @@ gui_chart_new_thread(gpointer data)
   return G_SOURCE_REMOVE;
 }
 
+// lua: chart_save_csv(handle)
+static int
+lua_gui_chart_save_csv(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  const char *filename = lua_tostring(L, 2);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    gtk_chart_save_csv(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
+  }
+
+  return 0;
+}
+
+// lua: chart_save_png(handle)
+static int
+lua_gui_chart_save_png(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  const char *filename = lua_tostring(L, 2);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    gtk_chart_save_png(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
+  }
+
+  return 0;
+}
+
 // lua: chart_close(handle)
 static int
 lua_gui_chart_close(lua_State* L)
@@ -1679,10 +1707,7 @@ lua_gui_chart_new(lua_State* L)
   }
   else
   {
-    // FIXME:
-    // Return error (negative value)
-    // Maybe also push error (msg)
-    g_print("Please specify chart type\n");
+    chart->type = GTK_CHART_TYPE_UNKNOWN;
   }
 
   chart->handle = handle;
@@ -1795,6 +1820,8 @@ static const struct luaL_Reg gui_lib [] =
   {"chart_plot", lua_gui_chart_plot},
   {"chart_set_value", lua_gui_chart_set_value},
   {"chart_close", lua_gui_chart_close},
+  {"chart_save_csv", lua_gui_chart_save_csv},
+  {"chart_save_png", lua_gui_chart_save_png},
   {"selected_ip", lua_gui_ip},
   {"selected_id", lua_gui_id},
   {"version", lua_gui_version},

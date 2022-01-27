@@ -5,7 +5,7 @@
 ------------------------------------------------------------------------------
 
 Both the lxi tool and lxi-gui tool add the following lua functions in addition
-to the standard lua library functions:
+to the standard lua library functions.
 
 ------------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ to the standard lua library functions:
     protocol: Communications protocol to use [VXI11, RAW]
 
   Returns
-      device: Handle of connected device
+      device: Handle of device
 
 ------------------------------------------------------------------------------
 
@@ -41,8 +41,8 @@ to the standard lua library functions:
      timeout: Timeout in miliseconds [integer]
 
   Returns
-    response: Returns response [string] if command string ended with "?". If a
-              timeout occurs the response is nil.
+    response: Returns response [string] if command string ended with "?". If an
+              error (timeout etc.) occurs the response is nil.
 
 ------------------------------------------------------------------------------
 
@@ -128,8 +128,17 @@ to the standard lua library functions:
 
 ------------------------------------------------------------------------------
 
-Additionally, the lxi-gui tools adds the following lua functions to present and
-manage data via the GUI:
+
+
+
+
+
+
+
+Additionally, the lxi-gui tool adds the following lua functions to present and
+manage data via the GUI.
+
+NOTE: These functions can only be used when running scripts via lxi-gui.
 
 ------------------------------------------------------------------------------
 
@@ -194,6 +203,30 @@ manage data via the GUI:
 ------------------------------------------------------------------------------
 
   Function
+    chart_save_csv(chart, filename)
+
+  Description
+    Save plotted data to CSV file
+
+  Paramters
+       chart: Handle of chart
+    filename: Filename of CSV file
+
+------------------------------------------------------------------------------
+
+  Function
+    chart_save_png(chart, filename)
+
+  Description
+    Save image of plotted chart to PNG file
+
+  Paramters
+       chart: Handle of chart
+    filename: Filename of PNG file
+
+------------------------------------------------------------------------------
+
+  Function
     chart_close(chart)
 
   Description
@@ -237,7 +270,26 @@ manage data via the GUI:
 
 ------------------------------------------------------------------------------
 
-Not yet documented or implemented:
+  Function
+    chart_save_csv(chart, filename)
 
-chart_dump_csv(chart0, file) - Dump plotted chart values to file in CSV format
-chart_dump_image(chart0, file) - Dump image of chart to file in PNG format
+  Description
+    Save plotted data to CSV file
+
+  Paramters
+       chart: Handle of chart
+    filename: Filename of CSV file
+
+------------------------------------------------------------------------------
+
+  Function
+    chart_save_png(chart, filename)
+
+  Description
+    Save image of plotted chart to PNG file
+
+  Paramters
+       chart: Handle of chart
+    filename: Filename of PNG file
+
+------------------------------------------------------------------------------
