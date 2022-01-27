@@ -874,10 +874,9 @@ bool gtk_chart_save_png(GtkChart *chart, const char *filename)
   GdkPaintable *paintable = gtk_widget_paintable_new (GTK_WIDGET(chart));
   GtkSnapshot *snapshot = gtk_snapshot_new ();
   gdk_paintable_snapshot (paintable, snapshot, width, height);
-  GskRenderNode *node = gtk_snapshot_to_node (snapshot);
-  GdkSurface *surface = gdk_surface_new_toplevel (gdk_display_get_default());
-  GskRenderer *renderer = gsk_renderer_new_for_surface (surface);
-  gsk_renderer_realize (renderer, surface, NULL);
+  GskRenderNode *node = gtk_snapshot_free_to_node (snapshot);
+  GskRenderer *renderer = gsk_cairo_renderer_new ();
+  gsk_renderer_realize (renderer, NULL, NULL);
   GdkTexture *texture = gsk_renderer_render_texture (renderer, node, NULL);
   gdk_texture_save_to_png (texture, filename);
 
@@ -885,9 +884,7 @@ bool gtk_chart_save_png(GtkChart *chart, const char *filename)
   g_object_unref(texture);
   gsk_renderer_unrealize(renderer);
   g_object_unref(renderer);
-  g_object_unref(surface);
   gsk_render_node_unref(node);
-  g_object_unref(snapshot);
   g_object_unref(paintable);
 
   return true;
