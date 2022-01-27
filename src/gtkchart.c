@@ -885,6 +885,7 @@ bool gtk_chart_save_png(GtkChart *chart, const char *filename)
   g_object_unref(texture);
   gsk_renderer_unrealize(renderer);
   g_object_unref(renderer);
+  g_object_unref(surface);
   gsk_render_node_unref(node);
   g_object_unref(snapshot);
   g_object_unref(paintable);
