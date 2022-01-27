@@ -1599,6 +1599,10 @@ lua_gui_chart_save_csv(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
+
     gtk_chart_save_csv(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
   }
 
@@ -1614,6 +1618,10 @@ lua_gui_chart_save_png(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
+
     gtk_chart_save_png(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
   }
 
