@@ -2225,31 +2225,12 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Initialize script file
   self->script_file = NULL;
 
-  // Set language of source buffer to "lua"
+  // Set language of source buffer to "lua-lxi-gui"
   GtkSourceBuffer *source_buffer_script =
     GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
   GtkSourceLanguageManager *language_manager = gtk_source_language_manager_get_default();
-
-  // Create new path structure with our search path added
-  const gchar* const* lang_specs_path = gtk_source_language_manager_get_search_path(language_manager);
-
-  int i = 0;
-  while (lang_specs_path[i] != 0)
-  {
-    i++;
-  }
-
-  gchar** lang_specs_path_copy = g_new0(gchar *, i+1);
-
-  int j;
-  for (j=0; j<i; j++)
-  {
-    lang_specs_path_copy[j] = (gchar *) lang_specs_path[j];
-  }
-  lang_specs_path_copy[i] = g_strdup("resource:///io/github/lxi-tools/lxi-gui/language-specs");
-  lang_specs_path_copy[i+1] = 0;
-
-  gtk_source_language_manager_set_search_path(language_manager, (const gchar * const*) lang_specs_path_copy);
+  gtk_source_language_manager_append_search_path(language_manager,
+                                                "resource:///io/github/lxi-tools/lxi-gui/language-specs");
   GtkSourceLanguage *language = gtk_source_language_manager_get_language(language_manager, "lua-lxi-gui");
   gtk_source_buffer_set_language(source_buffer_script, language);
 
