@@ -2230,12 +2230,12 @@ lxi_gui_window_init (LxiGuiWindow *self)
     GTK_SOURCE_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(self->source_view_script)));
   GtkSourceLanguageManager *language_manager = gtk_source_language_manager_get_default();
 
+  // Create new path structure with our search path added
   const gchar* const* lang_specs_path = gtk_source_language_manager_get_search_path(language_manager);
 
   int i = 0;
   while (lang_specs_path[i] != 0)
   {
-    g_print("path[%d] = %s\n", i, lang_specs_path[i]);
     i++;
   }
 
@@ -2244,18 +2244,10 @@ lxi_gui_window_init (LxiGuiWindow *self)
   int j;
   for (j=0; j<i; j++)
   {
-    lang_specs_path_copy[j] = lang_specs_path[j];
+    lang_specs_path_copy[j] = (gchar *) lang_specs_path[j];
   }
-  lang_specs_path_copy[i] = g_strdup("resource:///io/github/lxi-tools/lxi-gui/language-specs"); // Not working
-//  lang_specs_path_copy[i] = g_strdup("/home/lundmar/projects/lxi-tools/lxi-tools/src/language-specs"); // Works
+  lang_specs_path_copy[i] = g_strdup("resource:///io/github/lxi-tools/lxi-gui/language-specs");
   lang_specs_path_copy[i+1] = 0;
-
-  i = 0;
-  while (lang_specs_path_copy[i] != 0)
-  {
-    g_print("path[%d] = %s\n", i, lang_specs_path_copy[i]);
-    i++;
-  }
 
   gtk_source_language_manager_set_search_path(language_manager, (const gchar * const*) lang_specs_path_copy);
   GtkSourceLanguage *language = gtk_source_language_manager_get_language(language_manager, "lua-lxi-gui");
