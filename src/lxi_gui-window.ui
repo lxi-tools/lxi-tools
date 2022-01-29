@@ -76,14 +76,27 @@
           <object class="AdwFlap" id="flap">
             <property name="vexpand">True</property>
             <property name="flap">
-              <object class="GtkScrolledWindow">
-                <property name="width-request">250</property>
+              <object class="GtkOverlay">
+                <child type="overlay">
+                  <object class="AdwStatusPage" id="status_page_instruments">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="icon-name">dialog-information-symbolic</property>
+                    <property name="title">No instruments</property>
+                    <property name="description">Try a new search</property>
+                  </object>
+                </child>
                 <child>
-                  <object class="GtkViewport" id="list_viewport">
-                    <property name="can-focus">0</property>
+                  <object class="GtkScrolledWindow">
+                    <property name="width-request">250</property>
                     <child>
-                      <object class="GtkListBox" id="list_instruments">
+                      <object class="GtkViewport" id="list_viewport">
                         <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkListBox" id="list_instruments">
+                            <property name="can-focus">0</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

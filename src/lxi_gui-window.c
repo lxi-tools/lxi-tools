@@ -84,6 +84,7 @@ struct _LxiGuiWindow
   GtkViewport         *viewport_screenshot;
   GtkToggleButton     *toggle_button_script_run;
   AdwFlap             *flap;
+  AdwStatusPage       *status_page_instruments;
   unsigned int        benchmark_requests_count;
   const char          *id;
   const char          *ip;
@@ -101,6 +102,7 @@ struct _LxiGuiWindow
   gboolean            lua_stop_requested;
   GMutex              mutex_gui_chart;
   GMutex              mutex_discover;
+  bool                no_instruments;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -362,6 +364,9 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
 
   // Add list box to instrument list
   g_idle_add(gui_update_search_add_instrument_thread, list_box);
+
+  // Mark instrument list populated
+  self->no_instruments = false;
 }
 
 static void mdns_service(const char *address, const char *id, const char *service, int port)
@@ -422,6 +427,12 @@ gui_update_search_finished_thread(gpointer data)
   // Hide broadcasting info bar
   hide_info_bar(self);
 
+  // Manage instruments status page
+  if (self->no_instruments)
+  {
+    gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), true);
+  }
+
   // Reenable search shortcut
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "action.search", true);
 
@@ -455,6 +466,10 @@ gui_update_search_start_thread(gpointer data)
 {
   LxiGuiWindow *self = data;
   GtkWidget *child;
+
+  // Hide instruments status page
+  gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), false);
+  self->no_instruments = true;
 
   // Reveal flap
   adw_flap_set_reveal_flap(self->flap, true);
@@ -2062,6 +2077,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, viewport_screenshot);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_script_run);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, flap);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, status_page_instruments);
 
   // Bind signal callbacks
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_search);
@@ -2253,4 +2269,7 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Initialize lua script engine
   initialize_script_engine(self);
+
+  // Mark instrument list unpopulated
+  self->no_instruments = true;
 }
