@@ -575,13 +575,26 @@
                                                 </child>
                                                 <child>
                                                   <object class="GtkButton">
+                                                    <property name="label" translatable="yes">*RMC</property>
+                                                    <property name="receives-default">1</property>
+                                                    <property name="tooltip-text">Remove Individual Macro Command</property>
+                                                    <property name="focus-on-click">0</property>
+                                                    <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                    <layout>
+                                                      <property name="column">3</property>
+                                                      <property name="row">5</property>
+                                                    </layout>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton">
                                                     <property name="label" translatable="yes">*RST</property>
                                                     <property name="receives-default">1</property>
                                                     <property name="tooltip-text">Reset Command</property>
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -594,7 +607,20 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
+                                                      <property name="row">5</property>
+                                                    </layout>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton">
+                                                    <property name="label" translatable="yes">*SDS</property>
+                                                    <property name="receives-default">1</property>
+                                                    <property name="tooltip-text">Save Default Device Settings Command</property>
+                                                    <property name="focus-on-click">0</property>
+                                                    <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                    <layout>
+                                                      <property name="column">6</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -607,8 +633,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">5</property>
-                                                      <property name="row">5</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">6</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -620,8 +646,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">5</property>
+                                                      <property name="column">1</property>
+                                                      <property name="row">6</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -633,7 +659,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -646,7 +672,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -659,7 +685,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -672,47 +698,22 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
-                                                      <property name="row">6</property>
-                                                    </layout>
-                                                  </object>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkButton">
-                                                    <property name="label" translatable="yes">*RMC</property>
-                                                    <property name="receives-default">1</property>
-                                                    <property name="tooltip-text">Remove Individual Macro Command</property>
-                                                    <property name="focus-on-click">0</property>
-                                                    <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
-                                                    <layout>
-                                                      <property name="column">4</property>
-                                                      <property name="row">6</property>
-                                                    </layout>
-                                                  </object>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkButton">
-                                                    <property name="label" translatable="yes">*SDS</property>
-                                                    <property name="receives-default">1</property>
-                                                    <property name="tooltip-text">Save Default Device Settings Command</property>
-                                                    <property name="focus-on-click">0</property>
-                                                    <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
-                                                    <layout>
                                                       <property name="column">5</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkToggleButton" id="toggle_button_scpi_send">
-                                                    <property name="label" translatable="yes">Send</property>
+                                                  <object class="GtkButton" id="button_scpi_clear">
+                                                    <property name="label" translatable="yes">Clear</property>
+                                                    <property name="name">button-scpi-clear</property>
                                                     <property name="receives-default">1</property>
-                                                    <property name="tooltip-text">Send</property>
+                                                    <property name="tooltip-text">Clear</property>
                                                     <property name="focus-on-click">0</property>
-                                                    <signal name="clicked" handler="button_clicked_scpi_send" swapped="yes"/>
+                                                    <signal name="clicked" handler="button_clicked_scpi_clear" swapped="yes"/>
                                                     <style>
                                                       <class name="text-button"/>
-                                                      <class name="suggested-action"/>
+                                                      <class name="opaque"/>
                                                     </style>
                                                     <layout>
                                                       <property name="column">6</property>
@@ -746,7 +747,7 @@
                                                     </layout>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:CONDition?</property>
+                                                        <property name="label" translatable="yes">:SYSTem:ERRor?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -759,7 +760,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:ENABle</property>
+                                                        <property name="label" translatable="yes">:SYSTem:ERRor:NEXT?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -771,12 +772,16 @@
                                                       </object>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:ENABle?</property>
+                                                      <object class="GtkToggleButton" id="toggle_button_scpi_send">
+                                                        <property name="label" translatable="yes">Send</property>
                                                         <property name="receives-default">1</property>
-                                                        <property name="tooltip-text"></property>
+                                                        <property name="tooltip-text">Send</property>
                                                         <property name="focus-on-click">0</property>
-                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <signal name="clicked" handler="button_clicked_scpi_send" swapped="yes"/>
+                                                        <style>
+                                                          <class name="text-button"/>
+                                                          <class name="suggested-action"/>
+                                                        </style>
                                                         <layout>
                                                           <property name="column">2</property>
                                                           <property name="row">0</property>
@@ -785,20 +790,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:ERRor</property>
-                                                        <property name="receives-default">1</property>
-                                                        <property name="tooltip-text"></property>
-                                                        <property name="focus-on-click">0</property>
-                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
-                                                        <layout>
-                                                          <property name="column">3</property>
-                                                          <property name="row">0</property>
-                                                        </layout>
-                                                      </object>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:EVENt?</property>
+                                                        <property name="label" translatable="yes">:STATus:OPERation?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -811,7 +803,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:NEXT?</property>
+                                                        <property name="label" translatable="yes">:STATus:OPERation:CONDition?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -824,7 +816,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:OPERation</property>
+                                                        <property name="label" translatable="yes">:STATus:OPERation:ENABle</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -837,20 +829,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:PRESet</property>
-                                                        <property name="receives-default">1</property>
-                                                        <property name="tooltip-text"></property>
-                                                        <property name="focus-on-click">0</property>
-                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
-                                                        <layout>
-                                                          <property name="column">3</property>
-                                                          <property name="row">1</property>
-                                                        </layout>
-                                                      </object>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:QUEStionable</property>
+                                                        <property name="label" translatable="yes">:STATus:OPERation:ENABle?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -863,7 +842,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:STATus</property>
+                                                        <property name="label" translatable="yes">:STATus:OPERation:EVENt?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -876,7 +855,7 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:SYSTem</property>
+                                                        <property name="label" translatable="yes">:STATus:PRESet</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
@@ -889,14 +868,79 @@
                                                     </child>
                                                     <child>
                                                       <object class="GtkButton">
-                                                        <property name="label" translatable="yes">:VERSion?</property>
+                                                        <property name="label" translatable="yes">:STATus:QUEStionable?</property>
                                                         <property name="receives-default">1</property>
                                                         <property name="tooltip-text"></property>
                                                         <property name="focus-on-click">0</property>
                                                         <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                         <layout>
-                                                          <property name="column">3</property>
-                                                          <property name="row">2</property>
+                                                          <property name="column">0</property>
+                                                          <property name="row">3</property>
+                                                        </layout>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">:STATus:QUEStionable:CONDition?</property>
+                                                        <property name="receives-default">1</property>
+                                                        <property name="tooltip-text"></property>
+                                                        <property name="focus-on-click">0</property>
+                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <layout>
+                                                          <property name="column">1</property>
+                                                          <property name="row">3</property>
+                                                        </layout>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">:STATus:QUEStionable:ENABle</property>
+                                                        <property name="receives-default">1</property>
+                                                        <property name="tooltip-text"></property>
+                                                        <property name="focus-on-click">0</property>
+                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <layout>
+                                                          <property name="column">2</property>
+                                                          <property name="row">3</property>
+                                                        </layout>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">:STATus:QUEStionable:ENABle?</property>
+                                                        <property name="receives-default">1</property>
+                                                        <property name="tooltip-text"></property>
+                                                        <property name="focus-on-click">0</property>
+                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <layout>
+                                                          <property name="column">0</property>
+                                                          <property name="row">4</property>
+                                                        </layout>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">:STATus:QUEStionable:EVENt?</property>
+                                                        <property name="receives-default">1</property>
+                                                        <property name="tooltip-text"></property>
+                                                        <property name="focus-on-click">0</property>
+                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <layout>
+                                                          <property name="column">1</property>
+                                                          <property name="row">4</property>
+                                                        </layout>
+                                                      </object>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkButton">
+                                                        <property name="label" translatable="yes">:SYSTem:VERSion?</property>
+                                                        <property name="receives-default">1</property>
+                                                        <property name="tooltip-text"></property>
+                                                        <property name="focus-on-click">0</property>
+                                                        <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
+                                                        <layout>
+                                                          <property name="column">2</property>
+                                                          <property name="row">4</property>
                                                         </layout>
                                                       </object>
                                                     </child>

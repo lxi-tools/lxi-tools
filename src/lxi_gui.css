@@ -31,6 +31,9 @@
   color: alpha(@theme_text_color, 0.3);
 }
 
+#button-scpi-clear {
+  background-color: @warning_bg_color;
+}
 
 
 /* Screenshot page */

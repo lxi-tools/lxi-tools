@@ -682,6 +682,17 @@ error_no_input:
 }
 
 static void
+button_clicked_scpi_clear (LxiGuiWindow *self, GtkButton *button)
+{
+  UNUSED(button);
+
+  // Clear SCPI input entry
+  GtkEntryBuffer *entry_buffer = gtk_entry_get_buffer(self->entry_scpi);
+  gtk_entry_buffer_delete_text(entry_buffer, 0, -1);
+  gtk_entry_set_buffer(self->entry_scpi, entry_buffer);
+}
+
+static void
 button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
@@ -2084,6 +2095,7 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_add_instrument);
   gtk_widget_class_bind_template_callback (widget_class, entry_scpi_enter_pressed);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi);
+  gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_clear);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_send);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_grab);
   gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_save);
