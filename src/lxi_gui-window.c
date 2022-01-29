@@ -1500,7 +1500,7 @@ gui_chart_new_thread(gpointer data)
   GActionGroup *actions;
 
   /* Construct a GtkBuilder instance from UI description */
-  GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/lxi-tools/lxi-gui/lxi_gui-window-chart.ui");
+  GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/lxi-tools/lxi-gui/lxi_gui-chart.ui");
 
   // Get UI objects
   GtkWindow *window = GTK_WINDOW(gtk_builder_get_object (builder, "window"));
