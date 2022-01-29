@@ -90,6 +90,10 @@ static void
 gtk_chart_dispose (GObject *object)
 {
   GtkChart *self = GTK_CHART_WIDGET (object);
+  GtkWidget *child;
+
+  while ((child = gtk_widget_get_first_child (GTK_WIDGET (object))))
+    gtk_widget_unparent (child);
 
   // Cleanup
   g_free(self->title);
@@ -751,11 +755,8 @@ static void gtk_chart_class_init (GtkChartClass *class)
 
 GtkWidget * gtk_chart_new (void)
 {
-  GtkChart *self;
 
-  self = g_object_new (GTK_CHART_TYPE_WIDGET, NULL);
-
-  return GTK_WIDGET (self);  
+  return g_object_new (GTK_TYPE_CHART, NULL);
 }
 
 void gtk_chart_set_user_data(GtkChart *chart, void *user_data)
@@ -768,7 +769,7 @@ void * gtk_chart_get_user_data(GtkChart *chart)
   return chart->user_data;
 }
 
-void gtk_chart_set_type(GtkChart *chart, int type)
+void gtk_chart_set_type(GtkChart *chart, GtkChartType type)
 {
   chart->type = type;
 }

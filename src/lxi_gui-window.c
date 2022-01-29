@@ -115,7 +115,7 @@ struct chart_t
 {
   bool allocated;
   int handle;
-  enum gtk_chart_type_t type;
+  GtkChartType type;
   char *title;
   char *label;
   char *x_label;

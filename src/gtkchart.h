@@ -27,26 +27,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #pragma once
 
 #include <gtk/gtk.h>
 
-#define GTK_CHART_TYPE_WIDGET (gtk_chart_get_type ())
+G_BEGIN_DECLS
+
+#define GTK_TYPE_CHART (gtk_chart_get_type ())
 G_DECLARE_FINAL_TYPE (GtkChart, gtk_chart, GTK_CHART, WIDGET, GtkWidget)
 
-GtkWidget * gtk_chart_new (void);
-
-enum gtk_chart_type_t
+typedef enum
 {
   GTK_CHART_TYPE_UNKNOWN,
   GTK_CHART_TYPE_LINE,
   GTK_CHART_TYPE_SCATTER,
   GTK_CHART_TYPE_GAUGE_ANGULAR,
   GTK_CHART_TYPE_GAUGE_LINEAR,
-  GTK_CHART_TYPE_NUMBER,
-};
+  GTK_CHART_TYPE_NUMBER
+} GtkChartType;
 
-void gtk_chart_set_type(GtkChart *chart, int type);
+GtkWidget * gtk_chart_new (void);
+
+void gtk_chart_set_type(GtkChart *chart, GtkChartType type);
 void gtk_chart_set_title(GtkChart *chart, const char *title);
 void gtk_chart_set_label(GtkChart *chart, const char *label);
 void gtk_chart_set_x_label(GtkChart *chart, const char *x_label);
@@ -62,3 +65,5 @@ bool gtk_chart_save_csv(GtkChart *chart, const char *filename);
 bool gtk_chart_save_png(GtkChart *chart, const char *filename);
 void gtk_chart_set_user_data(GtkChart *chart, void *user_data);
 void * gtk_chart_get_user_data(GtkChart *chart);
+
+G_END_DECLS
