@@ -1293,9 +1293,9 @@ button_clicked_script_save_as (LxiGuiWindow *self, GtkButton *button)
 void initialize_script_engine(LxiGuiWindow *self)
 {
   // Print lua engine status
-  char *text = g_strdup_printf ("%s engine ready.\n", LUA_VERSION);
+  char *text = g_strdup_printf ("%s engine ready\n", LUA_VERSION);
   text_view_add_buffer(self->text_view_script_status, text);
-  text_view_add_buffer(self->text_view_script_status, "Loaded lxi extensions.\n");
+  text_view_add_buffer(self->text_view_script_status, "Loaded lxi-tools extensions\n");
   g_free(text);
 
   self->lua_stop_requested = false;
