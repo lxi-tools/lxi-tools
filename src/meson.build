@@ -67,7 +67,7 @@ if enable_gui
                                                       'build-examples=false',
                                                       'build-tests=false'])
 
-  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3',
+  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3.3',
                                     fallback : ['gtksourceview', 'gtksource_dep'],
                                     default_options: ['introspection=disabled'])
 
