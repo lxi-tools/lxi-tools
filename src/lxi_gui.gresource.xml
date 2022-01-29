@@ -7,6 +7,7 @@
     <file preprocess="xml-stripblanks">lxi_gui-window_list_widget_menu_model.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
     <file preprocess="xml-stripblanks">language-specs/lua-lxi-gui.lang</file>
+    <file>icons/128x128/status/dialog-information-symbolic.symbolic.png</file>
     <file>icons/16x16/actions/view-sidebar-start.symbolic.png</file>
     <file>icons/16x16/actions/view-fullscreen-symbolic.symbolic.png</file>
     <file>icons/16x16/actions/scpi.symbolic.png</file>
