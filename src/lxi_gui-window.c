@@ -1356,7 +1356,7 @@ on_chart_save_image_response (GtkDialog      *dialog,
 
     g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
 
-    status = gtk_chart_save_png(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
+    status = gtk_chart_save_png(GTK_CHART(chart->widget), g_file_get_path(file));
     if (status == false)
     {
       g_error ("Error: %s\n", error->message);
@@ -1411,7 +1411,7 @@ on_chart_save_csv_response (GtkDialog      *dialog,
 
     g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
 
-    status = gtk_chart_save_csv(GTK_CHART_WIDGET(chart->widget), g_file_get_path(file));
+    status = gtk_chart_save_csv(GTK_CHART(chart->widget), g_file_get_path(file));
     if (status == false)
     {
       g_error ("Error: %s\n", error->message);
@@ -1560,34 +1560,34 @@ gui_chart_new_thread(gpointer data)
   // Prepare chart widget
   GtkWidget *widget = gtk_chart_new();
   chart->widget = widget;
-  gtk_chart_set_type(GTK_CHART_WIDGET(widget), chart->type);
-  gtk_chart_set_title(GTK_CHART_WIDGET(widget), chart->title);
+  gtk_chart_set_type(GTK_CHART(widget), chart->type);
+  gtk_chart_set_title(GTK_CHART(widget), chart->title);
   g_free(chart->title);
-  gtk_chart_set_width(GTK_CHART_WIDGET(widget), chart->width);
+  gtk_chart_set_width(GTK_CHART(widget), chart->width);
 
   switch (chart->type)
   {
     case GTK_CHART_TYPE_LINE:
     case GTK_CHART_TYPE_SCATTER:
-      gtk_chart_set_x_label(GTK_CHART_WIDGET(widget), chart->x_label);
+      gtk_chart_set_x_label(GTK_CHART(widget), chart->x_label);
       g_free(chart->x_label);
-      gtk_chart_set_y_label(GTK_CHART_WIDGET(widget), chart->y_label);
+      gtk_chart_set_y_label(GTK_CHART(widget), chart->y_label);
       g_free(chart->y_label);
-      gtk_chart_set_x_max(GTK_CHART_WIDGET(widget), chart->x_max);
-      gtk_chart_set_y_max(GTK_CHART_WIDGET(widget), chart->y_max);
+      gtk_chart_set_x_max(GTK_CHART(widget), chart->x_max);
+      gtk_chart_set_y_max(GTK_CHART(widget), chart->y_max);
       break;
 
     case GTK_CHART_TYPE_NUMBER:
-      gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
+      gtk_chart_set_label(GTK_CHART(widget), chart->label);
       g_free(chart->label);
       break;
 
     case GTK_CHART_TYPE_GAUGE_LINEAR:
     case GTK_CHART_TYPE_GAUGE_ANGULAR:
-      gtk_chart_set_label(GTK_CHART_WIDGET(widget), chart->label);
+      gtk_chart_set_label(GTK_CHART(widget), chart->label);
       g_free(chart->label);
-      gtk_chart_set_value_min(GTK_CHART_WIDGET(widget), chart->value_min);
-      gtk_chart_set_value_max(GTK_CHART_WIDGET(widget), chart->value_max);
+      gtk_chart_set_value_min(GTK_CHART(widget), chart->value_min);
+      gtk_chart_set_value_max(GTK_CHART(widget), chart->value_max);
       break;
 
     default: // Do nothing
@@ -1628,7 +1628,7 @@ lua_gui_chart_save_csv(lua_State* L)
     char *text = g_strdup_printf ("Saving %s\n", filename);
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
-    gtk_chart_save_csv(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
+    gtk_chart_save_csv(GTK_CHART(gui_chart[handle].widget), filename);
   }
 
   return 0;
@@ -1646,7 +1646,7 @@ lua_gui_chart_save_png(lua_State* L)
     char *text = g_strdup_printf ("Saving %s\n", filename);
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
-    gtk_chart_save_png(GTK_CHART_WIDGET(gui_chart[handle].widget), filename);
+    gtk_chart_save_png(GTK_CHART(gui_chart[handle].widget), filename);
   }
 
   return 0;
@@ -1677,7 +1677,7 @@ lua_gui_chart_plot(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
-    gtk_chart_plot_point(GTK_CHART_WIDGET(gui_chart[handle].widget), x, y);
+    gtk_chart_plot_point(GTK_CHART(gui_chart[handle].widget), x, y);
   }
 
   return 0;
@@ -1692,7 +1692,7 @@ lua_gui_chart_set_value(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
-    gtk_chart_set_value(GTK_CHART_WIDGET(gui_chart[handle].widget), value);
+    gtk_chart_set_value(GTK_CHART(gui_chart[handle].widget), value);
   }
 
   return 0;

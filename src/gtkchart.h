@@ -35,7 +35,7 @@
 G_BEGIN_DECLS
 
 #define GTK_TYPE_CHART (gtk_chart_get_type ())
-G_DECLARE_FINAL_TYPE (GtkChart, gtk_chart, GTK_CHART, WIDGET, GtkWidget)
+G_DECLARE_FINAL_TYPE (GtkChart, gtk_chart, GTK, CHART, GtkWidget)
 
 typedef enum
 {

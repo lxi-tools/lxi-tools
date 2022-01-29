@@ -89,7 +89,7 @@ gtk_chart_init (GtkChart *self)
 static void
 gtk_chart_dispose (GObject *object)
 {
-  GtkChart *self = GTK_CHART_WIDGET (object);
+  GtkChart *self = GTK_CHART (object);
   GtkWidget *child;
 
   while ((child = gtk_widget_get_first_child (GTK_WIDGET (object))))
@@ -710,7 +710,7 @@ static void
 gtk_chart_snapshot (GtkWidget   *widget,
                     GtkSnapshot *snapshot)
 {
-  GtkChart *self = GTK_CHART_WIDGET(widget);
+  GtkChart *self = GTK_CHART(widget);
 
   float width = gtk_widget_get_width (widget);
   float height = gtk_widget_get_height (widget);
