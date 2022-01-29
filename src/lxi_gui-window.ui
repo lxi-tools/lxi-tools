@@ -3,8 +3,8 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.0"/>
   <template class="LxiGuiWindow" parent="GtkApplicationWindow">
-    <property name="default-width">738</property>
-    <property name="default-height">700</property>
+    <property name="default-width">840</property>
+    <property name="default-height">740</property>
     <child type="titlebar">
       <object class="AdwHeaderBar">
         <child type="title">
