@@ -1596,12 +1596,11 @@ gui_chart_new_thread(gpointer data)
 
   // Install event controller to listen for key presses
   GtkEventController *controller = gtk_event_controller_key_new();
-  g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
   gtk_widget_add_controller(GTK_WIDGET(window), controller);
 
   // Connect signals
   g_signal_connect (button_fullscreen, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
-  g_signal_connect (chart->widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
+  g_signal_connect (widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
   g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
 
   // Add chart widget to window
@@ -1660,7 +1659,6 @@ lua_gui_chart_close(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
-    gtk_widget_queue_draw(GTK_WIDGET(gui_chart[handle].window));
     gtk_window_close(gui_chart[handle].window);
   }
 
