@@ -1505,7 +1505,7 @@ gui_chart_new_thread(gpointer data)
   // Get UI objects
   GtkWindow *window = GTK_WINDOW(gtk_builder_get_object (builder, "window"));
   GObject *button_fullscreen = gtk_builder_get_object (builder, "button_fullscreen");
-  //GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
+  GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object (builder, "chart"));
 
   // Map window actions
   actions = G_ACTION_GROUP (g_simple_action_group_new ());
@@ -1558,7 +1558,6 @@ gui_chart_new_thread(gpointer data)
   }
 
   // Prepare chart widget
-  GtkWidget *widget = gtk_chart_new();
   chart->widget = widget;
   gtk_chart_set_type(GTK_CHART(widget), chart->type);
   gtk_chart_set_title(GTK_CHART(widget), chart->title);
@@ -1602,9 +1601,6 @@ gui_chart_new_thread(gpointer data)
   g_signal_connect (button_fullscreen, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
   g_signal_connect (widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
   g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
-
-  // Add chart widget to window
-  gtk_window_set_child(window, widget);
 
   // Show window
   gtk_window_present(window);
@@ -2176,6 +2172,9 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Required for GtkSourceView to be recognized by builder
   gtk_source_view_get_type();
+
+  // Required for GtkChart to be recognized by builder
+  gtk_chart_get_type();
 
   // Load settings
   self->settings = g_settings_new ("io.github.lxi-tools.lxi-gui");

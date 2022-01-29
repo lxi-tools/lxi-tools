@@ -26,14 +26,12 @@
         </child>
       </object>
     </child>
-    <!--
     <child>
       <object class="GtkChart" id="chart">
         <property name="hexpand">true</property>
         <property name="vexpand">true</property>
       </object>
-      </child>
-    -->
+    </child>
   </object>
   <menu id="menu_button_model">
     <section>
