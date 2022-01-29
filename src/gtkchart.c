@@ -33,6 +33,8 @@
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
+#define PLOT_BUFFER_SIZE 100000
+
 struct chart_point_t
 {
   double x;
@@ -808,10 +810,24 @@ void gtk_chart_set_width(GtkChart *chart, int width)
 
 void gtk_chart_plot_point(GtkChart *chart, double x, double y)
 {
-  // Allocate memory for new point
-  struct chart_point_t *point = g_new0(struct chart_point_t, 1);
-  point->x = x;
-  point->y = y;
+  static long int count = 0;
+  static struct chart_point_t *point;
+
+  if ((count % PLOT_BUFFER_SIZE) == 0)
+  {
+    // Allocate memory for new points
+    point = g_new0(struct chart_point_t, PLOT_BUFFER_SIZE);
+    point->x = x;
+    point->y = y;
+    count++;
+  }
+  else
+  {
+    point++;
+    point->x = x;
+    point->y = y;
+    count++;
+  }
 
   // Add point to list to be drawn
   chart->point_list = g_slist_append(chart->point_list, point);
