@@ -167,7 +167,7 @@ to the standard lua library functions.
 
   Parameters
          log: Handle of log
-    filename: Name of CSV log file
+    filename: Name of CSV file [string]
 
 ------------------------------------------------------------------------------
 
@@ -263,7 +263,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 
   Paramters
        chart: Handle of chart
-    filename: Filename of CSV file
+    filename: Name of CSV file [string]
 
 ------------------------------------------------------------------------------
 
@@ -275,7 +275,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 
   Paramters
        chart: Handle of chart
-    filename: Filename of PNG file
+    filename: Name of PNG file [string]
 
 ------------------------------------------------------------------------------
 
@@ -331,7 +331,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 
   Paramters
        chart: Handle of chart
-    filename: Filename of CSV file
+    filename: Name of CSV file [string]
 
 ------------------------------------------------------------------------------
 
@@ -343,6 +343,6 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 
   Paramters
        chart: Handle of chart
-    filename: Filename of PNG file
+    filename: Name of PNG file [string]
 
 ------------------------------------------------------------------------------
