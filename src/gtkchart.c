@@ -29,7 +29,6 @@
  */
 
 #include "gtkchart.h"
-#include <gsk/gl/gskglrenderer.h>
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
