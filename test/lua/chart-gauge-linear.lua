@@ -24,5 +24,6 @@ end
 
 -- Cleanup
 clock_free(clock0)
---chart_close(chart0)
+chart_close(chart0)
+
 print("Done")

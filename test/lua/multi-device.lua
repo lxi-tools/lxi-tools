@@ -6,8 +6,8 @@
 -- Example: Working with multiple devices
 
 -- Connect to instruments
-dso = connect("192.168.0.157", nil, nil, 6000, "VXI11")
-psu = connect("192.168.0.107", 5025, nil, 2000, "RAW")
+dso = connect("192.168.0.157", nil, nil, 6000, "VXI11") -- R&S RTB2004
+psu = connect("192.168.0.107", 5025, nil, 2000, "RAW") -- R&S NGM202
 
 -- Print instrument IDs
 print("Digital Storage Oscilloscope ID = " .. scpi(dso,"*IDN?"))
@@ -23,9 +23,9 @@ scpi(psu, "output on")
 msleep(1000)
 
 -- Read out power supply voltage
-volt = scpi(psu, "voltage? (@1)")
-volt = tonumber(volt)
-print("volt = " .. volt)
+volt_psu = scpi(psu, "voltage? (@1)")
+volt_psu = tonumber(volt_psu)
+print("volt_psu = " .. volt_psu)
 
 -- Autoset oscilloscope
 scpi(dso, "autoscale")
@@ -38,12 +38,12 @@ scpi(dso, ":measurement1:main rms")
 msleep(4000)
 
 -- Read out DSO voltage of channel 1
-volt_rms = scpi(dso, ":measurement1:result? rms")
-volt_rms = tonumber(volt_rms)
-print("volt_rms = " .. volt_rms)
+volt_dso = scpi(dso, ":measurement1:result? rms")
+volt_dso = tonumber(volt_dso)
+print("volt_dso = " .. volt_dso)
 
 -- Do voltage comparison
-if (volt < volt_rms) then
+if (volt_psu < volt_dso) then
     print("Power supply voltage is lower")
 else
     print("Power supply voltage is higher")
@@ -55,3 +55,5 @@ scpi(psu, "output off")
 -- Disconnect
 disconnect(psu)
 disconnect(dso)
+
+print("Done")

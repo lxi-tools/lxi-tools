@@ -111,3 +111,5 @@ print("a_number * 2 = " .. a_number * 2)
 os.execute ("echo 'Hello lxi-tools'")
 print(os.date("The time is %X"))
 print("TERM = " .. os.getenv("TERM"))
+
+print("Done")
