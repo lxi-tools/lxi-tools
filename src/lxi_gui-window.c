@@ -1597,13 +1597,20 @@ gui_chart_new_thread(gpointer data)
   GtkEventController *controller = gtk_event_controller_key_new();
   gtk_widget_add_controller(GTK_WIDGET(window), controller);
 
+  // Associate window with application for signals etc. to propagate
+  GtkApplication *app = gtk_window_get_application(GTK_WINDOW(self_global));
+  gtk_application_add_window(app, window);
+
   // Connect signals
   g_signal_connect (button_fullscreen, "clicked", G_CALLBACK (chart_button_clicked_fullscreen), window);
-  g_signal_connect (widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
   g_signal_connect (controller, "key-pressed", G_CALLBACK (chart_key_pressed_cb), window);
+  g_signal_connect (widget, "destroy", G_CALLBACK (chart_destroyed_cb), NULL);
 
   // Show window
   gtk_window_present(window);
+
+  // Cleanup
+  g_object_unref(builder);
 
   // Signal we are finished creating chart
   g_mutex_unlock(&self_global->mutex_gui_chart);
