@@ -286,6 +286,7 @@
       <keyword>chart_save_png</keyword>
       <keyword>log_new</keyword>
       <keyword>log_free</keyword>
+      <keyword>log_add</keyword>
       <keyword>log_save_csv</keyword>
 
     </context>

@@ -14,8 +14,9 @@ log_add(log0, 56, "text", "text", "text", 78)
 log_add(log0, "text", 12, "text", 345, "text", 6)
 
 -- Dump data to CSV file
-log_write_csv(log0, "log0.csv")
+log_save_csv(log0, "log0.csv")
 
 -- Cleanup
 log_free(log0)
+
 print("Done")

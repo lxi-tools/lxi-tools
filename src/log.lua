@@ -26,7 +26,7 @@ function log_add (handle, ...)
     end
 end
 
-function log_write_csv(handle, filename)
+function log_save_csv(handle, filename)
 
     local data = __log_data
 
