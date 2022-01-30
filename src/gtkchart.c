@@ -85,6 +85,16 @@ gtk_chart_init (GtkChart *self)
 }
 
 static void
+gtk_chart_finalize (GObject *object)
+{
+  GtkChart *self = GTK_CHART (object);
+
+  G_OBJECT_CLASS (
+    gtk_chart_parent_class)->
+      finalize (G_OBJECT (self));
+}
+
+static void
 gtk_chart_dispose (GObject *object)
 {
   GtkChart *self = GTK_CHART (object);
@@ -746,6 +756,7 @@ static void gtk_chart_class_init (GtkChartClass *class)
   GObjectClass *object_class = G_OBJECT_CLASS (class);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
+  object_class->finalize = gtk_chart_finalize;
   object_class->dispose = gtk_chart_dispose;
   
   widget_class->snapshot = gtk_chart_snapshot;
