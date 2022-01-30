@@ -120,6 +120,8 @@ struct chart_t
   char *label;
   char *x_label;
   char *y_label;
+  double x;
+  double y;
   double x_max;
   double y_max;
   double value;
@@ -130,6 +132,7 @@ struct chart_t
   bool no_csv;
   GtkWidget *widget;
   GtkWindow *window;
+  char *filename;
 };
 
 static struct chart_t gui_chart[CHARTS_MAX];
@@ -1492,6 +1495,146 @@ chart_key_pressed_cb (GtkEventControllerKey* self,
 }
 
 static gboolean
+gui_chart_save_csv_thread(gpointer user_data)
+{
+  struct chart_t *chart = user_data;
+
+  gtk_chart_save_csv(GTK_CHART(chart->widget), chart->filename);
+  g_free(chart->filename);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_save_csv(handle)
+static int
+lua_gui_chart_save_csv(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  const char *filename = lua_tostring(L, 2);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    gui_chart[handle].filename = g_strdup(filename);
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
+    g_idle_add(gui_chart_save_csv_thread, &gui_chart[handle]);
+  }
+
+  return 0;
+}
+
+static gboolean
+gui_chart_save_png_thread(gpointer user_data)
+{
+  struct chart_t *chart = user_data;
+
+  gtk_chart_save_png(GTK_CHART(chart->widget), chart->filename);
+  g_free(chart->filename);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_save_png(handle)
+static int
+lua_gui_chart_save_png(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  const char *filename = lua_tostring(L, 2);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    gui_chart[handle].filename = g_strdup(filename);
+    char *text = g_strdup_printf ("Saving %s\n", filename);
+    text_view_add_buffer(self_global->text_view_script_status, text);
+    g_free(text);
+    g_idle_add(gui_chart_save_png_thread, &gui_chart[handle]);
+  }
+
+  return 0;
+}
+
+static gboolean
+gui_chart_close_thread(gpointer user_data)
+{
+  GtkWindow *window = user_data;
+
+  gtk_window_close(window);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_close(handle)
+static int
+lua_gui_chart_close(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+
+  if (gui_chart[handle].allocated == true)
+  {
+    g_idle_add(gui_chart_close_thread, gui_chart[handle].window);
+  }
+
+  return 0;
+}
+
+static gboolean
+gui_chart_plot_thread(gpointer user_data)
+{
+  struct chart_t *chart = user_data;
+
+  gtk_chart_plot_point(GTK_CHART(chart->widget), chart->x, chart->y);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_plot(handle, x_value, y_value)
+static int
+lua_gui_chart_plot(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  double x = lua_tonumber(L, 2);
+  double y = lua_tonumber(L, 3);
+
+  gui_chart[handle].x = x;
+  gui_chart[handle].y = y;
+
+  if (gui_chart[handle].allocated == true)
+  {
+    g_idle_add(gui_chart_plot_thread, &gui_chart[handle]);
+  }
+
+  return 0;
+}
+
+static gboolean
+gui_chart_set_value_thread(gpointer user_data)
+{
+  struct chart_t *chart = user_data;
+
+  gtk_chart_set_value(GTK_CHART(chart->widget), chart->value);
+
+  return G_SOURCE_REMOVE;
+}
+
+// lua: chart_set_value(handle, value)
+static int
+lua_gui_chart_set_value(lua_State* L)
+{
+  int handle = lua_tointeger(L, 1);
+  double value = lua_tonumber(L, 2);
+
+  gui_chart[handle].value = value;
+
+  if (gui_chart[handle].allocated == true)
+  {
+    g_idle_add(gui_chart_set_value_thread, &gui_chart[handle]);
+  }
+
+  return 0;
+}
+
+static gboolean
 gui_chart_new_thread(gpointer data)
 {
   struct chart_t *chart = data;
@@ -1618,87 +1761,6 @@ gui_chart_new_thread(gpointer data)
   return G_SOURCE_REMOVE;
 }
 
-// lua: chart_save_csv(handle)
-static int
-lua_gui_chart_save_csv(lua_State* L)
-{
-  int handle = lua_tointeger(L, 1);
-  const char *filename = lua_tostring(L, 2);
-
-  if (gui_chart[handle].allocated == true)
-  {
-    char *text = g_strdup_printf ("Saving %s\n", filename);
-    text_view_add_buffer(self_global->text_view_script_status, text);
-    g_free(text);
-    gtk_chart_save_csv(GTK_CHART(gui_chart[handle].widget), filename);
-  }
-
-  return 0;
-}
-
-// lua: chart_save_png(handle)
-static int
-lua_gui_chart_save_png(lua_State* L)
-{
-  int handle = lua_tointeger(L, 1);
-  const char *filename = lua_tostring(L, 2);
-
-  if (gui_chart[handle].allocated == true)
-  {
-    char *text = g_strdup_printf ("Saving %s\n", filename);
-    text_view_add_buffer(self_global->text_view_script_status, text);
-    g_free(text);
-    gtk_chart_save_png(GTK_CHART(gui_chart[handle].widget), filename);
-  }
-
-  return 0;
-}
-
-// lua: chart_close(handle)
-static int
-lua_gui_chart_close(lua_State* L)
-{
-  int handle = lua_tointeger(L, 1);
-
-  if (gui_chart[handle].allocated == true)
-  {
-    gtk_window_close(gui_chart[handle].window);
-  }
-
-  return 0;
-}
-
-// lua: chart_plot(handle, x_value, y_value)
-static int
-lua_gui_chart_plot(lua_State* L)
-{
-  int handle = lua_tointeger(L, 1);
-  double x = lua_tonumber(L, 2);
-  double y = lua_tonumber(L, 3);
-
-  if (gui_chart[handle].allocated == true)
-  {
-    gtk_chart_plot_point(GTK_CHART(gui_chart[handle].widget), x, y);
-  }
-
-  return 0;
-}
-
-// lua: chart_set_value(handle, value)
-static int
-lua_gui_chart_set_value(lua_State* L)
-{
-  int handle = lua_tointeger(L, 1);
-  double value = lua_tonumber(L, 2);
-
-  if (gui_chart[handle].allocated == true)
-  {
-    gtk_chart_set_value(GTK_CHART(gui_chart[handle].widget), value);
-  }
-
-  return 0;
-}
-
 // lua: handle = chart_new(width, height, title, x_label, y_label, x_max, y_max, autoscale)
 static int
 lua_gui_chart_new(lua_State* L)
@@ -1781,13 +1843,10 @@ lua_gui_chart_new(lua_State* L)
       break;
   }
 
-  // FIXME: Parameter checks here
-
   // Create new chart window
   g_idle_add(gui_chart_new_thread, chart);
 
   // Wait for chart ready (sleeps here until unlocked)
-  // Alternative: Wait for g_signal?
   g_mutex_lock(&self_global->mutex_gui_chart);
 
   // Return chart handle
