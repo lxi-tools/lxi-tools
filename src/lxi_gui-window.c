@@ -102,6 +102,8 @@ struct _LxiGuiWindow
   gboolean            lua_stop_requested;
   GMutex              mutex_gui_chart;
   GMutex              mutex_discover;
+  GMutex              mutex_save_png;
+  GMutex              mutex_save_csv;
   bool                no_instruments;
 };
 
@@ -132,7 +134,8 @@ struct chart_t
   bool no_csv;
   GtkWidget *widget;
   GtkWindow *window;
-  char *filename;
+  char *filename_png;
+  char *filename_csv;
 };
 
 static struct chart_t gui_chart[CHARTS_MAX];
@@ -1499,8 +1502,11 @@ gui_chart_save_csv_thread(gpointer user_data)
 {
   struct chart_t *chart = user_data;
 
-  gtk_chart_save_csv(GTK_CHART(chart->widget), chart->filename);
-  g_free(chart->filename);
+  gtk_chart_save_csv(GTK_CHART(chart->widget), chart->filename_csv);
+  g_free(chart->filename_csv);
+
+  // Signal we are finished saving csv file
+  g_mutex_unlock(&self_global->mutex_save_csv);
 
   return G_SOURCE_REMOVE;
 }
@@ -1514,12 +1520,15 @@ lua_gui_chart_save_csv(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
-    gui_chart[handle].filename = g_strdup(filename);
+    gui_chart[handle].filename_csv = g_strdup(filename);
     char *text = g_strdup_printf ("Saving %s\n", filename);
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
     g_idle_add(gui_chart_save_csv_thread, &gui_chart[handle]);
   }
+
+  // Wait for save csv operation finished
+  g_mutex_lock(&self_global->mutex_save_csv);
 
   return 0;
 }
@@ -1529,8 +1538,11 @@ gui_chart_save_png_thread(gpointer user_data)
 {
   struct chart_t *chart = user_data;
 
-  gtk_chart_save_png(GTK_CHART(chart->widget), chart->filename);
-  g_free(chart->filename);
+  gtk_chart_save_png(GTK_CHART(chart->widget), chart->filename_png);
+  g_free(chart->filename_png);
+
+  // Signal we are finished saving png file
+  g_mutex_unlock(&self_global->mutex_save_png);
 
   return G_SOURCE_REMOVE;
 }
@@ -1544,12 +1556,15 @@ lua_gui_chart_save_png(lua_State* L)
 
   if (gui_chart[handle].allocated == true)
   {
-    gui_chart[handle].filename = g_strdup(filename);
+    gui_chart[handle].filename_png = g_strdup(filename);
     char *text = g_strdup_printf ("Saving %s\n", filename);
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
     g_idle_add(gui_chart_save_png_thread, &gui_chart[handle]);
   }
+
+  // Wait for save png operation finished
+  g_mutex_lock(&self_global->mutex_save_png);
 
   return 0;
 }
@@ -2339,8 +2354,10 @@ lxi_gui_window_init (LxiGuiWindow *self)
   GtkSourceStyleScheme *style = gtk_source_style_scheme_manager_get_scheme(style_manager, "classic-dark");
   gtk_source_buffer_set_style_scheme(source_buffer_script, style);
 
-  // Initialize GUI chart mutex
+  // Initialize mutexes
   g_mutex_lock(&self->mutex_gui_chart);
+  g_mutex_lock(&self->mutex_save_png);
+  g_mutex_lock(&self->mutex_save_csv);
 
   // Initialize lua script engine
   initialize_script_engine(self);
