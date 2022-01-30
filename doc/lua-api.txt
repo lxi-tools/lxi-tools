@@ -87,7 +87,7 @@ to the standard lua library functions.
 
   Returns
     clock: Handle of new clock
-     
+
 ------------------------------------------------------------------------------
 
   Function
@@ -128,6 +128,59 @@ to the standard lua library functions.
 
 ------------------------------------------------------------------------------
 
+  Function
+    log = log_new()
+
+  Description
+    Create new log resource
+
+  Returns
+    log: Handle of new log
+
+------------------------------------------------------------------------------
+
+  Function
+    log_add(log, ...)
+
+  Description
+    Log data to log.
+
+    This is a variadic function which means that it can take a variable number
+    of arguments and log them. Each log argument can be of any type.
+
+    Example:
+      log_add(log, 42, "hello", 4242).
+
+    The resulting line in the CSV output file will look like this:
+      42,"hello",4242
+
+  Parameters
+    log: Handle of log
+
+------------------------------------------------------------------------------
+
+  Function
+    log_save_csv(log, filename)
+
+  Description
+    Save log data to CSV formatted (RFC 4180) log file.
+
+  Parameters
+         log: Handle of log
+    filename: Name of CSV log file
+
+------------------------------------------------------------------------------
+
+  Function
+    log_free(log)
+
+  Desription
+    Release log resource
+
+  Parameters
+    log: Handle of log
+
+------------------------------------------------------------------------------
 
 
 
