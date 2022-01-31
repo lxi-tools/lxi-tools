@@ -2045,8 +2045,8 @@ script_run_worker_function(gpointer data)
   lua_close(L);
 
   // Restore script run button
-  gtk_toggle_button_set_active(self->toggle_button_script_run, false);
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
+  gtk_toggle_button_set_active(self->toggle_button_script_run, false);
 
   return NULL;
 }
