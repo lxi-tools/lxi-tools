@@ -35,13 +35,20 @@ an independent open source community effort.
 The lxi-gui application provides some of the same features as the commandline
 tool and more but presents them in a modern GUI frontend.
 
-<img src="images/lxi-gui-scpi.png" align="center">
+<p align="center">
+<img src="images/lxi-gui-scpi.png">
 <em>SCPI Mode</em>
-<img src="images/lxi-gui-search.png" align="center">
-<img src="images/lxi-gui-screenshot.png" align="center">
-<img src="images/lxi-gui-benchmark.png" align="center">
-<img src="images/lxi-gui-script.png" align="center">
-<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script-in-action.png" align="center">
+<img src="images/lxi-gui-search.png">
+<em>Searching for instruments</em>
+<img src="images/lxi-gui-screenshot.png">
+<em>Screenshot mode</em>
+<img src="images/lxi-gui-benchmark.png">
+<em>Benchmark mode</em>
+<img src="images/lxi-gui-script.png">
+<em>Script mode</em>
+<img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script-in-action.png">
+<em>Script mode in action plotting voltage level from DC power supply to line chart and CSV/PNG files</em>
+</p>
 
 ### 2.2 lxi
 
