@@ -37,17 +37,17 @@ tool and more but presents them in a modern GUI frontend.
 
 <p align="center">
 <img src="images/lxi-gui-scpi.png">
-<em>SCPI Mode</em>
+<em>SCPI mode - easily explore SCPI features of your instrument</em>
 <img src="images/lxi-gui-search.png">
-<em>Searching for instruments</em>
+<em>Search for instruments - using standard broadcast discovery or mDNS</em>
 <img src="images/lxi-gui-screenshot.png">
-<em>Screenshot mode</em>
+<em>Screenshot mode - easily grab display screenshots from supported instruments</em>
 <img src="images/lxi-gui-benchmark.png">
-<em>Benchmark mode</em>
+<em>Benchmark mode - measure the message response performance of your instrument</em>
 <img src="images/lxi-gui-script.png">
-<em>Script mode</em>
+<em>Script mode - program your LXI compatible instruments in a clean cut Lua script environment</em>
 <img src="https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script-in-action.png">
-<em>Script mode in action plotting voltage level from DC power supply to line chart and CSV/PNG files</em>
+<em>Script mode in action plotting voltage levels from a DC power supply to line chart and CSV/PNG files</em>
 </p>
 
 ### 2.2 lxi
