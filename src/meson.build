@@ -2,6 +2,7 @@ config_h = configuration_data()
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('GETTEXT_PACKAGE', 'lxi-gui')
 config_h.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
+config_h.set10('DEVEL_MODE', devel_mode)
 configure_file(output: 'config.h', configuration: config_h)
 
 common_sources = [

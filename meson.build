@@ -6,7 +6,8 @@ project('lxi-tools', 'c',
 )
 
 # The tag date of the project_version(), update when the version bumps.
-version_date='2021-12-23'
+version_date = '2021-12-23'
+devel_mode = 1
 
 subdir('src')
 subdir('man')
