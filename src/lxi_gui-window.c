@@ -2365,7 +2365,7 @@ lxi_gui_window_init (LxiGuiWindow *self)
   // Mark instrument list unpopulated
   self->no_instruments = true;
 
-#ifdef DEVEL_MODE
+#if DEVEL_MODE
   gtk_widget_add_css_class(GTK_WIDGET(self), "devel");
 #endif
 
