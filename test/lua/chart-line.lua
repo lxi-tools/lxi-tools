@@ -29,6 +29,6 @@ chart_save_png(chart0, "chart0.png")
 
 -- Cleanup
 clock_free(clock0)
-chart_close(chart0)
+--chart_close(chart0)
 
 print("Done")
