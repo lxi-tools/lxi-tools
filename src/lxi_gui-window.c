@@ -1525,10 +1525,10 @@ lua_gui_chart_save_csv(lua_State* L)
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
     g_idle_add(gui_chart_save_csv_thread, &gui_chart[handle]);
-  }
 
-  // Wait for save csv operation finished
-  g_mutex_lock(&self_global->mutex_save_csv);
+    // Wait for save csv operation finished
+    g_mutex_lock(&self_global->mutex_save_csv);
+  }
 
   return 0;
 }
@@ -1561,10 +1561,10 @@ lua_gui_chart_save_png(lua_State* L)
     text_view_add_buffer(self_global->text_view_script_status, text);
     g_free(text);
     g_idle_add(gui_chart_save_png_thread, &gui_chart[handle]);
-  }
 
-  // Wait for save png operation finished
-  g_mutex_lock(&self_global->mutex_save_png);
+    // Wait for save png operation finished
+    g_mutex_lock(&self_global->mutex_save_png);
+  }
 
   return 0;
 }
