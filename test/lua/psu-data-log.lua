@@ -22,7 +22,7 @@ msleep(1000)
 chart0 = chart_new("line-chart",             -- chart type
                    "PSU Channel 1 Data Log", -- title
                    "Time [ s ]",             -- x-axis label
-                   "Volt [ V ]",             -- y-axis label
+                   "Voltage [ V ]",          -- y-axis label
                    100, 10, 800)             -- x max, y max, window width
 clock0 = clock_new()
 
