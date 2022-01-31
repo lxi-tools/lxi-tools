@@ -222,7 +222,6 @@ See meson\_options.txt for which features to enable/disable.
 Note: Please do no try to install from source if you are not familiar with
 using meson.
 
-
 ## 4. Tested instruments
 
 The tools are tested to work successfully with the following LXI compatible
@@ -278,7 +277,17 @@ Note: Feel free to add your instrument(s) to the list via GitHub pull request
 or simply create a GitHub issue reporting your instrument(s) and which features
 work.
 
-## 5. Contributing
+## 5. Documentation
+
+## 5.1 lxi
+
+The lxi commandline tool is documented in its included manpages.
+
+## 5.2 Lua script API
+
+The lxi-tools Lua script API is documented [here](doc/lua-api.txt).
+
+## 6. Contributing
 
 lxi-tools is open source. If you want to help out with the project please feel
 free to join in.
@@ -292,22 +301,22 @@ consider making a donation of your choice:
 
 [![Donate](images/Paypal.png)](https://www.paypal.me/lundmar)
 
-## 6. Website
+## 7. Website
 
 Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
-## 7. License
+## 8. License
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
 
-## 8. Authors
+## 9. Authors
 
 Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
 See the AUTHORS file for full list of contributors.
 
-## 9. Sponsors
+## 10. Sponsors
 
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
