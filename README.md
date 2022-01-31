@@ -4,14 +4,14 @@
 
 ## 1. Introduction
 
-lxi-tools is a collection of open source software tools for managing LXI
-compatible test instruments such as modern oscilloscopes, power supplies,
-spectrum analyzers etc.
+lxi-tools is a collection of open source software tools for managing network
+attached LXI compatible test instruments such as modern oscilloscopes, power
+supplies, spectrum analyzers etc.
 
-Features include automatic discovery of network attached test instruments,
-sending SCPI commands, grabbing screenshots from supported instruments,
-benchmarking SCPI message performance, scripting for automation. Both a
-commandline tool and a GUI tool are available.
+Features include automatic discovery of test instruments, sending SCPI
+commands, grabbing screenshots from supported instruments, benchmarking SCPI
+message performance, and powerful scripting for automation. Both a commandline
+tool and a GUI tool are available.
 
 lxi-tools rely on [liblxi](https://github.com/lxi-tools/liblxi) for all
 communication.
