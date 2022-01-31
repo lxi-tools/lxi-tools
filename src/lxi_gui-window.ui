@@ -249,6 +249,24 @@
                                                   </object>
                                                 </child>
                                                 <child>
+                                                  <object class="GtkButton" id="button_scpi_clear">
+                                                    <property name="label" translatable="yes">Clear</property>
+                                                    <property name="name">button-scpi-clear</property>
+                                                    <property name="receives-default">1</property>
+                                                    <property name="tooltip-text">Clear</property>
+                                                    <property name="focus-on-click">0</property>
+                                                    <signal name="clicked" handler="button_clicked_scpi_clear" swapped="yes"/>
+                                                    <style>
+                                                      <class name="text-button"/>
+                                                      <class name="opaque"/>
+                                                    </style>
+                                                    <layout>
+                                                      <property name="column">6</property>
+                                                      <property name="row">1</property>
+                                                    </layout>
+                                                  </object>
+                                                </child>
+                                                <child>
                                                   <object class="GtkButton">
                                                     <property name="label" translatable="yes">*DMC</property>
                                                     <property name="receives-default">1</property>
@@ -256,8 +274,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">1</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">2</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -269,7 +287,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">1</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -282,7 +300,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -295,7 +313,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -308,7 +326,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -321,7 +339,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -334,7 +352,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">5</property>
+                                                      <property name="column">6</property>
                                                       <property name="row">2</property>
                                                     </layout>
                                                   </object>
@@ -347,8 +365,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">2</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">3</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -360,7 +378,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">1</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -373,7 +391,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -386,7 +404,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -399,7 +417,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -412,7 +430,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -425,7 +443,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">5</property>
+                                                      <property name="column">6</property>
                                                       <property name="row">3</property>
                                                     </layout>
                                                   </object>
@@ -438,8 +456,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">3</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">4</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -451,7 +469,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">1</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -464,7 +482,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -477,7 +495,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -490,7 +508,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -503,7 +521,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -516,7 +534,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">5</property>
+                                                      <property name="column">6</property>
                                                       <property name="row">4</property>
                                                     </layout>
                                                   </object>
@@ -529,8 +547,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">4</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">5</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -542,7 +560,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">1</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -555,7 +573,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -568,7 +586,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -581,7 +599,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -594,7 +612,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -607,7 +625,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">5</property>
+                                                      <property name="column">6</property>
                                                       <property name="row">5</property>
                                                     </layout>
                                                   </object>
@@ -620,8 +638,8 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">6</property>
-                                                      <property name="row">5</property>
+                                                      <property name="column">0</property>
+                                                      <property name="row">6</property>
                                                     </layout>
                                                   </object>
                                                 </child>
@@ -633,7 +651,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">0</property>
+                                                      <property name="column">1</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -646,7 +664,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">1</property>
+                                                      <property name="column">2</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -659,7 +677,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">2</property>
+                                                      <property name="column">3</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -672,7 +690,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">3</property>
+                                                      <property name="column">4</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -685,7 +703,7 @@
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
                                                     <layout>
-                                                      <property name="column">4</property>
+                                                      <property name="column">5</property>
                                                       <property name="row">6</property>
                                                     </layout>
                                                   </object>
@@ -697,24 +715,6 @@
                                                     <property name="tooltip-text">Wait-to-Continue Command</property>
                                                     <property name="focus-on-click">0</property>
                                                     <signal name="clicked" handler="button_clicked_scpi" swapped="yes"/>
-                                                    <layout>
-                                                      <property name="column">5</property>
-                                                      <property name="row">6</property>
-                                                    </layout>
-                                                  </object>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkButton" id="button_scpi_clear">
-                                                    <property name="label" translatable="yes">Clear</property>
-                                                    <property name="name">button-scpi-clear</property>
-                                                    <property name="receives-default">1</property>
-                                                    <property name="tooltip-text">Clear</property>
-                                                    <property name="focus-on-click">0</property>
-                                                    <signal name="clicked" handler="button_clicked_scpi_clear" swapped="yes"/>
-                                                    <style>
-                                                      <class name="text-button"/>
-                                                      <class name="opaque"/>
-                                                    </style>
                                                     <layout>
                                                       <property name="column">6</property>
                                                       <property name="row">6</property>
