@@ -7,7 +7,7 @@
 
 -- Init
 clock0 = clock_new()
-chart0 = chart_new("line-chart",                           -- chart type
+chart0 = chart_new("line",                                 -- chart type
                    "Sine wave plot, f(t) = 5 + 2sin(10t)", -- title
                    "Time [ s ]",                           -- x-axis label
                    "Value [  ]",                           -- y-axis label

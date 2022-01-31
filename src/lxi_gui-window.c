@@ -1776,7 +1776,7 @@ gui_chart_new_thread(gpointer data)
   return G_SOURCE_REMOVE;
 }
 
-// lua: handle = chart_new(width, height, title, x_label, y_label, x_max, y_max, autoscale)
+// lua: handle = chart_new(...)
 static int
 lua_gui_chart_new(lua_State* L)
 {
@@ -1795,11 +1795,11 @@ lua_gui_chart_new(lua_State* L)
   struct chart_t *chart = &gui_chart[handle];
 
   const char *type = lua_tostring(L, 1);
-  if (strcmp(type, "line-chart") == 0)
+  if (strcmp(type, "line") == 0)
   {
     chart->type = GTK_CHART_TYPE_LINE;
   }
-  else if (strcmp(type, "scatter-chart") == 0)
+  else if (strcmp(type, "scatter") == 0)
   {
     chart->type = GTK_CHART_TYPE_SCATTER;
   }

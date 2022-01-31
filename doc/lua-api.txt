@@ -205,8 +205,8 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
     type: Chart type [string]
 
           The type can be any of the following:
-            "line-chart"
-            "scatter-chart"
+            "line"
+            "scatter"
             "number"
             "angular-gauge"
             "linear-gauge"
@@ -214,7 +214,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
           The number of parameters following the first parameter depends on
           which type of chart is requested:
 
-                "line-chart", "scatter-chart":
+                "line", "scatter":
 
                       title: Title [string]
                     x_label: Label of x-axis [string]
