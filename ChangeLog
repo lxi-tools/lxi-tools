@@ -1,4 +1,75 @@
-=== lxi-tools v1.21 ===
+=== lxi-tools v2.0 ===
+
+
+Changes since lxi-tools v1.21:
+
+ * New lxi-gui application with many new features
+
+   Too many changes to list here. See git history for complete list of
+   changes.
+
+ * Replace autotools with meson
+
+ * Pass id to screenshot plugins
+
+ * Do not exit when screenshot plugin fails
+
+ * Rename lxi option '-s --script' to -f --file'
+
+ * Add lua clock API
+
+   Add lua clock API for measuring elapsed time:
+
+    * c = clock_new()      - Returns new clock
+    * time = clock_read(c) - Returns elapsed time in seconds since first read call
+    * clock_reset(c)       - Resets clock time
+    * clock_free(c)        - Releases clock handle
+
+   First time clock_read() is called on a new clock it will return a time
+   of 0 seconds and the clock will start running.
+
+   This clock API is useful for time stamping data as it is retrieved from
+   an instrument.
+
+ * Replace Travis wth CircleCI
+
+   Travis is no longer free for open source projects!
+
+   CircleCI seems to be the new king for quick open source CI.
+
+ * Add Rigol DM3058 to instrument list
+
+Sam Harry Tzavaras:
+
+ * Add screenshot plugin for tek 3000 series
+
+Uli Köhler:
+
+ * Added Rigol DL3021 to list of supported devices
+
+Heiko Jakob:
+
+ * Added screenshot support for Rigol DL3000 series programmable DC load
+
+ * Changed screenshot dg4000 regex to also match dg1000z series
+
+Mete Balci:
+
+ * Added Keysight MSOX 6004A to list of supported device
+
+ * Added Rohde & Schwarz NGE 100 to list of supported devices
+
+   I tested discovery, a few SCPI commands (IDN?, MEAS?, MEAS:CURR?) and
+   screenshot with the power supply R&S NGE 103B (NGE100 3-channels model).
+   All works fine.
+
+Martino Ferrari:
+
+ * Added Rohde & Schwarz RTM 3004 to list of supported devices
+
+htro:
+
+ * Added Tek MDO3024, 4 Series and 5 Series as compatible
 
 
 
