@@ -828,7 +828,10 @@ void gtk_chart_plot_point(GtkChart *chart, double x, double y)
   chart->point_list = g_slist_append(chart->point_list, point);
 
   // Queue draw of widget
-  gtk_widget_queue_draw(GTK_WIDGET(chart));
+  if (GTK_IS_WIDGET(chart))
+  {
+    gtk_widget_queue_draw(GTK_WIDGET(chart));
+  }
 }
 
 void gtk_chart_set_value(GtkChart *chart, double value)
@@ -836,7 +839,10 @@ void gtk_chart_set_value(GtkChart *chart, double value)
   chart->value = value;
 
   // Queue draw of widget
-  gtk_widget_queue_draw(GTK_WIDGET(chart));
+  if (GTK_IS_WIDGET(chart))
+  {
+    gtk_widget_queue_draw(GTK_WIDGET(chart));
+  }
 }
 
 void gtk_chart_set_value_min(GtkChart *chart, double value)
