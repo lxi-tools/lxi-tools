@@ -33,9 +33,10 @@ an independent open source community effort.
 ### 2.1 lxi-gui
 
 The lxi-gui application provides some of the same features as the commandline
-tool but presents them in a modern GUI frontend.
+tool and more but presents them in a modern GUI frontend.
 
 <img src="images/lxi-gui-scpi.png" align="center">
+<em>SCPI Mode</em>
 <img src="images/lxi-gui-search.png" align="center">
 <img src="images/lxi-gui-screenshot.png" align="center">
 <img src="images/lxi-gui-benchmark.png" align="center">
