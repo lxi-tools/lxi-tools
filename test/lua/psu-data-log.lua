@@ -38,8 +38,8 @@ do
 end
 
 -- Save data
-chart_save_csv(chart, "chart0.csv")
-chart_save_png(chart, "chart0.png")
+chart_save_csv(chart0, "chart0.csv")
+chart_save_png(chart0, "chart0.png")
 
 -- Cleanup
 clock_free(clock0)
