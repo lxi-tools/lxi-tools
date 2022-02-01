@@ -1,5 +1,5 @@
 project('lxi-tools', 'c',
-    version : '2.0',
+    version : '2.1',
     license : [ 'BSD-3-Clause'],
     meson_version : '>= 0.53.2',
     default_options : [ 'warning_level=2', 'buildtype=release', 'c_std=gnu11', 'b_lundef=false' ]
@@ -7,7 +7,7 @@ project('lxi-tools', 'c',
 
 # The tag date of the project_version(), update when the version bumps.
 version_date = '2022-01-31'
-devel_mode = 0
+devel_mode = 1
 
 subdir('src')
 subdir('man')
