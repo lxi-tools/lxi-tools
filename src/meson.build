@@ -57,22 +57,22 @@ subdir('bash-completion')
 enable_gui = get_option('gui')
 if enable_gui
 
-  libglib_dep = dependency('glib-2.0', version: '>= 2.70',
+  libglib_dep = dependency('glib-2.0', version: '>= 2.70', required: true,
                                     fallback : ['glib', 'libglib_dep'],
                                     default_options: ['tests=false'])
 
-  libgtk_dep = dependency('gtk4', version: '>= 4.5.0',
+  libgtk_dep = dependency('gtk4', version: '>= 4.5.0', required: true,
                                     fallback : ['gtk', 'libgtk_dep'],
                                     default_options: ['introspection=disabled',
                                                       'demos=false',
                                                       'build-examples=false',
                                                       'build-tests=false'])
 
-  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3.3',
+  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3.3', required: true,
                                     fallback : ['gtksourceview', 'gtksource_dep'],
                                     default_options: ['introspection=disabled'])
 
-  libadwaita_dep = dependency('libadwaita-1', version: '>= 1.0.1',
+  libadwaita_dep = dependency('libadwaita-1', version: '>= 1.0.1', required: true,
                                     fallback : ['libadwaita', 'libadwaita_dep'],
                                     default_options: ['introspection=disabled',
                                                       'examples=false',
@@ -88,8 +88,7 @@ if enable_gui
     ]
   
   lxi_gui_deps = [
-    dependency('liblxi', required: true),
-    dependency('lua-5.3', required: true),
+    lxi_deps,
     libglib_dep,
     libgtk_dep,
     libgtksourceview_dep,
