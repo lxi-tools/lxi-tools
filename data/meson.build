@@ -16,9 +16,10 @@ if desktop_utils.found()
 endif
 
 # See https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#spec-component-location
+# Change appdata to metainfo once meson it updated to support it
 appstream_file = i18n.merge_file(
-  input: 'io.github.lxi-tools.lxi-gui.metainfo.xml.in',
-  output: 'io.github.lxi-tools.lxi-gui.metainfo.xml',
+  input: 'io.github.lxi-tools.lxi-gui.appdata.xml.in',
+  output: 'io.github.lxi-tools.lxi-gui.appdata.xml',
   po_dir: '../po',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'metainfo')
