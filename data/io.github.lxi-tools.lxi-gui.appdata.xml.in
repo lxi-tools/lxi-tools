@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>io.github.lxi-tools.lxi-gui.desktop</id>
+  <id>io.github.lxi-tools.lxi-gui</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>BSD-3-Clause</project_license>
   <name>LXI-Tools</name>
