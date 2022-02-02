@@ -49,6 +49,9 @@ struct _LxiGuiPrefs
   GtkComboBoxText *combo_box_text_com_protocol;
   GtkWidget *spin_button_raw_port;
   GtkSwitch *switch_prefer_dark_theme;
+  GtkSwitch *switch_scpi_show_message_timestamp;
+  GtkSwitch *switch_scpi_show_message_ip;
+  GtkSwitch *switch_scpi_show_message_type;
 };
 
 G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, ADW_TYPE_PREFERENCES_WINDOW)
@@ -100,6 +103,15 @@ lxi_gui_prefs_init (LxiGuiPrefs *prefs)
   g_settings_bind (prefs->settings, "prefer-dark-theme",
                    prefs->switch_prefer_dark_theme, "active",
                    G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "scpi-show-message-timestamp",
+                   prefs->switch_scpi_show_message_timestamp, "active",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "scpi-show-message-ip",
+                   prefs->switch_scpi_show_message_ip, "active",
+                   G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs->settings, "scpi-show-message-type",
+                   prefs->switch_scpi_show_message_type, "active",
+                   G_SETTINGS_BIND_DEFAULT);
 }
 
 static void
@@ -132,6 +144,9 @@ lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
   gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, combo_box_text_com_protocol);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, spin_button_raw_port);
   gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_prefer_dark_theme);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_scpi_show_message_timestamp);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_scpi_show_message_ip);
+  gtk_widget_class_bind_template_child (widget_class, LxiGuiPrefs, switch_scpi_show_message_type);
 
   // Bind signals
   gtk_widget_class_bind_template_callback (widget_class, switch_activate_prefer_dark_theme);

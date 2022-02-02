@@ -3,7 +3,6 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.0"/>
   <template class="LxiGuiPrefs" parent="AdwPreferencesWindow">
-    <property name="default-height">620</property>
     <style>
       <class name="preferences"/>
     </style>
@@ -101,12 +100,51 @@
             <property name="title" translatable="yes">Appearance</property>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="yes">Show sent SCPI commands</property>
+                <property name="title" translatable="yes">Show sent SCPI message</property>
                 <child>
                   <object class="GtkSwitch" id="switch_show_sent_scpi">
                     <property name="halign">GTK_ALIGN_START</property>
                     <property name="has-tooltip">1</property>
-                    <property name="tooltip-text">Show sent SCPI commands</property>
+                    <property name="tooltip-text">Show sent SCPI message</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Show SCPI message timestamp</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_scpi_show_message_timestamp">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Show SCPI message timestamp</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Show SCPI message IP</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_scpi_show_message_ip">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Show SCPI message IP</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Show SCPI message type</property>
+                <child>
+                  <object class="GtkSwitch" id="switch_scpi_show_message_type">
+                    <property name="halign">GTK_ALIGN_START</property>
+                    <property name="has-tooltip">1</property>
+                    <property name="tooltip-text">Show SCPI message timestamp</property>
                     <property name="valign">center</property>
                   </object>
                 </child>

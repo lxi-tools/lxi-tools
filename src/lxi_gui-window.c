@@ -595,6 +595,68 @@ text_view_clear_buffer(GtkTextView *view)
   g_idle_add(text_view_clear_buffer_thread, view);
 }
 
+static void scpi_print(LxiGuiWindow *self,
+                       const char *text,
+                       bool sent,
+                       const char *ip,
+                       const char *timestamp)
+{
+  bool show_ip = g_settings_get_boolean(self->settings, "scpi-show-message-ip");
+  bool show_type = g_settings_get_boolean(self->settings, "scpi-show-message-type");
+  bool show_timestamp = g_settings_get_boolean(self->settings, "scpi-show-message-timestamp");
+  GString *string = g_string_new(NULL);
+
+  if (show_timestamp)
+  {
+    // Add timestamp
+    char *timestamp_string = g_strdup_printf("[%s]", timestamp);
+    g_string_append(string, timestamp_string);
+    g_free(timestamp_string);
+  }
+
+  if (show_ip)
+  {
+    // Prepend IP
+    char *ip_string = g_strdup_printf("[%s]", ip);
+    g_string_append(string, ip_string);
+    g_free(ip_string);
+  }
+
+  if (show_type)
+  {
+    const char *type;
+    if (sent)
+    {
+      type = "REQ";
+    } else
+    {
+      type = "RSP";
+    }
+
+    // Add type
+    char *ip_string = g_strdup_printf("[%s]", type);
+    g_string_append(string, ip_string);
+    g_free(ip_string);
+  }
+
+  // Build text string
+  g_string_append(string, " ");
+  g_string_append(string, text);
+
+  if (sent)
+  {
+    text_view_add_buffer_in_dimgray(self->text_view_scpi, string->str);
+    text_view_add_buffer(self->text_view_scpi, "\n");
+  }
+  else
+  {
+    text_view_add_buffer(self->text_view_scpi, string->str);
+  }
+
+  // Cleanup
+  g_string_free(string, true);
+}
+
 static gpointer
 send_worker_thread(gpointer data)
 {
@@ -648,9 +710,17 @@ send_worker_thread(gpointer data)
 
   if (show_sent_scpi)
   {
+    GDateTime* date_time = g_date_time_new_now_local();
+    char *timestamp = g_strdup_printf("%02d:%02d:%02d:%03d",
+                                      g_date_time_get_hour(date_time),
+                                      g_date_time_get_minute(date_time),
+                                      g_date_time_get_second(date_time),
+                                      g_date_time_get_microsecond(date_time)/1000);
+    g_date_time_unref(date_time);
+
     // Print sent command to output view
-    text_view_add_buffer_in_dimgray(self->text_view_scpi, tx_buffer->str);
-    text_view_add_buffer(self->text_view_scpi, "\n");
+    scpi_print(self, tx_buffer->str, true, self->ip, timestamp);
+    g_free(timestamp);
   }
 
   if (question(tx_buffer->str))
@@ -665,8 +735,17 @@ send_worker_thread(gpointer data)
     // Terminate received string/data
     rx_buffer[rx_bytes] = 0;
 
-    // Add received response to text view
-    text_view_add_buffer(self->text_view_scpi, rx_buffer);
+    GDateTime* date_time = g_date_time_new_now_local();
+    char *timestamp = g_strdup_printf("%02d:%02d:%02d:%03d",
+                                      g_date_time_get_hour(date_time),
+                                      g_date_time_get_minute(date_time),
+                                      g_date_time_get_second(date_time),
+                                      g_date_time_get_microsecond(date_time)/1000);
+    g_date_time_unref(date_time);
+
+    // Print received response to text view
+    scpi_print(self, rx_buffer, false, self->ip, timestamp);
+    g_free(timestamp);
   }
 
   // Clear text in text input entry

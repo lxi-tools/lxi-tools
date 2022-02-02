@@ -18,8 +18,8 @@
     </key>
     <key name="show-sent-scpi" type="b">
       <default>true</default>
-      <summary>Show sent SCPI commands</summary>
-      <description>Show sent SCPI commands</description>
+      <summary>Show sent SCPI message</summary>
+      <description>Show sent SCPI message.</description>
     </key>
     <key name="use-mdns-discovery" type="b">
       <default>false</default>
@@ -40,6 +40,21 @@
       <default>true</default>
       <summary>Prefer dark theme</summary>
       <description>Prefer dark theme.</description>
+    </key>
+    <key name="scpi-show-message-timestamp" type="b">
+      <default>false</default>
+      <summary>Show SCPI message timestamp</summary>
+      <description>Show SCPI message timestamp.</description>
+    </key>
+    <key name="scpi-show-message-ip" type="b">
+      <default>true</default>
+      <summary>Show SCPI message IP</summary>
+      <description>Show SCPI message IP.</description>
+    </key>
+    <key name="scpi-show-message-type" type="b">
+      <default>false</default>
+      <summary>Show SCPI message type</summary>
+      <description>Show SCPI message type.</description>
     </key>
   </schema>
 </schemalist>
