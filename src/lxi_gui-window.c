@@ -606,25 +606,39 @@ static void scpi_print(LxiGuiWindow *self,
   bool show_timestamp = g_settings_get_boolean(self->settings, "scpi-show-message-timestamp");
   GString *string = g_string_new(NULL);
 
+  // Build text string
+  if ((show_timestamp) || (show_ip) || (show_type))
+  {
+    g_string_append(string, "[");
+  }
+
   if (show_timestamp)
   {
     // Add timestamp
-    char *timestamp_string = g_strdup_printf("[%s]", timestamp);
-    g_string_append(string, timestamp_string);
-    g_free(timestamp_string);
+    g_string_append(string, timestamp);
   }
 
   if (show_ip)
   {
-    // Prepend IP
-    char *ip_string = g_strdup_printf("[%s]", ip);
-    g_string_append(string, ip_string);
-    g_free(ip_string);
+    // Add IP
+    if (show_timestamp)
+    {
+      g_string_append(string, " ");
+    }
+
+    g_string_append(string, ip);
   }
 
   if (show_type)
   {
+    // Add type
     const char *type;
+
+    if ((show_timestamp) || (show_ip))
+    {
+      g_string_append(string, " ");
+    }
+
     if (sent)
     {
       type = "REQ";
@@ -632,15 +646,14 @@ static void scpi_print(LxiGuiWindow *self,
     {
       type = "RSP";
     }
-
-    // Add type
-    char *ip_string = g_strdup_printf("[%s]", type);
-    g_string_append(string, ip_string);
-    g_free(ip_string);
+    g_string_append(string, type);
   }
 
-  // Build text string
-  g_string_append(string, " ");
+  if ((show_timestamp) || (show_ip) || (show_type))
+  {
+    g_string_append(string, "] ");
+  }
+
   g_string_append(string, text);
 
   if (sent)
