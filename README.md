@@ -10,8 +10,8 @@ supplies, spectrum analyzers etc.
 
 Features include automatic discovery of test instruments, sending SCPI
 commands, grabbing screenshots from supported instruments, benchmarking SCPI
-message performance, and powerful scripting for automation. Both a commandline
-tool and a GUI tool are available.
+message performance, and powerful scripting for test automation. Both a
+commandline tool and a GUI tool are available.
 
 lxi-tools rely on [liblxi](https://github.com/lxi-tools/liblxi) for all
 communication.
