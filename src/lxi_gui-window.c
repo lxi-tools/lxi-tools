@@ -732,7 +732,13 @@ send_worker_thread(gpointer data)
     g_date_time_unref(date_time);
 
     // Print sent command to output view
+    if (com_protocol == RAW)
+    {
+      // Remove newline
+      g_string_erase(tx_buffer, tx_buffer->len - 1, 1);
+    }
     scpi_print(self, tx_buffer->str, true, self->ip, timestamp);
+
     g_free(timestamp);
   }
 
