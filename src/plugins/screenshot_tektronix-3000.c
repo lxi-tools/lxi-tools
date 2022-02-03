@@ -54,7 +54,7 @@ void length_check(int length);
 int tektronix_screenshot_3000(char *address, char *id, int timeout)
 {
     restore param;
-    char response[IMAGE_SIZE_MAX];
+    char* response = malloc(IMAGE_SIZE_MAX);
     int length, device;
     char *command, command_str[100];
 
@@ -123,10 +123,14 @@ int tektronix_screenshot_3000(char *address, char *id, int timeout)
     else
         printf("Device doesn't match\n");
 
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
     return 0;
 }
+
 
 void length_check(int length)
 {

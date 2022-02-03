@@ -298,8 +298,13 @@ action_cb (GtkWidget  *widget,
 
   if (g_str_equal (action_name, "action.open_browser") && self->ip != NULL)
   {
+#ifndef __APPLE__	
     gchar *uri = g_strconcat("http://", self->ip, NULL);
     gtk_show_uri(GTK_WINDOW(self), uri, GDK_CURRENT_TIME);
+#else
+    gchar *uri = g_strconcat("open http://", self->ip, NULL);
+    system(uri);
+#endif
     g_free(uri);
   }
 }
@@ -422,6 +427,18 @@ static void vxi11_device(const char *address, const char *id)
 }
 
 static gboolean
+gui_update_script_run_worker_function_finished_thread(gpointer data)
+{
+  LxiGuiWindow *self = data;
+
+  // Restore search button
+    gtk_toggle_button_set_active(self->toggle_button_script_run, false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
+
+  return G_SOURCE_REMOVE;
+}
+
+static gboolean
 gui_update_search_finished_thread(gpointer data)
 {
   LxiGuiWindow *self = data;
@@ -441,6 +458,18 @@ gui_update_search_finished_thread(gpointer data)
 
   // Reenable search shortcut
   gtk_widget_action_set_enabled (GTK_WIDGET (self), "action.search", true);
+
+  return G_SOURCE_REMOVE;
+}
+
+static gboolean
+gui_update_send_worker_finished_thread(gpointer data)
+{
+  LxiGuiWindow *self = data;
+
+  // Restore search button
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), true);
+  gtk_toggle_button_set_active(self->toggle_button_scpi_send, false);
 
   return G_SOURCE_REMOVE;
 }
@@ -865,8 +894,7 @@ error_no_instrument:
 error_no_input:
   // Restore send button state
   // Defer!
-  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), true);
-  gtk_toggle_button_set_active(self->toggle_button_scpi_send, false);
+    g_idle_add(gui_update_send_worker_finished_thread, self);
 
   return NULL;
 }
@@ -886,6 +914,7 @@ static void
 button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
+
 
   // Update send button state
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), false);
@@ -2207,8 +2236,7 @@ script_run_worker_function(gpointer data)
   lua_close(L);
 
   // Restore script run button
-  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
-  gtk_toggle_button_set_active(self->toggle_button_script_run, false);
+    g_idle_add(gui_update_script_run_worker_function_finished_thread, self);
 
   return NULL;
 }

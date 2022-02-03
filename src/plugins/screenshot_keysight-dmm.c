@@ -42,7 +42,7 @@
 
 int keysight_dmm_screenshot(char *address, char *id, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
+    char* response = malloc(IMAGE_SIZE_MAX);
     char *command, *image;
     int device, length, n;
     char c;
@@ -81,7 +81,10 @@ int keysight_dmm_screenshot(char *address, char *id, int timeout)
 
     // Dump remaining image data to file
     screenshot_file_dump(image, length, "bmp");
-
+    
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
 
