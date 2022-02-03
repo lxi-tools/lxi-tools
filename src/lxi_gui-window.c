@@ -795,11 +795,11 @@ button_clicked_scpi_send(LxiGuiWindow *self, GtkButton *button)
 {
   UNUSED(button);
 
-  // Start thread which sends the SCPI message
-  self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
-
   // Update send button state
   gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_scpi_send), false);
+
+  // Start thread which sends the SCPI message
+  self->send_worker_thread = g_thread_new("send_worker", send_worker_thread, (gpointer)self);
 }
 
 static void
