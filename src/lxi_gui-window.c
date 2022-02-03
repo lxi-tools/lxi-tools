@@ -595,6 +595,92 @@ text_view_clear_buffer(GtkTextView *view)
   g_idle_add(text_view_clear_buffer_thread, view);
 }
 
+static void save_text_buffer_to_file(GFile *file, GtkTextBuffer *text_buffer)
+{
+  GtkTextIter start, end;
+  gboolean status = true;
+  GError *error = NULL;
+  char *buffer;
+
+  // Get buffer of script text view
+  gtk_text_buffer_get_bounds(text_buffer, &start, &end);
+  buffer = gtk_text_buffer_get_text(text_buffer, &start, &end, true);
+
+  // Write output stream to file
+  status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
+  if (status != true)
+  {
+    g_print("Could not write output stream: %s\n", error->message);
+    g_error_free(error);
+    return;
+  }
+
+  // TODO: Report errors to GUI
+}
+
+static void
+on_scpi_save_as_response (GtkDialog *dialog,
+                          int        response,
+                          gpointer   user_data)
+{
+  LxiGuiWindow *self = user_data;
+
+  if (response == GTK_RESPONSE_ACCEPT)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+    GFile *file = gtk_file_chooser_get_file (chooser);
+
+    GtkTextBuffer *text_buffer = gtk_text_view_get_buffer(self->text_view_scpi);
+    save_text_buffer_to_file(file, text_buffer);
+  }
+
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+static void
+scpi_save_as (LxiGuiWindow *self)
+{
+  GtkWidget *dialog;
+
+  // Show file save dialog
+  dialog = gtk_file_chooser_dialog_new ("Select file",
+                                        GTK_WINDOW (self),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        "_Cancel", GTK_RESPONSE_CANCEL,
+                                        "_Save", GTK_RESPONSE_ACCEPT,
+                                        NULL);
+  GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+  gtk_file_chooser_set_current_name (chooser, "Untitled.txt");
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_widget_show (dialog);
+
+  g_signal_connect (dialog, "response",
+                    G_CALLBACK (on_scpi_save_as_response),
+                    (gpointer *) self);
+}
+
+static void
+scpi_action_cb (GtkWidget  *widget,
+                const char *action_name,
+                GVariant   *parameter)
+{
+  LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+
+  UNUSED(parameter);
+
+  if (g_str_equal (action_name, "scpi_clear_all"))
+  {
+    text_view_clear_buffer(self->text_view_scpi);
+  }
+
+  if (g_str_equal (action_name, "scpi_save_as"))
+  {
+    scpi_save_as(self);
+  }
+}
+
 static void scpi_print(LxiGuiWindow *self,
                        const char *text,
                        bool sent,
@@ -1277,28 +1363,6 @@ button_clicked_script_open (LxiGuiWindow *self, GtkButton *button)
 }
 
 
-static void save_text_buffer_to_file(GFile *file, GtkTextBuffer *text_buffer)
-{
-  GtkTextIter start, end;
-  gboolean status = true;
-  GError *error = NULL;
-  char *buffer;
-
-  // Get buffer of script text view
-  gtk_text_buffer_get_bounds(text_buffer, &start, &end);
-  buffer = gtk_text_buffer_get_text(text_buffer, &start, &end, true);
-
-  // Write output stream to file
-  status = g_file_replace_contents (file, buffer, strlen(buffer), NULL, false, 0, NULL, NULL, &error);
-  if (status != true)
-  {
-    g_print("Could not write output stream: %s\n", error->message);
-    g_error_free(error);
-    return;
-  }
-
-  // TODO: Report errors to GUI
-}
 
 static void
 on_script_file_save_response (GtkDialog *dialog,
@@ -2287,6 +2351,8 @@ lxi_gui_window_class_init (LxiGuiWindowClass *class)
   gtk_widget_class_install_action (widget_class, "action.open_browser", NULL, action_cb);
   gtk_widget_class_install_action (widget_class, "action.search", NULL, lxi_gui_window_action_search_cb);
   gtk_widget_class_install_action (widget_class, "action.toggle_flap", NULL, lxi_gui_window_action_toggle_flap_cb);
+  gtk_widget_class_install_action (widget_class, "scpi_clear_all", NULL, scpi_action_cb);
+  gtk_widget_class_install_action (widget_class, "scpi_save_as", NULL, scpi_action_cb);
 
   /* Create shortcuts */
   gtk_widget_class_add_binding_action (widget_class, GDK_KEY_s, GDK_CONTROL_MASK, "action.search", NULL);
@@ -2462,6 +2528,12 @@ lxi_gui_window_init (LxiGuiWindow *self)
 
   // Mark instrument list unpopulated
   self->no_instruments = true;
+
+  // Add extra menu model for SCPI text view (right click menu)
+  GMenu *menu = g_menu_new ();
+  g_menu_append (menu, "Clear all", "scpi_clear_all");
+  g_menu_append (menu, "Save as..", "scpi_save_as");
+  gtk_text_view_set_extra_menu (self->text_view_scpi, G_MENU_MODEL(menu));
 
 #if DEVEL_MODE
   gtk_widget_add_css_class(GTK_WIDGET(self), "devel");
