@@ -113,7 +113,6 @@ error_receive:
 
     // Disconnect
     lxi_disconnect(device);
-    free(response);
 
 error_connect:
     free(response);
@@ -261,7 +260,6 @@ int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *f
     return 0;
 
 error_connect:
-    free(response);
     fclose(fp);
 error_fopen:
     free(response);

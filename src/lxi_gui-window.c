@@ -432,8 +432,8 @@ gui_update_script_run_worker_function_finished_thread(gpointer data)
   LxiGuiWindow *self = data;
 
   // Restore search button
-    gtk_toggle_button_set_active(self->toggle_button_script_run, false);
-    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
+  gtk_toggle_button_set_active(self->toggle_button_script_run, false);
+  gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_script_run), true);
 
   return G_SOURCE_REMOVE;
 }
@@ -894,7 +894,7 @@ error_no_instrument:
 error_no_input:
   // Restore send button state
   // Defer!
-    g_idle_add(gui_update_send_worker_finished_thread, self);
+  g_idle_add(gui_update_send_worker_finished_thread, self);
 
   return NULL;
 }
@@ -2236,7 +2236,7 @@ script_run_worker_function(gpointer data)
   lua_close(L);
 
   // Restore script run button
-    g_idle_add(gui_update_script_run_worker_function_finished_thread, self);
+  g_idle_add(gui_update_script_run_worker_function_finished_thread, self);
 
   return NULL;
 }
