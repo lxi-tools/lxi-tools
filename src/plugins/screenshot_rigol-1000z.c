@@ -42,7 +42,7 @@
 
 int rigol_1000z_screenshot(char *address, char *id, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
+    char* response = malloc(IMAGE_SIZE_MAX);
     char *command, *image;
     int device, length, n;
     char c;
@@ -76,7 +76,10 @@ int rigol_1000z_screenshot(char *address, char *id, int timeout)
 
     // Dump remaining PNG image data to file
     screenshot_file_dump(image, length, "png");
-
+    
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
 

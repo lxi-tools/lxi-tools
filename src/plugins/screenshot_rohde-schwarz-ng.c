@@ -42,14 +42,14 @@
 
 int rs_ng_screenshot(char *address, char *id, int timeout)
 {
-    char *response, *command, *image;
+    char *command, *image;
     int device, length, n;
     char c;
 
     UNUSED(id);
 
     // Prepare response buffer
-    response = malloc(IMAGE_SIZE_MAX);
+    char* response = malloc(IMAGE_SIZE_MAX);
     if (response == NULL)
     {
         error_printf("Failed to allocate response buffer\n");
@@ -84,6 +84,9 @@ int rs_ng_screenshot(char *address, char *id, int timeout)
     // Dump remaining image data to file
     screenshot_file_dump(image, length, "png");
 
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
 

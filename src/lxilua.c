@@ -38,6 +38,7 @@
 #include <lxi.h>
 #include "error.h"
 #include "misc.h"
+#include <stdlib.h>
 
 #define RESPONSE_LENGTH_MAX 0x400000
 #define SESSIONS_MAX 1024
@@ -124,7 +125,7 @@ static int disconnect(lua_State *L)
 // lua: scpi(device, command, timeout)
 static int scpi(lua_State *L)
 {
-    char response[RESPONSE_LENGTH_MAX];
+    char* response = malloc(RESPONSE_LENGTH_MAX);
     int status = 0, length;
     int device = lua_tointeger(L, 1);
     const char *command = lua_tostring(L, 2);
@@ -179,18 +180,20 @@ static int scpi(lua_State *L)
     }
 
     lua_pushlstring(L, response, length);
+    free(response);
     return 1;
 
 error:
     // Return status
     lua_pushnumber(L, status);
+    free(response);
     return 1;
 }
 
 // lua: scpi_raw(device, command, timeout)
 static int scpi_raw(lua_State *L)
 {
-    char response[RESPONSE_LENGTH_MAX];
+    char* response = malloc(RESPONSE_LENGTH_MAX);
     int status = 0, length;
     int device = lua_tointeger(L, 1);
     const char *command = lua_tostring(L, 2);
@@ -222,11 +225,13 @@ static int scpi_raw(lua_State *L)
     }
 
     lua_pushlstring(L, response, length);
+    free(response);
     return 1;
 
 error:
     // Return status
     lua_pushnumber(L, status);
+    free(response);
     return 1;
 }
 

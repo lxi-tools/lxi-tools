@@ -42,7 +42,7 @@
 
 int siglent_ssa3000x_screenshot(char *address, char *id, int timeout)
 {
-    char response[IMAGE_SIZE_MAX] = {};
+    char* response = malloc(IMAGE_SIZE_MAX);
     char *command;
     int device, length;
 
@@ -69,6 +69,9 @@ int siglent_ssa3000x_screenshot(char *address, char *id, int timeout)
     // Dump received BMP image data to file
     screenshot_file_dump(response, length, "bmp");
 
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
 

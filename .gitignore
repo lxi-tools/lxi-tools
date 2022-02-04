@@ -5,5 +5,6 @@
 /subprojects/graphene.wrap
 /subprojects/mutest.wrap
 build
+.DS_Store
 *.swp
 *.tar.xz

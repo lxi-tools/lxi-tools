@@ -42,7 +42,7 @@
 
 int tektronix_screenshot(char *address, char *id, int timeout)
 {
-    char response[IMAGE_SIZE_MAX];
+    char* response = malloc(IMAGE_SIZE_MAX);
     char *command;
     int device, length;
 
@@ -72,7 +72,10 @@ int tektronix_screenshot(char *address, char *id, int timeout)
 
     // Dump PNG image data to file
     screenshot_file_dump(response, length, "png");
-
+    
+    // Free allocated memory for screenshot
+    free(response);
+    
     // Disconnect
     lxi_disconnect(device);
 

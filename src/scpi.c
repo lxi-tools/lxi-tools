@@ -47,7 +47,7 @@
 
 int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
 {
-    char response[RESPONSE_LENGTH_MAX] = "";
+    char* response = malloc(RESPONSE_LENGTH_MAX);
     char command_buffer[1000];
     int device, length;;
 
@@ -105,7 +105,7 @@ int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command
 
     // Disconnect
     lxi_disconnect(device);
-
+    free(response);
     return 0;
 
 error_send:
@@ -115,13 +115,13 @@ error_receive:
     lxi_disconnect(device);
 
 error_connect:
-
+    free(response);
     return 1;
 }
 
 int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t protocol)
 {
-    char response[RESPONSE_LENGTH_MAX] = "";
+    char* response = malloc(RESPONSE_LENGTH_MAX);
     int device, length;
     char *input = "";
 
@@ -178,11 +178,12 @@ int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t proto
 
     // Disconnect
     lxi_disconnect(device);
+    free(response);
 
     return 0;
 
 error_connect:
-
+    free(response);
     return 1;
 }
 
@@ -192,7 +193,7 @@ int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *f
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
-    char response[RESPONSE_LENGTH_MAX] = "";
+    char* response = malloc(RESPONSE_LENGTH_MAX);
     int device, length, i;
 
     UNUSED(protocol);
@@ -251,8 +252,8 @@ int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *f
     }
 
     free(line);
+    free(response);
     fclose(fp);
-
     // Disconnect
     lxi_disconnect(device);
 
@@ -261,5 +262,6 @@ int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *f
 error_connect:
     fclose(fp);
 error_fopen:
+    free(response);
     return 1;
 }
