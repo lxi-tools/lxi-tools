@@ -53,7 +53,7 @@ int siglent_sdm3000_screenshot(char *address, char *id, int timeout)
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
-        return 1;
+        goto error_connect;
     }
 
     // Send SCPI command to grab BMP image
@@ -63,7 +63,7 @@ int siglent_sdm3000_screenshot(char *address, char *id, int timeout)
     if (length < 0)
     {
         error_printf("Failed to receive message\n");
-        return 1;
+        goto error_receive;
     }
 
     // Dump received BMP image data to file
@@ -76,6 +76,14 @@ int siglent_sdm3000_screenshot(char *address, char *id, int timeout)
     lxi_disconnect(device);
 
     return 0;
+
+error_connect:
+error_receive:
+
+    // Free allocated memory for screenshot
+    free(response);
+
+    return 1;
 }
 
 // Screenshot plugin configuration

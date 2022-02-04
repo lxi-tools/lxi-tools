@@ -54,7 +54,7 @@ int keysight_dmm_screenshot(char *address, char *id, int timeout)
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
-        return 1;
+        goto error_connect;
     }
 
     // Send SCPI commands to grab image
@@ -66,7 +66,7 @@ int keysight_dmm_screenshot(char *address, char *id, int timeout)
     if (length < 0)
     {
         error_printf("Failed to receive message\n");
-        return 1;
+        goto error_receive;
     }
 
     // Strip IEEE 488.2 Data Block header
@@ -81,14 +81,22 @@ int keysight_dmm_screenshot(char *address, char *id, int timeout)
 
     // Dump remaining image data to file
     screenshot_file_dump(image, length, "bmp");
-    
+
     // Free allocated memory for screenshot
     free(response);
-    
+
     // Disconnect
     lxi_disconnect(device);
 
     return 0;
+
+error_connect:
+error_receive:
+
+    // Free allocated memory for screenshot
+    free(response);
+
+    return 1;
 }
 
 

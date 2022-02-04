@@ -65,7 +65,7 @@ int tektronix_screenshot_3000(char *address, char *id, int timeout)
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
-        return 1;
+        goto error_connect;
     }
 
     // Check the device
@@ -128,7 +128,15 @@ int tektronix_screenshot_3000(char *address, char *id, int timeout)
     
     // Disconnect
     lxi_disconnect(device);
+
     return 0;
+
+error_connect:
+
+    // Free allocated memory for screenshot
+    free(response);
+
+    return 1;
 }
 
 

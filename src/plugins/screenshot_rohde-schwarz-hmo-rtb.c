@@ -61,7 +61,7 @@ int rs_hmo_rtb_screenshot(char *address, char *id, int timeout)
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
-        return 1;
+        goto error_connect;
     }
 
     // Send SCPI commands to grab image
@@ -73,7 +73,7 @@ int rs_hmo_rtb_screenshot(char *address, char *id, int timeout)
     if (length < 0)
     {
         error_printf("Failed to receive message\n");
-        return 1;
+        goto error_receive;
     }
 
     // Strip header
@@ -93,6 +93,14 @@ int rs_hmo_rtb_screenshot(char *address, char *id, int timeout)
     lxi_disconnect(device);
 
     return 0;
+
+error_connect:
+error_receive:
+
+    // Free allocated memory for screenshot
+    free(response);
+
+    return 1;
 }
 
 
