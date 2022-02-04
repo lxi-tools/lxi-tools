@@ -45,232 +45,225 @@
 #define RESPONSE_LENGTH_MAX 0x500000
 #define ID_LENGTH_MAX 65536
 
-int
-scpi (char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
+int scpi(char *ip, int port, int timeout, lxi_protocol_t protocol, char *command)
 {
-  char *response = malloc (RESPONSE_LENGTH_MAX);
-  char command_buffer[1000];
-  int device, length;;
+    char* response = malloc(RESPONSE_LENGTH_MAX);
+    char command_buffer[1000];
+    int device, length;;
 
-  strip_trailing_space (command);
+    strip_trailing_space(command);
 
-  if (protocol == RAW)
+    if (protocol == RAW)
     {
-      // Add newline to command string
-      strcpy (command_buffer, command);
-      command_buffer[strlen (command)] = '\n';
-      command_buffer[strlen (command) + 1] = 0;
-      command = command_buffer;
+        // Add newline to command string
+        strcpy(command_buffer, command);
+        command_buffer[strlen(command)] = '\n';
+        command_buffer[strlen(command)+1] = 0;
+        command = command_buffer;
     }
 
-  // Connect
-  device = lxi_connect (ip, port, NULL, timeout, protocol);
-  if (device != LXI_OK)
+    // Connect
+    device = lxi_connect(ip, port, NULL, timeout, protocol);
+    if (device != LXI_OK)
     {
-      error_printf ("Unable to connect to LXI device\n");
-      goto error_connect;
+        error_printf("Unable to connect to LXI device\n");
+        goto error_connect;
     }
 
-  // Send SCPI command
-  length = lxi_send (device, command, strlen (command), timeout);
-  if (length < 0)
+    // Send SCPI command
+    length = lxi_send(device, command, strlen(command), timeout);
+    if (length < 0)
     {
-      error_printf ("Failed to send message\n");
-      goto error_send;
+        error_printf("Failed to send message\n");
+        goto error_send;
     }
 
-  // Only expect response in case we are firing a question command
-  if (question (command))
+    // Only expect response in case we are firing a question command
+    if (question(command))
     {
-      length = lxi_receive (device, response, RESPONSE_LENGTH_MAX, timeout);
-      if (length < 0)
-	{
-	  error_printf ("Failed to receive message\n");
-	  goto error_receive;
-	}
+        length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
+        if (length < 0)
+        {
+            error_printf("Failed to receive message\n");
+            goto error_receive;
+        }
 
-      // Print response
-      if (option.hex)
-	hex_print (response, length);
-      else
-	{
-	  int i;
-	  for (i = 0; i < length; i++)
-	    putchar (response[i]);
+        // Print response
+        if (option.hex)
+            hex_print(response, length);
+        else
+            {
+                int i;
+                for (i=0; i<length; i++)
+                    putchar(response[i]);
 
-	  // Append newline if printing to tty terminal (not file)
-	  if (isatty (fileno (stdout)) && (response[length - 1] != '\n'))
-	    printf ("\n");
-	}
+                // Append newline if printing to tty terminal (not file)
+                if ( isatty(fileno(stdout)) && (response[length-1] != '\n'))
+                    printf("\n");
+            }
     }
 
-  // Disconnect
-  lxi_disconnect (device);
-  free (response);
-  return 0;
+    // Disconnect
+    lxi_disconnect(device);
+    free(response);
+    return 0;
 
 error_send:
 error_receive:
 
-  // Disconnect
-  lxi_disconnect (device);
+    // Disconnect
+    lxi_disconnect(device);
+    free(response);
 
 error_connect:
-  free (response);
-  return 1;
+    free(response);
+    return 1;
 }
 
-int
-enter_interactive_mode (char *ip, int port, int timeout,
-			lxi_protocol_t protocol)
+int enter_interactive_mode(char *ip, int port, int timeout, lxi_protocol_t protocol)
 {
-  char *response = malloc (RESPONSE_LENGTH_MAX);
-  int device, length;
-  char *input = "";
+    char* response = malloc(RESPONSE_LENGTH_MAX);
+    int device, length;
+    char *input = "";
 
-  // Connect
-  device = lxi_connect (ip, port, NULL, timeout, protocol);
-  if (device != LXI_OK)
+    // Connect
+    device = lxi_connect(ip, port, NULL, timeout, protocol);
+    if (device != LXI_OK)
     {
-      error_printf ("Unable to connect to LXI device\n");
-      goto error_connect;
+        error_printf("Unable to connect to LXI device\n");
+        goto error_connect;
     }
 
-  printf ("Connected to %s\n", ip);
-  printf ("Entering interactive mode (ctrl-d to quit)\n\n");
+    printf("Connected to %s\n", ip);
+    printf("Entering interactive mode (ctrl-d to quit)\n\n");
 
-  // Enter line/command processing loop
-  while (true)
+    // Enter line/command processing loop
+    while (true)
     {
-      input = readline ("lxi> ");
-      if (input == NULL)
-	break;
+        input = readline("lxi> ");
+        if (input == NULL)
+            break;
 
-      add_history (input);
+        add_history(input);
 
-      strip_trailing_space (input);
+        strip_trailing_space(input);
 
-      // Skip empty lines
-      if (strlen (input) == 0)
-	continue;
+        // Skip empty lines
+        if (strlen(input) == 0)
+            continue;
 
-      // Send entered input as SCPI command
-      length = lxi_send (device, input, strlen (input), timeout);
-      if (length < 0)
-	error_printf ("Failed to send message\n");
+        // Send entered input as SCPI command
+        length = lxi_send(device, input, strlen(input), timeout);
+        if (length < 0)
+            error_printf("Failed to send message\n");
 
-      // Only expect response in case we are firing a question command
-      if (question (input))
-	{
-	  length =
-	    lxi_receive (device, response, RESPONSE_LENGTH_MAX, timeout);
-	  if (length < 0)
-	    {
-	      error_printf ("Failed to receive message\n");
-	    }
-	  else
-	    {
-	      // Make sure we terminate response string
-	      response[length] = 0;
+        // Only expect response in case we are firing a question command
+        if (question(input))
+        {
+            length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
+            if (length < 0)
+            {
+                error_printf("Failed to receive message\n");
+            } else
+            {
+                // Make sure we terminate response string
+                response[length] = 0;
 
-	      // Print response
-	      printf ("%s", response);
-	    }
-	}
+                // Print response
+                printf("%s", response);
+            }
+        }
     }
 
-  printf ("\n");
+    printf("\n");
 
-  // Disconnect
-  lxi_disconnect (device);
-  free (response);
+    // Disconnect
+    lxi_disconnect(device);
+    free(response);
 
-  return 0;
+    return 0;
 
 error_connect:
-  free (response);
-  return 1;
+    free(response);
+    return 1;
 }
 
-int
-run_script (char *ip, int port, int timeout, lxi_protocol_t protocol,
-	    char *filename)
+int run_script(char *ip, int port, int timeout, lxi_protocol_t protocol, char *filename)
 {
-  FILE *fp;
-  char *line = NULL;
-  size_t len = 0;
-  ssize_t read;
-  char *response = malloc (RESPONSE_LENGTH_MAX);
-  int device, length, i;
+    FILE *fp;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    char* response = malloc(RESPONSE_LENGTH_MAX);
+    int device, length, i;
 
-  UNUSED (protocol);
+    UNUSED(protocol);
 
-  // Open script file
-  fp = fopen (filename, "r");
-  if (fp == NULL)
+    // Open script file
+    fp = fopen(filename, "r");
+    if (fp == NULL)
     {
-      error_printf ("Unable to open file %s\n", filename);
-      goto error_fopen;
+        error_printf("Unable to open file %s\n", filename);
+        goto error_fopen;
     }
 
-  // Connect
-  device = lxi_connect (ip, port, NULL, timeout, VXI11);
-  if (device != LXI_OK)
+    // Connect
+    device = lxi_connect(ip, port, NULL, timeout, VXI11);
+    if (device != LXI_OK)
     {
-      error_printf ("Unable to connect to LXI device\n");
-      goto error_connect;
+        error_printf("Unable to connect to LXI device\n");
+        goto error_connect;
     }
 
-  printf ("Connected to %s\n", ip);
-  printf ("Running script %s\n\n", filename);
+    printf("Connected to %s\n", ip);
+    printf("Running script %s\n\n", filename);
 
-  while ((read = getline (&line, &len, fp)) != -1)
+    while ((read = getline(&line, &len, fp)) != -1)
     {
-      printf ("%s", line);
+        printf("%s", line);
 
-      strip_trailing_space (line);
+        strip_trailing_space(line);
 
-      // Skip empty lines
-      if (strlen (line) == 1)
-	continue;
+        // Skip empty lines
+        if (strlen(line) == 1)
+            continue;
 
-      // Send read line as SCPI command
-      length = lxi_send (device, line, strlen (line), timeout);
-      if (length < 0)
-	error_printf ("Failed to send message\n");
+        // Send read line as SCPI command
+        length = lxi_send(device, line, strlen(line), timeout);
+        if (length < 0)
+            error_printf("Failed to send message\n");
 
-      // Only expect response in case we are firing a question command
-      if (line[strlen (line) - 1] == '?')
-	{
-	  length =
-	    lxi_receive (device, response, RESPONSE_LENGTH_MAX, timeout);
-	  if (length < 0)
-	    {
-	      error_printf ("Failed to receive message\n");
-	    }
-	  else
-	    {
-	      // Make sure we terminate response string
-	      response[length] = 0;
+        // Only expect response in case we are firing a question command
+        if (line[strlen(line)-1] == '?')
+        {
+            length = lxi_receive(device, response, RESPONSE_LENGTH_MAX, timeout);
+            if (length < 0)
+            {
+                error_printf("Failed to receive message\n");
+            } else
+            {
+                // Make sure we terminate response string
+                response[length] = 0;
 
-	      // Print response
-	      for (i = 0; i < length; i++)
-		putchar (response[i]);
-	    }
-	}
+                // Print response
+                for (i=0; i<length; i++)
+                putchar(response[i]);
+            }
+        }
     }
 
-  free (line);
-  free (response);
-  fclose (fp);
-  // Disconnect
-  lxi_disconnect (device);
+    free(line);
+    free(response);
+    fclose(fp);
+    // Disconnect
+    lxi_disconnect(device);
 
-  return 0;
+    return 0;
 
 error_connect:
-  fclose (fp);
+    free(response);
+    fclose(fp);
 error_fopen:
-  free (response);
-  return 1;
+    free(response);
+    return 1;
 }
