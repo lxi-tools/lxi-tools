@@ -28,6 +28,11 @@ Visit www.lxistandard.org for more details.
 Please notice that lxi-tools is not affiliated with the LXI consortium - it is
 an independent open source community effort.
 
+### 1.2 Motivation
+
+To make better and simpler open source tools for managing network attached LXI
+compatible test instruments.
+
 ## 2. Usage
 
 ### 2.1 lxi-gui
