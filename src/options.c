@@ -58,8 +58,6 @@ struct option_t option =
     "",         // Default SCPI command
     false,      // Default no hexadecimal print
     false,      // Default no interactive mode
-    false,      // Default no run script
-    "",         // Default SCPI filename
     "",         // Default lua script filename
     "",         // Default screenshot plugin name
     false,      // Default no list
@@ -94,7 +92,6 @@ void print_help(char *argv[])
     printf("  -t, --timeout <seconds>              Timeout (default: %d)\n", option.timeout);
     printf("  -x, --hex                            Print response in hexadecimal\n");
     printf("  -i, --interactive                    Enter interactive mode\n");
-    printf("  -f, --file <filename>                Run SCPI commands from file\n");
     printf("  -r, --raw                            Use raw/TCP\n");
     printf("\n");
     printf("Screenshot options:\n");
@@ -190,7 +187,6 @@ void parse_options(int argc, char *argv[])
             {"timeout",        required_argument, 0, 't'},
             {"hex",            no_argument,       0, 'x'},
             {"interactive",    no_argument,       0, 'i'},
-            {"file",           required_argument, 0, 'f'},
             {"raw",            no_argument,       0, 'r'},
             {0,                0,                 0,  0 }
         };
@@ -198,7 +194,7 @@ void parse_options(int argc, char *argv[])
         do
         {
             /* Parse scpi options */
-            c = getopt_long(argc, argv, "a:p:t:xif:r", long_options, &option_index);
+            c = getopt_long(argc, argv, "a:p:t:xir", long_options, &option_index);
 
             switch (c)
             {
@@ -220,11 +216,6 @@ void parse_options(int argc, char *argv[])
 
                 case 'i':
                     option.interactive = true;
-                    break;
-
-                case 'f':
-                    option.run_script = true;
-                    option.scpi_filename = optarg;
                     break;
 
                 case 'r':
@@ -398,7 +389,7 @@ void parse_options(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        if ((strlen(option.scpi_command) == 0) && (option.interactive == false) && (option.run_script == false))
+        if ((strlen(option.scpi_command) == 0) && (option.interactive == false))
         {
             error_printf("No SCPI command specified\n");
             exit(EXIT_FAILURE);

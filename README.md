@@ -82,7 +82,6 @@ from 'lxi --help':
        -t, --timeout <seconds>              Timeout (default: 3)
        -x, --hex                            Print response in hexadecimal
        -i, --interactive                    Enter interactive mode
-       -f, --file <filename>                Run SCPI commands from file
        -r, --raw                            Use raw/TCP
 
      Screenshot options:

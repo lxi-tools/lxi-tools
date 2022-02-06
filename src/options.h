@@ -44,8 +44,6 @@ struct option_t
     char scpi_command[500];
     bool hex;
     bool interactive;
-    bool run_script;
-    char *scpi_filename;
     char lua_script_filename[1000];
     char *plugin_name;
     bool list;

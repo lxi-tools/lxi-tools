@@ -37,7 +37,7 @@ Search available networks for LXI devices
 
 .PP
 .B scpi
-.I [<options>] <SCPI-command>
+.I [<options>] <scpi-command>
 .RS
 Send SCPI command
 .RE
@@ -58,7 +58,7 @@ Benchmark
 
 .PP
 .B run
-.I [<options>] <filename>
+.I <filename>
 .RS
 Run Lua script
 .RE
@@ -94,10 +94,6 @@ Print response in hexadecimal
 .TP
 .B \-i, \--interactive
 Enter interactive mode
-
-.TP
-.B \-s, \--script <filename>
-Run script (plain text file with one SCPI command per line)
 
 .TP
 .B \-r, \--raw
@@ -146,12 +142,6 @@ Number of request messages
 .TP
 .B \-r, \--raw
 Use raw/TCP protocol
-
-.SH "RUN OPTIONS"
-
-.TP
-.B \-t, \--timeout <seconds>
-Timeout in seconds
 
 .SH "EXAMPLES"
 .TP

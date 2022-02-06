@@ -42,7 +42,6 @@ _lxi()
                -t --timeout \
                -x --hex \
                -i --interactive \
-               -f --file \
                -r --raw"
 
     screenshot_opts="-a --address \

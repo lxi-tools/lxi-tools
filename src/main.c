@@ -68,8 +68,6 @@ int main(int argc, char* argv[])
         case SCPI:
             if (option.interactive)
                 status = enter_interactive_mode(option.ip, option.port, option.timeout, option.protocol);
-            else if (option.run_script)
-                status = run_script(option.ip, option.port, option.timeout, option.protocol, option.scpi_filename);
             else
                 status = scpi(option.ip, option.port, option.timeout, option.protocol, option.scpi_command);
             break;
