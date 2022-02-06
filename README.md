@@ -1,4 +1,4 @@
-# lxi-tools
+# lxi-tools - open source LXI tools
 
 [![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=shield)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 
@@ -188,7 +188,7 @@ screenshot image to JPG:
 lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
 your package manager tool to find and install lxi-tools.
 
-### 3.2 Installation via snap
+### 3.2 Installation using snap
 
 Install latest stable version:
 ```
