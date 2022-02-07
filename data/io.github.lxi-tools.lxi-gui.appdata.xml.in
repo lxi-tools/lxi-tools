@@ -19,27 +19,27 @@
   <screenshots>
     <screenshot>
       <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-scpi.png</image>
-      <caption>SCPI mode - easily explore SCPI features of your instruments</caption>
+      <caption>Easily explore SCPI features of your instruments</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-search.png</image>
-      <caption>Search for instruments - using standard broadcast discovery or mDNS</caption>
+      <caption>Search for instruments</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-screenshot.png</image>
-      <caption>Screenshot mode - easily grab display screenshots from supported instruments</caption>
+      <caption>Easily grab screenshots from supported instruments</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-benchmark.png</image>
-      <caption>Benchmark mode - measure the message response performance of your instruments</caption>
+      <caption>Measure instrument message response performance</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script.png</image>
-      <caption>Script mode - program your LXI compatible instruments in a powerful clean cut Lua script environment</caption>
+      <caption>Powerful clean cut Lua script environment</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script-in-action.png</image>
-      <caption>Script mode in action plotting voltage levels from a DC power supply to line chart and CSV/PNG files</caption>
+      <image>https://raw.githubusercontent.com/lxi-tools/lxi-tools/master/images/lxi-gui-script-in-action-900px.png</image>
+      <caption>Script mode plotting line chart and CSV/PNG files</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://lxi-tools.github.io</url>
