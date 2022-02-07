@@ -1,4 +1,50 @@
-=== lxi-tools v2.0 ===
+=== lxi-tools v2.1 ===
+
+
+
+Changes since lxi-tools v2.0:
+
+ * Remove scpi run commands from file feature
+
+   Retiring this feature as one should use the Lua script feature instead.
+
+ * Fix memory leak in screenshot plugins
+
+ * Add extra features to the SCPI text view context menu
+
+   Add "Clear all" and "Save as.." features.
+
+ * Fix printing of sent SCPI command when using TCP/RAW
+
+   A redundant newline is removed.
+
+ * Improve SCPI send button state change
+
+ * Fix appdata.xml.in
+
+ * Prefix SCPI messages with timestamp, IP, and type
+
+   Allow prefixing SCPI messages with timestamp, IP, and type
+   (REQ/RSP). Add preference settings accordingly.
+
+   Prefixing with IP is default.
+
+ * Rename from metainfo to appdata because of meson
+
+ * Update application meta file
+
+ * Update AppData path
+
+ * Fix psu data log test
+
+ * meson: Require dependencies
+
+ * Add doc section to README
+
+Valentin Belot:
+
+ * Fix memory allocation and GUI update outside of main thread (macOS compatibility)
+
 
 
 Changes since lxi-tools v1.21:
