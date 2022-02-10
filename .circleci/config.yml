@@ -18,10 +18,6 @@ jobs:
       - run: sudo apt-get install -y libreadline-dev liblua5.3-dev bash-completion libtirpc-dev libavahi-common-dev libavahi-client-dev libxml2-dev git meson
       - run: git clone https://github.com/lxi-tools/liblxi.git
       - run: cd liblxi && meson build --prefix $HOME/test/liblxi && ninja -C build install
-#      - run: sudo apt-get install -y libavahi-core-dev libavahi-common-dev libavahi-client-dev libxml2-dev liblua5.3-dev libtirpc-dev libreadline liblxi1 liblxi-dev meson
-#      - run: wget https://github.com/lxi-tools/liblxi/archive/master.tar.gz
-#      - run: tar -xvf master.tar.gz
-#      - run: pushd liblxi-master && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install && popd
       - run: PKG_CONFIG_PATH=$HOME/test/liblxi/lib/x86_64-linux-gnu/pkgconfig meson build --prefix=$HOME/test/lxi-tools && ninja -C build install
 
 # Invoke jobs via workflows
