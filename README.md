@@ -305,22 +305,26 @@ consider making a donation of your choice:
 
 [![Donate](images/Paypal.png)](https://www.paypal.me/lundmar)
 
-## 7. Website
+## 7. Support
+
+Submit bug reports via GitHub: https://github.com/lxi-tools/lxi-tools/issues
+
+## 8. Website
 
 Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
-## 8. License
+## 9. License
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
 
-## 9. Authors
+## 10. Authors
 
 Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
 See the AUTHORS file for full list of contributors.
 
-## 10. Sponsors
+## 11. Sponsors
 
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
