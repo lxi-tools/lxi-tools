@@ -366,7 +366,7 @@ list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
   gtk_widget_set_vexpand_set(list_subtitle, true);
   gtk_widget_set_valign(list_subtitle, GTK_ALIGN_START);
   gtk_label_set_wrap(GTK_LABEL(list_subtitle), true);
-  gtk_label_set_natural_wrap_mode(GTK_LABEL(list_subtitle), GTK_NATURAL_WRAP_NONE);
+//  gtk_label_set_natural_wrap_mode(GTK_LABEL(list_subtitle), GTK_NATURAL_WRAP_NONE);
   gtk_label_set_wrap_mode(GTK_LABEL(list_subtitle), PANGO_WRAP_CHAR);
   gtk_box_append(GTK_BOX(list_text_box), list_subtitle);
 
