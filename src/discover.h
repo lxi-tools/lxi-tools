@@ -28,11 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DISCOVER_H
-#define DISCOVER_H
+#pragma once
 
 #include <stdbool.h>
 
 int discover(bool mdns, int timeout);
-
-#endif

@@ -28,12 +28,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ERROR_H
-#define ERROR_H
+#pragma once
 
 #include <stdio.h>
 
 #define error_printf(format, args...) \
     fprintf(stderr, "Error: " format, ## args)
-
-#endif

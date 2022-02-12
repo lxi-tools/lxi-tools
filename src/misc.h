@@ -28,13 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MISC_H
-#define MISC_H
+#pragma once
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
 void hex_print(void *data, int length);
 void strip_trailing_space(char *line);
 int question(const char *string);
-
-#endif

@@ -27,8 +27,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SCPI_H
-#define SCPI_H
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +54,4 @@ void strip_trailing_space(char *line);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

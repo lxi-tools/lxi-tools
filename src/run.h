@@ -27,8 +27,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef RUN_H
-#define RUN_H
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,6 +48,4 @@ int run(char *filename, int timeout);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

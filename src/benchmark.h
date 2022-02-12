@@ -27,8 +27,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef BENCHMARK_H
-#define BENCHMARK_H
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,6 +48,4 @@ int benchmark(const char *ip, int port, int timeout, lxi_protocol_t protocol, in
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -27,8 +27,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef SCREENSHOT_H
-#define SCREENSHOT_H
+
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,6 +56,4 @@ struct screenshot_plugin
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

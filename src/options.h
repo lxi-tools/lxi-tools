@@ -28,8 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#pragma once
 
 #include <stdbool.h>
 #include <sys/param.h>
@@ -67,5 +66,3 @@ enum command_t
 extern struct option_t option;
 
 void parse_options(int argc, char *argv[]);
-
-#endif
