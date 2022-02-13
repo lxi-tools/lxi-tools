@@ -7,5 +7,5 @@ if bashcompletiondir == ''
 endif
 
 if (bashcompletiondir != 'no') and (bashcompletiondir != '')
-  install_data('lxi', 'lxi.snap', install_dir: bashcompletiondir)
+  install_data('lxi', install_dir: bashcompletiondir)
 endif
