@@ -1,6 +1,7 @@
 # lxi-tools - open source LXI tools
 
 [![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=shield)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
+[![lxi-tools](https://snapcraft.io/lxi-tools/badge.svg)](https://snapcraft.io/lxi-tools)
 
 ## 1. Introduction
 
