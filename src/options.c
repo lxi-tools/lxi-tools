@@ -52,20 +52,20 @@
 
 struct option_t option =
 {
-    NO_COMMAND, // Default command
-    TIMEOUT,    // Default timeout in seconds
-    "",         // Default IP address
-    "",         // Default SCPI command
-    false,      // Default no hexadecimal print
-    false,      // Default no interactive mode
-    "",         // Default lua script filename
-    "",         // Default screenshot plugin name
-    false,      // Default no list
-    "",         // Default screenshot filename
-    VXI11,      // Default protocol
-    0,          // Default port (set later)
-    false,      // Default no mDNS discover
-    100,        // Default number of requests in benchmark
+    .command = NO_COMMAND,     // Default command
+    .timeout = TIMEOUT,        // Default timeout in seconds
+    .ip = "",                  // Default IP address
+    .scpi_command = "",        // Default SCPI command
+    .hex = false,              // Default no hexadecimal print
+    .interactive = false,      // Default no interactive mode
+    .lua_script_filename = "", // Default lua script filename
+    .plugin_name = "",         // Default screenshot plugin name
+    .list = false,             // Default no list
+    .screenshot_filename = "", // Default screenshot filename
+    .protocol = VXI11,         // Default protocol
+    .port = 0,                 // Default port (set later)
+    .mdns = false,             // Default no mDNS discover
+    .count = 100,              // Default number of requests in benchmark
 };
 
 void print_help(char *argv[])
