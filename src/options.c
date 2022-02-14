@@ -125,9 +125,6 @@ void parse_options(int argc, char *argv[])
         exit(EXIT_SUCCESS);
     }
 
-    // Convert default timeout to milliseconds
-    option.timeout = option.timeout * 1000;
-
     // getopt_long stores the option index here
     int option_index = 0;
 
@@ -155,7 +152,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg);
                     no_timeout_provided = false;
                     break;
                 case 'm':
@@ -171,9 +168,9 @@ void parse_options(int argc, char *argv[])
         if (no_timeout_provided)
         {
             if (option.mdns)
-                option.timeout = TIMEOUT_DISCOVER_MDNS * 1000;
+                option.timeout = TIMEOUT_DISCOVER_MDNS;
             else
-                option.timeout = TIMEOUT_DISCOVER * 1000;
+                option.timeout = TIMEOUT_DISCOVER;
         }
     }
     else if (strcmp(argv[1], "scpi") == 0)
@@ -207,7 +204,7 @@ void parse_options(int argc, char *argv[])
                     break;
 
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg);
                     break;
 
                 case 'x':
@@ -231,7 +228,7 @@ void parse_options(int argc, char *argv[])
         option.command = SCREENSHOT;
 
         // Set default timeout for screenshots
-        option.timeout = TIMEOUT_SCREENSHOT * 1000;
+        option.timeout = TIMEOUT_SCREENSHOT;
 
         static struct option long_options[] =
         {
@@ -254,7 +251,7 @@ void parse_options(int argc, char *argv[])
                     break;
 
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg);
                     break;
 
                 case 'p':
@@ -299,7 +296,7 @@ void parse_options(int argc, char *argv[])
                     break;
 
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg);
                     break;
 
                 case 'c':
@@ -332,7 +329,7 @@ void parse_options(int argc, char *argv[])
             switch (c)
             {
                 case 't':
-                    option.timeout = atoi(optarg) * 1000;
+                    option.timeout = atoi(optarg);
                     break;
 
                 case '?':
@@ -425,4 +422,7 @@ void parse_options(int argc, char *argv[])
         else
             option.port = PORT_VXI11; // Default TCP/VXI11 port
     }
+
+    // Convert timeout from seconds to milliseconds
+    option.timeout = option.timeout * 1000;
 }
