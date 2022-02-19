@@ -20,7 +20,7 @@ to the standard lua library functions.
         port: Port of remote device [integer] (only used for RAW connections)
         name: Name of remote device [string] (only used for VXI11 connection,
               best use nil to default to "inst0")
-     timeout: Timeout in miliseconds [integer]
+     timeout: Timeout in milliseconds [integer]
     protocol: Communications protocol to use [VXI11, RAW]
 
   Returns
@@ -38,7 +38,7 @@ to the standard lua library functions.
       device: Handle of connected device
      command: SCPI command to send [string]. A response is expected if the
               command ends with "?".
-     timeout: Timeout in miliseconds [integer]
+     timeout: Timeout in milliseconds [integer]
 
   Returns
     response: Returns response [string] if command string ended with "?". If an
@@ -75,7 +75,7 @@ to the standard lua library functions.
     Sleep for specified amount of time
 
   Parameters
-    time: Time to sleep in miliseconds [integer]
+    time: Time to sleep in milliseconds [integer]
 
 ------------------------------------------------------------------------------
 
