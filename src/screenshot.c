@@ -35,6 +35,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <time.h>
 #include <regex.h>
@@ -135,11 +136,13 @@ static bool regex_match(const char *string, const char *pattern)
 static char *date_time(void)
 {
     static char date_time_string[50];
+    struct tm *tm;
+    struct timeval tv;
 
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    sprintf(date_time_string, "%d-%02d-%02d_%02d:%02d:%02d", tm.tm_year + 1900,
-            tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    gettimeofday(&tv, NULL);
+
+    tm = localtime(&tv.tv_sec);
+    strftime(date_time_string, sizeof(date_time_string), "%Y-%m-%dT%H:%M:%S", tm);
 
     return date_time_string;
 }
