@@ -1,7 +1,0 @@
-data/io.github.lxi-tools.lxi-gui.desktop.in
-data/io.github.lxi-tools.lxi-gui.appdata.xml.in
-data/io.github.lxi-tools.lxi-gui.gschema.xml
-src/lxi_gui-window.ui
-src/main.c
-src/lxi_gui-window.c
-

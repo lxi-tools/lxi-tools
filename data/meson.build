@@ -1,9 +1,11 @@
+i18n = import('i18n')
+
 # See https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s02.html
 desktop_file = i18n.merge_file(
   input: 'io.github.lxi-tools.lxi-gui.desktop.in',
   output: 'io.github.lxi-tools.lxi-gui.desktop',
   type: 'desktop',
-  po_dir: '../po',
+  po_dir: '.',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
@@ -20,7 +22,7 @@ endif
 appstream_file = i18n.merge_file(
   input: 'io.github.lxi-tools.lxi-gui.appdata.xml.in',
   output: 'io.github.lxi-tools.lxi-gui.appdata.xml',
-  po_dir: '../po',
+  po_dir: '.',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
