@@ -40,8 +40,11 @@ lxi_sources = [
   common_sources,
   ]
 
+
+compiler = meson.get_compiler('c')
+
 lxi_deps = [
-  dependency('readline', required: true),
+  compiler.find_library('readline', required: true),
   dependency('lua-5.3', required: true),
   dependency('liblxi', version: '>=1.13', required: true),
 ]
