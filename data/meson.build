@@ -1,36 +1,26 @@
-i18n = import('i18n')
-
 # See https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s02.html
-desktop_file = i18n.merge_file(
-  input: 'io.github.lxi-tools.lxi-gui.desktop.in',
-  output: 'io.github.lxi-tools.lxi-gui.desktop',
-  type: 'desktop',
-  po_dir: '.',
-  install: true,
+install_data('io.github.lxi-tools.lxi-gui.desktop',
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
+current_dir = meson.current_source_dir()
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
   test('Validate desktop file', desktop_utils,
-    args: [desktop_file]
+    args: join_paths(current_dir, 'io.github.lxi-tools.lxi-gui.desktop')
   )
 endif
 
 # See https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#spec-component-location
 # Change appdata to metainfo once meson it updated to support it
-appstream_file = i18n.merge_file(
-  input: 'io.github.lxi-tools.lxi-gui.appdata.xml.in',
-  output: 'io.github.lxi-tools.lxi-gui.appdata.xml',
-  po_dir: '.',
-  install: true,
+install_data('io.github.lxi-tools.lxi-gui.appdata.xml',
   install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
 
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validate appstream file', appstream_util,
-    args: ['validate', appstream_file]
+    args: ['validate', join_paths(current_dir, 'io.github.lxi-tools.lxi-gui.appdata.xml')]
   )
 endif
 
