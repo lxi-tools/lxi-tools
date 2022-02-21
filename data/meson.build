@@ -3,11 +3,10 @@ install_data('io.github.lxi-tools.lxi-gui.desktop',
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
-current_dir = meson.current_source_dir()
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
   test('Validate desktop file', desktop_utils,
-    args: join_paths(current_dir, 'io.github.lxi-tools.lxi-gui.desktop')
+    args: files('io.github.lxi-tools.lxi-gui.desktop')
   )
 endif
 
@@ -20,7 +19,7 @@ install_data('io.github.lxi-tools.lxi-gui.appdata.xml',
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validate appstream file', appstream_util,
-    args: ['validate', join_paths(current_dir, 'io.github.lxi-tools.lxi-gui.appdata.xml')]
+    args: ['validate', files('io.github.lxi-tools.lxi-gui.appdata.xml')]
   )
 endif
 
