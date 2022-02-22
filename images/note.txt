@@ -1,0 +1,2 @@
+Screenshots are processed via the following command:
+mogrify -fuzz 2% -trim +repage *.png
