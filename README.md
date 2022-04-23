@@ -209,11 +209,11 @@ following dependencies:
 
  * liblxi
  * libreadline
- * lua
- * bash-completion
+ * liblua
  * libgtk
- * gtksourceview
  * libadwaita
+ * gtksourceview
+ * bash-completion
 
 Install steps:
 ```
