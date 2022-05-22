@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master.svg?style=shield)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 [![lxi-tools](https://snapcraft.io/lxi-tools/badge.svg)](https://snapcraft.io/lxi-tools)
+[![Packaging status](https://repology.org/badge/tiny-repos/lxi-tools.svg)](https://repology.org/project/lxi-tools/versions)
 
 ## 1. Introduction
 
