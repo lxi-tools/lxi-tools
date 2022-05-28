@@ -249,6 +249,7 @@ instruments:
 | Rigol Technologies DP832          | [discover+scpi+screenshot] |
 | Rigol Technologies DM3058         | [discover+scpi]            |
 | Rigol Technologies DM3068         | [discover+scpi+screenshot] |
+| Rigol Technologies DS1074Z+       | [discover+scpi+screenshot] |
 | Rigol Technologies DS1104Z        | [discover+scpi+screenshot] |
 | Rigol Technologies DS2302         | [discover+scpi+screenshot] |
 | Rigol Technologies DSA815         | [discover+scpi+screenshot] |
@@ -279,9 +280,9 @@ instruments:
 | Tektronix 4 Series MSO            | [discover+scpi]            |
 | Tektronix 5 Series MSO            | [discover+scpi]            |
 
-Note: Feel free to add your instrument(s) to the list via GitHub pull request
-or simply create a GitHub issue reporting your instrument(s) and which features
-work.
+Notes:
+ * Feel free to add your instrument(s) to the list via GitHub pull request or simply create a GitHub issue reporting your instrument(s) and which features work.
+ * Recent Rigol, like the DS1074Z+, may fail half-way through the LXI communication if the USB cable is plugged in. The error shown in English is "LAN unused, set it in RemoteIO" yet this is not possible (all options in the RemoteIO menu are disabled). In this case, try unplugging the USB cable from the back of the scope. LXI-based LAN functionality should then function correctly.
 
 ## 5. Documentation
 
