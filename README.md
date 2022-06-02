@@ -310,7 +310,7 @@ consider making a donation of your choice:
 
 ## 7. Support
 
-Submit bug reports via GitHub: https://github.com/lxi-tools/lxi-tools/issues
+Submit bug reports [here](https://github.com/lxi-tools/lxi-tools/issues).
 
 ## 8. Website
 
@@ -318,7 +318,7 @@ Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
 ## 9. Wiki
 
-Visit [github.com/lxi-tools/lxi-tools/wiki](https://github.com/lxi-tools/lxi-tools/wiki/)
+Visit wiki [here](https://github.com/lxi-tools/lxi-tools/wiki/).
 
 ## 10. License
 
