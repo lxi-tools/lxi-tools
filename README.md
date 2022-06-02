@@ -282,6 +282,7 @@ instruments:
 
 Notes:
  * Feel free to add your instrument(s) to the list via GitHub pull request or simply create a GitHub issue reporting your instrument(s) and which features work.
+ * A wiki page maintaining a list of known test instrument issues can be found [here](https://github.com/lxi-tools/lxi-tools/wiki/Test-instruments-known-issues). Feel free to edit.
 
 ## 5. Documentation
 
