@@ -282,7 +282,7 @@ instruments:
 
 Notes:
  * Feel free to add your instrument(s) to the list via GitHub pull request or simply create a GitHub issue reporting your instrument(s) and which features work.
- * A wiki page maintaining a list of known test instrument issues can be found [here](https://github.com/lxi-tools/lxi-tools/wiki/Test-instruments-known-issues). Feel free to edit.
+ * The [lxi-tools wiki](https://github.com/lxi-tools/lxi-tools/wiki/) provides further information regarding test instruments, including known issues and SCPI commands. 
 
 ## 5. Documentation
 
@@ -316,18 +316,22 @@ Submit bug reports via GitHub: https://github.com/lxi-tools/lxi-tools/issues
 
 Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
-## 9. License
+## 9. Wiki
+
+Visit [github.com/lxi-tools/lxi-tools/wiki](https://github.com/lxi-tools/lxi-tools/wiki/)
+
+## 10. License
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
 
-## 10. Authors
+## 11. Authors
 
 Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
 See the AUTHORS file for full list of contributors.
 
-## 11. Sponsors
+## 12. Sponsors
 
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
