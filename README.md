@@ -281,7 +281,7 @@ instruments:
 | Tektronix 5 Series MSO            | [discover+scpi]            |
 
 Notes:
- * Feel free to add your instrument(s) to the list via GitHub pull request or simply create a GitHub issue reporting your instrument(s) and which features work.
+ * Feel free to add tested instruments to the list via GitHub pull request or report via GitHub issue.
  * The [lxi-tools wiki](https://github.com/lxi-tools/lxi-tools/wiki/) provides further information regarding test instruments, including known issues and SCPI commands. 
 
 ## 5. Documentation
