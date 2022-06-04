@@ -1,0 +1,55 @@
+# lxi-gui
+
+ * Add support for adding instruments manually
+
+ * Add support for test cases in lua scripts
+
+   Add support for splitting a lua script into test cases for expressing
+   pass/fail status via gui or console when running the script. This is a
+   feature useful for test automation and reporting.
+
+   The current idea is to define test cases via lua comments so that is becomes
+   a layering not affecting normal script operation.
+
+   Example lua test script:
+ 
+    -- tc "Test case 1 description"
+    
+    print("This is test case 1")
+    
+    
+    
+    -- tc "Test case 2 description"
+    
+    print("This is test case 2")
+    
+    fail()
+    
+    
+    
+    -- tc "Test case 3 description"
+    
+    print("This is test case 3")
+    
+    fail_stop()
+    
+    
+    
+    -- tc "Test case 4 description"
+    
+    print("This is test case 4")
+    
+    
+
+    -- tc end
+
+    tc_save("test-results.log")
+  
+
+   When running the script the GUI will present a list of test cases and their
+   pass/fail status as the script progresses. If run via command line tool lxi,
+   a similar list will be presented in text.
+
+   Also includes introduction of fail() function which will report failure and
+   continue and fail_stop() function which will report failure and stop script
+   execution.
