@@ -56,6 +56,8 @@ compatible test instruments.
        - Linear gauge
      - Charts can be saved to PNG
  * Command-line and GUI tool available
+ * Interactive command-line mode
+ * Dump received response in hexadecimal format
 
 ## 3. Usage
 
