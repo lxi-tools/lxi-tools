@@ -45,6 +45,7 @@ compatible test instruments.
    - Simple script editor with syntax highlighting
    - Simple API which supports
      - Connecting/disconnecting remote test instruments
+     - Send SCPI commands to connected test instruments and receive responses
      - Clock sources for reading out elapsed time
      - Log data to CSV file
      - Charts for graphically presenting captured data live in various chart types:
