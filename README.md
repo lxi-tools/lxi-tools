@@ -35,9 +35,30 @@ an independent open source community effort.
 To make better and simpler open source tools for managing network attached LXI
 compatible test instruments.
 
-## 2. Usage
+## 2. Features
 
-### 2.1 lxi-gui
+ * Automatically discover test instruments on local network via VXI11 or mDNS
+ * Send SCPI commands
+ * Automatically grab screenshots from supported instruments
+ * Benchmark request/response performance of instruments
+ * Powerful Lua scripting support for advanced automation
+   - Simple script editor with syntax highlighting
+   - Simple API which supports
+     - Connecting/disconnecting remote test instruments
+     - Clock sources for reading out elapsed time
+     - Log data to CSV file
+     - Charts for graphically presenting captured data live in various chart types:
+       - Line
+       - Scatter
+       - Number
+       - Angular gauge
+       - Linear gauge
+     - Charts can be saved to PNG
+ * Command-line and GUI tool available
+
+## 3. Usage
+
+### 3.1 lxi-gui
 
 The lxi-gui application provides some of the same features as the commandline
 tool and more but presents them in a modern GUI frontend.
@@ -57,7 +78,7 @@ tool and more but presents them in a modern GUI frontend.
 <em>Script mode in action plotting voltage levels from a DC power supply to line chart and CSV/PNG files</em>
 </p>
 
-### 2.2 lxi
+### 3.2 lxi
 
 The commandline interface of the lxi application is described in the output
 from 'lxi --help':
@@ -100,7 +121,7 @@ from 'lxi --help':
        -r, --raw                            Use raw/TCP
 ```
 
-#### 2.2.1 Example - Discover LXI devices on available networks
+#### 3.2.1 Example - Discover LXI devices on available networks
 
 ```
      $ lxi discover
@@ -115,7 +136,7 @@ from 'lxi --help':
      Found 2 devices
 ```
 
-#### 2.2.2 Example - Send SCPI command to an instrument
+#### 3.2.2 Example - Send SCPI command to an instrument
 
 ```
      $ lxi scpi --address 10.42.1.20 "*IDN?"
@@ -126,7 +147,7 @@ To dump response to file simply do:
      $ lxi scpi --address 10.42.1.20 "*IDN?" > response.txt
 ```
 
-#### 2.2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope
+#### 3.2.3 Example - Capture screenshot from a Rigol 1000z series oscilloscope
 
 ```
      $ lxi screenshot --address 10.42.1.20 --plugin rigol-1000z
@@ -141,7 +162,7 @@ Or using plugin autodetection simply:
      Saved screenshot image to screenshot_10.42.1.20_2017-11-11_13:46:02.png
 ```
 
-#### 2.2.4 Example - Capture screenshot and convert it to any image format
+#### 3.2.4 Example - Capture screenshot and convert it to any image format
 
 By default the format of the captured screenshot image is dictated by which
 screenshot plugin and instrument are in play. However, it is possible to write
@@ -155,7 +176,7 @@ screenshot image to JPG:
     $ lxi screenshot --address 10.42.1.20 - | convert - screenshot.jpg
 ```
 
-#### 2.2.5 Example - List available screenshot plugins
+#### 3.2.5 Example - List available screenshot plugins
 
 ```
      $ lxi screenshot --list
@@ -175,7 +196,7 @@ screenshot image to JPG:
        tektronix-2000   Tektronix DPO/MSO 2000 series oscilloscope (experimental)
 ```
 
-#### 2.2.6 Example - Benchmark instrument request/response performance
+#### 3.2.6 Example - Benchmark instrument request/response performance
 
 ```
      $ lxi benchmark --address 10.42.1.20
@@ -183,14 +204,14 @@ screenshot image to JPG:
      Result: 24.7 requests/second
 ```
 
-## 3. Installation
+## 4. Installation
 
-### 3.1 Installation using package manager
+### 4.1 Installation using package manager
 
 lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
 your package manager tool to find and install lxi-tools.
 
-### 3.2 Installation using snap
+### 4.2 Installation using snap
 
 Install latest stable version:
 ```
@@ -201,7 +222,7 @@ Install bleeding edge:
     $ snap install lxi-tools --edge
 ```
 
-### 3.3 Installation from source
+### 4.3 Installation from source
 
 The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
@@ -228,7 +249,7 @@ See meson\_options.txt for which features to enable/disable.
 Note: Please do no try to install from source if you are not familiar with
 using meson.
 
-## 4. Tested instruments
+## 5. Tested instruments
 
 The tools are tested to work successfully with the following LXI compatible
 instruments:
@@ -284,17 +305,17 @@ Notes:
  * Feel free to add tested instruments to the list via GitHub pull request or report via GitHub issue.
  * The [lxi-tools wiki](https://github.com/lxi-tools/lxi-tools/wiki/) provides further information regarding test instruments, including known issues and SCPI commands. 
 
-## 5. Documentation
+## 6. Documentation
 
-## 5.1 lxi
+## 6.1 lxi
 
 The lxi commandline tool is documented in its included manpages.
 
-## 5.2 Lua script API
+## 6.2 Lua script API
 
 The lxi-tools Lua script API is documented [here](doc/lua-api.txt).
 
-## 6. Contributing
+## 7. Contributing
 
 lxi-tools is open source. If you want to help out with the project please feel
 free to join in.
@@ -308,30 +329,30 @@ consider making a donation of your choice:
 
 [![Donate](images/Paypal.png)](https://www.paypal.me/lundmar)
 
-## 7. Support
+## 8. Support
 
 Submit bug reports [here](https://github.com/lxi-tools/lxi-tools/issues).
 
-## 8. Website
+## 9. Website
 
 Visit [lxi-tools.github.io](https://lxi-tools.github.io)
 
-## 9. Wiki
+## 10. Wiki
 
 Visit wiki [here](https://github.com/lxi-tools/lxi-tools/wiki/).
 
-## 10. License
+## 11. License
 
 This code is released under BSD-3, commonly known as the 3-clause (or
 "modified") BSD license.
 
-## 11. Authors
+## 12. Authors
 
 Created and maintained by Martin Lund \<martin.lund@keep-it-simple.com>
 
 See the AUTHORS file for full list of contributors.
 
-## 12. Sponsors
+## 13. Sponsors
 
 A big thank you to the following sponsors that have donated test equipment to
 support the lxi-tools open source effort:
