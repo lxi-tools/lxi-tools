@@ -38,7 +38,7 @@ compatible test instruments.
 ## 2. Features
 
  * Automatically discover test instruments on local network via VXI11 or mDNS
- * Send SCPI commands
+ * Send SCPI commands and receive responses
  * Automatically grab screenshots from supported instruments
  * Benchmark request/response performance of instruments
  * Powerful Lua scripting support for advanced automation
@@ -46,15 +46,15 @@ compatible test instruments.
    - Simple API which supports
      - Connecting/disconnecting remote test instruments
      - Send SCPI commands to connected test instruments and receive responses
-     - Clock sources for reading out elapsed time
-     - Log data to CSV file
+     - Clock sources for managing elapsed time
+     - Log data to CSV files
      - Charts for graphically presenting captured data live in various chart types:
        - Line
        - Scatter
        - Number
        - Angular gauge
        - Linear gauge
-     - Charts can be saved to PNG
+     - Charts can be saved in PNG or CSV format
  * Command-line and GUI tool available
  * Interactive command-line mode
  * Dump received response in hexadecimal format
