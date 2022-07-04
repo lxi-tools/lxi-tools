@@ -214,6 +214,9 @@ screenshot image to JPG:
 lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
 your package manager tool to find and install lxi-tools.
 
+If you would like to see lxi-tools included in your favorite distribution,
+please reach out to their package maintainers team.
+
 ### 4.2 Installation using snap
 
 Install latest stable version:
