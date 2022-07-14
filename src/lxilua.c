@@ -60,6 +60,61 @@ struct lua_clock_t
 
 static struct lua_clock_t lua_clock[CLOCKS_MAX];
 
+static char log_script[] =
+"__log_data = {}\n"
+"\n"
+"function log_new()\n"
+"\n"
+"    local data = __log_data\n"
+"\n"
+"    handle = #data + 1\n"
+"    data[handle] = {}\n"
+"\n"
+"    return handle\n"
+"end\n"
+"\n"
+"function log_free(handle)\n"
+"--    table.remove(data, handle)\n"
+"end\n"
+"\n"
+"function log_add (handle, ...)\n"
+"\n"
+"    local data = __log_data\n"
+"\n"
+"    i = #data[handle] + 1\n"
+"\n"
+"    data[handle][i] = {}\n"
+"    for j,v in ipairs{...} do\n"
+"        data[handle][i][j] = v\n"
+"    end\n"
+"end\n"
+"\n"
+"function log_save_csv(handle, filename)\n"
+"\n"
+"    local data = __log_data\n"
+"\n"
+"    file = io.open(filename, \"w\")\n"
+"    io.output(file)\n"
+"\n"
+"    for i=1, #data[handle], 1\n"
+"    do \n"
+"        for j=1, #data[handle][i], 1\n"
+"        do\n"
+"            if (j == #data[handle][i])\n"
+"            then\n"
+"                io.write(data[handle][i][j])\n"
+"            else\n"
+"                io.write(data[handle][i][j] .. \",\")\n"
+"            end\n"
+"        end\n"
+"        io.write(\"\\n\")\n"
+"    end\n"
+"\n"
+"    io.close(file)\n"
+"end\n";
+
+
+
 // lua: device = lxi_connect(address, port, name, timeout, protocol)
 static int connect(lua_State *L)
 {
@@ -328,6 +383,19 @@ static int clock_free(lua_State *L)
     return 0;
 }
 
+static void load_log_script(lua_State *L)
+{
+    int error;
+
+    error = luaL_loadbuffer(L, log_script, strlen(log_script), "lxi") ||
+        lua_pcall(L, 0, 0, 0);
+    if (error)
+    {
+        error_printf("%s\n", lua_tostring(L, -1));
+        lua_pop(L, 1);  /* pop error message from the stack */
+    }
+}
+
 int lua_register_lxi(lua_State *L)
 {
     lua_register(L, "connect", connect);
@@ -340,5 +408,8 @@ int lua_register_lxi(lua_State *L)
     lua_register(L, "clock_read", clock_read);
     lua_register(L, "clock_reset", clock_reset);
     lua_register(L, "clock_free", clock_free);
+
+    load_log_script(L);
+
     return 0;
 }
