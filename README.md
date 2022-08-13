@@ -252,8 +252,7 @@ Install steps:
 
 See meson\_options.txt for which features to enable/disable.
 
-Note: Please do no try to install from source if you are not familiar with
-using meson.
+Note: The meson install steps may differ depending on your specific system.
 
 ## 5. Tested instruments
 
