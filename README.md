@@ -3,7 +3,7 @@
 [![CircleCI](https://img.shields.io/circleci/build/gh/lxi-tools/lxi-tools?token=138eb86e5ef6781858bddfd414cab9e3ecf75e5e)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 [![Release](https://img.shields.io/github/v/release/lxi-tools/lxi-tools?sort=semver)](https://github.com/lxi-tools/lxi-tools/releases)
 [![Code Lines](https://img.shields.io/tokei/lines/github/lxi-tools/lxi-tools)](https://github.com/lxi-tools/lxi-tools)
-[![Packaging status](https://img.shields.io/repology/repositories/lxi-tools)](https://repology.org/project/lxi-tools/versions)
+[![Packaging Status](https://img.shields.io/repology/repositories/lxi-tools)](https://repology.org/project/lxi-tools/versions)
 
 ## 1. Introduction
 
