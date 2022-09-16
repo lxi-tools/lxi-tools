@@ -98,7 +98,7 @@ if enable_gui
     'gtkchart.c',
     common_sources,
     ]
-  
+
   lxi_gui_deps = [
     lxi_deps,
     libglib_dep,
@@ -106,18 +106,18 @@ if enable_gui
     libgtksourceview_dep,
     libadwaita_dep,
   ]
-  
+
   gnome = import('gnome')
-  
+
   lxi_gui_sources += gnome.compile_resources(
     'lxi_gui-resources',
     'lxi_gui.gresource.xml',
     c_name: 'lxi_gui',
   )
-  
+
   executable('lxi-gui', lxi_gui_sources,
     dependencies: lxi_gui_deps,
     install: true,
   )
-  
+
 endif
