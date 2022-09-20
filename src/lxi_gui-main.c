@@ -48,7 +48,7 @@ int main (int argc, char *argv[])
      * application windows, integration with the window manager/compositor, and
      * desktop features such as file opening and single-instance applications.
      */
-    app = lxi_gui_application_new ("io.github.lxi-tools.lxi-gui", G_APPLICATION_FLAGS_NONE);
+    app = lxi_gui_application_new ("io.github.lxi-tools.lxi-gui", G_APPLICATION_DEFAULT_FLAGS);
 
     /*
      * Run the application. This function will block until the application
