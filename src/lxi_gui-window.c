@@ -2215,6 +2215,17 @@ static void lxi_gui_window_dispose(GObject *object)
     G_OBJECT_CLASS (lxi_gui_window_parent_class)->dispose (object);
 }
 
+static void lxi_gui_window_action_copy_screenshot_cb(GtkWidget  *widget,
+        const char *action_name,
+        GVariant   *param)
+{
+    UNUSED(action_name);
+    UNUSED(param);
+
+    LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+    gdk_clipboard_set_texture(self->clipboard, gdk_texture_new_for_pixbuf(self->pixbuf_screenshot));
+}
+
 static void lxi_gui_window_action_search_cb(GtkWidget  *widget,
         const char *action_name,
         GVariant   *param)
@@ -2305,10 +2316,12 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
     gtk_widget_class_install_action (widget_class, "action.toggle_flap", NULL, lxi_gui_window_action_toggle_flap_cb);
     gtk_widget_class_install_action (widget_class, "scpi_clear_all", NULL, scpi_action_cb);
     gtk_widget_class_install_action (widget_class, "scpi_save_as", NULL, scpi_action_cb);
+    gtk_widget_class_install_action (widget_class, "action.copy_screenshot", NULL, lxi_gui_window_action_copy_screenshot_cb);
 
     /* Create shortcuts */
     gtk_widget_class_add_binding_action (widget_class, GDK_KEY_s, GDK_CONTROL_MASK, "action.search", NULL);
     gtk_widget_class_add_binding_action (widget_class, GDK_KEY_h, GDK_CONTROL_MASK, "action.toggle_flap", NULL);
+    gtk_widget_class_add_binding_action (widget_class, GDK_KEY_c, GDK_CONTROL_MASK, "action.copy_screenshot", NULL);
 
     // Initialize LXI library
     lxi_init();

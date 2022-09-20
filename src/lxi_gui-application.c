@@ -152,6 +152,7 @@ static void lxi_gui_application_init (LxiGuiApplication *self)
     } accels[] = {
         { "action.search", { "<Control>s", NULL } },
         { "action.toggle_flap", { "<Control>h", NULL } },
+        { "action.copy_screenshot", { "<Control>c", NULL } },
         { "app.quit", { "<primary>q", NULL } },
     };
 
