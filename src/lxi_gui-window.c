@@ -2223,7 +2223,11 @@ static void lxi_gui_window_action_copy_screenshot_cb(GtkWidget  *widget,
     UNUSED(param);
 
     LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
-    gdk_clipboard_set_texture(self->clipboard, gdk_texture_new_for_pixbuf(self->pixbuf_screenshot));
+
+    if (self->pixbuf_screenshot != NULL)
+    {
+        gdk_clipboard_set_texture(self->clipboard, gdk_texture_new_for_pixbuf(self->pixbuf_screenshot));
+    }
 }
 
 static void lxi_gui_window_action_search_cb(GtkWidget  *widget,
@@ -2454,6 +2458,8 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
 
     // Disable screenshot "Save" button until image is present
     gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
+
+    self->pixbuf_screenshot = NULL;
 
     // Initialize script file
     self->script_file = NULL;
