@@ -9,7 +9,7 @@
       <object class="AdwHeaderBar">
         <child type="title">
           <object class="AdwViewSwitcherTitle" id="switcher_title">
-            <property name="stack">stack</property>
+            <property name="stack">view_stack</property>
             <property name="halign">GTK_ALIGN_CENTER</property>
             <property name="hexpand">false</property>
             <property name="focus-on-click">0</property>
@@ -134,7 +134,7 @@
                         <property name="margin-top">10</property>
                         <property name="margin-bottom">10</property>
                         <child>
-                          <object class="AdwViewStack" id="stack">
+                          <object class="AdwViewStack" id="view_stack">
                             <child>
                               <object class="AdwViewStackPage">
                                 <property name="name">page_scpi</property>
@@ -1358,7 +1358,7 @@
         </child>
         <child>
           <object class="AdwViewSwitcherBar">
-            <property name="stack">stack</property>
+            <property name="stack">view_stack</property>
             <binding name="reveal">
               <lookup name="title-visible">switcher_title</lookup>
             </binding>

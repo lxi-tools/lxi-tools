@@ -81,6 +81,7 @@ struct _LxiGuiWindow
     GThread             *script_run_worker_thread;
     GtkInfoBar          *info_bar;
     GtkLabel            *label_info_bar;
+    AdwViewStack        *view_stack;
     GtkViewport         *viewport_screenshot;
     GtkToggleButton     *toggle_button_script_run;
     AdwFlap             *flap;
@@ -2223,10 +2224,26 @@ static void lxi_gui_window_action_copy_screenshot_cb(GtkWidget  *widget,
     UNUSED(param);
 
     LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+    GtkSelectionModel *selection_model = adw_view_stack_get_pages(self->view_stack);
 
-    if (self->pixbuf_screenshot != NULL)
+    // If screenshot page is selected
+    if (gtk_selection_model_is_selected(selection_model, 1))
     {
-        gdk_clipboard_set_texture(self->clipboard, gdk_texture_new_for_pixbuf(self->pixbuf_screenshot));
+        // If screenshot image is available
+        if (self->pixbuf_screenshot != NULL)
+        {
+            // Copy image to clipboard
+            gdk_clipboard_set_texture(self->clipboard, gdk_texture_new_for_pixbuf(self->pixbuf_screenshot));
+        }
+    }
+    else
+    {
+        // Perform normal copy action
+        GtkWidget *widget = gtk_window_get_focus(GTK_WINDOW(self));
+        if (widget != NULL)
+        {
+            g_signal_emit_by_name(widget, "copy-clipboard");
+        }
     }
 }
 
@@ -2289,6 +2306,7 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_script_status);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, info_bar);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, label_info_bar);
+    gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, view_stack);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, viewport_screenshot);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_script_run);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, flap);
