@@ -14,6 +14,7 @@ common_sources = [
   'plugins/screenshot_rigol-dl3000.c',
   'plugins/screenshot_siglent-sdg.c',
   'plugins/screenshot_keysight-ivx.c',
+  'plugins/screenshot_lecroy.c',
   'plugins/screenshot_rigol-dm3068.c',
   'plugins/screenshot_siglent-sdm3000.c',
   'plugins/screenshot_rigol-1000z.c',

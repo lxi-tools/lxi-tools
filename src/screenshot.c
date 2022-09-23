@@ -48,6 +48,7 @@
 
 extern struct screenshot_plugin keysight_dmm;
 extern struct screenshot_plugin keysight_ivx;
+extern struct screenshot_plugin lecroy;
 extern struct screenshot_plugin rigol_1000z;
 extern struct screenshot_plugin rigol_2000;
 extern struct screenshot_plugin rigol_dg;
@@ -254,6 +255,7 @@ void screenshot_register_plugins(void)
     // Register screenshot plugins
     screenshot_plugin_register(&keysight_dmm);
     screenshot_plugin_register(&keysight_ivx);
+    screenshot_plugin_register(&lecroy);
     screenshot_plugin_register(&rigol_1000z);
     screenshot_plugin_register(&rigol_2000);
     screenshot_plugin_register(&rigol_dg);
