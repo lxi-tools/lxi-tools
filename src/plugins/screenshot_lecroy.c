@@ -41,6 +41,30 @@
 #define IMAGE_SIZE_MAX       0x400000   // 4 MB
 #define MIN_TRANSFER_SIZE    32
 
+// Poll until the SCDP bit is clear
+static int scdp_status_wait(device, timeout) {
+  char *command;
+  char response[6];
+
+  for (unsigned retry = 0; retry < 5; retry++) {
+    command = "INR?";
+    lxi_send(device, command, strlen(command), timeout);
+    int rc = lxi_receive(device, response, MIN_TRANSFER_SIZE, timeout);
+    if (rc < (int)sizeof(response)) {
+      printf("INR? receive failed\n");
+      return 1;
+    }
+
+    // Parse the mask, screendump is bit 2
+    unsigned long state = strtoul(&response[4], NULL, 10);
+    if (state & 2) {
+      return 0;
+    }
+  }
+
+  return 1;
+}
+
 int lecroy_screenshot(char *address, char *id, int timeout)
 {
     UNUSED(id);
@@ -60,9 +84,17 @@ int lecroy_screenshot(char *address, char *id, int timeout)
         goto error_connect;
     }
 
+    // Clear status registers and enable screen dump mask bit, then do a read to
+    // clear any pending bits
+    char * command = "*CLS";
+    lxi_send(device, command, strlen(command), timeout);
+    command = "INE 2";
+    lxi_send(device, command, strlen(command), timeout);
+    scdp_status_wait(device, timeout);
+
     // Delete any existing file, if any. This ensures that the autoincrementing
     // suffix counter is reset to zero.
-    char *command = "DELF DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
+    command = "DELF DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
     lxi_send(device, command, strlen(command), timeout);
 
     // Set hardcopy to dump PNGs to a file
@@ -72,6 +104,9 @@ int lecroy_screenshot(char *address, char *id, int timeout)
     // Trigger screendump
     command = "SCDP";
     lxi_send(device, command, strlen(command), timeout);
+    if (scdp_status_wait(device, timeout)) {
+        printf("screendump bit not set?\n");
+    }
 
     // Read it back
     command = "TRFL? DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
