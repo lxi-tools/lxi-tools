@@ -186,6 +186,7 @@ screenshot image to JPG:
      $ lxi screenshot --list
                  Name   Description
          keysight-ivx   Keysight InfiniVision 2000X/3000X series oscilloscope
+               lecroy   LeCroy WavePro oscilloscopes
           rigol-1000z   Rigol DS/MSO 1000z series oscilloscope
            rigol-2000   Rigol DS/MSO 2000 series oscilloscope
          rigol-dg4000   Rigol DG 4000 series function generator
@@ -266,6 +267,7 @@ instruments:
 | Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |
 | Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |
 | Keysight Technologies MSO-X 6004A | [discover+scpi+screenshot] |
+| LeCroy WavePro ZI-a               | [discover+scpi+screenshot] |
 | Kikusui Electronics PMX35-3A      | [discover+scpi]            |
 | Rigol Technologies DG1062Z        | [discover+scpi+screenshot] |
 | Rigol Technologies DG4062         | [discover+scpi+screenshot] |
