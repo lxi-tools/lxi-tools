@@ -38,18 +38,22 @@
 #include "error.h"
 #include "screenshot.h"
 
-#define IMAGE_SIZE_MAX 0x400000 // 4 MB
+#define IMAGE_SIZE_MAX       0x400000   // 4 MB
+#define MIN_TRANSFER_SIZE    32
 
 int lecroy_screenshot(char *address, char *id, int timeout)
 {
-    char* response = malloc(IMAGE_SIZE_MAX);
-    char *command;
-    int device, length;
-
     UNUSED(id);
 
-    // Connect to LXI instrument
-    device = lxi_connect(address, 0, NULL, timeout, VXI11);
+    char* response;
+    response = malloc(IMAGE_SIZE_MAX);
+    if (!response)
+    {
+        error_printf("Memory allocation failed\n");
+        return 1;
+    }
+
+    int device = lxi_connect(address, 0, NULL, timeout, VXI11);
     if (device == LXI_ERROR)
     {
         error_printf("Failed to connect\n");
@@ -58,7 +62,7 @@ int lecroy_screenshot(char *address, char *id, int timeout)
 
     // Delete any existing file, if any. This ensures that the autoincrementing
     // suffix counter is reset to zero.
-    command = "DELETE_FILE DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
+    char *command = "DELETE_FILE DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
     lxi_send(device, command, strlen(command), timeout);
 
     // Set hardcopy to dump PNGs to a file
@@ -72,25 +76,37 @@ int lecroy_screenshot(char *address, char *id, int timeout)
     // Read it back
     command = "TRFL? DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
     lxi_send(device, command, strlen(command), timeout);
-    length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
-    if (length < 0)
-    {
-        error_printf("Failed to receive message\n");
-        goto error_receive;
+    int length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
+    if (length < MIN_TRANSFER_SIZE) {
+      error_printf("receive error: %d\n", length);
+      goto error_receive;
     }
 
-    // Skip TRFL? response
-    char c = response[6];
+    // Skip 'TRFL? #'
     length -= 6;
 
-    // Skip IEEE header
+    // Parse the digit and skip IEEE header
+    char digit = response[6];
     char *image = &response[7];
-    int n = atoi(&c);
-    image += n;
-    length -= n;
+    switch (digit) {
+    case '0' ... '9': {
+        size_t n = digit - '0';
+        image += n;
+        length -= n;
+        break;
+    }
+    default:
+        break;
+    }
 
     // Strip 8 byte CRC footer and 2 byte terminator
     length -= 10;
+
+    if (length < 0 || length >= IMAGE_SIZE_MAX)
+    {
+        error_printf("Invalid message\n");
+        goto error_receive;
+    }
 
     screenshot_file_dump(image, length, "png");
     free(response);
@@ -98,10 +114,9 @@ int lecroy_screenshot(char *address, char *id, int timeout)
 
     return 0;
 
-error_connect:
 error_receive:
-
-    // Free allocated memory for screenshot
+    lxi_disconnect(device);
+error_connect:
     free(response);
 
     return 1;
