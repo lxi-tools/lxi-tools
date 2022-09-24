@@ -62,15 +62,15 @@ int lecroy_screenshot(char *address, char *id, int timeout)
 
     // Delete any existing file, if any. This ensures that the autoincrementing
     // suffix counter is reset to zero.
-    char *command = "DELETE_FILE DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
+    char *command = "DELF DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
     lxi_send(device, command, strlen(command), timeout);
 
     // Set hardcopy to dump PNGs to a file
-    command = "hardcopy_setup DEV,png,DEST,FILE,DIR,'D:\\HardCopy\',AREA,FULLSCREEN,FILE,'lxi-screenshot'";
+    command = "HCSU DEV,png,DEST,FILE,DIR,'D:\\HardCopy\',AREA,FULLSCREEN,FILE,'lxi-screenshot'";
     lxi_send(device, command, strlen(command), timeout);
 
     // Trigger screendump
-    command = "scdp";
+    command = "SCDP";
     lxi_send(device, command, strlen(command), timeout);
 
     // Read it back
