@@ -44,13 +44,14 @@
             </child>
             <child type="end">
               <object class="GtkButton" id="button_add_instrument">
+                <property name="name">button-add-instrument</property>
                 <property name="icon-name">list-add-symbolic</property>
                 <property name="halign">GTK_ALIGN_END</property>
                 <property name="hexpand">1</property>
                 <property name="receives-default">1</property>
                 <property name="tooltip-text">Manually add instrument</property>
                 <property name="focus-on-click">0</property>
-                <property name="visible">0</property>
+                <property name="visible">1</property>
                 <signal name="clicked" handler="button_clicked_add_instrument" swapped="yes"/>
                 <style>
                   <class name="image-button"/>
@@ -93,7 +94,7 @@
                       <object class="GtkViewport" id="list_viewport">
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkListBox" id="list_instruments">
+                          <object class="GtkListBox" id="list_box_instruments">
                             <property name="can-focus">0</property>
                           </object>
                         </child>

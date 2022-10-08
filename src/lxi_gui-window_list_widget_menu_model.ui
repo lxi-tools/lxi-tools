@@ -13,5 +13,13 @@
       <attribute name="label">Open in browser</attribute>
       <attribute name="action">action.open_browser</attribute>
     </item>
+    <item>
+      <attribute name="label">Edit</attribute>
+      <attribute name="action">action.edit</attribute>
+    </item>
+    <item>
+      <attribute name="label">Remove</attribute>
+      <attribute name="action">action.remove</attribute>
+    </item>
   </menu>
 </interface>

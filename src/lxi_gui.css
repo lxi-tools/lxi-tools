@@ -1,3 +1,8 @@
+/* Application Window */
+#button-add-instrument {
+  margin-left: 2px;
+}
+
 /* SCPI page */
 
 .text-view-scpi {

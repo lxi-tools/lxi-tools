@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <object class="GtkDialog" id="add_instrument_dialog">
+    <property name="transient-for">toplevel</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="default-width">520</property>
+    <!-- <property name="default-height">380</property> -->
+    <property name="use-header-bar">1</property>
+    <child type="action">
+      <object class="GtkButton" id="button_cancel">
+        <property name="label" translatable="yes">Cancel</property>
+      </object>
+    </child>
+    <child type="action">
+      <object class="GtkButton" id="button_save">
+        <property name="label" translatable="yes">Save</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="cancel">button_cancel</action-widget>
+      <action-widget response="ok" default="true">button_save</action-widget>
+    </action-widgets>
+    <child internal-child="content_area">
+      <object class="GtkBox">
+        <child>
+          <object class="AdwClamp">
+            <property name="maximum-size">450</property>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <property name="margin-top">18</property>
+                <property name="margin-bottom">18</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <child>
+                  <object class="GtkListBox" id="listbox">
+                    <property name="selection_mode">none</property>
+                    <child>
+                      <object class="AdwEntryRow" id="entry_row_name">
+                        <property name="title" translatable="yes">Name</property>
+                        <!-- <signal name="changed" handler="entry_changed" swapped="no"/> -->
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwEntryRow" id="entry_row_address">
+                        <property name="title" translatable="yes">IP Address</property>
+                        <!-- <signal name="changed" handler="entry_row_address_changed" swapped="no"/> -->
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Communications protocol</property>
+                        <child>
+                          <object class="GtkComboBoxText" id="combo_box_text_com_protocol">
+                            <property name="active">0</property>
+                            <property name="tooltip-text">Communications protocol</property>
+                            <property name="valign">center</property>
+                            <items>
+                              <item>VXI11/TCP</item>
+                              <item>RAW/TCP</item>
+                            </items>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow" id="action_row_raw_port">
+                        <property name="title" translatable="yes">RAW/TCP port</property>
+                        <child>
+                          <object class="GtkSpinButton" id="spin_button_raw_port">
+                            <property name="adjustment">adjustment_raw_port</property>
+                            <property name="has-tooltip">1</property>
+                            <property name="tooltip-text">RAW/TCP network port</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkRevealer" id="label_revealer">
+                    <child>
+                      <object class="GtkLabel" id="warn_label">
+                        <property name="label" translatable="yes">You already have this instrument.</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_raw_port">
+    <property name="upper">65535</property>
+    <property name="lower">0</property>
+    <property name="value">5025</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">100</property>
+  </object>
+</interface>

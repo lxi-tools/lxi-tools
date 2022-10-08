@@ -70,7 +70,7 @@
                 <child>
                   <object class="GtkComboBoxText" id="combo_box_text_com_protocol">
                     <property name="active">0</property>
-                    <property name="tooltip-text">Communications protocol used for SCPI and benchmark</property>
+                    <property name="tooltip-text">Default communications protocol used for discovered instruments</property>
                     <property name="valign">center</property>
                     <items>
                       <item>VXI11/TCP</item>

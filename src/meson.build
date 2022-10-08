@@ -91,6 +91,10 @@ if enable_gui
                                                       'examples=false',
                                                       'tests=false'])
 
+  libjson_glib_dep = dependency('json-glib-1.0', version: '>= 1.4', required: true,
+                                    fallback : ['json-glib', 'json_glib_dep'],
+                                    default_options: ['introspection=disabled'])
+
   lxi_gui_sources = [
     'lxi_gui-main.c',
     'lxi_gui-window.c',
@@ -106,6 +110,7 @@ if enable_gui
     libgtk_dep,
     libgtksourceview_dep,
     libadwaita_dep,
+    libjson_glib_dep,
   ]
 
   gnome = import('gnome')

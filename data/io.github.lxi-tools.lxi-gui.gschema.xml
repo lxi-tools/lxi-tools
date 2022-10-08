@@ -56,5 +56,10 @@
       <summary>Show SCPI message type</summary>
       <description>Show SCPI message type.</description>
     </key>
+    <key name="added-instruments" type="s">
+      <default>''</default>
+      <summary>Added instruments</summary>
+      <description>Added instruments JSON list</description>
+    </key>
   </schema>
 </schemalist>

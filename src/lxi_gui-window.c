@@ -41,6 +41,7 @@
 #include <lualib.h>
 #include <locale.h>
 #include <gtksourceview/gtksource.h>
+#include <json-glib/json-glib.h>
 #include <adwaita.h>
 #include "gtkchart.h"
 #include "lxi_gui-resources.h"
@@ -53,7 +54,7 @@ struct _LxiGuiWindow
 
     /* Template widgets */
     GSettings           *settings;
-    GtkListBox          *list_instruments;
+    GtkListBox          *list_box_instruments;
     GMenuModel          *list_widget_menu_model;
     GtkWidget           *list_widget_popover_menu;
     GtkViewport         *list_viewport;
@@ -89,6 +90,8 @@ struct _LxiGuiWindow
     unsigned int        benchmark_requests_count;
     const char          *id;
     const char          *ip;
+    int                 protocol;
+    int                 port;
     char                *image_buffer;
     int                 image_size;
     char                image_format[10];
@@ -103,9 +106,11 @@ struct _LxiGuiWindow
     gboolean            lua_stop_requested;
     GMutex              mutex_gui_chart;
     GMutex              mutex_discover;
+    GMutex              mutex_instrument_list;
     GMutex              mutex_save_png;
     GMutex              mutex_save_csv;
-    bool                no_instruments;
+    GList               *list_instruments;
+    GtkListBoxRow       *list_box_row_pressed;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -226,107 +231,65 @@ static GtkWidget* find_child_by_name(GtkWidget* parent, const gchar* name)
     return NULL;
 }
 
-static void pressed_cb (GtkGestureClick *gesture,
-        guint            n_press,
-        double           x,
-        double           y,
-        LxiGuiWindow     *self)
+typedef enum
 {
-    GtkWidget *child;
-    GtkListBoxRow *row;
-    GtkAdjustment* adjustment;
-    double y_adjustment, y_adjusted;
+    DISCOVERED,
+    MANUAL
+} instrument_type_t;
 
-    UNUSED(gesture);
-    UNUSED(n_press);
-
-    // Adjust y value to account for scrolling offset so we can pick the right row
-    adjustment = gtk_list_box_get_adjustment(self->list_instruments);
-    y_adjustment = gtk_adjustment_get_value(adjustment);
-    y_adjusted = y + y_adjustment;
-    row = gtk_list_box_get_row_at_y(self->list_instruments, y_adjusted);
-
-    if (row != NULL)
-    {
-        child = find_child_by_name(GTK_WIDGET(row), "list-title");
-        if (child != NULL)
-        {
-            // Save IP selected via GUI
-            self->ip = gtk_label_get_text(GTK_LABEL(child));
-        }
-
-        child = find_child_by_name(GTK_WIDGET(row), "list-subtitle");
-        if (child != NULL)
-        {
-            // Save ID selected via GUI
-            self->id = gtk_label_get_text(GTK_LABEL(child));
-        }
-
-        // If right click
-        if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_SECONDARY)
-        {
-            /* Place our popup menu at the point where
-             * the click happened, before popping it up.
-             */
-            gtk_popover_set_pointing_to (GTK_POPOVER (self->list_widget_popover_menu),
-                    &(const GdkRectangle){ x, y, 1, 1 });
-            gtk_popover_popup (GTK_POPOVER (self->list_widget_popover_menu));
-        }
-    }
-}
-
-static void action_cb (GtkWidget  *widget,
-        const char *action_name,
-        GVariant   *parameter)
+typedef enum
 {
-    LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+    ADD,
+    REMOVE,
+    EDIT,
+} action_t;
 
-    UNUSED(parameter);
-
-    if (g_str_equal (action_name, "action.copy_ip"))
-    {
-        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->ip);
-    }
-
-    if (g_str_equal (action_name, "action.copy_id"))
-    {
-        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->id);
-    }
-
-    if (g_str_equal (action_name, "action.open_browser") && self->ip != NULL)
-    {
-#ifndef __APPLE__
-        gchar *uri = g_strconcat("http://", self->ip, NULL);
-        gtk_show_uri(GTK_WINDOW(self), uri, GDK_CURRENT_TIME);
-#else
-        gchar *uri = g_strconcat("open http://", self->ip, NULL);
-        system(uri);
-#endif
-        g_free(uri);
-    }
-}
+typedef struct
+{
+    const char *name;
+    const char *uuid;
+    const char *address;
+    int protocol;
+    int port;
+    GtkWidget *widget;
+    instrument_type_t type;
+} instrument_t;
 
 static gboolean gui_update_search_add_instrument_thread(gpointer data)
 {
-    GtkWidget *list_box = data;
+    instrument_t *device = data;
 
-    // Add list box to list (GtkListBoxRow automatically inserted inbetween)
-    gtk_list_box_append(self_global->list_instruments, list_box);
+    g_mutex_lock(&self_global->mutex_instrument_list);
 
-    g_mutex_unlock(&self_global->mutex_discover);
+    if (device->type == DISCOVERED)
+    {
+        // Append list box to list (GtkListBoxRow automatically inserted as parent)
+        gtk_list_box_append(self_global->list_box_instruments, device->widget);
+    }
+    else
+    {
+        // Prepend list box to list (GtkListBoxRow automatically inserted as parent)
+        gtk_list_box_prepend(self_global->list_box_instruments, device->widget);
+    }
+
+    // Update widget reference to parent (GtkListBoxRow)
+    device->widget = gtk_widget_get_parent(device->widget);
+
+    g_mutex_unlock(&self_global->mutex_instrument_list);
 
     return G_SOURCE_REMOVE;
 }
 
 /* Add instrument to list */
-static void list_add_instrument (LxiGuiWindow *self, const char *ip, const char *id)
+static void list_add_instrument (LxiGuiWindow *self, const char *name, const char *uuid, const char *address, int protocol, int port, instrument_type_t type)
 {
     UNUSED(self);
+    GtkWidget *image;
 
     GtkWidget *list_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *list_text_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    GtkWidget *list_title = gtk_label_new(ip);
-    GtkWidget *list_subtitle = gtk_label_new (id);
+    GtkWidget *list_title = gtk_label_new(address);
+    GtkWidget *list_subtitle = gtk_label_new (name);
 
     // Set properties of list box
     gtk_widget_set_size_request(list_box, -1, 60);
@@ -339,7 +302,15 @@ static void list_add_instrument (LxiGuiWindow *self, const char *ip, const char 
     gtk_widget_set_halign(list_text_box, GTK_ALIGN_START);
 
     // Add image to list box
-    GtkWidget *image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument.png");
+    if (type == DISCOVERED)
+    {
+        image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument-discovered.png");
+    }
+    else
+    {
+        image = gtk_image_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-instrument-manual.png");
+    }
+
     gtk_widget_set_margin_start(image, 2);
     gtk_widget_set_margin_end(image, 2);
     gtk_image_set_pixel_size(GTK_IMAGE(image), 50);
@@ -360,49 +331,351 @@ static void list_add_instrument (LxiGuiWindow *self, const char *ip, const char 
     gtk_widget_set_vexpand(list_subtitle, true);
     gtk_widget_set_vexpand_set(list_subtitle, true);
     gtk_widget_set_valign(list_subtitle, GTK_ALIGN_START);
+    gtk_widget_set_halign(list_subtitle, GTK_ALIGN_START);
     gtk_label_set_wrap(GTK_LABEL(list_subtitle), true);
-    //  gtk_label_set_natural_wrap_mode(GTK_LABEL(list_subtitle), GTK_NATURAL_WRAP_NONE);
+    gtk_label_set_natural_wrap_mode(GTK_LABEL(list_subtitle), GTK_NATURAL_WRAP_NONE);
     gtk_label_set_wrap_mode(GTK_LABEL(list_subtitle), PANGO_WRAP_CHAR);
     gtk_box_append(GTK_BOX(list_text_box), list_subtitle);
 
     // Add text box to list box
     gtk_box_append(GTK_BOX(list_box), list_text_box);
 
-    // Add list box to instrument list
-    g_idle_add(gui_update_search_add_instrument_thread, list_box);
+    // Add instrument to list to manage instrument data
+    instrument_t *device = g_new0(instrument_t, 1);
+    device->name = g_strdup(name);
+    device->address = g_strdup(address);
+    device->uuid = g_strdup(uuid);
+    device->protocol = protocol;
+    device->port = port;
+    device->widget = list_box;
+    device->type = type;
+    self_global->list_instruments = g_list_append(self_global->list_instruments, device);
 
-    // Mark instrument list populated
-    self->no_instruments = false;
+    // Add list box to instrument list (rework, add or insert depending on type)
+    g_idle_add(gui_update_search_add_instrument_thread, device);
 }
+
+static void json_read_instrument(JsonReader *reader, const char **name, const char **id, const char **address, int *protocol, int *port)
+{
+    json_reader_read_member (reader, "name");
+    *name = json_reader_get_string_value (reader);
+    json_reader_end_member (reader);
+
+    json_reader_read_member (reader, "id");
+    *id = json_reader_get_string_value (reader);
+    json_reader_end_member (reader);
+
+    json_reader_read_member (reader, "address");
+    *address = json_reader_get_string_value (reader);
+    json_reader_end_member (reader);
+
+    json_reader_read_member (reader, "protocol");
+    *protocol = json_reader_get_int_value (reader);
+    json_reader_end_member (reader);
+
+    json_reader_read_member (reader, "port");
+    *port = json_reader_get_int_value (reader);
+    json_reader_end_member (reader);
+}
+
+static void json_add_instrument(JsonBuilder *builder, const char *name, const char *id, const char *address, int protocol, int port)
+{
+    json_builder_begin_object(builder);
+
+    json_builder_set_member_name(builder, "name");
+    json_builder_add_string_value(builder, name);
+
+    json_builder_set_member_name(builder, "id");
+    json_builder_add_string_value(builder, id);
+
+    json_builder_set_member_name(builder, "address");
+    json_builder_add_string_value(builder, address);
+
+    json_builder_set_member_name(builder, "protocol");
+    json_builder_add_int_value(builder, protocol);
+
+    json_builder_set_member_name(builder, "port");
+    json_builder_add_int_value(builder, port);
+
+    json_builder_end_object (builder);
+}
+
+static void json_instrument(action_t action, const char *name, const char *uuid, const char *address, int protocol, int port)
+{
+    const char *uuid_;
+    const char *name_;
+    const char *address_;
+    int protocol_;
+    int port_;
+
+    // Read instrument JSON tree from gsettings
+    gchar *added_instruments_string = g_settings_get_string(self_global->settings, "added-instruments");
+
+    // If empty
+    if (strlen(added_instruments_string) == 0)
+    {
+        // Install default JSON tree representing parsable empty instrument list
+        g_settings_set_string(self_global->settings, "added-instruments", "{\"instrument\":[]}");
+        g_settings_sync();
+        added_instruments_string = g_settings_get_string(self_global->settings, "added-instruments");
+    }
+
+    // Setup JSON reader
+    JsonParser *parser = json_parser_new ();
+    json_parser_load_from_data (parser, added_instruments_string, -1, NULL);
+    JsonReader *reader = json_reader_new (json_parser_get_root (parser));
+
+    // Setup JSON builder
+    JsonBuilder *builder = json_builder_new();
+
+    // Begin new JSON tree
+    json_builder_begin_object(builder);
+    json_builder_set_member_name(builder, "instrument");
+    json_builder_begin_array(builder);
+
+    // Traverse through existing list of instruments
+    json_reader_read_member (reader, "instrument");
+    int array_size = json_reader_count_elements(reader);
+    for (int i=0; i<array_size; i++)
+    {
+        json_reader_read_element (reader, i);
+        json_read_instrument(reader, &name_, &uuid_, &address_, &protocol_, &port_);
+        json_reader_end_element (reader);
+
+        // Do not add existing instrument when removing instrument with uuid
+        if ((action == REMOVE) && g_str_equal(uuid, uuid_))
+        {
+            // Skip
+            continue;
+        }
+
+        // Add existing instrument wiht new modified properties
+        if ((action == EDIT) && g_str_equal(uuid, uuid_))
+        {
+            json_add_instrument(builder, name, uuid, address, protocol, port);
+            continue;
+        }
+
+        // Add existing instrument to new JSON tree
+        json_add_instrument(builder, name_, uuid_, address_, protocol_, port_);
+    }
+
+    // End reading list of instruments
+    json_reader_end_member(reader);
+
+    if (action == ADD)
+    {
+        // Add new instrument to new JSON tree
+        json_add_instrument(builder, name, uuid, address, protocol, port);
+    }
+
+    json_builder_end_array(builder);
+    json_builder_end_object(builder);
+
+    JsonGenerator *gen = json_generator_new();
+    JsonNode * root = json_builder_get_root(builder);
+    json_generator_set_root(gen, root);
+    gchar *added_instruments_string_updated = json_generator_to_data(gen, NULL);
+
+    // Write updated JSON tree of added instruments to settings
+    g_settings_set_string(self_global->settings, "added-instruments", added_instruments_string_updated);
+    g_settings_sync();
+
+    // Cleanup
+    g_free(added_instruments_string_updated);
+    json_node_free(root);
+    g_object_unref(gen);
+    g_object_unref(builder);
+
+    g_free(added_instruments_string);
+    g_object_unref(reader);
+    g_object_unref(parser);
+}
+
+static void add_instrument(const char *name, const char *address, int protocol, int port, instrument_type_t type)
+{
+    const char *uuid = g_uuid_string_random();
+
+    if (type == MANUAL)
+    {
+        // Add instrument to gsettings JSON tree
+        json_instrument(ADD, name, uuid, address, protocol, port);
+    }
+
+    if (type == DISCOVERED)
+    {
+        // Make sure we don't add instrument with same IP twice (happens in mDNS
+        // discovery because multiple services can be reported on same IP)
+        for (GList *l = self_global->list_instruments; l != NULL; l = l->next)
+        {
+            instrument_t *device = (instrument_t *) l->data;
+
+            if (g_str_equal(device->address, address) && (device->type == DISCOVERED))
+            {
+                return;
+            }
+        }
+    }
+
+    // Add instrument to list widget
+    list_add_instrument(self_global, name, uuid, address, protocol, port, type);
+
+    // Manage instruments status page
+    if (g_list_length(self_global->list_instruments) > 0)
+    {
+        gtk_widget_set_visible(GTK_WIDGET(self_global->status_page_instruments), false);
+    }
+}
+
+static instrument_t *find_instrument(GtkWidget *widget)
+{
+    for (GList *l = self_global->list_instruments; l != NULL; l = l->next)
+    {
+        instrument_t *device = (instrument_t *) l->data;
+
+        if (device->widget == widget)
+        {
+            return device;
+        }
+    }
+
+    return NULL;
+}
+
+static void remove_discovered_instruments(void)
+{
+    g_mutex_lock(&self_global->mutex_instrument_list);
+
+    // Go through instrument list and remove discovered instruments
+    GList *l = self_global->list_instruments;
+    while (l != NULL)
+    {
+        instrument_t *device = (instrument_t *) l->data;
+        GList *next = l->next;
+        if (device->type == DISCOVERED)
+        {
+            gtk_list_box_remove(self_global->list_box_instruments, device->widget);
+
+            g_free((gpointer)device->name);
+            g_free((gpointer)device->uuid);
+            g_free((gpointer)device->address);
+            g_free(l->data);
+            self_global->list_instruments = g_list_delete_link (self_global->list_instruments, l);
+        }
+        l = next;
+    }
+
+    g_mutex_unlock(&self_global->mutex_instrument_list);
+}
+
+static void remove_instrument(GtkWidget *widget)
+{
+    instrument_t *device;
+
+    g_mutex_lock(&self_global->mutex_instrument_list);
+
+    // Find intrument in instrument list by widget pointer (child)
+    device = find_instrument(widget);
+    if (device == NULL)
+    {
+        printf("No widget found!\n");
+        return;
+    }
+
+    // If removing currently selected device make sure to invalidate information
+    // for currently selected instrument
+    if (g_str_equal(self_global->ip, device->address))
+    {
+        self_global->ip = NULL;
+        self_global->id = NULL;
+        self_global->protocol = -1;
+        self_global->port = -1;
+    }
+
+    // If manually added device, remove device from gsettings JSON tree
+    if (device->type == MANUAL)
+    {
+        json_instrument(REMOVE, NULL, device->uuid, NULL, 0, 0);
+    }
+
+    // Remove device from instrument list
+    g_free((gpointer)device->name);
+    g_free((gpointer)device->uuid);
+    g_free((gpointer)device->address);
+    g_free(device);
+    self_global->list_instruments = g_list_remove(self_global->list_instruments, device);
+
+    // Destroy instrument widget from list view
+    gtk_list_box_remove(self_global->list_box_instruments, GTK_WIDGET(widget));
+
+    // Manage instruments status page
+    if (g_list_length(self_global->list_instruments) <= 0)
+    {
+        gtk_widget_set_visible(GTK_WIDGET(self_global->status_page_instruments), true);
+    }
+
+    g_mutex_unlock(&self_global->mutex_instrument_list);
+}
+
+static int add_instruments_from_gsettings(void)
+{
+    gchar *added_instruments_string = g_settings_get_string(self_global->settings, "added-instruments");
+    const char *name;
+    const char *uuid;
+    const char *address;
+    int protocol;
+    int port;
+
+    // If empty
+    if (strlen(added_instruments_string) == 0)
+    {
+        // Do nothing
+        return 0;
+    }
+
+    // Setup JSON reader
+    JsonParser *parser = json_parser_new ();
+    json_parser_load_from_data (parser, added_instruments_string, -1, NULL);
+    JsonReader *reader = json_reader_new (json_parser_get_root (parser));
+
+    // Traverse through existing list of instruments
+    json_reader_read_member (reader, "instrument");
+    int array_size = json_reader_count_elements(reader);
+    for (int i=0; i<array_size; i++)
+    {
+        json_reader_read_element (reader, i);
+        json_read_instrument(reader, &name, &uuid, &address, &protocol, &port);
+        json_reader_end_element (reader);
+
+        // Add instrument to list widget
+        list_add_instrument(self_global, name, uuid, address, protocol, port, MANUAL);
+    }
+
+    // End reading list of instruments
+    json_reader_end_member(reader);
+
+    // Cleanup
+    g_object_unref(reader);
+    g_object_unref(parser);
+
+    return array_size;
+}
+
 
 static void mdns_service(const char *address, const char *id, const char *service, int port)
 {
     UNUSED(service);
     UNUSED(port);
 
-    GtkWidget *child, *subtitle_child;
+    // Use configured defaults
+    unsigned int com_protocol = g_settings_get_uint(self_global->settings, "com-protocol");
+    unsigned int raw_port = g_settings_get_uint(self_global->settings, "raw-port");
 
     g_mutex_lock(&self_global->mutex_discover);
 
-    // Traverse list of instruments
-    for (child = gtk_widget_get_first_child(GTK_WIDGET(self_global->list_instruments));
-            child != NULL;
-            child = gtk_widget_get_next_sibling(child))
-    {
-        subtitle_child = find_child_by_name(GTK_WIDGET(child), "list-subtitle");
-        if (subtitle_child != NULL)
-        {
-            if (strcmp(id, gtk_label_get_text(GTK_LABEL(subtitle_child))) == 0)
-            {
-                // Instruments already exists, do not add
-                g_mutex_unlock(&self_global->mutex_discover);
-                return;
-            }
-        }
-    }
+    add_instrument(id, address, com_protocol, raw_port, DISCOVERED);
 
-    // No match found, add instrument to list box
-    list_add_instrument(self_global, address, id);
+    g_mutex_unlock(&self_global->mutex_discover);
 }
 
 static void vxi11_broadcast(const char *address, const char *interface)
@@ -416,9 +689,15 @@ static void vxi11_broadcast(const char *address, const char *interface)
 
 static void vxi11_device(const char *address, const char *id)
 {
+    // Use configured defaults
+    unsigned int com_protocol = g_settings_get_uint(self_global->settings, "com-protocol");
+    unsigned int raw_port = g_settings_get_uint(self_global->settings, "raw-port");
+
     g_mutex_lock(&self_global->mutex_discover);
 
-    list_add_instrument(self_global, address, id);
+    add_instrument(id, address, com_protocol, raw_port, DISCOVERED);
+
+    g_mutex_unlock(&self_global->mutex_discover);
 }
 
 static gboolean gui_update_script_run_worker_function_finished_thread(gpointer data)
@@ -444,7 +723,11 @@ static gboolean gui_update_search_finished_thread(gpointer data)
     hide_info_bar(self);
 
     // Manage instruments status page
-    if (self->no_instruments)
+    if (g_list_length(self->list_instruments) > 0)
+    {
+        gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), false);
+    }
+    else
     {
         gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), true);
     }
@@ -490,11 +773,9 @@ static gpointer search_worker_thread(gpointer data)
 static gboolean gui_update_search_start_thread(gpointer data)
 {
     LxiGuiWindow *self = data;
-    GtkWidget *child;
 
     // Hide instruments status page
     gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), false);
-    self->no_instruments = true;
 
     // Reveal flap
     adw_flap_set_reveal_flap(self->flap, true);
@@ -503,12 +784,7 @@ static gboolean gui_update_search_start_thread(gpointer data)
     gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
 
     // Clear instrument list
-    child = gtk_widget_get_first_child (GTK_WIDGET(self->list_instruments));
-    while (child != NULL)
-    {
-        gtk_list_box_remove (GTK_LIST_BOX (self->list_instruments), child);
-        child = gtk_widget_get_first_child (GTK_WIDGET(self->list_instruments));
-    }
+    remove_discovered_instruments();
 
     // Start thread which searches for LXI instruments
     self->search_worker_thread = g_thread_new("search_worker", search_worker_thread, (gpointer)self);
@@ -775,8 +1051,6 @@ static gpointer send_worker_thread(gpointer data)
     int rx_bytes;
     unsigned int timeout = g_settings_get_uint(self->settings, "timeout-scpi");
     bool show_sent_scpi = g_settings_get_boolean(self->settings, "show-sent-scpi");
-    unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
-    unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
 
     if (self->ip == NULL)
     {
@@ -794,14 +1068,14 @@ static gpointer send_worker_thread(gpointer data)
     tx_buffer = g_string_new_len(input_buffer, strlen(input_buffer));
     strip_trailing_space(tx_buffer->str);
 
-    if (com_protocol == VXI11)
+    if (self->protocol == VXI11)
     {
         device = lxi_connect(self->ip, 0, NULL, timeout, VXI11);
     }
-    if (com_protocol == RAW)
+    if (self->protocol == RAW)
     {
         tx_buffer = g_string_append(tx_buffer, "\n");
-        device = lxi_connect(self->ip, raw_port, NULL, timeout, RAW);
+        device = lxi_connect(self->ip, self->port, NULL, timeout, RAW);
     }
     if (device == LXI_ERROR)
     {
@@ -826,7 +1100,7 @@ static gpointer send_worker_thread(gpointer data)
         g_date_time_unref(date_time);
 
         // Print sent command to output view
-        if (com_protocol == RAW)
+        if (self->protocol == RAW)
         {
             // Remove newline
             g_string_erase(tx_buffer, tx_buffer->len - 1, 1);
@@ -1142,16 +1416,14 @@ static gpointer benchmark_worker_function(gpointer data)
 {
     double result;
     LxiGuiWindow *self = data;
-    unsigned int com_protocol = g_settings_get_uint(self->settings, "com-protocol");
-    unsigned int raw_port = g_settings_get_uint(self->settings, "raw-port");
 
-    if (com_protocol == VXI11)
+    if (self->protocol == VXI11)
     {
         benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
     }
-    if (com_protocol == RAW)
+    if (self->protocol == RAW)
     {
-        benchmark(self->ip, raw_port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+        benchmark(self->ip, self->port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
     }
 
     // Show benchmark result
@@ -1191,13 +1463,350 @@ static void button_clicked_benchmark_start(LxiGuiWindow *self, GtkToggleButton *
     self->benchmark_worker_thread = g_thread_new("benchmark_worker", benchmark_worker_function, (gpointer) self);
 }
 
-static void button_clicked_add_instrument(LxiGuiWindow *self, GtkButton *button)
+typedef struct
+{
+    AdwEntryRow *entry_row_name;
+    AdwEntryRow *entry_row_address;
+    GtkComboBoxText *combo_box_text_com_protocol;
+    GtkSpinButton *spin_button_raw_port;
+    GtkButton *button_save;
+    AdwActionRow *action_row_raw_port;
+    action_t action;
+    instrument_t *device;
+} ResponseData;
+
+static void on_dialog_response(GtkDialog *dialog,
+                               int        response,
+                               gpointer   user_data)
+{
+    ResponseData *data = user_data;
+
+    const char *name;
+    const char *address;
+    const char *protocol_string;
+    int protocol;
+    int port;
+    instrument_t *device = data->device;
+    GtkWidget *child;
+
+    if (response == GTK_RESPONSE_OK)
+    {
+        // Save pressed
+        name = gtk_editable_get_text(GTK_EDITABLE(data->entry_row_name));
+        address = gtk_editable_get_text(GTK_EDITABLE(data->entry_row_address));
+        protocol_string = gtk_combo_box_text_get_active_text(data->combo_box_text_com_protocol);
+        port = gtk_spin_button_get_value_as_int(data->spin_button_raw_port);
+
+        // Manage protocol value
+        if (g_str_equal(protocol_string, "VXI11/TCP"))
+        {
+            protocol = VXI11;
+        }
+        else
+        {
+            protocol = RAW;
+        }
+
+        if (data->action == ADD)
+        {
+            add_instrument(name, address, protocol, port, MANUAL);
+        }
+        else
+        {
+            // EDIT
+            // Update instrument in gsettings JSON tree
+            if (device->type == MANUAL)
+            {
+                json_instrument(EDIT, name, data->device->uuid, address, protocol, port);
+            }
+
+            // Update device runtime settings
+            g_free((gpointer)device->name);
+            g_free((gpointer)device->address);
+            device->name = g_strdup(name);
+            device->address = g_strdup(address);
+            device->protocol = protocol;
+            device->port = port;
+            GtkListBoxRow *row = self_global->list_box_row_pressed;
+
+            // Update list widget title and subtitle (id/name and ip)
+            if (row != NULL)
+            {
+                child = find_child_by_name(GTK_WIDGET(row), "list-title");
+                if (child != NULL)
+                {
+                    // Update IP
+                    gtk_label_set_text(GTK_LABEL(child), address);
+                }
+
+                child = find_child_by_name(GTK_WIDGET(row), "list-subtitle");
+                if (child != NULL)
+                {
+                    // Update ID
+                    gtk_label_set_text(GTK_LABEL(child), name);
+                }
+            }
+
+            // When editing an instrument it is also selected so we need to
+            // update the currently selected instrument information
+            self_global->ip = device->address;
+            self_global->id = device->name;
+            self_global->protocol = device->protocol;
+            self_global->port = device->port;
+        }
+    }
+
+    gtk_window_destroy (GTK_WINDOW (dialog));
+
+    g_free(data);
+}
+
+static void on_entry_row_name_or_address_changed(GtkEditable *self, gpointer user_data)
 {
     UNUSED(self);
+    const char *name, *address;
+    ResponseData *data = user_data;
+    bool address_valid = false;
+
+    name = gtk_editable_get_text(GTK_EDITABLE(data->entry_row_name));
+    address = gtk_editable_get_text(GTK_EDITABLE(data->entry_row_address));
+
+    // Manage address field
+    if (strlen(address) > 0)
+    {
+        if (g_hostname_is_ip_address(address))
+        {
+            gtk_widget_remove_css_class(GTK_WIDGET(data->entry_row_address), "error");
+            gtk_widget_set_tooltip_text(GTK_WIDGET(data->entry_row_address), "");
+            address_valid = true;
+        }
+        else
+        {
+            gtk_widget_add_css_class(GTK_WIDGET(data->entry_row_address), "error");
+            gtk_widget_set_tooltip_text(GTK_WIDGET(data->entry_row_address), "Invalid address format");
+            address_valid = false;
+        }
+    }
+    else
+    {
+            gtk_widget_remove_css_class(GTK_WIDGET(data->entry_row_address), "error");
+            gtk_widget_set_tooltip_text(GTK_WIDGET(data->entry_row_address), "");
+            address_valid = false;
+    }
+
+    // Manage port combo box
+    if (strcmp(gtk_combo_box_text_get_active_text(data->combo_box_text_com_protocol), "VXI11/TCP") == 0)
+    {
+         gtk_widget_set_sensitive(GTK_WIDGET(data->action_row_raw_port), false);
+    }
+    else
+    {
+         gtk_widget_set_sensitive(GTK_WIDGET(data->action_row_raw_port), true);
+    }
+
+    // Manage save button
+    if ((strlen(name) > 0) && (address_valid))
+    {
+         gtk_widget_set_sensitive(GTK_WIDGET(data->button_save), true);
+    }
+    else
+    {
+         gtk_widget_set_sensitive(GTK_WIDGET(data->button_save), false);
+    }
+}
+
+static void create_instrument_dialog(LxiGuiWindow *self, action_t action)
+{
+    ResponseData *data;
+    instrument_t *device = NULL;
+
+    if (action == EDIT)
+    {
+        // Find intrument in instrument list by widget pointer (child)
+        device = find_instrument(GTK_WIDGET(self->list_box_row_pressed));
+        if (device == NULL)
+        {
+            printf("No widget found!\n");
+            return;
+        }
+    }
+
+    /* Construct a GtkBuilder instance from UI description */
+    GtkWidget *toplevel = GTK_WIDGET(self);
+    GtkBuilder *gtk_builder = gtk_builder_new ();
+    gtk_builder_expose_object (gtk_builder, "toplevel", G_OBJECT (toplevel));
+    gtk_builder_add_from_resource(gtk_builder, "/io/github/lxi-tools/lxi-gui/lxi_gui-instrument_dialog.ui", NULL);
+
+    // Get UI objects
+    GtkDialog *dialog = GTK_DIALOG(gtk_builder_get_object(gtk_builder, "add_instrument_dialog"));
+    AdwEntryRow *entry_row_name = ADW_ENTRY_ROW(gtk_builder_get_object(gtk_builder, "entry_row_name"));
+    AdwEntryRow *entry_row_address = ADW_ENTRY_ROW(gtk_builder_get_object(gtk_builder, "entry_row_address"));
+    GtkComboBoxText *combo_box_text_com_protocol = GTK_COMBO_BOX_TEXT(gtk_builder_get_object (gtk_builder, "combo_box_text_com_protocol"));
+    GtkSpinButton *spin_button_raw_port = GTK_SPIN_BUTTON(gtk_builder_get_object(gtk_builder, "spin_button_raw_port"));
+    AdwActionRow *action_row_raw_port = ADW_ACTION_ROW(gtk_builder_get_object(gtk_builder, "action_row_raw_port"));
+    GtkButton *button_save = GTK_BUTTON(gtk_builder_get_object(gtk_builder, "button_save"));
+
+    // Set defaults
+    if (action == ADD)
+    {
+        gtk_window_set_title(GTK_WINDOW(dialog), "Add Instrument");
+        gtk_widget_set_sensitive(GTK_WIDGET(button_save), false);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box_text_com_protocol), 0);
+        gtk_widget_set_sensitive(GTK_WIDGET(action_row_raw_port), false);
+    }
+    else
+    {
+        // EDIT
+        gtk_window_set_title(GTK_WINDOW(dialog), "Edit Instrument");
+        if (device->protocol == VXI11)
+        {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box_text_com_protocol), 0);
+            gtk_widget_set_sensitive(GTK_WIDGET(action_row_raw_port), false);
+        }
+        else
+        {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box_text_com_protocol), 1);
+            gtk_widget_set_sensitive(GTK_WIDGET(action_row_raw_port), true);
+        }
+
+        // Restore old values
+        gtk_editable_set_text(GTK_EDITABLE(entry_row_name), device->name);
+        gtk_editable_set_text(GTK_EDITABLE(entry_row_address), device->address);
+        gtk_spin_button_set_value(spin_button_raw_port, device->port);
+    }
+
+    data = g_new (ResponseData, 1);
+    data->entry_row_name = entry_row_name;
+    data->entry_row_address = entry_row_address;
+    data->combo_box_text_com_protocol = combo_box_text_com_protocol;
+    data->spin_button_raw_port = spin_button_raw_port;
+    data->button_save = button_save;
+    data->action_row_raw_port = action_row_raw_port;
+    data->action = action;
+    data->device = device;
+
+    // Connect signals
+    g_signal_connect(dialog, "response", G_CALLBACK(on_dialog_response), data);
+    g_signal_connect(entry_row_name, "changed", G_CALLBACK(on_entry_row_name_or_address_changed), data);
+    g_signal_connect(entry_row_address, "changed", G_CALLBACK(on_entry_row_name_or_address_changed), data);
+    g_signal_connect(combo_box_text_com_protocol, "changed", G_CALLBACK(on_entry_row_name_or_address_changed), data);
+
+    // Show window
+    gtk_widget_show(GTK_WIDGET(dialog));
+
+    // Cleanup
+    g_object_unref(gtk_builder);
+}
+
+static void button_clicked_add_instrument(LxiGuiWindow *self, GtkButton *button)
+{
     UNUSED(button);
 
-    // Not implemented
+    create_instrument_dialog(self, ADD);
 }
+
+static void edit_instrument(LxiGuiWindow *self)
+{
+    create_instrument_dialog(self, EDIT);
+}
+
+static void pressed_cb (GtkGestureClick *gesture,
+        guint            n_press,
+        double           x,
+        double           y,
+        LxiGuiWindow     *self)
+{
+    GtkListBoxRow *row;
+    GtkAdjustment* adjustment;
+    double y_adjustment, y_adjusted;
+
+    UNUSED(gesture);
+    UNUSED(n_press);
+
+    // Adjust y value to account for scrolling offset so we can pick the right row
+    adjustment = gtk_list_box_get_adjustment(self->list_box_instruments);
+    y_adjustment = gtk_adjustment_get_value(adjustment);
+    y_adjusted = y + y_adjustment;
+    row = gtk_list_box_get_row_at_y(self->list_box_instruments, y_adjusted);
+    self->list_box_row_pressed = row;
+
+    if (row != NULL)
+    {
+        instrument_t *device;
+
+        device = find_instrument(GTK_WIDGET(row));
+        if (device == NULL)
+        {
+            // No instrument found
+            self->id = NULL;
+            self->ip = NULL;
+            self->protocol = -1;
+            self->port = -1;
+            return;
+        }
+
+        // Update information of currently selected instrument
+        self->ip = device->address;
+        self->id = device->name;
+        self->protocol = device->protocol;
+        self->port = device->port;
+
+        // If right click
+        if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_SECONDARY)
+        {
+            /* Place our popup menu at the point where
+             * the click happened, before popping it up.
+             */
+            gtk_popover_set_pointing_to (GTK_POPOVER (self->list_widget_popover_menu),
+                    &(const GdkRectangle){ x, y, 1, 1 });
+            gtk_popover_popup (GTK_POPOVER (self->list_widget_popover_menu));
+        }
+    }
+}
+
+static void action_cb (GtkWidget  *widget,
+        const char *action_name,
+        GVariant   *parameter)
+{
+    LxiGuiWindow *self = LXI_GUI_WINDOW (widget);
+
+    UNUSED(parameter);
+
+    if (g_str_equal (action_name, "action.copy_ip"))
+    {
+        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->ip);
+    }
+
+    if (g_str_equal (action_name, "action.copy_id"))
+    {
+        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->id);
+    }
+
+    if (g_str_equal (action_name, "action.remove"))
+    {
+        // Remove action
+        remove_instrument(GTK_WIDGET(self->list_box_row_pressed));
+    }
+
+    if (g_str_equal (action_name, "action.edit"))
+    {
+        // Edit action
+        edit_instrument(self);
+    }
+
+    if (g_str_equal (action_name, "action.open_browser") && self->ip != NULL)
+    {
+#ifndef __APPLE__
+        gchar *uri = g_strconcat("http://", self->ip, NULL);
+        gtk_show_uri(GTK_WINDOW(self), uri, GDK_CURRENT_TIME);
+#else
+        gchar *uri = g_strconcat("open http://", self->ip, NULL);
+        system(uri);
+#endif
+        g_free(uri);
+    }
+}
+
 
 static void on_script_file_open_response (GtkDialog *dialog,
         int        response,
@@ -2288,7 +2897,7 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
 
     // Bind widgets
     gtk_widget_class_set_template_from_resource (widget_class, "/io/github/lxi-tools/lxi-gui/lxi_gui-window.ui");
-    gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_instruments);
+    gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_box_instruments);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, list_viewport);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, entry_scpi);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, text_view_scpi);
@@ -2333,6 +2942,8 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
     /* These are the actions that we are using in the menu */
     gtk_widget_class_install_action (widget_class, "action.copy_ip", NULL, action_cb);
     gtk_widget_class_install_action (widget_class, "action.copy_id", NULL, action_cb);
+    gtk_widget_class_install_action (widget_class, "action.remove", NULL, action_cb);
+    gtk_widget_class_install_action (widget_class, "action.edit", NULL, action_cb);
     gtk_widget_class_install_action (widget_class, "action.open_browser", NULL, action_cb);
     gtk_widget_class_install_action (widget_class, "action.search", NULL, lxi_gui_window_action_search_cb);
     gtk_widget_class_install_action (widget_class, "action.toggle_flap", NULL, lxi_gui_window_action_toggle_flap_cb);
@@ -2439,7 +3050,7 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
     // Add list view port as parent to list popover menu
     gtk_widget_set_parent (GTK_WIDGET(self->list_widget_popover_menu), GTK_WIDGET(self->list_viewport));
 
-    // Add event controller to handle any click gesture on list item widget
+    // Add event controller to handle any click gesture on list viewport widget
     gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (list_widget_gesture), 0);
     g_signal_connect (list_widget_gesture, "pressed", G_CALLBACK (pressed_cb), self);
     gtk_widget_add_controller (GTK_WIDGET(self->list_viewport), GTK_EVENT_CONTROLLER (list_widget_gesture));
@@ -2458,6 +3069,8 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
 
     self->ip = NULL;
     self->id = NULL;
+    self->protocol = -1;
+    self->port = -1;
 
     // Register LXI screenshot plugins
     screenshot_register_plugins();
@@ -2513,9 +3126,6 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
     // Initialize lua script engine
     initialize_script_engine(self);
 
-    // Mark instrument list unpopulated
-    self->no_instruments = true;
-
     // Add extra menu model for SCPI text view (right click menu)
     GMenu *menu = g_menu_new ();
     g_menu_append (menu, "Clear all", "scpi_clear_all");
@@ -2526,4 +3136,10 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
     gtk_widget_add_css_class(GTK_WIDGET(self), "devel");
 #endif
 
+    // Add manually added instruments to list widget
+    int added_instruments = add_instruments_from_gsettings();
+    if (added_instruments > 0)
+    {
+        gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), false);
+    }
 }
