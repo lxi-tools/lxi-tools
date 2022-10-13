@@ -85,7 +85,7 @@ if enable_gui
                                     fallback : ['gtksourceview', 'gtksource_dep'],
                                     default_options: ['introspection=disabled'])
 
-  libadwaita_dep = dependency('libadwaita-1', version: '>= 1.0.1', required: true,
+  libadwaita_dep = dependency('libadwaita-1', version: '>= 1.2', required: true,
                                     fallback : ['libadwaita', 'libadwaita_dep'],
                                     default_options: ['introspection=disabled',
                                                       'examples=false',

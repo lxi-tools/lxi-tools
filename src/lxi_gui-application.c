@@ -94,26 +94,24 @@ static void lxi_gui_application_show_about (GSimpleAction *action,
 {
     UNUSED(action);
     UNUSED(parameter);
-    GtkWindow *window;
+    GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (user_data));
 
-    window = gtk_application_get_active_window (GTK_APPLICATION (user_data));
-    GdkTexture *logo = gdk_texture_new_from_resource("/io/github/lxi-tools/lxi-gui/icons/lxi-tools-icon-128px.png");
-    const gchar *authors[] = {"Martin Lund", NULL};
+    const char *developers[] = {
+        "Martin Lund",
+        NULL
+    };
 
-    //g_return_if_fail (LXI_GUI_IS_APPLICATION (GTK_APPLICATION(user_data)));
-
-    gtk_show_about_dialog (window,
-            "program-name", "lxi-gui",
-            "authors", authors,
-            "version", PACKAGE_VERSION,
-            "copyright", "© 2021-2022 Martin Lund",
-            "license-type", GTK_LICENSE_BSD_3,
-            "website", "http://lxi-tools.github.io",
-            "comments", "Program for managing LXI compatible instruments.",
-            "authors", authors,
-            "logo", logo,
-            "title", "About lxi-gui",
-            NULL);
+    adw_show_about_window (window,
+                         "application-name", "lxi-gui",
+                         "application-icon", "io.github.lxi-tools.lxi-gui",
+                         "developer-name", "The lxi-tools Project",
+                         "version", PACKAGE_VERSION,
+                         "copyright", "© 2022 Martin Lund",
+                         "issue-url", "https://github.com/lxi-tools/lxi-tools/issues",
+                         "license-type", GTK_LICENSE_BSD_3,
+                         "developers", developers,
+                         "website", "https://lxi-tools.github.io",
+                         NULL);
 }
 
 static void lxi_gui_application_show_preferences (GSimpleAction *action,
