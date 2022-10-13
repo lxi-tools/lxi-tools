@@ -79,7 +79,7 @@ int rigol_dsa_screenshot(char *address, char *id, int timeout)
 
     // Free allocated memory for screenshot
     free(response);
-    
+
     // Disconnect
     lxi_disconnect(device);
 

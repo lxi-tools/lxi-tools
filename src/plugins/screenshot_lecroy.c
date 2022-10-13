@@ -42,27 +42,30 @@
 #define MIN_TRANSFER_SIZE    32
 
 // Poll until the SCDP bit is clear
-static int scdp_status_wait(device, timeout) {
-  char *command;
-  char response[6];
+static int scdp_status_wait(int device, int timeout)
+{
+    char *command;
+    char response[6];
 
-  for (unsigned retry = 0; retry < 5; retry++) {
-    command = "INR?";
-    lxi_send(device, command, strlen(command), timeout);
-    int rc = lxi_receive(device, response, MIN_TRANSFER_SIZE, timeout);
-    if (rc < (int)sizeof(response)) {
-      printf("INR? receive failed\n");
-      return 1;
+    for (unsigned retry = 0; retry < 5; retry++)
+    {
+        command = "INR?";
+        lxi_send(device, command, strlen(command), timeout);
+        int rc = lxi_receive(device, response, MIN_TRANSFER_SIZE, timeout);
+        if (rc < (int)sizeof(response)) {
+            printf("INR? receive failed\n");
+            return 1;
+        }
+
+        // Parse the mask, screendump is bit 2
+        unsigned long state = strtoul(&response[4], NULL, 10);
+        if (state & 2)
+        {
+            return 0;
+        }
     }
 
-    // Parse the mask, screendump is bit 2
-    unsigned long state = strtoul(&response[4], NULL, 10);
-    if (state & 2) {
-      return 0;
-    }
-  }
-
-  return 1;
+    return 1;
 }
 
 int lecroy_screenshot(char *address, char *id, int timeout)
@@ -104,7 +107,8 @@ int lecroy_screenshot(char *address, char *id, int timeout)
     // Trigger screendump
     command = "SCDP";
     lxi_send(device, command, strlen(command), timeout);
-    if (scdp_status_wait(device, timeout)) {
+    if (scdp_status_wait(device, timeout))
+    {
         printf("screendump bit not set?\n");
     }
 
@@ -112,9 +116,10 @@ int lecroy_screenshot(char *address, char *id, int timeout)
     command = "TRFL? DISK,HDD,FILE,'D:\\HardCopy\\lxi-screenshot--00000.png'";
     lxi_send(device, command, strlen(command), timeout);
     int length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
-    if (length < MIN_TRANSFER_SIZE) {
-      error_printf("receive error: %d\n", length);
-      goto error_receive;
+    if (length < MIN_TRANSFER_SIZE)
+    {
+        error_printf("receive error: %d\n", length);
+        goto error_receive;
     }
 
     // Skip 'TRFL? #'
@@ -124,14 +129,14 @@ int lecroy_screenshot(char *address, char *id, int timeout)
     char digit = response[6];
     char *image = &response[7];
     switch (digit) {
-    case '0' ... '9': {
-        size_t n = digit - '0';
-        image += n;
-        length -= n;
-        break;
-    }
-    default:
-        break;
+        case '0' ... '9': {
+                              size_t n = digit - '0';
+                              image += n;
+                              length -= n;
+                              break;
+                          }
+        default:
+                          break;
     }
 
     // Strip 8 byte CRC footer and 2 byte terminator
