@@ -42,6 +42,7 @@ compatible test instruments.
  * Send SCPI commands and receive responses
  * Automatically grab screenshots from supported instruments
  * Benchmark request/response performance of instruments
+ * Support for manually adding instruments in case they are undiscoverable
  * Powerful Lua scripting support for advanced automation
    - Simple script editor with syntax highlighting
    - Simple API which supports
