@@ -111,6 +111,7 @@ struct _LxiGuiWindow
     GMutex              mutex_save_csv;
     GList               *list_instruments;
     GtkListBoxRow       *list_box_row_pressed;
+    GtkListBoxRow       *list_box_row_selected;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -1534,7 +1535,7 @@ static void on_dialog_response(GtkDialog *dialog,
             device->address = g_strdup(address);
             device->protocol = protocol;
             device->port = port;
-            GtkListBoxRow *row = self_global->list_box_row_pressed;
+            GtkWidget *row = device->widget;
 
             // Update list widget title and subtitle (id/name and ip)
             if (row != NULL)
@@ -1554,12 +1555,15 @@ static void on_dialog_response(GtkDialog *dialog,
                 }
             }
 
-            // When editing an instrument it is also selected so we need to
-            // update the currently selected instrument information
-            self_global->ip = device->address;
-            self_global->id = device->name;
-            self_global->protocol = device->protocol;
-            self_global->port = device->port;
+            // If editing selected instrument make sure to update currently
+            // selected instrument information
+            if (row == (GtkWidget *) self_global->list_box_row_selected)
+            {
+                self_global->ip = device->address;
+                self_global->id = device->name;
+                self_global->protocol = device->protocol;
+                self_global->port = device->port;
+            }
         }
     }
 
@@ -1752,11 +1756,17 @@ static void pressed_cb (GtkGestureClick *gesture,
             return;
         }
 
-        // Update information of currently selected instrument
-        self->ip = device->address;
-        self->id = device->name;
-        self->protocol = device->protocol;
-        self->port = device->port;
+        // If left click
+        if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_PRIMARY)
+        {
+            self->list_box_row_selected = row;
+
+            // Update information of currently selected instrument
+            self->ip = device->address;
+            self->id = device->name;
+            self->protocol = device->protocol;
+            self->port = device->port;
+        }
 
         // If right click
         if (gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture)) == GDK_BUTTON_SECONDARY)
@@ -3149,4 +3159,7 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
     {
         gtk_widget_set_visible(GTK_WIDGET(self->status_page_instruments), false);
     }
+
+    self->list_box_row_pressed = NULL;
+    self->list_box_row_selected = NULL;
 }
