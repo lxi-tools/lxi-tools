@@ -1416,14 +1416,21 @@ static gpointer benchmark_worker_function(gpointer data)
 {
     double result;
     LxiGuiWindow *self = data;
+    int status = 0;
 
     if (self->protocol == VXI11)
     {
-        benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+        status = benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
     }
     if (self->protocol == RAW)
     {
-        benchmark(self->ip, self->port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+        status = benchmark(self->ip, self->port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
+    }
+
+    if (status != LXI_OK)
+    {
+        show_error(self, "Error benchmarking instrument");
+        self->benchmark_result_text = NULL;
     }
 
     // Show benchmark result
