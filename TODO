@@ -1,7 +1,5 @@
 # lxi-gui
 
- * Add support for adding instruments manually
-
  * Add support for test cases in lua scripts
 
    Add support for splitting a lua script into test cases for expressing
@@ -12,39 +10,39 @@
    a layering not affecting normal script operation.
 
    Example lua test script:
- 
+
     -- tc "Test case 1 description"
-    
+
     print("This is test case 1")
-    
-    
-    
+
+
+
     -- tc "Test case 2 description"
-    
+
     print("This is test case 2")
-    
+
     fail()
-    
-    
-    
+
+
+
     -- tc "Test case 3 description"
-    
+
     print("This is test case 3")
-    
+
     fail_stop()
-    
-    
-    
+
+
+
     -- tc "Test case 4 description"
-    
+
     print("This is test case 4")
-    
-    
+
+
 
     -- tc end
 
     tc_save("test-results.log")
-  
+
 
    When running the script the GUI will present a list of test cases and their
    pass/fail status as the script progresses. If run via command line tool lxi,
