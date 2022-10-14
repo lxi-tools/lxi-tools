@@ -1,4 +1,140 @@
-=== lxi-tools v2.1 ===
+=== lxi-tools v2.2 ===
+
+
+
+Changes since lxi-tools v2.1:
+
+ * Add support for manually adding instruments
+
+   Manually added instruments are managed via settings in the dconf registry
+   so that they can be remembered by the application.
+
+   Manually added instruments will appear with an instrument icon with a
+   yellow indicator (indicating that it may or may not be present).
+
+   Automatically discovered instruments will appear with an instrument icon
+   with a green indicator (indicating that it is likely present since it
+   responded).
+
+   Once added it is possible to edit or remove instruments again via the
+   right click menu.
+
+ * Show error in case benchmark fails
+
+ * Make use of new AdwAboutWindow
+
+ * Do not break normal clipboard copy feature
+
+ * Only copy image data to clipboard when image data is available
+
+ * Update lxi-gui application flags
+
+   Replace deprecated G_APPLICATION_FLAGS_NONE with new
+   G_APPLICATION_DEFAULT_FLAGS.
+
+ * Add lua log feature to command-line tool
+
+ * Add repology packaging status
+
+ * Fix desktop file categories
+
+   Prevent that application might appear more than once in the application menu
+
+ * Rework meson lua dependency check
+
+   To support more distributions which package lua differently.
+
+ * Rework meson readline dependency check
+
+   To support readline installations without pkg-config.
+
+ * Remove internationalization stuff
+
+   There are no plans to support other languages.
+
+ * Rename COPYING -> LICENSE
+
+ * Cleanup date_time()
+
+   Also, use ISO8601 timestamp format.
+
+ * Rename test -> examples
+
+ * Update PSU data log test script
+
+ * Add automation test script (draft)
+
+ * Reduce default timeout values
+
+ * Fix timeout conversion
+
+   Fix so that the printed default timeout values are not different when
+   running 'lxi' or 'lxi --help'. Fix also simplifies code.
+
+ * Remove obsolete completion script for snap
+
+ * Use '#pragma once' in all headers
+
+ * Disable natural wrap mode
+
+ * Cleanup circleCI configuration
+
+ * Rename ChangeLog to NEWS
+
+ * Enable gui by default
+
+   Distributions like Ubuntu now have all the components required to build
+   lxi-gui so let's enable it by default.
+
+ * Add TODO list
+
+Perry Hung:
+
+ * README: update readme to reflect lecroy support
+
+   Add the LeCroy WavePro ZI-a to the list of tested devices.
+
+ * plugins: lecroy: poll status register until SCDP bit is set
+
+   To avoid racing the device (transferring a file before it's available),
+   poll the SCDP bit in the status register until the hardcopy has
+   completed.
+
+ * plugins: lecroy make command format consistent
+
+   Use shortened and capitalized forms across all commands for consistency.
+
+ * plugins: lecroy: error check and validate inputs
+
+   Fix some memory safety issues. Add some rudimentary checks and validate
+   untrusted input from the device.
+
+ * plugins: implement screenshot for LeCroy WavePRO oscilloscopes
+
+   This changeset adds screenshot support for LeCroy oscilloscopes that
+   implement the MAUI LXI interface.
+
+   In principle this should work with other LeCroy telescopes, but I have
+   only tested it with the WavePro 7 Zi-A.
+
+Adrian Scripca:
+
+ * Added ability to copy grabbed screenshot to clipboard
+
+Eddie:
+
+ * adds R&S CMW270 to README
+
+werwaswarum:
+
+ * Add R&S ZNL as compatible
+
+   Tested R&S ZNL3. LXI discover and SCPI ok.
+   As far as I read the manual screenshoots are only saved to the device or send to a printer.
+
+Walter Stanish:
+
+ * Update Wiki link text; add Wiki section
 
 
 
