@@ -585,7 +585,7 @@ static void remove_instrument(GtkWidget *widget)
 
     // If removing currently selected device make sure to invalidate information
     // for currently selected instrument
-    if (g_str_equal(self_global->ip, device->address))
+    if (device->widget == (GtkWidget *) self_global->list_box_row_selected)
     {
         self_global->ip = NULL;
         self_global->id = NULL;
