@@ -74,14 +74,14 @@ if enable_gui
                                     fallback : ['glib', 'libglib_dep'],
                                     default_options: ['tests=false'])
 
-  libgtk_dep = dependency('gtk4', version: '>= 4.5.0', required: true,
+  libgtk_dep = dependency('gtk4', version: '>= 4.6.0', required: true,
                                     fallback : ['gtk', 'libgtk_dep'],
                                     default_options: ['introspection=disabled',
                                                       'demos=false',
                                                       'build-examples=false',
                                                       'build-tests=false'])
 
-  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.3.3', required: true,
+  libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.4.0', required: true,
                                     fallback : ['gtksourceview', 'gtksource_dep'],
                                     default_options: ['introspection=disabled'])
 
