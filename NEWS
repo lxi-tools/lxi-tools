@@ -27,11 +27,6 @@ Changes since lxi-tools v2.1:
 
  * Only copy image data to clipboard when image data is available
 
- * Update lxi-gui application flags
-
-   Replace deprecated G_APPLICATION_FLAGS_NONE with new
-   G_APPLICATION_DEFAULT_FLAGS.
-
  * Add lua log feature to command-line tool
 
  * Add repology packaging status
