@@ -1789,14 +1789,16 @@ static void action_cb (GtkWidget  *widget,
 
     UNUSED(parameter);
 
+    instrument_t *device = find_instrument(GTK_WIDGET(self->list_box_row_pressed));
+
     if (g_str_equal (action_name, "action.copy_ip"))
     {
-        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->ip);
+        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, device->address);
     }
 
     if (g_str_equal (action_name, "action.copy_id"))
     {
-        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, self->id);
+        gdk_clipboard_set (self->clipboard, G_TYPE_STRING, device->name);
     }
 
     if (g_str_equal (action_name, "action.remove"))
