@@ -1,5 +1,9 @@
 # lxi-gui
 
+ * Make lxi-gui work on MacOS - requires adoption of Bonjour API for mDNS
+
+   Need help from people with access to MacOS.
+
  * Add support for test cases in lua scripts
 
    Add support for splitting a lua script into test cases for expressing
