@@ -88,4 +88,4 @@ get_firstword() {
 }
 
 # Bind completion to lxi command
-complete -o default -F _lxi lxi
+complete -o default -F _lxi lxi lxi-tools.lxi
