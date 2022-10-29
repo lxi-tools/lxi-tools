@@ -1,4 +1,14 @@
-=== lxi-tools v2.2 ===
+=== lxi-tools v2.3 ===
+
+
+
+Changes since lxi-tools v2.2:
+
+ * Fix copy of IP and ID
+
+ * Also autocomplete lxi-tools.lxi
+
+ * Update LICENSE
 
 
 
