@@ -61,11 +61,11 @@ struct lua_clock_t
 static struct lua_clock_t lua_clock[CLOCKS_MAX];
 
 static char log_script[] =
-"__log_data = {}\n"
+"__lxi_log_data = {}\n"
 "\n"
-"function log_new()\n"
+"function lxi_log_new()\n"
 "\n"
-"    local data = __log_data\n"
+"    local data = __lxi_log_data\n"
 "\n"
 "    handle = #data + 1\n"
 "    data[handle] = {}\n"
@@ -73,13 +73,13 @@ static char log_script[] =
 "    return handle\n"
 "end\n"
 "\n"
-"function log_free(handle)\n"
+"function lxi_log_free(handle)\n"
 "--    table.remove(data, handle)\n"
 "end\n"
 "\n"
-"function log_add (handle, ...)\n"
+"function lxi_log_add(handle, ...)\n"
 "\n"
-"    local data = __log_data\n"
+"    local data = __lxi_log_data\n"
 "\n"
 "    i = #data[handle] + 1\n"
 "\n"
@@ -89,9 +89,9 @@ static char log_script[] =
 "    end\n"
 "end\n"
 "\n"
-"function log_save_csv(handle, filename)\n"
+"function lxi_log_save_csv(handle, filename)\n"
 "\n"
-"    local data = __log_data\n"
+"    local data = __lxi_log_data\n"
 "\n"
 "    file = io.open(filename, \"w\")\n"
 "    io.output(file)\n"
@@ -396,18 +396,27 @@ static void load_log_script(lua_State *L)
     }
 }
 
+static const struct luaL_Reg lxi_lib[] =
+{
+    { "lxi_connect", connect},
+    { "lxi_disconnect", disconnect},
+    { "lxi_scpi", scpi },
+    { "lxi_scpi_raw", scpi_raw},
+    { "lxi_sleep", sleep_},
+    { "lxi_msleep", msleep},
+    { "lxi_clock_new", clock_new},
+    { "lxi_clock_read", clock_read},
+    { "lxi_clock_reset", clock_reset},
+    { "lxi_clock_free", clock_free},
+    {NULL, NULL}
+};
+
 int lua_register_lxi(lua_State *L)
 {
-    lua_register(L, "connect", connect);
-    lua_register(L, "disconnect", disconnect);
-    lua_register(L, "scpi", scpi);
-    lua_register(L, "scpi_raw", scpi_raw);
-    lua_register(L, "sleep", sleep_);
-    lua_register(L, "msleep", msleep);
-    lua_register(L, "clock_new", clock_new);
-    lua_register(L, "clock_read", clock_read);
-    lua_register(L, "clock_reset", clock_reset);
-    lua_register(L, "clock_free", clock_free);
+    // Register lxi functions
+    lua_getglobal(L, "_G");
+    luaL_setfuncs(L, lxi_lib, 0);
+    lua_pop(L, 1);
 
     load_log_script(L);
 

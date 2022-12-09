@@ -2675,16 +2675,16 @@ static int lua_gui_version(lua_State* L)
 
 static const struct luaL_Reg gui_lib [] =
 {
-    {"chart_new", lua_gui_chart_new},
-    {"chart_plot", lua_gui_chart_plot},
-    {"chart_set_value", lua_gui_chart_set_value},
-    {"chart_close", lua_gui_chart_close},
-    {"chart_save_csv", lua_gui_chart_save_csv},
-    {"chart_save_png", lua_gui_chart_save_png},
-    {"selected_ip", lua_gui_ip},
-    {"selected_id", lua_gui_id},
-    {"version", lua_gui_version},
-    {"print", lua_print},
+    {"lxi_chart_new", lua_gui_chart_new},
+    {"lxi_chart_plot", lua_gui_chart_plot},
+    {"lxi_chart_set_value", lua_gui_chart_set_value},
+    {"lxi_chart_close", lua_gui_chart_close},
+    {"lxi_chart_save_csv", lua_gui_chart_save_csv},
+    {"lxi_chart_save_png", lua_gui_chart_save_png},
+    {"lxi_selected_ip", lua_gui_ip},
+    {"lxi_selected_id", lua_gui_id},
+    {"lxi_version", lua_gui_version},
+    {"lxi_print", lua_print},
     {NULL, NULL}
 };
 

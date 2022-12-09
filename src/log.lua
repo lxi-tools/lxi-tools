@@ -1,8 +1,8 @@
-__log_data = {}
+__lxi_log_data = {}
 
-function log_new()
+function lxi_log_new()
 
-    local data = __log_data
+    local data = __lxi_log_data
 
     handle = #data + 1
     data[handle] = {}
@@ -10,13 +10,13 @@ function log_new()
     return handle
 end
 
-function log_free(handle)
+function lxi_log_free(handle)
 --    table.remove(data, handle)
 end
 
-function log_add (handle, ...)
+function lxi_log_add(handle, ...)
 
-    local data = __log_data
+    local data = __lxi_log_data
 
     i = #data[handle] + 1
 
@@ -26,9 +26,9 @@ function log_add (handle, ...)
     end
 end
 
-function log_save_csv(handle, filename)
+function lxi_log_save_csv(handle, filename)
 
-    local data = __log_data
+    local data = __lxi_log_data
 
     file = io.open(filename, "w")
     io.output(file)

@@ -270,24 +270,24 @@
       <keyword>__le</keyword>
 
       <!-- lxi-tools -->
-      <keyword>connect</keyword>
-      <keyword>disconnect</keyword>
-      <keyword>scpi</keyword>
-      <keyword>msleep</keyword>
-      <keyword>sleep</keyword>
-      <keyword>clock_new</keyword>
-      <keyword>clock_free</keyword>
-      <keyword>clock_read</keyword>
-      <keyword>chart_new</keyword>
-      <keyword>chart_close</keyword>
-      <keyword>chart_plot</keyword>
-      <keyword>chart_set_value</keyword>
-      <keyword>chart_save_csv</keyword>
-      <keyword>chart_save_png</keyword>
-      <keyword>log_new</keyword>
-      <keyword>log_free</keyword>
-      <keyword>log_add</keyword>
-      <keyword>log_save_csv</keyword>
+      <keyword>lxi_connect</keyword>
+      <keyword>lxi_disconnect</keyword>
+      <keyword>lxi_scpi</keyword>
+      <keyword>lxi_msleep</keyword>
+      <keyword>lxi_sleep</keyword>
+      <keyword>lxi_clock_new</keyword>
+      <keyword>lxi_clock_free</keyword>
+      <keyword>lxi_clock_read</keyword>
+      <keyword>lxi_chart_new</keyword>
+      <keyword>lxi_chart_close</keyword>
+      <keyword>lxi_chart_plot</keyword>
+      <keyword>lxi_chart_set_value</keyword>
+      <keyword>lxi_chart_save_csv</keyword>
+      <keyword>lxi_chart_save_png</keyword>
+      <keyword>lxi_log_new</keyword>
+      <keyword>lxi_log_free</keyword>
+      <keyword>lxi_log_add</keyword>
+      <keyword>lxi_log_save_csv</keyword>
 
     </context>
 

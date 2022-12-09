@@ -10,7 +10,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    device = connect(address, port, name, timeout, protocol)
+    device = lxi_connect(address, port, name, timeout, protocol)
 
   Description
     Connect to LXI compatible device
@@ -29,7 +29,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    response = scpi(device, command, timeout)
+    response = lxi_scpi(device, command, timeout)
 
   Description
     Send SCPI command and receive response if expected
@@ -47,7 +47,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    disconnect(device)
+    lxi_disconnect(device)
 
   Description
     Disconnect connected device
@@ -58,7 +58,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    sleep(time)
+    lxi_sleep(time)
 
   Description
     Sleep for specified amount of time
@@ -69,7 +69,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    msleep(time)
+    lxi_msleep(time)
 
   Description
     Sleep for specified amount of time
@@ -80,7 +80,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    clock = clock_new()
+    clock = lxi_clock_new()
 
   Description
     Create new clock resource
@@ -91,14 +91,14 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    time = clock_read(clock)
+    time = lxi_clock_read(clock)
 
   Description
     Read out the elapsed time of the clock since first clock_read() call
 
   Paramters
     clock: Handle of clock
-  
+
   Returns
      time: Time in seconds since last call [double]. If first call it will
            return 0 and the clock will start ticking.
@@ -106,7 +106,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    clock_reset(clock)
+    lxi_clock_reset(clock)
 
   Description
     Reset clock so that it stops ticking. First clock_read() will make the
@@ -118,7 +118,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    clock_free(clock)
+    lxi_clock_free(clock)
 
   Desription
     Release clock resource
@@ -129,7 +129,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    log = log_new()
+    log = lxi_log_new()
 
   Description
     Create new log resource
@@ -140,7 +140,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    log_add(log, ...)
+    lxi_log_add(log, ...)
 
   Description
     Log data to log.
@@ -160,7 +160,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    log_save_csv(log, filename)
+    lxi_log_save_csv(log, filename)
 
   Description
     Save log data to CSV formatted (RFC 4180) log file.
@@ -172,7 +172,7 @@ to the standard lua library functions.
 ------------------------------------------------------------------------------
 
   Function
-    log_free(log)
+    lxi_log_free(log)
 
   Desription
     Release log resource
@@ -196,7 +196,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    chart = chart_new(type, ...)
+    chart = lxi_chart_new(type, ...)
 
   Description
     Create and present a new chart. The chart is opened in a new window.
@@ -243,7 +243,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    chart_plot(chart, x, y)
+    lxi_chart_plot(chart, x, y)
 
   Description
     Plot x and y value to chart
@@ -256,7 +256,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    chart_save_csv(chart, filename)
+    lxi_chart_save_csv(chart, filename)
 
   Description
     Save plotted data to CSV file
@@ -268,7 +268,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    chart_save_png(chart, filename)
+    lxi_chart_save_png(chart, filename)
 
   Description
     Save image of plotted chart to PNG file
@@ -280,7 +280,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    chart_close(chart)
+    lxi_chart_close(chart)
 
   Description
     Close chart window
@@ -291,7 +291,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    version = version()
+    version = lxi_version()
 
   Description
     Get version of lxi-tools
@@ -302,7 +302,7 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    ip = selected_ip()
+    ip = lxi_selected_ip()
 
   Description
     Get IP of device selected in GUI
@@ -313,36 +313,12 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 ------------------------------------------------------------------------------
 
   Function
-    id = selected_id()
+    id = lxi_selected_id()
 
   Description
     Get ID of device selected in GUI
 
   Returns
     id: ID of device selected in GUI [string]. Returns nil if none selected.
-
-------------------------------------------------------------------------------
-
-  Function
-    chart_save_csv(chart, filename)
-
-  Description
-    Save plotted data to CSV file
-
-  Paramters
-       chart: Handle of chart
-    filename: Name of CSV file [string]
-
-------------------------------------------------------------------------------
-
-  Function
-    chart_save_png(chart, filename)
-
-  Description
-    Save image of plotted chart to PNG file
-
-  Paramters
-       chart: Handle of chart
-    filename: Name of PNG file [string]
 
 ------------------------------------------------------------------------------
