@@ -1,4 +1,12 @@
-=== lxi-tools v2.3 ===
+=== lxi-tools v2.4 ===
+
+
+
+Changes since lxi-tools v2.3:
+
+ * Prefix all lua functions with lxi_
+
+   To avoid conflict with existing lua APIs.
 
 
 
