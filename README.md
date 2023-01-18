@@ -262,56 +262,57 @@ Note: The meson install steps may differ depending on your specific system.
 The tools are tested to work successfully with the following LXI compatible
 instruments:
 
-| Instrument                        | Working features           |
-|-----------------------------------|----------------------------|
-| Keysight Technologies AWG 33612A  | [discover+scpi+screenshot] |
-| Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |
-| Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |
-| Keysight Technologies MSO-X 6004A | [discover+scpi+screenshot] |
-| LeCroy WavePro ZI-a               | [discover+scpi+screenshot] |
-| Kikusui Electronics PMX35-3A      | [discover+scpi]            |
-| Rigol Technologies DG1062Z        | [discover+scpi+screenshot] |
-| Rigol Technologies DG4062         | [discover+scpi+screenshot] |
-| Rigol Technologies DG4102         | [discover+scpi+screenshot] |
-| Rigol Technologies DG4162         | [discover+scpi+screenshot] |
-| Rigol Technologies DL3021         | [discover+scpi]            |
-| Rigol Technologies DP831          | [discover+scpi+screenshot] |
-| Rigol Technologies DP832          | [discover+scpi+screenshot] |
-| Rigol Technologies DM3058         | [discover+scpi]            |
-| Rigol Technologies DM3068         | [discover+scpi+screenshot] |
-| Rigol Technologies DS1074Z+       | [discover+scpi+screenshot] |
-| Rigol Technologies DS1104Z        | [discover+scpi+screenshot] |
-| Rigol Technologies DS2302         | [discover+scpi+screenshot] |
-| Rigol Technologies DSA815         | [discover+scpi+screenshot] |
-| Rigol Technologies MSO1104Z       | [discover+scpi+screenshot] |
-| Rigol Technologies MSO2302A       | [discover+scpi+screenshot] |
-| Rigol Technologies MSO5074        | [discover+scpi+screenshot] |
-| Rohde & Schwarz CMW 270           | [discover+scpi]            |
-| Rohde & Schwarz HMC 8012          | [discover+scpi+screenshot] |
-| Rohde & Schwarz HMC 8043          | [discover+scpi+screenshot] |
-| Rohde & Schwarz HMO 1202          | [discover+scpi+screenshot] |
-| Rohde & Schwarz HMO 3054          | [scpi+screenshot]          |
-| Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |
-| Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |
-| Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |
-| Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |
-| Rohde & Schwarz ZNL3              | [discover+scpi]            |
-| Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |
-| Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |
-| Siglent Technologies SDG6052      | [discover+scpi+screenshot] |
-| Siglent Technologies SDS1152CML   | [discover+scpi+screenshot] |
-| Siglent Technologies SDS1202X-E   | [discover+scpi+screenshot] |
-| Siglent Technologies SDS1204X-E   | [discover+scpi+screenshot] |
-| Siglent Technologies SDS2304X     | [discover+scpi+screenshot] |
-| Siglent Technologies SDM3045X     | [discover+scpi+screenshot] |
-| Siglent Technologies SDM3055      | [discover+scpi+screenshot] |
-| Siglent Technologies SDM3065X     | [discover+scpi+screenshot] |
-| Siglent Technologies SPD3303X-E   | [scpi]                     |
-| Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |
-| Tektronix TDS3034B                | [discover+scpi+screenshot] |
-| Tektronix MDO3024                 | [discover+scpi]            |
-| Tektronix 4 Series MSO            | [discover+scpi]            |
-| Tektronix 5 Series MSO            | [discover+scpi]            |
+| Instrument                        | Working features           | Note                          |
+|-----------------------------------|----------------------------|-------------------------------|
+| Chroma 63205A                     | [discover+scpi]            | Use RAW/TCP, port 2101        |
+| Keysight Technologies AWG 33612A  | [discover+scpi+screenshot] |                               |
+| Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |                               |
+| Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |                               |
+| Keysight Technologies MSO-X 6004A | [discover+scpi+screenshot] |                               |
+| Kikusui Electronics PMX35-3A      | [discover+scpi]            |                               |
+| LeCroy WavePro ZI-a               | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DG1062Z        | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DG4062         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DG4102         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DG4162         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DL3021         | [discover+scpi]            |                               |
+| Rigol Technologies DP831          | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DP832          | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DM3058         | [discover+scpi]            |                               |
+| Rigol Technologies DM3068         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DS1074Z+       | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DS1104Z        | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DS2302         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies DSA815         | [discover+scpi+screenshot] |                               |
+| Rigol Technologies MSO1104Z       | [discover+scpi+screenshot] |                               |
+| Rigol Technologies MSO2302A       | [discover+scpi+screenshot] |                               |
+| Rigol Technologies MSO5074        | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz CMW 270           | [discover+scpi]            |                               |
+| Rohde & Schwarz HMC 8012          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz HMC 8043          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz HMO 1202          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz HMO 3054          | [scpi+screenshot]          |                               |
+| Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz ZNL3              | [discover+scpi]            |                               |
+| Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDG6052      | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDS1152CML   | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDS1202X-E   | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDS1204X-E   | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDS2304X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDM3045X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDM3055      | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDM3065X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SPD3303X-E   | [scpi]                     |                               |
+| Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |                               |
+| Tektronix TDS3034B                | [discover+scpi+screenshot] |                               |
+| Tektronix MDO3024                 | [discover+scpi]            |                               |
+| Tektronix 4 Series MSO            | [discover+scpi]            |                               |
+| Tektronix 5 Series MSO            | [discover+scpi]            |                               |
 
 Notes:
  * Feel free to add tested instruments to the list via GitHub pull request or report via GitHub issue.
