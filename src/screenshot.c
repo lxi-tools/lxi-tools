@@ -58,12 +58,14 @@ extern struct screenshot_plugin rigol_dp800;
 extern struct screenshot_plugin rigol_dsa;
 extern struct screenshot_plugin rs_hmo_rtb;
 extern struct screenshot_plugin rs_ng;
+extern struct screenshot_plugin rs_rth;
 extern struct screenshot_plugin siglent_sdm3000;
 extern struct screenshot_plugin siglent_sdg;
 extern struct screenshot_plugin siglent_sds;
 extern struct screenshot_plugin siglent_ssa3000x;
 extern struct screenshot_plugin tektronix_2000;
 extern struct screenshot_plugin tektronix_3000;
+extern struct screenshot_plugin tektronix_mso_5;
 
 static struct screenshot_plugin *plugin_list[PLUGIN_LIST_SIZE_MAX] = { };
 static char *screenshot_filename = NULL;
@@ -265,12 +267,14 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&rigol_dsa);
     screenshot_plugin_register(&rs_hmo_rtb);
     screenshot_plugin_register(&rs_ng);
+    screenshot_plugin_register(&rs_rth);
     screenshot_plugin_register(&siglent_sdm3000);
     screenshot_plugin_register(&siglent_sdg);
     screenshot_plugin_register(&siglent_sds);
     screenshot_plugin_register(&siglent_ssa3000x);
     screenshot_plugin_register(&tektronix_2000);
     screenshot_plugin_register(&tektronix_3000);
+    screenshot_plugin_register(&tektronix_mso_5);
 }
 
 int screenshot(char *address, char *plugin_name, char *filename,

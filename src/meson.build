@@ -28,6 +28,8 @@ common_sources = [
   'plugins/screenshot_rohde-schwarz-ng.c',
   'plugins/screenshot_tektronix.c',
   'plugins/screenshot_tektronix-3000.c',
+  'plugins/screenshot_rohde-schwarz-rth.c',
+  'plugins/screenshot_tektronix-mso-5.c',
 ]
 
 lxi_sources = [
