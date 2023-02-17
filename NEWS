@@ -1,4 +1,21 @@
-=== lxi-tools v2.4 ===
+=== lxi-tools v2.5 ===
+
+
+
+Changes since lxi-tools v2.4:
+
+ * Add new screenshot plugins
+
+   Add screenshot plugins to support:
+
+    * Tektronix MSO 5 series
+    * Rohde & Schwarz RTH series (hand help oscillopes)
+
+ * Add code for backwards compatibility with lua 5.0/5.1
+
+Twilight-Logic:
+
+ * Updated rigol-2000 plugin to allow screenshot capture on MSO5000
 
 
 
