@@ -266,6 +266,8 @@ instruments:
 | Instrument                        | Working features           | Note                          |
 |-----------------------------------|----------------------------|-------------------------------|
 | Chroma 63205A                     | [discover+scpi]            | Use RAW/TCP, port 2101        |
+| ITECH IT6018C                     | [discover+scpi]            |                               |
+| GW-INSTEK PSW800                  | [scpi]                     | Use RAW/TCP, port 2268        |
 | Keysight Technologies AWG 33612A  | [discover+scpi+screenshot] |                               |
 | Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |                               |
 | Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |                               |
@@ -293,9 +295,10 @@ instruments:
 | Rohde & Schwarz HMC 8043          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz HMO 1202          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz HMO 3054          | [scpi+screenshot]          |                               |
-| Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz RTH 1004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz ZNL3              | [discover+scpi]            |                               |
 | Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |                               |
@@ -313,7 +316,7 @@ instruments:
 | Tektronix TDS3034B                | [discover+scpi+screenshot] |                               |
 | Tektronix MDO3024                 | [discover+scpi]            |                               |
 | Tektronix 4 Series MSO            | [discover+scpi]            |                               |
-| Tektronix 5 Series MSO            | [discover+scpi]            |                               |
+| Tektronix MSO56                   | [discover+scpi+screenshot] |                               |
 
 Notes:
  * Feel free to add tested instruments to the list via GitHub pull request or report via GitHub issue.
