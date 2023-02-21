@@ -1,5 +1,5 @@
 project('lxi-tools', 'c',
-    version : '2.5',
+    version : '2.6',
     license : [ 'BSD-3-Clause'],
     meson_version : '>= 0.53.2',
     default_options : [ 'warning_level=2', 'buildtype=release', 'c_std=gnu11', 'b_lundef=false' ]
