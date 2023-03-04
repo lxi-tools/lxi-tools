@@ -79,10 +79,10 @@ int rigol_2000_screenshot(char *address, char *id, int timeout)
 
     // Dump remaining BMP image data to file
     screenshot_file_dump(image, length, "bmp");
-    
+
     // Free allocated memory for screenshot
     free(response);
-    
+
     // Disconnect
     lxi_disconnect(device);
 
@@ -101,7 +101,7 @@ error_receive:
 struct screenshot_plugin rigol_2000 =
 {
     .name = "rigol-2000",
-    .description = "Rigol DS/MSO 2000 series oscilloscope",
-    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DS2... MSO2... MSO5...",
+    .description = "Rigol DS/MSO 2000/4000/5000 series oscilloscope",
+    .regex = "RIGOL TECHNOLOGIES Rigol Technologies DS2... MSO2... MSO4... MSO5...",
     .screenshot = rigol_2000_screenshot
 };
