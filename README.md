@@ -289,6 +289,8 @@ instruments:
 | Rigol Technologies DSA815         | [discover+scpi+screenshot] |                               |
 | Rigol Technologies MSO1104Z       | [discover+scpi+screenshot] |                               |
 | Rigol Technologies MSO2302A       | [discover+scpi+screenshot] |                               |
+| Rigol Technologies MSO4024        | [discover+scpi+screenshot] |                               |
+| Rigol Technologies MSO4054        | [discover+scpi+screenshot] |                               |
 | Rigol Technologies MSO5074        | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz CMW 270           | [discover+scpi]            |                               |
 | Rohde & Schwarz HMC 8012          | [discover+scpi+screenshot] |                               |
