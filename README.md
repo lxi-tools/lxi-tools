@@ -1,3 +1,6 @@
+
+[![lxi-tools](images/lxi-tools-icon.png)]()
+
 # lxi-tools - open source LXI tools
 
 [![](https://img.shields.io/circleci/build/gh/lxi-tools/lxi-tools?token=138eb86e5ef6781858bddfd414cab9e3ecf75e5e)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
