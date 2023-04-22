@@ -252,7 +252,7 @@ following dependencies:
 
 Install steps:
 ```
-    $ meson build
+    $ meson setup build
     $ meson compile -C build
     $ meson install -C build
 ```
