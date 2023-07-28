@@ -1,4 +1,19 @@
-=== lxi-tools v2.5 ===
+=== lxi-tools v2.6 ===
+
+
+
+Changes since lxi-tools v2.5:
+
+ * Update postinstall.py to use gtk4-update-icon-cache
+
+   Use gtk4-update-icon-cache instead of gtk-update-icon-cache which is
+   only for gtk3.
+
+ * Add Rigol MSO4024/4054 to list of supported instruments
+
+ * Add screenshot support for Rigol DS4000 series
+
+ * Add screenshot plugin support for Rigol MSO5000 series
 
 
 
