@@ -302,6 +302,7 @@ instruments:
 | Rohde & Schwarz HMO 3054          | [scpi+screenshot]          |                               |
 | Rohde & Schwarz NGE 100           | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz NGM 202           | [discover+scpi+screenshot] |                               |
+| Rohde & Schwarz NGL 202           | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz RTB 2004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz RTH 1004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |                               |
