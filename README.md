@@ -216,7 +216,7 @@ screenshot image to JPG:
 
 ## 4. Installation
 
-### 4.1 Installation using package manager
+### 4.1 Installation using package manager (Linux)
 
 lxi-tools comes prepackaged for various GNU/Linux distributions. Please consult
 your package manager tool to find and install lxi-tools.
@@ -224,7 +224,7 @@ your package manager tool to find and install lxi-tools.
 If you would like to see lxi-tools included in your favorite distribution,
 please reach out to their package maintainers team.
 
-### 4.2 Installation using snap
+### 4.2 Installation using snap (Linux)
 
 Install latest stable version:
 ```
@@ -235,7 +235,14 @@ Install bleeding edge:
     $ snap install lxi-tools --edge
 ```
 
-### 4.3 Installation from source
+### 4.3 Installation using homebrew (MacOS, Linux)
+
+If you have [homebrew](http://brew.sh) installed:
+```
+$ brew install lxi-tools
+```
+
+### 4.4 Installation from source
 
 The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
