@@ -3,7 +3,7 @@
 --    https://lxi-tools.github.io  --
 -------------------------------------
 
--- Example: Retrieve ID from instrument (R&H NGM 202) via RAW (socket)
+-- Example: Retrieve ID from instrument (R&S NGM 202) via RAW (socket)
 
 -- Connect to power supply
 psu = lxi_connect("192.168.0.107", 5025, nil, 2000, "RAW")
