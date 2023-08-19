@@ -2684,7 +2684,7 @@ static const struct luaL_Reg gui_lib [] =
     {"lxi_selected_ip", lua_gui_ip},
     {"lxi_selected_id", lua_gui_id},
     {"lxi_version", lua_gui_version},
-    {"lxi_print", lua_print},
+    {"print", lua_print},
     {NULL, NULL}
 };
 
