@@ -100,7 +100,7 @@ print(type(a_number))
 
 -- Math
 print("2*2 = " .. 2 * 2)
-print("2^4 = " .. math.pow(2,4))
+print("2^4 = " .. 2 ^ 4)
 print("sin(2) = " .. math.sin(2))
 print("sqrt(16) = " .. math.sqrt(16))
 print("pi = " .. math.pi)
@@ -113,3 +113,4 @@ print(os.date("The time is %X"))
 print("TERM = " .. os.getenv("TERM"))
 
 print("Done")
+
