@@ -6,8 +6,8 @@
 [![](https://img.shields.io/circleci/build/github/lxi-tools/lxi-tools)](https://circleci.com/gh/lxi-tools/lxi-tools/tree/master)
 [![](https://img.shields.io/github/v/release/lxi-tools/lxi-tools?sort=semver)](https://github.com/lxi-tools/lxi-tools/releases)
 [![](https://img.shields.io/repology/repositories/lxi-tools)](https://repology.org/project/lxi-tools/versions)
-[![](https://img.shields.io/tokei/lines/github/lxi-tools/lxi-tools)](https://github.com/lxi-tools/lxi-tools)
 [![](https://img.shields.io/codefactor/grade/github/lxi-tools/lxi-tools)](https://www.codefactor.io/repository/github/lxi-tools/lxi-tools)
+<!-- [![](https://img.shields.io/tokei/lines/github/lxi-tools/lxi-tools)](https://github.com/lxi-tools/lxi-tools) -->
 
 ## 1. Introduction
 
