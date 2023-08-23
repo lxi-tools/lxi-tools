@@ -316,6 +316,7 @@ instruments:
 | Rohde & Schwarz ZNL3              | [discover+scpi]            |                               |
 | Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDG2042X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDG6052      | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDS1152CML   | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDS1202X-E   | [discover+scpi+screenshot] |                               |
@@ -323,6 +324,7 @@ instruments:
 | Siglent Technologies SDS2304X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3045X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3055      | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDM3055-SC   | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3065X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SPD3303X-E   | [scpi]                     |                               |
 | Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |                               |
@@ -333,7 +335,7 @@ instruments:
 
 Notes:
  * Feel free to add tested instruments to the list via GitHub pull request or report via GitHub issue.
- * The [lxi-tools wiki](https://github.com/lxi-tools/lxi-tools/wiki/) provides further information regarding test instruments, including known issues and SCPI commands. 
+ * The [lxi-tools wiki](https://github.com/lxi-tools/lxi-tools/wiki/) provides further information regarding test instruments, including known issues and SCPI commands.
 
 ## 6. Documentation
 
