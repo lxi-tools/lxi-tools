@@ -326,6 +326,7 @@ instruments:
 | Siglent Technologies SDM3055      | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3055-SC   | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3065X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SPD1168X     | [scpi]                     |                               |
 | Siglent Technologies SPD3303X-E   | [scpi]                     |                               |
 | Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |                               |
 | Tektronix TDS3034B                | [discover+scpi+screenshot] |                               |
