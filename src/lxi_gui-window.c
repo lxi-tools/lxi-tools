@@ -3170,7 +3170,7 @@ static void lxi_gui_window_init(LxiGuiWindow *self)
     g_menu_append (menu, "Save as..", "scpi_save_as");
     gtk_text_view_set_extra_menu (self->text_view_scpi, G_MENU_MODEL(menu));
 
-#if DEVEL_MODE
+#ifdef DEVEL_MODE
     gtk_widget_add_css_class(GTK_WIDGET(self), "devel");
 #endif
 
