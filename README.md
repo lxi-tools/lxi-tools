@@ -280,6 +280,7 @@ instruments:
 | GW-INSTEK PSW800                  | [scpi]                     | Use RAW/TCP, port 2268        |
 | Keysight Technologies AWG 33612A  | [discover+scpi+screenshot] |                               |
 | Keysight Technologies DMM 34461A  | [discover+scpi+screenshot] |                               |
+| Keysight Technologies DMM L4411A  | [discover+scpi]            |                               |
 | Keysight Technologies MSO-X 3024T | [discover+scpi+screenshot] |                               |
 | Keysight Technologies MSO-X 6004A | [discover+scpi+screenshot] |                               |
 | Kikusui Electronics PMX35-3A      | [discover+scpi]            |                               |
