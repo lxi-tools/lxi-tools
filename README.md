@@ -275,6 +275,7 @@ instruments:
 
 | Instrument                        | Working features           | Note                          |
 |-----------------------------------|----------------------------|-------------------------------|
+| AimTTi CPX400DP                   | [scpi]                     | Use RAW/TCP, port 9221        |
 | Chroma 63205A                     | [discover+scpi]            | Use RAW/TCP, port 2101        |
 | ITECH IT6018C                     | [discover+scpi]            |                               |
 | GW-INSTEK PSW800                  | [scpi]                     | Use RAW/TCP, port 2268        |
