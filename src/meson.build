@@ -83,6 +83,9 @@ if enable_gui
                                                       'build-examples=false',
                                                       'build-tests=false'])
 
+  libcairo_dep = dependency('cairo', required: true)
+  libgdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', required: true)
+
   libgtksourceview_dep = dependency('gtksourceview-5', version: '>= 5.4.0', required: true,
                                     fallback : ['gtksourceview', 'gtksource_dep'],
                                     default_options: ['introspection=disabled'])
@@ -110,6 +113,8 @@ if enable_gui
     lxi_deps,
     libglib_dep,
     libgtk_dep,
+    libcairo_dep,
+    libgdk_pixbuf_dep,
     libgtksourceview_dep,
     libadwaita_dep,
     libjson_glib_dep,
