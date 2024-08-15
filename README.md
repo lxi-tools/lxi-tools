@@ -242,7 +242,15 @@ If you have [homebrew](http://brew.sh) installed:
 $ brew install lxi-tools
 ```
 
-### 4.4 Installation from source
+### 4.4 Installation using Linux on Windows with WSL2 (Windows)
+
+If you have [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)
+installed you can simply use snap to install lxi-tools in the Ubuntu WSL:
+```
+$ snap install lxi-tools
+```
+
+### 4.5 Installation from source
 
 The latest source releases can be found [here](https://github.com/lxi-tools/lxi-tools/releases).
 
