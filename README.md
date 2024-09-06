@@ -340,6 +340,7 @@ instruments:
 | Siglent Technologies SPD1168X     | [scpi]                     |                               |
 | Siglent Technologies SPD3303X-E   | [scpi]                     |                               |
 | Siglent Technologies SSA3032X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SVA1032X     | [discover+scpi+screenshot] |                               |
 | Tektronix TDS3034B                | [discover+scpi+screenshot] |                               |
 | Tektronix MDO3024                 | [discover+scpi]            |                               |
 | Tektronix 4 Series MSO            | [discover+scpi]            |                               |
