@@ -1072,6 +1072,19 @@
                                               </object>
                                             </child>
                                             <child>
+                                              <object class="GtkToggleButton" id="toggle_button_live_view">
+                                                <property name="label" translatable="yes">Live View</property>
+                                                <property name="receives-default">1</property>
+                                                <signal name="clicked" handler="button_clicked_live_view" swapped="yes"/>
+                                                <style>
+                                                  <class name="text-button"/>
+                                                  <class name="suggested-action"/>
+                                                </style>
+                                              </object>
+                                            </child>
+                                            <child>
+                                            </child>
+                                            <child>
                                               <object class="GtkButton" id="button_screenshot_save">
                                                 <property name="label" translatable="yes">Save</property>
                                                 <property name="receives-default">1</property>
