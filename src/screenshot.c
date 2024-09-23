@@ -79,6 +79,8 @@ static int *screenshot_image_size;
 static char *screenshot_image_format;
 static char *screenshot_image_filename;
 
+static char id[ID_LENGTH_MAX];
+
 static int get_device_id(char *address, char *id, int timeout)
 {
     int device, bytes_sent, bytes_received;
@@ -283,18 +285,84 @@ void screenshot_register_plugins(void)
     screenshot_plugin_register(&tektronix_mso_5);
 }
 
-int screenshot(char *address, char *plugin_name, char *filename,
-               int timeout, bool no_gui, void *image_buffer,
-               int *image_size, char *image_format, char *image_filename)
+char* screenshot_detect_plugin(char *address, char *id, int timeout)
 {
-    static char id[ID_LENGTH_MAX];
-    bool no_match = true;
     bool token_found = true;
     char *token = NULL;
     int plugin_winner = -1;
     int match_count = 0;
     int match_count_max = 0;
     char *regex_buffer;
+    int i = 0;
+
+    // Get instrument ID
+    if (get_device_id(address, id, timeout) != 0)
+    {
+        error_printf("Unable to retrieve instrument ID\n");
+        return NULL;
+    }
+
+    // Find relevant screenshot plugin (match instrument ID to plugin)
+    while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
+    {
+        // Skip plugin if it has no .regex entry
+        if (plugin_list[i]->regex == NULL)
+        {
+            i++;
+            continue;
+        }
+
+        // Walk through space separated regular expressions in regex string
+        regex_buffer = strdup(plugin_list[i]->regex);
+        while (token_found == true)
+        {
+            if (token == NULL)
+                token = strtok(regex_buffer, " ");
+            else
+                token = strtok(NULL, " ");
+
+            if (token != NULL)
+            {
+                // Match regular expression against ID
+                if (regex_match(id, token))
+                    match_count++; // Successful match
+            }
+            else
+                token_found = false;
+        }
+        free(regex_buffer);
+
+        // Plugin with most matches wins
+        if (match_count > match_count_max)
+        {
+            plugin_winner = i;
+            match_count_max = match_count;
+        }
+
+        // Reset
+        match_count = 0;
+        token_found = true;
+        i++;
+    }
+
+    if (plugin_winner == -1)
+    {
+        error_printf("Could not autodetect which screenshot plugin to use\n");
+        return NULL;
+    }
+
+    if (isatty(fileno(stdout)) && screenshot_no_gui)
+        printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
+
+    i = plugin_winner;
+    return (char *)plugin_list[i]->name;
+
+}
+
+int screenshot(char *address, char *plugin_name, char *filename,
+               int timeout, bool no_gui, void *image_buffer,
+               int *image_size, char *image_format, char *image_filename)
+{
     int i = 0;
 
     // Check parameters
@@ -313,90 +381,33 @@ int screenshot(char *address, char *plugin_name, char *filename,
     screenshot_image_format = image_format;
     screenshot_image_filename = image_filename;
 
-    if (strlen(plugin_name) == 0)
+    if (plugin_name == NULL)
     {
-        // Get instrument ID
-        if (get_device_id(address, id, timeout) != 0)
+        plugin_name = screenshot_detect_plugin(address, id, timeout);
+        if(plugin_name  == NULL)
         {
-            error_printf("Unable to retrieve instrument ID\n");
+            error_printf("Unknown plugin name\n");
             return 1;
         }
-
-        // Find relevant screenshot plugin (match instrument ID to plugin)
-        while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
-        {
-            // Skip plugin if it has no .regex entry
-            if (plugin_list[i]->regex == NULL)
-            {
-                i++;
-                continue;
-            }
-
-            // Walk through space separated regular expressions in regex string
-            regex_buffer = strdup(plugin_list[i]->regex);
-            while (token_found == true)
-            {
-                if (token == NULL)
-                    token = strtok(regex_buffer, " ");
-                else
-                    token = strtok(NULL, " ");
-
-                if (token != NULL)
-                {
-                    // Match regular expression against ID
-                    if (regex_match(id, token))
-                        match_count++; // Successful match
-                }
-                else
-                    token_found = false;
-            }
-            free(regex_buffer);
-
-            // Plugin with most matches wins
-            if (match_count > match_count_max)
-            {
-                plugin_winner = i;
-                match_count_max = match_count;
-            }
-
-            // Reset
-            match_count = 0;
-            token_found = true;
-            i++;
-        }
-
-        if (plugin_winner == -1)
-        {
-            error_printf("Could not autodetect which screenshot plugin to use\n");
-            return 1;
-        }
-
-        if (isatty(fileno(stdout)) && screenshot_no_gui)
-            printf("Loaded %s screenshot plugin\n", plugin_list[plugin_winner]->name);
-
-        no_match = false;
-        i = plugin_winner;
     }
-    else
+
+    // Find relevant screenshot plugin (match specified plugin name to plugin)
+    while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
     {
-        // Find relevant screenshot plugin (match specified plugin name to plugin)
-        while ((i < PLUGIN_LIST_SIZE_MAX) && (plugin_list[i] != NULL))
+        if (strcmp(plugin_list[i]->name, plugin_name) == 0)
         {
-            if (strcmp(plugin_list[i]->name, plugin_name) == 0)
-            {
-                no_match = false;
-                break;
-            }
-            i++;
+            break;
         }
+        i++;
     }
 
-    if (no_match)
-    {
-        error_printf("Unknown plugin name\n");
-        return 1;
-    }
 
     // Call capture screenshot function
     return plugin_list[i]->screenshot(address, id, timeout);
+}
+
+
+char* screenshot_detect_plugin_name(char *address, int timeout)
+{
+    return screenshot_detect_plugin(address, id, timeout);
 }

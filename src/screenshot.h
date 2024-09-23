@@ -54,6 +54,8 @@ struct screenshot_plugin
    int (*screenshot)(char *address, char *id, int timeout);
 };
 
+char* screenshot_detect_plugin_name(char *address, int timeout);
+
 #ifdef __cplusplus
 }
 #endif

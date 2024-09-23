@@ -64,9 +64,11 @@ struct _LxiGuiWindow
     GtkToggleButton     *toggle_button_scpi_send;
     GtkPicture          *picture_screenshot;
     GtkToggleButton     *toggle_button_screenshot_grab;
+    GtkToggleButton     *toggle_button_live_view;
     GtkButton           *button_screenshot_save;
     GThread             *screenshot_worker_thread;
     GThread             *screenshot_grab_worker_thread;
+    GThread             *live_view_worker_thread;
     GThread             *search_worker_thread;
     GThread             *send_worker_thread;
     GtkProgressBar      *progress_bar_benchmark;
@@ -92,6 +94,7 @@ struct _LxiGuiWindow
     const char          *ip;
     int                 protocol;
     int                 port;
+    char                *plugin_name;
     char                *image_buffer;
     int                 image_size;
     char                image_format[10];
@@ -109,9 +112,11 @@ struct _LxiGuiWindow
     GMutex              mutex_instrument_list;
     GMutex              mutex_save_png;
     GMutex              mutex_save_csv;
+    GMutex              mutex_live_view;
     GList               *list_instruments;
     GtkListBoxRow       *list_box_row_pressed;
     GtkListBoxRow       *list_box_row_selected;
+    gboolean            live_view_pressed;
 };
 
 G_DEFINE_TYPE (LxiGuiWindow, lxi_gui_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -1201,9 +1206,22 @@ static void button_clicked_scpi(LxiGuiWindow *self, GtkButton *button)
     gtk_editable_set_position(GTK_EDITABLE(self->entry_scpi), cursor_position);
 }
 
+void restore_screenshot_buttons(gpointer data)
+{
+    LxiGuiWindow *self = data;
+
+    // Restore screenshot button
+    gtk_toggle_button_set_active(self->toggle_button_screenshot_grab, false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), true);
+        // Restore live view button
+    gtk_button_set_label (GTK_BUTTON(self->toggle_button_live_view), "Live View");
+    gtk_toggle_button_set_active(self->toggle_button_live_view, false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_live_view), true);
+
+}
+
 static bool grab_screenshot(LxiGuiWindow *self)
 {
-    char *plugin_name = (char *) "";
     char *filename = (char *) "";
     unsigned int timeout = g_settings_get_uint(self->settings, "timeout-screenshot");
     int status;
@@ -1223,15 +1241,17 @@ static bool grab_screenshot(LxiGuiWindow *self)
         return 1;
     }
 
+    self->plugin_name = NULL;
     // Capture screenshot
-    status = screenshot((char *)self->ip, plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
+    status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
     if (status != 0)
     {
         show_error(self, "Failed to grab screenshot");
         g_free(self->image_buffer);
+        self->plugin_name = NULL;
         return 1;
     }
-
+    self->plugin_name = NULL;
     return 0;
 }
 
@@ -1270,8 +1290,7 @@ static gboolean gui_update_grab_screenshot_finished_thread(gpointer user_data)
     }
 
     // Restore screenshot buttons
-    gtk_toggle_button_set_active(self->toggle_button_screenshot_grab, false);
-    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), true);
+    restore_screenshot_buttons(self);
 
     // Activate screenshot "Save" button if picture was successfully loaded
     if (self->screenshot_loaded)
@@ -1298,6 +1317,163 @@ static gpointer screenshot_grab_worker_thread(gpointer data)
     return NULL;
 }
 
+
+static gboolean gui_update_live_view_finished_thread(gpointer user_data)
+{
+    LxiGuiWindow *self = user_data;
+    GdkPixbufLoader *loader;
+
+    // Show screenshot
+    //loader = gdk_pixbuf_loader_new ();
+    loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
+    gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+    self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
+    if (self->pixbuf_screenshot == NULL)
+    {
+        show_error(self, "Failure handling image format");
+        self->screenshot_loaded = false;
+    }
+    else
+    {
+        self->screenshot_size = gdk_pixbuf_get_width(self->pixbuf_screenshot);
+        self->screenshot_loaded = true;
+        gtk_widget_set_valign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
+        gtk_widget_set_halign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
+        gtk_picture_set_pixbuf(self->picture_screenshot, self->pixbuf_screenshot);
+        gdk_pixbuf_loader_close(loader, NULL);
+        g_object_unref(loader);
+
+        // Make screenshot picture zoomable
+        //gtk_widget_set_sensitive(GTK_WIDGET(self->viewport_screenshot), true);
+    }
+
+    g_mutex_unlock(&self->mutex_live_view);
+
+    return G_SOURCE_REMOVE;
+}
+static gpointer live_view_worker_thread(gpointer data)
+{
+    LxiGuiWindow *self = data;
+
+    char *filename = (char *) "";
+    unsigned int timeout = g_settings_get_uint(self->settings, "timeout-screenshot");
+    int status;
+
+    // Check for instrument
+    if (self->ip == NULL)
+    {
+        show_error(self, "No instrument selected");
+        restore_screenshot_buttons(self);
+        gtk_toggle_button_set_active(self->toggle_button_search, false);
+        gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        return NULL;
+    }
+
+    // Allocate 20 MB for image data
+    self->image_buffer = g_malloc(0x100000*20);
+    if (self->image_buffer == NULL)
+    {
+        show_error(self, "Failure allocating memory for image data");
+        restore_screenshot_buttons(self);
+        gtk_toggle_button_set_active(self->toggle_button_search, false);
+        gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        return NULL;
+
+    }
+    self->plugin_name = NULL;
+    self->plugin_name = screenshot_detect_plugin_name((char *)self->ip, timeout);
+    if(self->plugin_name == NULL)
+    {
+        show_error(self, "Can't access device or No Plugin Found");
+        restore_screenshot_buttons(self);
+        gtk_toggle_button_set_active(self->toggle_button_search, false);
+        gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        return NULL;
+    }
+
+    while(true)
+    {
+        if(!self->live_view_pressed)
+            break;
+        g_mutex_lock(&self->mutex_live_view);
+        // Capture screenshot
+        status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
+        if (status != 0)
+        {
+            show_error(self, "Live view: Failed to grab screenshot");
+            g_mutex_unlock(&self->mutex_live_view);
+            g_free(self->image_buffer);
+            restore_screenshot_buttons(self);
+            gtk_toggle_button_set_active(self->toggle_button_search, false);
+            gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+            self->plugin_name = NULL;
+            return NULL;
+        }
+
+        g_idle_add(gui_update_live_view_finished_thread, self);
+    }
+
+    g_mutex_lock(&self->mutex_live_view);
+    self->plugin_name = NULL;
+    g_free(self->image_buffer);
+    g_mutex_unlock(&self->mutex_live_view);
+
+    restore_screenshot_buttons(self);
+    // Activate screenshot "Save" button if picture was successfully loaded
+    if (self->screenshot_loaded)
+        gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), true);
+
+
+    gtk_toggle_button_set_active(self->toggle_button_search, false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+
+    return NULL;
+}
+
+static void button_clicked_live_viewStart(LxiGuiWindow *self, GtkButton *button)
+{
+    UNUSED(button);
+
+     if (self->ip == NULL)
+    {
+        show_error(self, "No instrument selected");
+        restore_screenshot_buttons(self);
+        return;
+    }
+    // Disable grab button while grabbing the screenshot
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), false);
+
+    self->live_view_pressed = true;
+    // Start worker thread that will perform the grab screenshot work
+    self->live_view_worker_thread = g_thread_new("screenshot_grab_worker", live_view_worker_thread, (gpointer) self);
+
+    gtk_button_set_label (GTK_BUTTON(self->toggle_button_live_view), "Stop");
+}
+
+static void button_clicked_live_view_stop(LxiGuiWindow *self, GtkButton *button)
+{
+    UNUSED(button);
+    self->live_view_pressed = false;
+}
+
+
+static void button_clicked_live_view(LxiGuiWindow *self, GtkButton *button)
+{
+    gboolean live_active=false;
+    live_active = gtk_toggle_button_get_active(self->toggle_button_live_view);
+    if(live_active)
+    {
+        button_clicked_live_viewStart(self, button);
+
+    }
+    else
+    {
+        button_clicked_live_view_stop(self, button);
+    }
+}
+
 static void button_clicked_screenshot_grab(LxiGuiWindow *self, GtkButton *button)
 {
     UNUSED(button);
@@ -1311,6 +1487,7 @@ static void button_clicked_screenshot_grab(LxiGuiWindow *self, GtkButton *button
 
     // Disable grab button while grabbing the screenshot
     gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_live_view), false);
 
     // Start worker thread that will perform the grab screenshot work
     self->screenshot_grab_worker_thread = g_thread_new("screenshot_grab_worker", screenshot_grab_worker_thread, (gpointer) self);
@@ -2942,6 +3119,7 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_scpi_send);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, picture_screenshot);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_screenshot_grab);
+    gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_live_view);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, button_screenshot_save);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, progress_bar_benchmark);
     gtk_widget_class_bind_template_child (widget_class, LxiGuiWindow, toggle_button_benchmark_start);
@@ -2967,6 +3145,8 @@ static void lxi_gui_window_class_init(LxiGuiWindowClass *class)
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_clear);
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_scpi_send);
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_grab);
+    gtk_widget_class_bind_template_callback (widget_class, button_clicked_live_view);
+    gtk_widget_class_bind_template_callback (widget_class, button_clicked_live_view_stop);
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_screenshot_save);
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_benchmark_start);
     gtk_widget_class_bind_template_callback (widget_class, button_clicked_script_new);
