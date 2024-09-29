@@ -1,5 +1,9 @@
 # lxi-gui
 
+ * Update lxi-gui to use latest GTK4.x and libadwaita versions. Currently the
+   compilation process throws a lot of message regarding use of deprecated
+   GTK/libadwaita functions.
+
  * Make lxi-gui work on MacOS - requires adoption of Bonjour API for mDNS
 
    Need help from people with access to MacOS.
