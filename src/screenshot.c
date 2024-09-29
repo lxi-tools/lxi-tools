@@ -44,7 +44,7 @@
 #include <lxi.h>
 
 #define PLUGIN_LIST_SIZE_MAX 50
-#define ID_LENGTH_MAX 65536
+#define ID_LENGTH_MAX 4096
 
 extern struct screenshot_plugin keysight_dmm;
 extern struct screenshot_plugin keysight_psa;
