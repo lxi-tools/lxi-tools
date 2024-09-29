@@ -1083,8 +1083,6 @@
                                               </object>
                                             </child>
                                             <child>
-                                            </child>
-                                            <child>
                                               <object class="GtkButton" id="button_screenshot_save">
                                                 <property name="label" translatable="yes">Save</property>
                                                 <property name="receives-default">1</property>
