@@ -107,6 +107,6 @@ struct screenshot_plugin keysight_pxa =
 {
     .name = "keysight-pxa",
     .description = "Keysight PXA Spectrum Analyzer",
-    .regex = "Agilent Keysight Technologies N903. A,",
+    .regex = "Agilent Keysight Technologies N90. A,",
     .screenshot = keysight_pxa_screenshot
 };
