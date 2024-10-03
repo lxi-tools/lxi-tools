@@ -65,7 +65,7 @@ int keysight_psa_screenshot(char *address, char *id, int timeout)
     length = lxi_receive(device, response, IMAGE_SIZE_MAX, timeout);
     if (length < 0)
     {
-        error_printf("PXA: Failed to receive message\n");
+        error_printf("PSA: Failed to receive message\n");
         goto error_receive;
     }
 
