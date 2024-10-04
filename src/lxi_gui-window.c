@@ -1366,6 +1366,7 @@ static gpointer live_view_worker_thread(gpointer data)
         restore_screenshot_buttons(self);
         gtk_toggle_button_set_active(self->toggle_button_search, false);
         gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        self->live_view_worker_thread = NULL;
         return NULL;
     }
 
@@ -1377,6 +1378,7 @@ static gpointer live_view_worker_thread(gpointer data)
         restore_screenshot_buttons(self);
         gtk_toggle_button_set_active(self->toggle_button_search, false);
         gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        self->live_view_worker_thread = NULL;
         return NULL;
 
     }
@@ -1388,6 +1390,7 @@ static gpointer live_view_worker_thread(gpointer data)
         restore_screenshot_buttons(self);
         gtk_toggle_button_set_active(self->toggle_button_search, false);
         gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
+        self->live_view_worker_thread = NULL;
         return NULL;
     }
 
@@ -1407,6 +1410,7 @@ static gpointer live_view_worker_thread(gpointer data)
             gtk_toggle_button_set_active(self->toggle_button_search, false);
             gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
             self->plugin_name = NULL;
+	    self->live_view_worker_thread = NULL;
             return NULL;
         }
 
@@ -1427,6 +1431,7 @@ static gpointer live_view_worker_thread(gpointer data)
     gtk_toggle_button_set_active(self->toggle_button_search, false);
     gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
 
+    self->live_view_worker_thread = NULL;
     return NULL;
 }
 
@@ -1440,6 +1445,10 @@ static void button_clicked_live_viewStart(LxiGuiWindow *self, GtkButton *button)
         restore_screenshot_buttons(self);
         return;
     }
+
+    if(self->live_view_worker_thread != NULL)
+        return;
+
     // Disable grab button while grabbing the screenshot
     gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_screenshot_grab), false);
     gtk_widget_set_sensitive(GTK_WIDGET(self->button_screenshot_save), false);
@@ -1447,7 +1456,7 @@ static void button_clicked_live_viewStart(LxiGuiWindow *self, GtkButton *button)
 
     self->live_view_pressed = true;
     // Start worker thread that will perform the grab screenshot work
-    self->live_view_worker_thread = g_thread_new("screenshot_grab_worker", live_view_worker_thread, (gpointer) self);
+    self->live_view_worker_thread = g_thread_new("screenshot_live_view_worker", live_view_worker_thread, (gpointer) self);
 
     gtk_button_set_label (GTK_BUTTON(self->toggle_button_live_view), "Stop");
 }
