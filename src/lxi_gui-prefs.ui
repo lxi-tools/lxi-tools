@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.0"/>
-  <template class="LxiGuiPrefs" parent="AdwPreferencesWindow">
+  <template class="LxiGuiPrefs" parent="AdwPreferencesDialog">
     <style>
       <class name="preferences"/>
     </style>

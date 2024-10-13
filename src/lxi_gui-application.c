@@ -120,13 +120,10 @@ static void lxi_gui_application_show_preferences (GSimpleAction *action,
 {
     UNUSED(action);
     UNUSED(parameter);
-    LxiGuiPrefs *prefs;
     GtkWindow *win;
 
     win = gtk_application_get_active_window (GTK_APPLICATION (user_data));
-    prefs = lxi_gui_prefs_new (LXI_GUI_WINDOW (win));
-    gtk_window_present (GTK_WINDOW (prefs));
-
+    adw_dialog_present(lxi_gui_prefs_dialog_new(), GTK_WIDGET(win));
 }
 
 static void lxi_gui_application_init (LxiGuiApplication *self)

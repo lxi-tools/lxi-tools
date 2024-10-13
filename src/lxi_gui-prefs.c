@@ -54,7 +54,7 @@ struct _LxiGuiPrefs
     GtkSwitch *switch_scpi_show_message_type;
 };
 
-G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, ADW_TYPE_PREFERENCES_WINDOW)
+G_DEFINE_TYPE (LxiGuiPrefs, lxi_gui_prefs, ADW_TYPE_PREFERENCES_DIALOG)
 
 static void switch_activate_prefer_dark_theme (LxiGuiPrefs *self, GtkSwitch *Switch)
 {
@@ -148,7 +148,7 @@ static void lxi_gui_prefs_class_init (LxiGuiPrefsClass *class)
     gtk_widget_class_bind_template_callback (widget_class, switch_activate_prefer_dark_theme);
 }
 
-LxiGuiPrefs * lxi_gui_prefs_new (LxiGuiWindow *win)
+AdwDialog * lxi_gui_prefs_dialog_new (void)
 {
-    return g_object_new (LXI_GUI_PREFS_TYPE, "transient-for", win, NULL);
+    return g_object_new (LXI_GUI_PREFS_TYPE, NULL);
 }
