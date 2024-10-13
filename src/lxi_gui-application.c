@@ -101,7 +101,7 @@ static void lxi_gui_application_show_about (GSimpleAction *action,
         NULL
     };
 
-    adw_show_about_window (window,
+    adw_show_about_dialog (GTK_WIDGET(window),
                          "application-name", "lxi-gui",
                          "application-icon", "io.github.lxi-tools.lxi-gui",
                          "developer-name", "The lxi-tools Project",
