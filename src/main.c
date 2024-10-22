@@ -46,6 +46,10 @@
 #include "run.h"
 #include <lxi.h>
 
+#ifdef __CYGWIN__
+#include "windows_socket.h"
+#endif
+
 int main(int argc, char* argv[])
 {
     int status = EXIT_SUCCESS;
@@ -53,6 +57,10 @@ int main(int argc, char* argv[])
 
     // Parse options
     parse_options(argc, argv);
+
+#ifdef __CYGWIN__
+    windows_socket_initialize();
+#endif
 
     // Initialize LXI library
     lxi_init();
@@ -87,6 +95,10 @@ int main(int argc, char* argv[])
             status = run(option.lua_script_filename, option.timeout);
             break;
    }
+
+#ifdef __CYGWIN__
+    windows_socket_cleanup();
+#endif
 
     return status;
 }

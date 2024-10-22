@@ -46,6 +46,12 @@ lxi_sources = [
   common_sources,
   ]
 
+lxi_link_args = []
+if(build_machine.system() == 'cygwin')
+  lxi_link_args = ['-lws2_32']
+  lxi_sources += 'windows_socket.c'
+endif
+
 foreach name: ['lua-5.4', 'lua-5.3', 'lua-5.2', 'lua-5.1', 'lua']
   lua_dep = dependency(name, version: '>=5.1', required: false)
   if lua_dep.found()
@@ -67,6 +73,7 @@ lxi_deps = [
 executable('lxi',
   lxi_sources,
   dependencies: lxi_deps,
+  link_args: lxi_link_args,
   install: true,
 )
 
