@@ -111,7 +111,7 @@ void print_help(char *argv[])
 
 void print_version(void)
 {
-    printf("lxi v%s\n", PACKAGE_VERSION);
+    printf("lxi %s\n", PACKAGE_VERSION);
 }
 
 void parse_options(int argc, char *argv[])
