@@ -204,7 +204,7 @@ static void show_info(LxiGuiWindow *self, const char *buffer)
 
 static void hide_info_bar(LxiGuiWindow *self)
 {
-    gtk_widget_hide(GTK_WIDGET(self->info_bar));
+    gtk_widget_set_visible(GTK_WIDGET(self->info_bar), false);
 }
 
 static GtkWidget* find_child_by_name(GtkWidget* parent, const gchar* name)
@@ -3034,7 +3034,7 @@ static void info_bar_clicked(LxiGuiWindow *self, GtkInfoBar *infobar)
     UNUSED(infobar);
 
     // TODO: Fix and use callback parameters
-    gtk_widget_hide(GTK_WIDGET(self_global->info_bar));
+    gtk_widget_set_visible(GTK_WIDGET(self_global->info_bar), false);
 }
 
 static void lxi_gui_window_dispose(GObject *object)
