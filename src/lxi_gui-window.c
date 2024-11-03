@@ -166,7 +166,7 @@ static gboolean show_error_thread(gpointer user_data)
     gtk_label_set_text (GTK_LABEL(data->self->label_info_bar), data->buffer);
     gtk_info_bar_set_message_type(data->self->info_bar, GTK_MESSAGE_ERROR);
     gtk_info_bar_set_show_close_button(data->self->info_bar, true);
-    gtk_widget_show (GTK_WIDGET(data->self->info_bar));
+    gtk_widget_set_visible(GTK_WIDGET(data->self->info_bar), true);
 
     g_free(data->buffer);
     return G_SOURCE_REMOVE;
@@ -188,7 +188,7 @@ static gboolean show_info_thread(gpointer user_data)
     gtk_label_set_text (GTK_LABEL(data->self->label_info_bar), data->buffer);
     gtk_info_bar_set_message_type(data->self->info_bar, GTK_MESSAGE_INFO);
     gtk_info_bar_set_show_close_button(data->self->info_bar, false);
-    gtk_widget_show (GTK_WIDGET(data->self->info_bar));
+    gtk_widget_set_visible(GTK_WIDGET(data->self->info_bar), true);
 
     g_free(data->buffer);
     return G_SOURCE_REMOVE;
@@ -946,7 +946,7 @@ static void scpi_save_as(LxiGuiWindow *self)
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_scpi_save_as_response),
@@ -1542,7 +1542,7 @@ static void button_clicked_screenshot_save (LxiGuiWindow *self, GtkButton *butto
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_screenshot_file_save_response),
@@ -1889,7 +1889,7 @@ static void create_instrument_dialog(LxiGuiWindow *self, action_t action)
     g_signal_connect(combo_box_text_com_protocol, "changed", G_CALLBACK(on_entry_row_name_or_address_changed), data);
 
     // Show window
-    gtk_widget_show(GTK_WIDGET(dialog));
+    gtk_widget_set_visible(GTK_WIDGET(dialog), true);
 
     // Cleanup
     g_object_unref(gtk_builder);
@@ -2156,7 +2156,7 @@ static void button_clicked_script_open(LxiGuiWindow *self, GtkButton *button)
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_script_file_open_response),
@@ -2236,7 +2236,7 @@ static void button_clicked_script_save(LxiGuiWindow *self, GtkButton *button)
 
         gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
         gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-        gtk_widget_show (dialog);
+        gtk_widget_set_visible(dialog, true);
 
         g_signal_connect (dialog, "response",
                 G_CALLBACK (on_script_file_save_response),
@@ -2260,7 +2260,7 @@ static void button_clicked_script_save_as(LxiGuiWindow *self, GtkButton *button)
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_script_file_save_response),
@@ -2353,7 +2353,7 @@ static void chart_save_image(GSimpleAction *action,
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_chart_save_image_response),
@@ -2406,7 +2406,7 @@ static void chart_save_csv(GSimpleAction *action,
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-    gtk_widget_show (dialog);
+    gtk_widget_set_visible(dialog, true);
 
     g_signal_connect (dialog, "response",
             G_CALLBACK (on_chart_save_csv_response),
