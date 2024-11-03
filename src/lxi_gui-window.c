@@ -1278,9 +1278,11 @@ static gboolean gui_update_grab_screenshot_finished_thread(gpointer user_data)
             self->screenshot_loaded = true;
             gtk_widget_set_valign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
             gtk_widget_set_halign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
-            gtk_picture_set_pixbuf(self->picture_screenshot, self->pixbuf_screenshot);
+            GdkTexture *texture = gdk_texture_new_for_pixbuf(self->pixbuf_screenshot);
+            gtk_picture_set_paintable(self->picture_screenshot, GDK_PAINTABLE(texture));
             gdk_pixbuf_loader_close(loader, NULL);
             g_object_unref(loader);
+            g_object_unref(texture);
 
             // Make screenshot picture zoomable
             //gtk_widget_set_sensitive(GTK_WIDGET(self->viewport_screenshot), true);
@@ -1339,9 +1341,11 @@ static gboolean gui_update_live_view_finished_thread(gpointer user_data)
         self->screenshot_loaded = true;
         gtk_widget_set_valign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
         gtk_widget_set_halign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
-        gtk_picture_set_pixbuf(self->picture_screenshot, self->pixbuf_screenshot);
+        GdkTexture *texture = gdk_texture_new_for_pixbuf(self->pixbuf_screenshot);
+        gtk_picture_set_paintable(self->picture_screenshot, GDK_PAINTABLE(texture));
         gdk_pixbuf_loader_close(loader, NULL);
         g_object_unref(loader);
+        g_object_unref(texture);
 
         // Make screenshot picture zoomable
         //gtk_widget_set_sensitive(GTK_WIDGET(self->viewport_screenshot), true);
