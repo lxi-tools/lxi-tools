@@ -113,12 +113,12 @@ if enable_gui
     ]
 
   if(build_machine.system() == 'cygwin')
-    convert = find_program('/ucrt64/bin/convert', required: true)
+    magick = find_program('magick', required: true)
     # Add icon in  exe
     lxi_tools_icon = custom_target('icon',
       input : '../data/icons/hicolor/scalable/apps/io.github.lxi-tools.lxi-gui.svg',
       output : 'lxi-tools.ico',
-      command : [convert, '-density', '128x128','-background', 'transparent', '@INPUT@', '@OUTPUT@'])
+      command : [magick, 'convert' , '-density', '128x128','-background', 'transparent', '@INPUT@', '@OUTPUT@'])
     lxi_gui_sources += lxi_tools_icon
     windows = import('windows')
     lxi_gui_sources += windows.compile_resources('lxi-tools.rc')
