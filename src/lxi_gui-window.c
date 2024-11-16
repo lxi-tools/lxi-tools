@@ -330,10 +330,14 @@ static void list_add_instrument (LxiGuiWindow *self, const char *name, const cha
     // Add subtitle to list text box
     gtk_widget_set_name(list_subtitle, "list-subtitle");
     gtk_widget_add_css_class(list_subtitle, "subtitle");
-    GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (list_subtitle));
-    GtkCssProvider *provider = gtk_css_provider_new ();
-    gtk_css_provider_load_from_data (provider, "label.subtitle {opacity: 1; font-size: x-small;}", -1);
-    gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_string(provider, "label.subtitle {opacity: 1; font-size: x-small;}");
+    GdkDisplay *display = gdk_display_get_default();
+    gtk_style_context_add_provider_for_display(display, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_widget_add_css_class(GTK_WIDGET(list_subtitle), "subtitle");
+    g_object_unref(provider);
+
     gtk_widget_set_vexpand(list_subtitle, true);
     gtk_widget_set_vexpand_set(list_subtitle, true);
     gtk_widget_set_valign(list_subtitle, GTK_ALIGN_START);
