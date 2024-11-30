@@ -1,4 +1,85 @@
-=== lxi-tools v2.7 ===
+=== lxi-tools v2.8 ===
+
+
+
+Changes since lxi-tools v2.7:
+
+ * Fix deprecated GTK4 style context functions
+
+   Retire the folliwing deprecated GTK4 functions:
+
+    * gtk_widget_get_style_context
+    * gtk_style_context_add_provider
+    * gtk_css_provider_load_from_data
+
+ * README: Add Windows installer section
+
+ * Fix version string
+
+ * Fix deprecated gtk_picture_set_pixbuf()
+
+   Replace with gtk_picture_set_paintable() on a GdkTexture representing
+   the pixbuf buffer.
+
+ * Fix deprecated gtk_widget_show()
+
+   Replace with gtk_widget_set_visible()
+
+ * Fix deprecated gtk_widget_hide()
+
+   Replace with gtk_widget_set_visible()
+
+ * Extract project version from git
+
+ * Fix deprecated adw_preferences_window_get_type()
+
+   Replace with AdwPreferencesDialog
+
+ * Fix deprecated adw_show_about_window()
+
+   Replace with adw_show_about_dialog()
+
+ * Fix deprecated G_APPLICATION_FLAGS_NONE
+
+   Use G_APPLICATION_DEFAULT_FLAGS instead as introduced in glib 2.74.
+
+   Bump required glib version to 2.74.
+
+ * Cleanup .ui for lxi-gui
+
+ * Add Siglent SVA1032X to supported instruments list
+
+ * Add cairo and gdkpixbuf dependencies
+
+ * Add tested instrument AimTTi PL303-P
+
+ * Add tested instrument AimTTi CPX400DP
+
+ * README: Add DMM L4411A
+
+ * Stop using deprecated meson .set10 for setting boolean
+
+ * Add SPD1168X to README
+
+Primoz Salic:
+
+ * Add Windows support
+
+ * Add Live view support
+
+ * Add Agilent Spectrum Analyzer and Digital osciloscope plugin
+
+ * Add Agilent Spectrum Analyzer and Digital osciloscope plugin
+
+ * Fix hang of live view button fast toggle
+
+ * Fix Agilent PXA SA plugin to work with older MXA model
+
+ * Fix convert to ico file in windows
+
+Rob Carruthers:
+
+ * docs(readme): Add instruments
 
 
 
