@@ -8,7 +8,7 @@ project('lxi-tools', 'c',
 meson.add_dist_script('version.sh', 'set-dist', meson.project_version())
 
 # The tag date of the project_version(), update when the version bumps.
-version_date = '2023-02-21'
+version_date = '2024-11-30'
 devel_mode = false
 
 subdir('src')
