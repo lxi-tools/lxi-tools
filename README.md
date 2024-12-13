@@ -339,6 +339,7 @@ instruments:
 | Siglent Technologies SDS1202X-E   | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDS1204X-E   | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDS2304X     | [discover+scpi+screenshot] |                               |
+| Siglent Technologies SDS3034X-HD  | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3045X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3055      | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDM3055-SC   | [discover+scpi+screenshot] |                               |
