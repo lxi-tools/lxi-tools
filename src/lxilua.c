@@ -169,6 +169,11 @@ static int disconnect(lua_State *L)
     int status = 0;
     int device = lua_tointeger(L, 1);
 
+    if(device < 0)
+    {
+        lua_pushnumber(L, -1);
+        return 1;
+    }
     // Disconnect
     status = lxi_disconnect(device);
 
@@ -187,6 +192,11 @@ static int scpi(lua_State *L)
     int timeout = lua_tointeger(L, 3);
     char command_buffer[1000];
 
+    if(device < 0)
+    {
+        lua_pushnumber(L, -1);
+        return 1;
+    }
     // Use session timeout if no timeout provided
     if (timeout == 0)
         timeout = session[device].timeout;
@@ -254,6 +264,11 @@ static int scpi_raw(lua_State *L)
     const char *command = lua_tostring(L, 2);
     int timeout = lua_tointeger(L, 3);
 
+    if(device < 0)
+    {
+        lua_pushnumber(L, -1);
+        return 1;
+    }
     // Use session timeout if no timeout provided
     if (timeout == 0)
         timeout = session[device].timeout;
