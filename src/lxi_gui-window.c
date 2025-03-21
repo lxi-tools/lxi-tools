@@ -2992,7 +2992,7 @@ static gpointer script_run_worker_function(gpointer data)
     }
     else
     {
-        chunkname = strdup("buffer");
+        chunkname = g_strdup("buffer");
     }
 
     // Let lua load buffer and do error checking before running
