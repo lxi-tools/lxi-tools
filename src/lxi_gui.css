@@ -1,3 +1,7 @@
+picture:disabled {
+  opacity: 1;
+}
+
 /* Application Window */
 #button-add-instrument {
   margin-left: 2px;
@@ -87,3 +91,9 @@
 .text-view-script-status text {
   background-color: rgba(0,0,0,0);
 }
+
+#lxi-stop-button {
+  background-color: var(--accent-red);
+  color: #ffffff;
+}
+
