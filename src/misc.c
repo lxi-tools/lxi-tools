@@ -63,7 +63,7 @@ void strip_trailing_space(char *line)
 
     while (i >= 0)
     {
-        if ( isspace(line[i]) )
+        if (line[i] == 0x20)
             line[i] = '\0';
         else
             break;
