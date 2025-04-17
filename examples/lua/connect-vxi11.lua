@@ -9,7 +9,7 @@
 psu = lxi_connect("192.168.0.107", nil, nil, 2000, "VXI11")
 
 -- Print instrument ID
-print("Power Supply ID = " .. lxi_scpi(psu,"*IDN?\n"))
+print("Power Supply ID = " .. lxi_scpi(psu,"*IDN?"))
 
 -- Disconnect
 lxi_disconnect(psu)
