@@ -113,6 +113,7 @@ struct _LxiGuiWindow
     GMutex              mutex_save_png;
     GMutex              mutex_save_csv;
     GMutex              mutex_live_view;
+    GMutex              mutex_connection;
     GList               *list_instruments;
     GtkListBoxRow       *list_box_row_pressed;
     GtkListBoxRow       *list_box_row_selected;
@@ -1062,6 +1063,7 @@ static gpointer send_worker_thread(gpointer data)
     unsigned int timeout = g_settings_get_uint(self->settings, "timeout-scpi");
     bool show_sent_scpi = g_settings_get_boolean(self->settings, "show-sent-scpi");
 
+    g_mutex_lock(&self->mutex_connection);
     if (self->ip == NULL)
     {
         show_error(self, "No instrument selected");
@@ -1157,6 +1159,7 @@ error_no_instrument:
 error_no_input:
     // Restore send button state
     // Defer!
+    g_mutex_unlock(&self->mutex_connection);
     g_idle_add(gui_update_send_worker_finished_thread, self);
 
     return NULL;
@@ -1247,7 +1250,9 @@ static bool grab_screenshot(LxiGuiWindow *self)
 
     self->plugin_name = NULL;
     // Capture screenshot
+    g_mutex_lock(&self->mutex_connection);
     status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
+    g_mutex_unlock(&self->mutex_connection);
     if (status != 0)
     {
         show_error(self, "Failed to grab screenshot");
@@ -1391,7 +1396,9 @@ static gpointer live_view_worker_thread(gpointer data)
 
     }
     self->plugin_name = NULL;
+    g_mutex_lock(&self->mutex_connection);
     self->plugin_name = screenshot_detect_plugin_name((char *)self->ip, timeout);
+    g_mutex_unlock(&self->mutex_connection);
     if(self->plugin_name == NULL)
     {
         show_error(self, "Can't access device or No Plugin Found");
@@ -1408,7 +1415,9 @@ static gpointer live_view_worker_thread(gpointer data)
             break;
         g_mutex_lock(&self->mutex_live_view);
         // Capture screenshot
+        g_mutex_lock(&self->mutex_connection);
         status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
+        g_mutex_unlock(&self->mutex_connection);
         if (status != 0)
         {
             show_error(self, "Live view: Failed to grab screenshot");
@@ -1613,6 +1622,7 @@ static gpointer benchmark_worker_function(gpointer data)
     LxiGuiWindow *self = data;
     int status = 0;
 
+    g_mutex_lock(&self->mutex_connection);
     if (self->protocol == VXI11)
     {
         status = benchmark(self->ip, 0, 1000, VXI11, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
@@ -1621,6 +1631,7 @@ static gpointer benchmark_worker_function(gpointer data)
     {
         status = benchmark(self->ip, self->port, 1000, RAW, self->benchmark_requests_count, false, &result, benchmark_progress_cb);
     }
+    g_mutex_unlock(&self->mutex_connection);
 
     if (status != LXI_OK)
     {
