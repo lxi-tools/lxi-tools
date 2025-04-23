@@ -114,6 +114,7 @@ struct _LxiGuiWindow
     GMutex              mutex_save_csv;
     GMutex              mutex_live_view;
     GMutex              mutex_connection;
+    gboolean            lua_connection_locked;
     GList               *list_instruments;
     GtkListBoxRow       *list_box_row_pressed;
     GtkListBoxRow       *list_box_row_selected;
@@ -2878,6 +2879,71 @@ static int lua_gui_version(lua_State* L)
     return 1;
 }
 
+extern void set_session_params(int device, int timeout, int protocol);
+
+static int connect_selected(lua_State *L)
+{
+    int device;
+    unsigned int timeout = g_settings_get_uint(self_global->settings, "timeout-scpi");
+
+    if(self_global->ip == NULL)
+    {
+        lua_pushnumber(L, -1);
+        return 1;
+    }
+    g_mutex_lock(&self_global->mutex_connection);
+    self_global->lua_connection_locked = true;
+    // Connect to LXI instrument using VXI11
+    if (self_global->protocol == VXI11)
+    {
+        device = lxi_connect(self_global->ip, 0, NULL, timeout, VXI11);
+    }
+    if (self_global->protocol == RAW)
+    {
+        device = lxi_connect(self_global->ip, self_global->port, NULL, timeout, RAW);
+    }
+
+    if (device == LXI_ERROR)
+    {
+        error_printf("Failed to connect\n");
+        lua_pushnumber(L, -1);
+        g_mutex_unlock(&self_global->mutex_connection);
+        self_global->lua_connection_locked = false;
+        return 1;
+    }
+    // Save session data for later reuse
+    set_session_params(device, timeout, self_global->protocol);
+
+    // Return status
+    lua_pushinteger(L, device);
+    return 1;
+}
+
+static int disconnect_selected(lua_State *L)
+{
+    int status = 0;
+    int device = lua_tointeger(L, 1);
+
+    if(device < 0)
+    {
+        lua_pushnumber(L, -1);
+        if(self_global->lua_connection_locked == true)
+        {
+            g_mutex_unlock(&self_global->mutex_connection);
+        }
+        return 1;
+    }
+    // Disconnect
+    status = lxi_disconnect(device);
+    if(self_global->lua_connection_locked == true)
+    {
+        g_mutex_unlock(&self_global->mutex_connection);
+    }
+    // Return status
+    lua_pushnumber(L, status);
+    return 1;
+}
+
 static const struct luaL_Reg gui_lib [] =
 {
     {"lxi_chart_new", lua_gui_chart_new},
@@ -2890,6 +2956,8 @@ static const struct luaL_Reg gui_lib [] =
     {"lxi_selected_id", lua_gui_id},
     {"lxi_version", lua_gui_version},
     {"print", lua_print},
+    {"lxi_connect_selected", connect_selected},
+    {"lxi_disconnect_selected", disconnect_selected},
     {NULL, NULL}
 };
 

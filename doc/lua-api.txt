@@ -26,6 +26,8 @@ to the standard lua library functions.
   Returns
       device: Handle of device
 
+NOTE: Done use this API in combination with lxi_disconnect_selected
+
 ------------------------------------------------------------------------------
 
   Function
@@ -54,6 +56,8 @@ to the standard lua library functions.
 
   Paramters
     device: Handle of device
+
+NOTE: Done use this API in combination with lxi_connect_selected
 
 ------------------------------------------------------------------------------
 
@@ -320,5 +324,35 @@ NOTE: These functions can only be used when running scripts via lxi-gui.
 
   Returns
     id: ID of device selected in GUI [string]. Returns nil if none selected.
+
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+
+  Function
+    device = lxi_connect_selected()
+
+  Description
+    Connect to LXI compatible device which is selected by lxi-gui
+
+  Parameters
+
+  Returns
+      device: Handle of device
+
+NOTE: Done use this API in combination with lxi_disconnect
+
+------------------------------------------------------------------------------
+
+  Function
+    lxi_disconnect_selected(device)
+
+  Description
+    Disconnect connected device which is selected by lxi-gui
+
+  Paramters
+    device: Handle of device
+
+NOTE: Done use this API in combination with lxi_connect
 
 ------------------------------------------------------------------------------

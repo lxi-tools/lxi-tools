@@ -52,6 +52,15 @@ struct session_t
 
 static struct session_t session[SESSIONS_MAX];
 
+void set_session_params(int device, int timeout, int protocol)
+{
+    if(device >= 0)
+    {
+        session[device].timeout = timeout;
+        session[device].protocol = protocol;
+    }
+}
+
 struct lua_clock_t
 {
     double time_start;
@@ -152,8 +161,11 @@ static int connect(lua_State *L)
     // Connect to LXI instrument using VXI11
     device = lxi_connect(address, arg_port, arg_name, arg_timeout, arg_protocol);
     if (device == LXI_ERROR)
+    {
         error_printf("Failed to connect\n");
-
+        lua_pushnumber(L, -1);
+        return 1;
+    }
     // Save session data for later reuse
     session[device].timeout = arg_timeout;
     session[device].protocol = arg_protocol;
