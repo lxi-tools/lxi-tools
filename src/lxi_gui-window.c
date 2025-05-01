@@ -112,7 +112,6 @@ struct _LxiGuiWindow
     GMutex              mutex_instrument_list;
     GMutex              mutex_save_png;
     GMutex              mutex_save_csv;
-    GMutex              mutex_live_view;
     GMutex              mutex_connection;
     gboolean            lua_connection_locked;
     GList               *list_instruments;
@@ -1361,7 +1360,7 @@ static gboolean gui_update_live_view_finished_thread(gpointer user_data)
         //gtk_widget_set_sensitive(GTK_WIDGET(self->viewport_screenshot), true);
     }
 
-    g_mutex_unlock(&self->mutex_live_view);
+    g_mutex_unlock(&self->mutex_connection);
 
     return G_SOURCE_REMOVE;
 }
@@ -1412,17 +1411,18 @@ static gpointer live_view_worker_thread(gpointer data)
 
     while(true)
     {
-        if(!self->live_view_pressed)
-            break;
-        g_mutex_lock(&self->mutex_live_view);
         // Capture screenshot
         g_mutex_lock(&self->mutex_connection);
+        if(!self->live_view_pressed)
+        {
+            g_mutex_unlock(&self->mutex_connection);
+            break;
+        }
         status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
-        g_mutex_unlock(&self->mutex_connection);
         if (status != 0)
         {
             show_error(self, "Live view: Failed to grab screenshot");
-            g_mutex_unlock(&self->mutex_live_view);
+            g_mutex_unlock(&self->mutex_connection);
             g_free(self->image_buffer);
             restore_screenshot_buttons(self);
             gtk_toggle_button_set_active(self->toggle_button_search, false);
@@ -1435,10 +1435,8 @@ static gpointer live_view_worker_thread(gpointer data)
         g_idle_add(gui_update_live_view_finished_thread, self);
     }
 
-    g_mutex_lock(&self->mutex_live_view);
     self->plugin_name = NULL;
     g_free(self->image_buffer);
-    g_mutex_unlock(&self->mutex_live_view);
 
     restore_screenshot_buttons(self);
     // Activate screenshot "Save" button if picture was successfully loaded
