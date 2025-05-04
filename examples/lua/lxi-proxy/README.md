@@ -15,12 +15,26 @@ On PC side you run Lua script which include client/lxi-gui-api.lua to send lxi c
 
 ## 3. What is needed
 
-Currenty only tested on linux.
 In linux you need to install:
 
 ```
 sudo apt install lua5.3 lua-lgi lua-socket lua-cjson libgtk-3-dev
 ```
+
+
+On Windows MSYS2 is needed.  Install msys2 from:
+https://www.msys2.org/
+
+In UCRT64 enviroment install following packages:
+
+```
+pacman -S mingw-w64-ucrt-x86_64-lua-luarocks make mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-lua-cjson mingw-w64-ucrt-x86_64-lua-lgi mingw-w64-ucrt-x86_64-gtk3
+```
+
+```
+luarocks install luasocket
+```
+
 
 ## 4. Run example
 
