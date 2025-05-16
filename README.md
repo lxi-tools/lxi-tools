@@ -331,6 +331,7 @@ instruments:
 | Rohde & Schwarz RTH 1004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz RTM 3004          | [discover+scpi+screenshot] |                               |
 | Rohde & Schwarz ZNL3              | [discover+scpi]            |                               |
+| Rohde & Schwarz FSV-30            | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDG1032X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDG2122X     | [discover+scpi+screenshot] |                               |
 | Siglent Technologies SDG2042X     | [discover+scpi+screenshot] |                               |
