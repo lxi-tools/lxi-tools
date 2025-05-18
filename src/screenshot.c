@@ -383,7 +383,7 @@ int screenshot(char *address, char *plugin_name, char *filename,
     screenshot_image_format = image_format;
     screenshot_image_filename = image_filename;
 
-    if (plugin_name == NULL)
+    if ((plugin_name == NULL) || (strlen(plugin_name) == 0))
     {
         plugin_name = screenshot_detect_plugin(address, id, timeout);
         if(plugin_name  == NULL)
